@@ -1,0 +1,62 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <ApplicationIcon />
+    <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Discord.Net" Version="2.0.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
+    <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
+    <PackageReference Include="System.Management" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Interop.IWshRuntimeLibrary">
+      <HintPath>..\..\BronzePlayer\Libs\Interop.IWshRuntimeLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic">
+      <HintPath>..\Resources\Libs\Microsoft.VisualBasic.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib">
+      <HintPath>mscorlib</HintPath>
+    </Reference>
+    <Reference Include="ScriptsLib">
+      <HintPath>..\Resources\Libs\ScriptsLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>System</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration">
+      <HintPath>..\DLLs\System.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data">
+      <HintPath>System.Data</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SqlClient">
+      <HintPath>..\Resources\Libs\System.Data.SqlClient.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <HintPath>System.Drawing</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression.ZipFile">
+      <HintPath>..\..\BronzePlayer\Libs\System.IO.Compression.ZipFile.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <HintPath>..\Resources\Libs\System.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml">
+      <HintPath>System.Xml</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\Admin\" />
+    <Folder Include="Commands\Joguinhos\" />
+  </ItemGroup>
+
+</Project>
