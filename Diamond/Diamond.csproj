@@ -16,9 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Interop.IWshRuntimeLibrary">
-      <HintPath>..\..\BronzePlayer\Libs\Interop.IWshRuntimeLibrary.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualBasic">
       <HintPath>..\Resources\Libs\Microsoft.VisualBasic.dll</HintPath>
     </Reference>
@@ -26,7 +23,7 @@
       <HintPath>mscorlib</HintPath>
     </Reference>
     <Reference Include="ScriptsLib">
-      <HintPath>..\Resources\Libs\ScriptsLib.dll</HintPath>
+      <HintPath>..\..\..\Libs\ScriptsLib.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <HintPath>System</HintPath>

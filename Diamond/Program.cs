@@ -8,8 +8,6 @@ using System.Windows.Forms;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-
-using ScriptsLib.Database;
 #endregion Usings
 
 
@@ -18,16 +16,12 @@ namespace Diamond
 {
 	class Program
 	{
-		SlDatabase _Database = new SlDatabase();
-
-
-
 		#region Main
 		static void Main(string[] args)
 		{
 			try
 			{
-				SlDatabase._DatabasePath = @"C:\Milkenm\Data\DiamondData.mdf";
+				_DatabasePath = @"C:\Milkenm\Data\DiamondData.mdf";
 				new Program().MainAsync().GetAwaiter().GetResult();
 			}
 			catch (Exception _Exception)
@@ -48,7 +42,7 @@ namespace Diamond
 				Scripts.Client.Ready += this.Client_Ready;
 				Scripts.Client.Log += this.Client_Log;
 
-				await Scripts.Client.LoginAsync(TokenType.Bot, _Database.Select("DConfig", "Value", "Config='Token'")[0]);
+				await Scripts.Client.LoginAsync(TokenType.Bot, Select("DConfig", "Value", "Config='Token'")[0]);
 				await Scripts.Client.StartAsync();
 
 				AppDomain.CurrentDomain.ProcessExit += this.CurrentDomain_ProcessExit;
