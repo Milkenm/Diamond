@@ -19,7 +19,7 @@ namespace DiamondGui
         {
             try
             {
-                string[] _Log = new string[2];
+                string[] _Log = new string[3];
 
                 _Log[0] = LogMsg.Severity.ToString();
                 _Log[1] = LogMsg.Source;
