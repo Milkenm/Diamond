@@ -35,6 +35,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\Images\Logos\Diamond_Icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Discord.Net.Commands, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Discord.Net.Commands.2.1.1\lib\net46\Discord.Net.Commands.dll</HintPath>
@@ -221,6 +224,10 @@
   <ItemGroup>
     <Folder Include="Functions\Commands\Admin\" />
     <Folder Include="Functions\Commands\Joguinhos\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Images\Logos\Diamond_Icon.ico" />
+    <Content Include="Resources\Images\Logos\Diamond_Icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />

@@ -44,5 +44,10 @@ namespace DiamondGui
 		{
 			ButtonRevealToken();
 		}
+
+		private void Main_Load(object sender, EventArgs e)
+		{
+
+		}
 	}
 }

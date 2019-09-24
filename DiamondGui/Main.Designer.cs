@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
 			this.listBox_output = new System.Windows.Forms.ListBox();
 			this.textBox_token = new System.Windows.Forms.TextBox();
 			this.label_token = new System.Windows.Forms.Label();
@@ -118,8 +119,10 @@
 			this.Controls.Add(this.label_token);
 			this.Controls.Add(this.textBox_token);
 			this.Controls.Add(this.listBox_output);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "Main";
 			this.Text = "Diamond 💎";
+			this.Load += new System.EventHandler(this.Main_Load);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
