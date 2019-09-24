@@ -11,10 +11,10 @@ using Discord.Commands;
 
 namespace DiamondGui.Commands
 {
-	internal class Information : ModuleBase<SocketCommandContext>
+	public class Information : ModuleBase<SocketCommandContext>
 	{
 		[Command("information"), Alias("info", "i"), Summary("Displays some information about the bot.")]
-		internal async Task CMD_Information()
+		public async Task CMD_Information()
 		{
 			try
 			{

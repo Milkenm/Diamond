@@ -12,42 +12,37 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-	public partial class Main : Form
+    public partial class Main : Form
     {
+        #region Main
         public Main()
         {
-			try
-			{
-				InitializeComponent();
-				MainForm = this;
-				this.Load += new EventHandler((_Sender, _Event) => MainLoad());
-				this.FormClosing += new FormClosingEventHandler((_Sender, _Event) => MainClosing());
-			}
-			catch (Exception _Exception)
-			{
-				ShowException(_Exception, "Main.Main()");
-			}
+            try
+            {
+                InitializeComponent();
+                MainForm = this;
+            }
+            catch (Exception _Exception)
+            {
+                ShowException(_Exception, "Main.Main()");
+            }
         }
 
+        private void Main_Load(object sender, EventArgs e) => MainLoad();
+
+        private void Main_FormClosing(object sender, FormClosingEventArgs e) => MainClosing();
+        #endregion Main
 
 
 
 
 
 
-		private void button_start_Click(object sender, EventArgs e)
-        {
-			ButtonStart();
-        }
 
-		private void button_revealToken_Click(object sender, EventArgs e)
-		{
-			ButtonRevealToken();
-		}
+        private void button_start_Click(object sender, EventArgs e) => ButtonStart();
 
-		private void Main_Load(object sender, EventArgs e)
-		{
+        private void button_revealToken_Click(object sender, EventArgs e) => ButtonRevealToken();
 
-		}
-	}
+        private void button_setGame_Click(object sender, EventArgs e) => ButtonSetGame();
+    }
 }

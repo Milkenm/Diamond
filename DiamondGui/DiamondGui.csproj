@@ -175,18 +175,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Functions\Commands\Games\League of Legends.cs" />
-    <Compile Include="Functions\Commands\Hello World.cs" />
-    <Compile Include="Functions\Commands\Information.cs" />
+    <Compile Include="Commands\Easter Eggs\TableFlip.cs" />
+    <Compile Include="Commands\Games\LeagueOfLegends.cs" />
+    <Compile Include="Commands\HelloWorld.cs" />
+    <Compile Include="Commands\Information.cs" />
     <Compile Include="Functions\Controls\ButtonRevealToken.cs" />
     <Compile Include="Functions\Controls\ButtonStart.cs" />
-    <Compile Include="Functions\Core\Discord\DiscordMessageReceived.cs" />
-    <Compile Include="Functions\Core\Discord\DiscordLog.cs" />
+    <Compile Include="Functions\Controls\ButtonSetGame.cs" />
+    <Compile Include="Functions\Core\Discord\InstallCommands.cs" />
+    <Compile Include="Functions\Core\Discord\HandleCommand.cs" />
+    <Compile Include="Functions\Core\Discord\Log.cs" />
     <Compile Include="Functions\Core\Discord\DiscordMain.cs" />
     <Compile Include="Functions\Core\Program\MainClosing.cs" />
-    <Compile Include="Functions\Core\Program\ProgramLoad.cs" />
+    <Compile Include="Functions\Core\Program\MainLoad.cs" />
     <Compile Include="Functions\GetLogLevel.cs" />
     <Compile Include="Functions\ShowException.cs" />
+    <Compile Include="Functions\ToggleMainControlEnabled.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -222,8 +226,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Functions\Commands\Admin\" />
-    <Folder Include="Functions\Commands\Joguinhos\" />
+    <Folder Include="Commands\Admin\" />
+    <Folder Include="Commands\Joguinhos\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Images\Logos\Diamond_Icon.ico" />

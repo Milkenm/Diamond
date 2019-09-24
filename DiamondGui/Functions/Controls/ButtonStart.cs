@@ -24,24 +24,23 @@ namespace DiamondGui
 						DiscordMain().GetAwaiter().GetResult();
 					})).Start();
 
-					MainForm.textBox_token.Enabled = false;
-					MainForm.button_start.Text = "Stop";
+                    ToggleMainControlEnabled();
 				}
 				else
 				{
 					new Task(new Action(() =>
 					{
 						Client.LogoutAsync();
+                        Client.StopAsync();
 					})).Start();
 
-					MainForm.textBox_token.Enabled = true;
-					MainForm.button_start.Text = "Start";
-				}
-			}
-			catch (Exception _Exception)
-			{
-				ShowException(_Exception, "Controls.ButtonStart()");
-			}
-		}
-	}
+                    ToggleMainControlEnabled();
+                }
+            }
+            catch (Exception _Exception)
+            {
+                ShowException(_Exception, "Controls.ButtonStart()");
+            }
+        }
+    }
 }
