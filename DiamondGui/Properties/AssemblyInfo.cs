@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DiamondGui")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Diamond 💎 Bot")]
+[assembly: AssemblyDescription("Diamond 💎 Discord Bot")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DiamondGui")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyProduct("Diamond 💎 Bot")]
+[assembly: AssemblyCopyright("Copyright © Milkenm 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
