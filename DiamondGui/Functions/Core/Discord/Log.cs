@@ -19,11 +19,12 @@ namespace DiamondGui
         {
             try
             {
-                string[] _Log = new string[3];
+                string[] _Log = new string[4];
 
-                _Log[0] = LogMsg.Severity.ToString();
-                _Log[1] = LogMsg.Source;
-                _Log[2] = LogMsg.Message;
+				_Log[0] = string.Empty;
+                _Log[1] = LogMsg.Severity.ToString();
+                _Log[2] = LogMsg.Source;
+                _Log[3] = LogMsg.Message;
 
                 MainForm.Invoke(new Action(() =>
                 {
