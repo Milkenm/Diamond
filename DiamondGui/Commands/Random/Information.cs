@@ -51,7 +51,7 @@ namespace DiamondGui.Commands
 			}
 			catch (Exception _Exception)
 			{
-                ShowException(_Exception, new StackFrame().GetMethod().DeclaringType.ReflectedType.ToString());
+                ShowException(_Exception, "DiamondGui.Commands.Information.CMD_Information()");
             }
 		}
 	}

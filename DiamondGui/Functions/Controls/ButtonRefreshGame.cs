@@ -2,7 +2,6 @@
 using System;
 using System.Diagnostics;
 using static DiamondGui.Functions;
-using static DiamondGui.Static;
 #endregion Usings
 
 
@@ -11,15 +10,15 @@ namespace DiamondGui
 {
     internal static partial class Controls
     {
-        internal static void ButtonSetGame()
+        internal static void ButtonRefreshGame()
         {
             try
             {
-                Client.SetGameAsync(MainForm.textBox_game.Text);
+                SetDiscordGame();
             }
             catch (Exception _Exception)
             {
-                ShowException(_Exception, new StackFrame().GetMethod().DeclaringType.ReflectedType.ToString());
+                ShowException(_Exception, "DiamondGui.Controls.ButtonRefreshGame()");
             }
         }
     }

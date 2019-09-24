@@ -1,8 +1,7 @@
 ﻿#region Usings
+using Discord;
 using System;
 using System.Diagnostics;
-using Discord;
-
 using static DiamondGui.Static;
 #endregion Usings
 
@@ -10,7 +9,7 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-	internal static partial class Functions
+    internal static partial class Functions
 	{
 		internal static LogSeverity GetLogLevel()
 		{
@@ -23,14 +22,13 @@ namespace DiamondGui
 					if (MainForm.comboBox_logType.Text == "Critical") _LogType = LogSeverity.Critical;
 					else if (MainForm.comboBox_logType.Text == "Debug") _LogType = LogSeverity.Debug;
 					else if (MainForm.comboBox_logType.Text == "Error") _LogType = LogSeverity.Error;
-					else if (MainForm.comboBox_logType.Text == "Info") _LogType = LogSeverity.Info;
 					else if (MainForm.comboBox_logType.Text == "Verbose") _LogType = LogSeverity.Verbose;
-					else _LogType = LogSeverity.Warning;
+					else if (MainForm.comboBox_logType.Text == "Warning") _LogType = LogSeverity.Warning;
 				}));
 			}
 			catch (Exception _Exception)
 			{
-                ShowException(_Exception, new StackFrame().GetMethod().DeclaringType.ReflectedType.ToString());
+                ShowException(_Exception, "DiamondGui.Functions.GetLogLevel()");
             }
 
 			return _LogType;

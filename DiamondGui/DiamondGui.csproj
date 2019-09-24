@@ -66,8 +66,9 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="ScriptsLib">
-      <HintPath>..\..\..\- Recursos\DLLs\ScriptsLib.dll</HintPath>
+    <Reference Include="ScriptsLib, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Libs\ScriptsLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -175,20 +176,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Functions\Controls\ButtonRefreshStatus.cs" />
     <Compile Include="Functions\DiscordEasterEggs.cs" />
     <Compile Include="Commands\Games\LeagueOfLegends.cs" />
     <Compile Include="Commands\Random\HelloWorld.cs" />
     <Compile Include="Commands\Random\Information.cs" />
-    <Compile Include="Functions\Controls\ButtonRevealToken.cs" />
+    <Compile Include="Functions\Controls\CheckBoxRevealToken.cs" />
     <Compile Include="Functions\Controls\ButtonStart.cs" />
-    <Compile Include="Functions\Controls\ButtonSetGame.cs" />
+    <Compile Include="Functions\Controls\ButtonRefreshGame.cs" />
     <Compile Include="Functions\Core\Discord\InstallCommands.cs" />
     <Compile Include="Functions\Core\Discord\CommandHandler.cs" />
     <Compile Include="Functions\Core\Discord\Log.cs" />
     <Compile Include="Functions\Core\Discord\DiscordMain.cs" />
     <Compile Include="Functions\Core\Program\MainClosing.cs" />
     <Compile Include="Functions\Core\Program\MainLoad.cs" />
+    <Compile Include="Functions\GetActivityType.cs" />
     <Compile Include="Functions\GetLogLevel.cs" />
+    <Compile Include="Functions\GetUserStatus.cs" />
+    <Compile Include="Functions\SetDiscordGame.cs" />
+    <Compile Include="Functions\SetDiscordStatus.cs" />
     <Compile Include="Functions\ShowException.cs" />
     <Compile Include="Functions\ToggleMainControlEnabled.cs" />
     <Compile Include="Main.cs">

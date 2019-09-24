@@ -6,11 +6,11 @@ using System;
 
 namespace DiamondGui
 {
-	internal static partial class Functions
-	{
-		internal static void ShowException(Exception Exception, string Title)
-		{
-			ScriptsLib.Tools.ShowException(Exception);
-		}
-	}
+    internal static partial class Functions
+    {
+        internal static void ShowException(Exception Exception, string Title)
+        {
+            ScriptsLib.Tools.ShowException(Exception, Title);
+        }
+    }
 }

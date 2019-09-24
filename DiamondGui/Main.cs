@@ -25,7 +25,7 @@ namespace DiamondGui
             }
             catch (Exception _Exception)
             {
-                ShowException(_Exception, new StackFrame().GetMethod().DeclaringType.ReflectedType.ToString());
+                ShowException(_Exception, "DiamondGui.Main.Main()");
             }
         }
 
@@ -40,10 +40,12 @@ namespace DiamondGui
 
 
 
-        private void button_start_Click(object sender, EventArgs e) => ButtonStart();
+        private void button_start_Click(object sender, EventArgs e) => ButtonStart(); // Button Start
+        
+        private void checkBox_revealToken_CheckedChanged(object sender, EventArgs e) => CheckBoxRevealToken(); // CheckBox Reveal Token
 
-        private void button_revealToken_Click(object sender, EventArgs e) => ButtonRevealToken();
+        private void button_refreshStatus_Click(object sender, EventArgs e) => ButtonRefreshStatus(); // Button Refresh Status
 
-        private void button_setGame_Click(object sender, EventArgs e) => ButtonSetGame();
+        private void button_setGame_Click(object sender, EventArgs e) => ButtonRefreshGame(); // Button Refresh Game
     }
 }

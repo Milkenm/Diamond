@@ -1,12 +1,10 @@
 ﻿#region Usings
-using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using static DiamondGui.Functions;
 using static DiamondGui.Static;
 #endregion Usings
@@ -15,7 +13,7 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-	internal static partial class Core
+    internal static partial class Core
 	{
 		internal static async Task DiscordMain()
 		{
@@ -47,7 +45,9 @@ namespace DiamondGui
                 // a configuration.
                 await Client.LoginAsync(TokenType.Bot, MainForm.textBox_token.Text);
                 await Client.StartAsync();
-                // await Client.SetGameAsync("Hello!", "https://twitch.tv/milkenm", ActivityType.Streaming);
+
+                SetDiscordGame();
+                SetDiscordStatus();
 
                 await DiscordInstallCommands();
 
@@ -56,7 +56,7 @@ namespace DiamondGui
             }
             catch (Exception _Exception)
             {
-                ShowException(_Exception, new StackFrame().GetMethod().DeclaringType.ReflectedType.ToString());
+                ShowException(_Exception, "DiamondGui.Core.DiscordMain()");
             }
 		}
 	}

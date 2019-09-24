@@ -1,6 +1,5 @@
 ﻿#region Usings
 using System;
-using System.Diagnostics;
 using System.Windows.Forms;
 using static DiamondGui.Functions;
 #endregion Usings
@@ -21,7 +20,7 @@ namespace DiamondGui
             }
             catch (Exception _Exception)
             {
-                ShowException(_Exception, new StackFrame().GetMethod().DeclaringType.ReflectedType.ToString());
+                ShowException(_Exception, "DiamondGui.Program.Main()");
             }
         }
     }

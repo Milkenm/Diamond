@@ -46,5 +46,53 @@ namespace DiamondGui.Properties {
                 this["LogTypeIndex"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Game {
+            get {
+                return ((string)(this["Game"]));
+            }
+            set {
+                this["Game"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ActivityIndex {
+            get {
+                return ((int)(this["ActivityIndex"]));
+            }
+            set {
+                this["ActivityIndex"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string StreamUrl {
+            get {
+                return ((string)(this["StreamUrl"]));
+            }
+            set {
+                this["StreamUrl"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int StatusIndex {
+            get {
+                return ((int)(this["StatusIndex"]));
+            }
+            set {
+                this["StatusIndex"] = value;
+            }
+        }
     }
 }

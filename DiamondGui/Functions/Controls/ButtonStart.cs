@@ -12,7 +12,7 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-	internal static partial class Controls
+    internal static partial class Controls
 	{
 		internal static void ButtonStart()
 		{
@@ -40,7 +40,7 @@ namespace DiamondGui
             }
             catch (Exception _Exception)
             {
-                ShowException(_Exception, new StackFrame().GetMethod().DeclaringType.ReflectedType.ToString());
+                ShowException(_Exception, "DiamondGui.Controls.ButtonStart()");
             }
         }
     }
