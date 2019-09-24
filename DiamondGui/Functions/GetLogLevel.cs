@@ -1,5 +1,6 @@
 ﻿#region Usings
 using System;
+using System.Diagnostics;
 using Discord;
 
 using static DiamondGui.Static;
@@ -29,8 +30,8 @@ namespace DiamondGui
 			}
 			catch (Exception _Exception)
 			{
-				ShowException(_Exception, "Functions.GetLogLevel()");
-			}
+                ShowException(_Exception, new StackFrame().GetMethod().DeclaringType.ReflectedType.ToString());
+            }
 
 			return _LogType;
 		}

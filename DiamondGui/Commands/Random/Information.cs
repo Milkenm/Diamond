@@ -2,9 +2,10 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using static DiamondGui.Functions;
 using Discord;
 using Discord.Commands;
+using System.Diagnostics;
 #endregion
 
 
@@ -48,10 +49,10 @@ namespace DiamondGui.Commands
 
 				await ReplyAsync(embed: embed.Build());
 			}
-			catch (Exception exception)
+			catch (Exception _Exception)
 			{
-				MessageBox.Show(exception.Message.ToString());
-			}
+                ShowException(_Exception, new StackFrame().GetMethod().DeclaringType.ReflectedType.ToString());
+            }
 		}
 	}
 }

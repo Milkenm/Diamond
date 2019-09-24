@@ -1,6 +1,6 @@
 ﻿#region Usings
 using System;
-
+using System.Diagnostics;
 using static DiamondGui.Functions;
 using static DiamondGui.Static;
 #endregion Usings
@@ -20,8 +20,8 @@ namespace DiamondGui
 			}
 			catch (Exception _Exception)
 			{
-				ShowException(_Exception, "Controls.ButtonRevealToken()");
-			}
+                ShowException(_Exception, new StackFrame().GetMethod().DeclaringType.ReflectedType.ToString());
+            }
 		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿#region Usings
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 using static DiamondGui.Core;
@@ -39,7 +40,7 @@ namespace DiamondGui
             }
             catch (Exception _Exception)
             {
-                ShowException(_Exception, "Controls.ButtonStart()");
+                ShowException(_Exception, new StackFrame().GetMethod().DeclaringType.ReflectedType.ToString());
             }
         }
     }

@@ -175,15 +175,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\Easter Eggs\TableFlip.cs" />
+    <Compile Include="Functions\DiscordEasterEggs.cs" />
     <Compile Include="Commands\Games\LeagueOfLegends.cs" />
-    <Compile Include="Commands\HelloWorld.cs" />
-    <Compile Include="Commands\Information.cs" />
+    <Compile Include="Commands\Random\HelloWorld.cs" />
+    <Compile Include="Commands\Random\Information.cs" />
     <Compile Include="Functions\Controls\ButtonRevealToken.cs" />
     <Compile Include="Functions\Controls\ButtonStart.cs" />
     <Compile Include="Functions\Controls\ButtonSetGame.cs" />
     <Compile Include="Functions\Core\Discord\InstallCommands.cs" />
-    <Compile Include="Functions\Core\Discord\HandleCommand.cs" />
+    <Compile Include="Functions\Core\Discord\CommandHandler.cs" />
     <Compile Include="Functions\Core\Discord\Log.cs" />
     <Compile Include="Functions\Core\Discord\DiscordMain.cs" />
     <Compile Include="Functions\Core\Program\MainClosing.cs" />

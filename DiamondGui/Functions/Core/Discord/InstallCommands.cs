@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -21,7 +22,7 @@ namespace DiamondGui
         {
             try
             {
-                Client.MessageReceived += DiscordHandleCommand;
+                Client.MessageReceived += DiscordCommandHandler;
 
                 // Here we discover all of the command modules in the entry 
                 // assembly and load them. Starting from Discord.NET 2.0, a
@@ -35,7 +36,7 @@ namespace DiamondGui
             }
             catch (Exception _Exception)
             {
-                ShowException(_Exception, "Core.DiscordInstallCommands()");
+                ShowException(_Exception, new StackFrame().GetMethod().DeclaringType.ReflectedType.ToString());
             }
         }
     }

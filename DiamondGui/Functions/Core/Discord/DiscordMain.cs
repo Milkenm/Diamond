@@ -1,5 +1,6 @@
 ﻿#region Usings
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 using Discord;
@@ -55,8 +56,8 @@ namespace DiamondGui
             }
             catch (Exception _Exception)
             {
-				ShowException(_Exception, "Core.DiscordMain()");
-			}
+                ShowException(_Exception, new StackFrame().GetMethod().DeclaringType.ReflectedType.ToString());
+            }
 		}
 	}
 }

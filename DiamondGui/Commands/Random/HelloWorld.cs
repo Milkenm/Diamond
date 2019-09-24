@@ -3,6 +3,7 @@ using Discord.Commands;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using static DiamondGui.Functions;
 #endregion Usings
 
@@ -10,14 +11,17 @@ using static DiamondGui.Functions;
 
 namespace DiamondGui.Commands
 {
-    public class LeagueOfLegends : ModuleBase<SocketCommandContext>
+    public class HelloWorld : ModuleBase<SocketCommandContext>
 	{
-		[Command("summoner"), Alias("sum"), Summary("Gets information about a League of Legends summoner.")]
-		public async Task CMD_Summoner()
-		{
+		[Command("helloworld"), Alias("hello", "world"), Summary("Prints 'Hello World!' in event-channel.")]
+		public async Task CMD_HelloWorld()
+        {
             try
             {
-
+                if (Context.User.Id == 222114807887691777)
+                {
+                    await ReplyAsync("Hello World!");
+                }
             }
             catch (Exception _Exception)
             {

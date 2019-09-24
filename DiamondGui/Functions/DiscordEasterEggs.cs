@@ -1,4 +1,5 @@
 ﻿#region Usings
+using Discord.Commands;
 using System;
 using System.Diagnostics;
 using static DiamondGui.Static;
@@ -10,15 +11,11 @@ namespace DiamondGui
 {
     internal static partial class Functions
     {
-        internal static void ToggleMainControlEnabled()
+        internal static void EasterEggs(SocketCommandContext Context)
         {
             try
             {
-                MainForm.textBox_token.Enabled = MainForm.button_start.Text != "Start";
-                MainForm.comboBox_logType.Enabled = MainForm.button_start.Text != "Start";
-
-                if (MainForm.button_start.Text == "Start") MainForm.button_start.Text = "Stop";
-                else MainForm.button_start.Text = "Start";
+                if (Context.Message.ToString().Contains("(╯°□°）╯︵ ┻━┻")) Client.GetGuild(Context.Guild.Id).GetTextChannel(Context.Channel.Id).SendMessageAsync("┬─┬ ノ( ゜-゜ノ)");
             }
             catch (Exception _Exception)
             {
