@@ -23,7 +23,7 @@
       <HintPath>mscorlib</HintPath>
     </Reference>
     <Reference Include="ScriptsLib">
-      <HintPath>..\..\..\Libs\ScriptsLib.dll</HintPath>
+      <HintPath>..\..\..\- Recursos\DLLs\ScriptsLib.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <HintPath>System</HintPath>
