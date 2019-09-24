@@ -10,7 +10,7 @@ namespace DiamondGui
 	{
 		internal static void ShowException(Exception Exception, string Title)
 		{
-			ScriptsLib.Tools.ShowException(Exception, Title);
+			ScriptsLib.Tools.ShowException(Exception);
 		}
 	}
 }
