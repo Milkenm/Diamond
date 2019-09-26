@@ -1,8 +1,9 @@
 ﻿#region Usings
-using Discord.Commands;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
+
+using Discord.Commands;
+
 using static DiamondGui.Functions;
 #endregion Usings
 
@@ -10,7 +11,7 @@ using static DiamondGui.Functions;
 
 namespace DiamondGui.Commands
 {
-    public class LeagueOfLegends : ModuleBase<SocketCommandContext>
+	public class LeagueOfLegends : ModuleBase<SocketCommandContext>
 	{
 		[Command("summoner"), Alias("sum"), Summary("Gets information about a League of Legends summoner.")]
 		public async Task CMD_Summoner()

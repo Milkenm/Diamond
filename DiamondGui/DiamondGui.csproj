@@ -178,9 +178,9 @@
   <ItemGroup>
     <Compile Include="Functions\Controls\ButtonRefreshStatus.cs" />
     <Compile Include="Functions\DiscordEasterEggs.cs" />
-    <Compile Include="Commands\Games\LeagueOfLegends.cs" />
-    <Compile Include="Commands\Random\HelloWorld.cs" />
-    <Compile Include="Commands\Random\Information.cs" />
+    <Compile Include="Modules\Games\LeagueOfLegends.cs" />
+    <Compile Include="Modules\Diamond\HelloWorld.cs" />
+    <Compile Include="Modules\Diamond\Information.cs" />
     <Compile Include="Functions\Controls\CheckBoxRevealToken.cs" />
     <Compile Include="Functions\Controls\ButtonStart.cs" />
     <Compile Include="Functions\Controls\ButtonRefreshGame.cs" />
@@ -206,6 +206,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Static.cs" />
+    <Compile Include="Templates\DiscordCommandTemplate.cs" />
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
@@ -232,8 +233,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Commands\Admin\" />
-    <Folder Include="Commands\Joguinhos\" />
+    <Folder Include="Modules\Admin\" />
+    <Folder Include="Modules\Joguinhos\" />
+    <Folder Include="Modules\Random\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Images\Logos\Diamond_Icon.ico" />
