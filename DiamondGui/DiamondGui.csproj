@@ -178,7 +178,6 @@
   <ItemGroup>
     <Compile Include="Functions\Controls\ButtonRefreshStatus.cs" />
     <Compile Include="Functions\DiscordEasterEggs.cs" />
-    <Compile Include="Modules\Games\LeagueOfLegends.cs" />
     <Compile Include="Modules\Diamond\HelloWorld.cs" />
     <Compile Include="Modules\Diamond\Information.cs" />
     <Compile Include="Functions\Controls\CheckBoxRevealToken.cs" />
