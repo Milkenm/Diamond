@@ -220,6 +220,7 @@
     <Compile Include="Forms\Statistics.Designer.cs">
       <DependentUpon>Statistics.cs</DependentUpon>
     </Compile>
+    <Compile Include="Debug\TestCodeSpeed.cs" />
     <EmbeddedResource Include="Forms\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
