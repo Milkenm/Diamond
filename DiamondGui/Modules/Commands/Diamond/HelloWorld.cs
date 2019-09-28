@@ -12,7 +12,7 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-	public partial class Commands : ModuleBase<SocketCommandContext>
+	public partial class CommandsModule : ModuleBase<SocketCommandContext>
 	{
 		[Command("helloworld"), Alias("hello", "world"), Summary("Prints 'Hello World!' in event-channel.")]
 		public async Task HelloWorld()
@@ -21,7 +21,7 @@ namespace DiamondGui
             {
 				Settings.CommandsUsed += 1; Settings.Save();
 
-                if (Context.User.Id == 222114807887691777)
+                if (Context.User.Id == Settings.AdminId)
                 {
                     await ReplyAsync("Hello World!");
                 }

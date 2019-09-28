@@ -258,6 +258,7 @@
     <Folder Include="Modules\Commands\Admin\" />
     <Folder Include="Modules\Commands\Joguinhos\" />
     <Folder Include="Modules\Commands\Random\" />
+    <Folder Include="Modules\Events\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Images\Logos\Diamond_Icon.ico" />

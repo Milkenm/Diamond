@@ -170,9 +170,9 @@ namespace DiamondGui.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public long AdminId {
+        public ulong AdminId {
             get {
-                return ((long)(this["AdminId"]));
+                return ((ulong)(this["AdminId"]));
             }
             set {
                 this["AdminId"] = value;
