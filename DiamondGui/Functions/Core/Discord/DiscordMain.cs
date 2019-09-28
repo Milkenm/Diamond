@@ -55,7 +55,14 @@ namespace DiamondGui
 				// Block this task until the program is closed.
 				await Task.Delay(-1);
 			}
-			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Core.DiscordMain()"); }
+			catch (Exception _Exception)
+			{
+				MainForm.Invoke(new Action(() =>
+				{
+					MainForm.button_start.PerformClick();
+				}));
+				ShowException(_Exception, "DiamondGui.Core.DiscordMain()");
+			}
 		}
 	}
 }
