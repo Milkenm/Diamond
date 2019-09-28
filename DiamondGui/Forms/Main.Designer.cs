@@ -112,7 +112,7 @@
 			// 
 			this.button_options.Location = new System.Drawing.Point(674, 291);
 			this.button_options.Name = "button_options";
-			this.button_options.Size = new System.Drawing.Size(102, 22);
+			this.button_options.Size = new System.Drawing.Size(102, 23);
 			this.button_options.TabIndex = 2;
 			this.button_options.Text = "Options...";
 			this.button_options.UseVisualStyleBackColor = true;
@@ -127,7 +127,7 @@
 			// 
 			this.button_statistics.Location = new System.Drawing.Point(573, 291);
 			this.button_statistics.Name = "button_statistics";
-			this.button_statistics.Size = new System.Drawing.Size(102, 22);
+			this.button_statistics.Size = new System.Drawing.Size(102, 23);
 			this.button_statistics.TabIndex = 4;
 			this.button_statistics.Text = "Statistics";
 			this.button_statistics.UseVisualStyleBackColor = true;

@@ -1,6 +1,6 @@
 ﻿#region Usings
 using System;
-using System.Windows.Forms;
+
 using static DiamondGui.Functions;
 using static DiamondGui.Static;
 #endregion Usings
@@ -9,7 +9,7 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-    internal static partial class Core
+	internal static partial class Core
     {
         internal static void MainLoad()
         {

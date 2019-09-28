@@ -1,6 +1,7 @@
 ﻿#region Usings
 using System;
 using System.Windows.Forms;
+
 using static DiamondGui.Static;
 #endregion Usings
 

@@ -4,7 +4,6 @@ using System.Windows.Forms;
 
 using static DiamondGui.Controls;
 using static DiamondGui.Core;
-using static DiamondGui.Debug;
 using static DiamondGui.Functions;
 using static DiamondGui.Static;
 #endregion Usings
