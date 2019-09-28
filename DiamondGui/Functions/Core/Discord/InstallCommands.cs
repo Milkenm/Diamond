@@ -24,15 +24,7 @@ namespace DiamondGui
             {
                 Client.MessageReceived += DiscordCommandHandler;
 
-                // Here we discover all of the command modules in the entry 
-                // assembly and load them. Starting from Discord.NET 2.0, a
-                // service provider is required to be passed into the
-                // module registration method to inject the 
-                // required dependencies.
-                //
-                // If you do not use Dependency Injection, pass null.
-                // See Dependency Injection guide for more information.
-                await Command.AddModulesAsync(assembly: Assembly.GetEntryAssembly(), services: null);
+                await Command.AddModulesAsync(Assembly.GetEntryAssembly(), null);
             }
             catch (Exception _Exception)
             {
