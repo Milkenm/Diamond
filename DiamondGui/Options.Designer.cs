@@ -75,7 +75,7 @@
 			this.textBox_token.MaxLength = 200;
 			this.textBox_token.Name = "textBox_token";
 			this.textBox_token.PasswordChar = '•';
-			this.textBox_token.Size = new System.Drawing.Size(341, 20);
+			this.textBox_token.Size = new System.Drawing.Size(430, 20);
 			this.textBox_token.TabIndex = 0;
 			// 
 			// checkBox_revealToken
@@ -83,7 +83,7 @@
 			this.checkBox_revealToken.AutoSize = true;
 			this.checkBox_revealToken.Checked = true;
 			this.checkBox_revealToken.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.checkBox_revealToken.Location = new System.Drawing.Point(428, 21);
+			this.checkBox_revealToken.Location = new System.Drawing.Point(520, 21);
 			this.checkBox_revealToken.Name = "checkBox_revealToken";
 			this.checkBox_revealToken.Size = new System.Drawing.Size(48, 17);
 			this.checkBox_revealToken.TabIndex = 4;
@@ -125,7 +125,7 @@
 			this.groupBox_activity.Controls.Add(this.comboBox_activity);
 			this.groupBox_activity.Location = new System.Drawing.Point(12, 175);
 			this.groupBox_activity.Name = "groupBox_activity";
-			this.groupBox_activity.Size = new System.Drawing.Size(482, 102);
+			this.groupBox_activity.Size = new System.Drawing.Size(574, 102);
 			this.groupBox_activity.TabIndex = 1;
 			this.groupBox_activity.TabStop = false;
 			this.groupBox_activity.Text = "Activity";
@@ -135,7 +135,7 @@
 			this.textBox_activityName.Location = new System.Drawing.Point(84, 46);
 			this.textBox_activityName.MaxLength = 200;
 			this.textBox_activityName.Name = "textBox_activityName";
-			this.textBox_activityName.Size = new System.Drawing.Size(341, 20);
+			this.textBox_activityName.Size = new System.Drawing.Size(430, 20);
 			this.textBox_activityName.TabIndex = 1;
 			// 
 			// label_activityName
@@ -160,7 +160,7 @@
 			// 
 			this.textBox_streamUrl.Location = new System.Drawing.Point(84, 72);
 			this.textBox_streamUrl.Name = "textBox_streamUrl";
-			this.textBox_streamUrl.Size = new System.Drawing.Size(341, 20);
+			this.textBox_streamUrl.Size = new System.Drawing.Size(430, 20);
 			this.textBox_streamUrl.TabIndex = 2;
 			// 
 			// label_streamUrl
@@ -200,7 +200,7 @@
 			this.groupBox_general.Controls.Add(this.comboBox_logType);
 			this.groupBox_general.Location = new System.Drawing.Point(12, 12);
 			this.groupBox_general.Name = "groupBox_general";
-			this.groupBox_general.Size = new System.Drawing.Size(482, 157);
+			this.groupBox_general.Size = new System.Drawing.Size(574, 157);
 			this.groupBox_general.TabIndex = 0;
 			this.groupBox_general.TabStop = false;
 			this.groupBox_general.Text = "General";
@@ -208,7 +208,7 @@
 			// button_save
 			// 
 			this.button_save.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.button_save.Location = new System.Drawing.Point(420, 341);
+			this.button_save.Location = new System.Drawing.Point(512, 341);
 			this.button_save.Name = "button_save";
 			this.button_save.Size = new System.Drawing.Size(75, 23);
 			this.button_save.TabIndex = 3;
@@ -218,7 +218,7 @@
 			// 
 			// button_cancel
 			// 
-			this.button_cancel.Location = new System.Drawing.Point(339, 341);
+			this.button_cancel.Location = new System.Drawing.Point(431, 341);
 			this.button_cancel.Name = "button_cancel";
 			this.button_cancel.Size = new System.Drawing.Size(75, 23);
 			this.button_cancel.TabIndex = 4;
@@ -232,7 +232,7 @@
 			this.groupBox_webHost.Controls.Add(this.textBox_domain);
 			this.groupBox_webHost.Location = new System.Drawing.Point(12, 283);
 			this.groupBox_webHost.Name = "groupBox_webHost";
-			this.groupBox_webHost.Size = new System.Drawing.Size(482, 52);
+			this.groupBox_webHost.Size = new System.Drawing.Size(574, 52);
 			this.groupBox_webHost.TabIndex = 2;
 			this.groupBox_webHost.TabStop = false;
 			this.groupBox_webHost.Text = "Web Host";
@@ -241,7 +241,7 @@
 			// 
 			this.textBox_domain.Location = new System.Drawing.Point(84, 19);
 			this.textBox_domain.Name = "textBox_domain";
-			this.textBox_domain.Size = new System.Drawing.Size(341, 20);
+			this.textBox_domain.Size = new System.Drawing.Size(430, 20);
 			this.textBox_domain.TabIndex = 0;
 			// 
 			// label_domain
@@ -257,14 +257,14 @@
 			// 
 			this.textBox_botUrl.Location = new System.Drawing.Point(84, 72);
 			this.textBox_botUrl.Name = "textBox_botUrl";
-			this.textBox_botUrl.Size = new System.Drawing.Size(341, 20);
+			this.textBox_botUrl.Size = new System.Drawing.Size(430, 20);
 			this.textBox_botUrl.TabIndex = 2;
 			// 
 			// textBox_discordUrl
 			// 
 			this.textBox_discordUrl.Location = new System.Drawing.Point(84, 98);
 			this.textBox_discordUrl.Name = "textBox_discordUrl";
-			this.textBox_discordUrl.Size = new System.Drawing.Size(341, 20);
+			this.textBox_discordUrl.Size = new System.Drawing.Size(430, 20);
 			this.textBox_discordUrl.TabIndex = 3;
 			// 
 			// label_botUrl
@@ -309,7 +309,7 @@
 			// 
 			this.textBox_adminId.Location = new System.Drawing.Point(84, 124);
 			this.textBox_adminId.Name = "textBox_adminId";
-			this.textBox_adminId.Size = new System.Drawing.Size(341, 20);
+			this.textBox_adminId.Size = new System.Drawing.Size(430, 20);
 			this.textBox_adminId.TabIndex = 9;
 			// 
 			// linkLabel_riotDev
@@ -327,7 +327,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(506, 371);
+			this.ClientSize = new System.Drawing.Size(598, 371);
 			this.Controls.Add(this.linkLabel_riotDev);
 			this.Controls.Add(this.linkLabel_discordDev);
 			this.Controls.Add(this.groupBox_webHost);
