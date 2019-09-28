@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
 			this.button_start = new System.Windows.Forms.Button();
 			this.comboBox_status = new System.Windows.Forms.ComboBox();
@@ -37,6 +38,7 @@
 			this.listView_log_source = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.listView_log_message = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.button_options = new System.Windows.Forms.Button();
+			this.timer_uptime = new System.Windows.Forms.Timer(this.components);
 			this.SuspendLayout();
 			// 
 			// button_start
@@ -115,6 +117,12 @@
 			this.button_options.UseVisualStyleBackColor = true;
 			this.button_options.Click += new System.EventHandler(this.button_options_Click);
 			// 
+			// timer_uptime
+			// 
+			this.timer_uptime.Enabled = true;
+			this.timer_uptime.Interval = 1000;
+			this.timer_uptime.Tick += new System.EventHandler(this.timer_uptime_Tick);
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -143,6 +151,7 @@
         internal System.Windows.Forms.ColumnHeader listView_log_message;
 		private System.Windows.Forms.ColumnHeader listView_log_emptyBug;
 		private System.Windows.Forms.Button button_options;
+		private System.Windows.Forms.Timer timer_uptime;
 	}
 }
 

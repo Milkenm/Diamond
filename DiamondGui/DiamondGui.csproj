@@ -180,8 +180,9 @@
     <Compile Include="Functions\Core\Program\Options\OptionsLoad.cs" />
     <Compile Include="Functions\ShowOptionsForm.cs" />
     <Compile Include="Functions\DiscordEasterEggs.cs" />
-    <Compile Include="Modules\Diamond\HelloWorld.cs" />
-    <Compile Include="Modules\Diamond\Information.cs" />
+    <Compile Include="Functions\UpdateUptime.cs" />
+    <Compile Include="Modules\Commands\Diamond\HelloWorld.cs" />
+    <Compile Include="Modules\Commands\Diamond\Information.cs" />
     <Compile Include="Functions\RevealToken.cs" />
     <Compile Include="Functions\Core\Discord\DiscordStart.cs" />
     <Compile Include="Functions\Core\Discord\InstallCommands.cs" />
@@ -241,10 +242,9 @@
     <None Include="Templates\DiscordCommand.zip" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Functions\Controls\" />
-    <Folder Include="Modules\Admin\" />
-    <Folder Include="Modules\Joguinhos\" />
-    <Folder Include="Modules\Random\" />
+    <Folder Include="Modules\Commands\Admin\" />
+    <Folder Include="Modules\Commands\Joguinhos\" />
+    <Folder Include="Modules\Commands\Random\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Images\Logos\Diamond_Icon.ico" />

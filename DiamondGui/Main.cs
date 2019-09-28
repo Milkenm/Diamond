@@ -43,5 +43,7 @@ namespace DiamondGui
 		private void button_options_Click(object sender, EventArgs e) => ShowOptionsForm(); // Button 'Options'
 
 		private void comboBox_status_SelectedIndexChanged(object sender, EventArgs e) => SetDiscordStatus(); // ComboBox 'Status'
+
+		private void timer_uptime_Tick(object sender, EventArgs e) => UpdateUptime(); // Timer 'Uptime'
 	}
 }

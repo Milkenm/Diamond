@@ -23,7 +23,8 @@ namespace DiamondGui
 				Settings.BotUrl = OptionsForm.textBox_botUrl.Text;
 				Settings.DiscordUrl = OptionsForm.textBox_discordUrl.Text;
 				Settings.Domain = OptionsForm.textBox_domain.Text;
-
+				Settings.AdminId = Convert.ToInt64(OptionsForm.textBox_adminId.Text);
+				
 				Settings.Save();
 
 				OptionsForm.Hide();

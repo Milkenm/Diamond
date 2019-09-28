@@ -10,12 +10,12 @@ using static DiamondGui.Functions;
 
 
 
-namespace DiamondGui.Commands
+namespace DiamondGui
 {
-	public class Information : ModuleBase<SocketCommandContext>
+	public partial class Commands : ModuleBase<SocketCommandContext>
 	{
-		[Command("information"), Alias("info", "i"), Summary("Displays some information about the bot.")]
-		public async Task CMD_Information()
+		[Command("information"), Alias("info", "i", "invite"), Summary("Displays some information about the bot.")]
+		public async Task Information()
 		{
 			try
 			{

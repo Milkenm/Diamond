@@ -130,5 +130,53 @@ namespace DiamondGui.Properties {
                 this["Domain"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Uptime {
+            get {
+                return ((int)(this["Uptime"]));
+            }
+            set {
+                this["Uptime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int CommandsUsed {
+            get {
+                return ((int)(this["CommandsUsed"]));
+            }
+            set {
+                this["CommandsUsed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Exceptions {
+            get {
+                return ((int)(this["Exceptions"]));
+            }
+            set {
+                this["Exceptions"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public long AdminId {
+            get {
+                return ((long)(this["AdminId"]));
+            }
+            set {
+                this["AdminId"] = value;
+            }
+        }
     }
 }

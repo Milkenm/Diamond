@@ -52,6 +52,8 @@
 			this.label_botUrl = new System.Windows.Forms.Label();
 			this.label_discordUrl = new System.Windows.Forms.Label();
 			this.linkLabel_discordDev = new System.Windows.Forms.LinkLabel();
+			this.label_adminId = new System.Windows.Forms.Label();
+			this.textBox_adminId = new System.Windows.Forms.TextBox();
 			this.groupBox_activity.SuspendLayout();
 			this.groupBox_general.SuspendLayout();
 			this.groupBox_webHost.SuspendLayout();
@@ -120,7 +122,7 @@
 			this.groupBox_activity.Controls.Add(this.textBox_streamUrl);
 			this.groupBox_activity.Controls.Add(this.label_streamUrl);
 			this.groupBox_activity.Controls.Add(this.comboBox_activity);
-			this.groupBox_activity.Location = new System.Drawing.Point(12, 152);
+			this.groupBox_activity.Location = new System.Drawing.Point(12, 175);
 			this.groupBox_activity.Name = "groupBox_activity";
 			this.groupBox_activity.Size = new System.Drawing.Size(482, 102);
 			this.groupBox_activity.TabIndex = 1;
@@ -184,6 +186,8 @@
 			// 
 			// groupBox_general
 			// 
+			this.groupBox_general.Controls.Add(this.label_adminId);
+			this.groupBox_general.Controls.Add(this.textBox_adminId);
 			this.groupBox_general.Controls.Add(this.label_discordUrl);
 			this.groupBox_general.Controls.Add(this.label_botUrl);
 			this.groupBox_general.Controls.Add(this.textBox_discordUrl);
@@ -195,7 +199,7 @@
 			this.groupBox_general.Controls.Add(this.comboBox_logType);
 			this.groupBox_general.Location = new System.Drawing.Point(12, 12);
 			this.groupBox_general.Name = "groupBox_general";
-			this.groupBox_general.Size = new System.Drawing.Size(482, 134);
+			this.groupBox_general.Size = new System.Drawing.Size(482, 157);
 			this.groupBox_general.TabIndex = 0;
 			this.groupBox_general.TabStop = false;
 			this.groupBox_general.Text = "General";
@@ -203,7 +207,7 @@
 			// button_save
 			// 
 			this.button_save.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.button_save.Location = new System.Drawing.Point(419, 318);
+			this.button_save.Location = new System.Drawing.Point(420, 341);
 			this.button_save.Name = "button_save";
 			this.button_save.Size = new System.Drawing.Size(75, 23);
 			this.button_save.TabIndex = 3;
@@ -213,7 +217,7 @@
 			// 
 			// button_cancel
 			// 
-			this.button_cancel.Location = new System.Drawing.Point(338, 318);
+			this.button_cancel.Location = new System.Drawing.Point(339, 341);
 			this.button_cancel.Name = "button_cancel";
 			this.button_cancel.Size = new System.Drawing.Size(75, 23);
 			this.button_cancel.TabIndex = 4;
@@ -225,7 +229,7 @@
 			// 
 			this.groupBox_webHost.Controls.Add(this.label_domain);
 			this.groupBox_webHost.Controls.Add(this.textBox_domain);
-			this.groupBox_webHost.Location = new System.Drawing.Point(12, 260);
+			this.groupBox_webHost.Location = new System.Drawing.Point(12, 283);
 			this.groupBox_webHost.Name = "groupBox_webHost";
 			this.groupBox_webHost.Size = new System.Drawing.Size(482, 52);
 			this.groupBox_webHost.TabIndex = 2;
@@ -265,36 +269,52 @@
 			// label_botUrl
 			// 
 			this.label_botUrl.AutoSize = true;
-			this.label_botUrl.Location = new System.Drawing.Point(30, 75);
+			this.label_botUrl.Location = new System.Drawing.Point(27, 75);
 			this.label_botUrl.Name = "label_botUrl";
-			this.label_botUrl.Size = new System.Drawing.Size(48, 13);
+			this.label_botUrl.Size = new System.Drawing.Size(51, 13);
 			this.label_botUrl.TabIndex = 7;
-			this.label_botUrl.Text = "Bot URL";
+			this.label_botUrl.Text = "Bot URL:";
 			// 
 			// label_discordUrl
 			// 
 			this.label_discordUrl.AutoSize = true;
-			this.label_discordUrl.Location = new System.Drawing.Point(10, 101);
+			this.label_discordUrl.Location = new System.Drawing.Point(7, 101);
 			this.label_discordUrl.Name = "label_discordUrl";
-			this.label_discordUrl.Size = new System.Drawing.Size(68, 13);
+			this.label_discordUrl.Size = new System.Drawing.Size(71, 13);
 			this.label_discordUrl.TabIndex = 8;
-			this.label_discordUrl.Text = "Discord URL";
+			this.label_discordUrl.Text = "Discord URL:";
 			// 
 			// linkLabel_discordDev
 			// 
 			this.linkLabel_discordDev.AutoSize = true;
-			this.linkLabel_discordDev.Location = new System.Drawing.Point(9, 323);
+			this.linkLabel_discordDev.Location = new System.Drawing.Point(10, 346);
 			this.linkLabel_discordDev.Name = "linkLabel_discordDev";
 			this.linkLabel_discordDev.Size = new System.Drawing.Size(134, 13);
 			this.linkLabel_discordDev.TabIndex = 5;
 			this.linkLabel_discordDev.TabStop = true;
 			this.linkLabel_discordDev.Text = "» Discord Developer Portal";
 			// 
+			// label_adminId
+			// 
+			this.label_adminId.AutoSize = true;
+			this.label_adminId.Location = new System.Drawing.Point(25, 127);
+			this.label_adminId.Name = "label_adminId";
+			this.label_adminId.Size = new System.Drawing.Size(53, 13);
+			this.label_adminId.TabIndex = 10;
+			this.label_adminId.Text = "Admin ID:";
+			// 
+			// textBox_adminId
+			// 
+			this.textBox_adminId.Location = new System.Drawing.Point(84, 124);
+			this.textBox_adminId.Name = "textBox_adminId";
+			this.textBox_adminId.Size = new System.Drawing.Size(341, 20);
+			this.textBox_adminId.TabIndex = 9;
+			// 
 			// Options
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(506, 349);
+			this.ClientSize = new System.Drawing.Size(506, 371);
 			this.Controls.Add(this.linkLabel_discordDev);
 			this.Controls.Add(this.groupBox_webHost);
 			this.Controls.Add(this.button_cancel);
@@ -343,5 +363,7 @@
 		internal System.Windows.Forms.TextBox textBox_discordUrl;
 		internal System.Windows.Forms.TextBox textBox_botUrl;
 		internal System.Windows.Forms.LinkLabel linkLabel_discordDev;
+		internal System.Windows.Forms.Label label_adminId;
+		internal System.Windows.Forms.TextBox textBox_adminId;
 	}
 }

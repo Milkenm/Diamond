@@ -1,23 +1,26 @@
 ﻿#region Usings
-using Discord.Commands;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+
+using Discord.Commands;
+
 using static DiamondGui.Functions;
+using static DiamondGui.Static;
 #endregion Usings
 
 
 
-namespace DiamondGui.Commands
+namespace DiamondGui
 {
-    public class HelloWorld : ModuleBase<SocketCommandContext>
+	public partial class Commands : ModuleBase<SocketCommandContext>
 	{
 		[Command("helloworld"), Alias("hello", "world"), Summary("Prints 'Hello World!' in event-channel.")]
-		public async Task CMD_HelloWorld()
+		public async Task HelloWorld()
         {
             try
             {
+				Settings.CommandsUsed += 1; Settings.Save();
+
                 if (Context.User.Id == 222114807887691777)
                 {
                     await ReplyAsync("Hello World!");

@@ -3,6 +3,7 @@ using System;
 
 using static DiamondGui.Functions;
 using static DiamondGui.Static;
+using static ScriptsLib.nControls.SlTextBox;
 #endregion Usings
 
 
@@ -22,6 +23,8 @@ namespace DiamondGui
 				OptionsForm.textBox_botUrl.Text = Settings.BotUrl;
 				OptionsForm.textBox_discordUrl.Text = Settings.DiscordUrl;
 				OptionsForm.textBox_domain.Text = Settings.Domain;
+				OptionsForm.textBox_adminId.Text = Settings.AdminId.ToString();
+				OnlyNumbersTextBox(OptionsForm.textBox_adminId);
 
 				// ComboBox
 				OptionsForm.comboBox_logType.SelectedIndex = Settings.LogTypeIndex;
