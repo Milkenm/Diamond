@@ -73,14 +73,16 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(371, 85);
+			this.ClientSize = new System.Drawing.Size(371, 82);
 			this.Controls.Add(this.label_exceptions);
 			this.Controls.Add(this.label_commandsUsed);
 			this.Controls.Add(this.label_uptime);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "Statistics";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Statistics";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Statistics_FormClosing);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

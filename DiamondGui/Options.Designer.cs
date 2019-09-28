@@ -54,6 +54,7 @@
 			this.linkLabel_discordDev = new System.Windows.Forms.LinkLabel();
 			this.label_adminId = new System.Windows.Forms.Label();
 			this.textBox_adminId = new System.Windows.Forms.TextBox();
+			this.linkLabel_riotDev = new System.Windows.Forms.LinkLabel();
 			this.groupBox_activity.SuspendLayout();
 			this.groupBox_general.SuspendLayout();
 			this.groupBox_webHost.SuspendLayout();
@@ -293,6 +294,7 @@
 			this.linkLabel_discordDev.TabIndex = 5;
 			this.linkLabel_discordDev.TabStop = true;
 			this.linkLabel_discordDev.Text = "» Discord Developer Portal";
+			this.linkLabel_discordDev.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel_discordDev_LinkClicked);
 			// 
 			// label_adminId
 			// 
@@ -310,11 +312,23 @@
 			this.textBox_adminId.Size = new System.Drawing.Size(341, 20);
 			this.textBox_adminId.TabIndex = 9;
 			// 
+			// linkLabel_riotDev
+			// 
+			this.linkLabel_riotDev.AutoSize = true;
+			this.linkLabel_riotDev.Location = new System.Drawing.Point(150, 346);
+			this.linkLabel_riotDev.Name = "linkLabel_riotDev";
+			this.linkLabel_riotDev.Size = new System.Drawing.Size(117, 13);
+			this.linkLabel_riotDev.TabIndex = 6;
+			this.linkLabel_riotDev.TabStop = true;
+			this.linkLabel_riotDev.Text = "» Riot Developer Portal";
+			this.linkLabel_riotDev.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel_riotDev_LinkClicked);
+			// 
 			// Options
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(506, 371);
+			this.Controls.Add(this.linkLabel_riotDev);
 			this.Controls.Add(this.linkLabel_discordDev);
 			this.Controls.Add(this.groupBox_webHost);
 			this.Controls.Add(this.button_cancel);
@@ -326,6 +340,7 @@
 			this.Name = "Options";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Options";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Options_FormClosing);
 			this.Load += new System.EventHandler(this.Options_Load);
 			this.groupBox_activity.ResumeLayout(false);
 			this.groupBox_activity.PerformLayout();
@@ -365,5 +380,6 @@
 		internal System.Windows.Forms.LinkLabel linkLabel_discordDev;
 		internal System.Windows.Forms.Label label_adminId;
 		internal System.Windows.Forms.TextBox textBox_adminId;
+		internal System.Windows.Forms.LinkLabel linkLabel_riotDev;
 	}
 }

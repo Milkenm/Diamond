@@ -176,9 +176,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Functions\OpenLink.cs" />
     <Compile Include="Functions\Core\Forms\Options\OptionsSave.cs" />
     <Compile Include="Functions\Core\Forms\Options\OptionsLoad.cs" />
     <Compile Include="Functions\Core\Forms\Statistics\UpdateStatistics.cs" />
+    <Compile Include="Functions\HideForm.cs" />
     <Compile Include="Functions\ShowOptionsForm.cs" />
     <Compile Include="Functions\DiscordEasterEggs.cs" />
     <Compile Include="Functions\ShowStatisticsForm.cs" />

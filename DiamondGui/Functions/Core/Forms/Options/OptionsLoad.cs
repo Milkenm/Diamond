@@ -29,9 +29,6 @@ namespace DiamondGui
 				// ComboBox
 				OptionsForm.comboBox_logType.SelectedIndex = Settings.LogTypeIndex;
 				OptionsForm.comboBox_activity.SelectedIndex = Settings.ActivityIndex;
-
-				// Link Label
-				OptionsForm.linkLabel_discordDev.Links.Add(0, OptionsForm.linkLabel_discordDev.Text.Length, "https://discordapp.com/developers/applications/");
 			}
 			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Core.OptionsLoad()"); }
 		}

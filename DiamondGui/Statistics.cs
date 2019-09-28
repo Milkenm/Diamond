@@ -3,6 +3,7 @@ using System;
 using System.Windows.Forms;
 
 using static DiamondGui.Core;
+using static DiamondGui.Functions;
 #endregion Usings
 
 
@@ -13,6 +14,8 @@ namespace DiamondGui
 	{
 		#region Statistics
 		public Statistics() => InitializeComponent();
+
+		private void Statistics_FormClosing(object sender, FormClosingEventArgs e) => HideForm(this, e);
 		#endregion Statistics
 
 
