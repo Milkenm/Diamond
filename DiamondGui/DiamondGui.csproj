@@ -192,7 +192,6 @@
     <Compile Include="Functions\Core\Discord\CommandHandler.cs" />
     <Compile Include="Functions\Core\Discord\Log.cs" />
     <Compile Include="Functions\Core\Discord\DiscordMain.cs" />
-    <Compile Include="Functions\Core\Forms\Main\MainClosing.cs" />
     <Compile Include="Functions\Core\Forms\Main\MainLoad.cs" />
     <Compile Include="Functions\GetActivityType.cs" />
     <Compile Include="Functions\GetLogLevel.cs" />

@@ -1,6 +1,7 @@
 ﻿#region Usings
 using System;
 using System.Windows.Forms;
+using static DiamondGui.Static;
 #endregion Usings
 
 
@@ -13,8 +14,18 @@ namespace DiamondGui
 		{
 			try
 			{
-				Event.Cancel = true;
-				Form.Hide();
+				if (Form.Name == "Main")
+				{
+					if (MainForm.button_start.Text == "Stop") MainForm.button_start.PerformClick();
+
+					Settings.StatusIndex = MainForm.comboBox_status.SelectedIndex;
+					Settings.Save();
+				}
+				else
+				{
+					Event.Cancel = true;
+					Form.Hide();
+				}
 			}
 			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Functions.CloseForm()"); }
 		}

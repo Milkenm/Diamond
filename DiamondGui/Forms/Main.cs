@@ -4,6 +4,7 @@ using System.Windows.Forms;
 
 using static DiamondGui.Controls;
 using static DiamondGui.Core;
+using static DiamondGui.Debug;
 using static DiamondGui.Functions;
 using static DiamondGui.Static;
 #endregion Usings
@@ -27,7 +28,7 @@ namespace DiamondGui
 
 		private void Main_Load(object sender, EventArgs e) => MainLoad();
 
-		private void Main_FormClosing(object sender, FormClosingEventArgs e) => MainClosing();
+		private void Main_FormClosing(object sender, FormClosingEventArgs e) => CloseForm(this, e);
 		#endregion Main
 
 
