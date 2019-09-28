@@ -19,10 +19,9 @@ namespace DiamondGui
         {
             try
             {
-                var _Message = _SocketMsg as SocketUserMessage;
-                if (_Message == null) return;
-				
-                int _ArgPos = 0;
+				if (!(_SocketMsg is SocketUserMessage _Message)) return;
+
+				int _ArgPos = 0;
 				
                 if (!(_Message.HasCharPrefix('!', ref _ArgPos) || _Message.HasMentionPrefix(Client.CurrentUser, ref _ArgPos)) || _Message.Author.IsBot)
                 {
