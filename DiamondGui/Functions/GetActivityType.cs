@@ -18,17 +18,14 @@ namespace DiamondGui
             {
                 MainForm.Invoke(new Action(() =>
                 {
-                    if (MainForm.comboBox_logType.Text == "Listening") _ActivityType = ActivityType.Listening;
-                    else if (MainForm.comboBox_logType.Text == "Streaming") _ActivityType = ActivityType.Streaming;
-                    else if (MainForm.comboBox_logType.Text == "Watching") _ActivityType = ActivityType.Watching;
-                }));
-            }
-            catch (Exception _Exception)
-            {
-                ShowException(_Exception, "DiamondGui.Functions.GetActivityType()");
-            }
+                    if (OptionsForm.comboBox_logType.Text == "Listening") _ActivityType = ActivityType.Listening;
+					else if (OptionsForm.comboBox_logType.Text == "Streaming") _ActivityType = ActivityType.Streaming;
+					else if (OptionsForm.comboBox_logType.Text == "Watching") _ActivityType = ActivityType.Watching;
+				}));
+			}
+			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Functions.GetActivityType()"); }
 
-            return _ActivityType;
-        }
-    }
+			return _ActivityType;
+		}
+	}
 }

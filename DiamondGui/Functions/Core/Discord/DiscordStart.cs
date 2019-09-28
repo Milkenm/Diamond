@@ -1,9 +1,7 @@
 ﻿#region Usings
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
-using static DiamondGui.Core;
 using static DiamondGui.Functions;
 using static DiamondGui.Static;
 #endregion Usings
@@ -12,9 +10,9 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-    internal static partial class Controls
+	internal static partial class Core
 	{
-		internal static void ButtonStart()
+		internal static void DiscordStart()
 		{
 			try
 			{
@@ -24,8 +22,6 @@ namespace DiamondGui
 					{
 						DiscordMain().GetAwaiter().GetResult();
 					})).Start();
-
-                    ToggleMainControlEnabled();
 				}
 				else
 				{
@@ -34,14 +30,17 @@ namespace DiamondGui
 						Client.LogoutAsync();
                         Client.StopAsync();
 					})).Start();
-
-                    ToggleMainControlEnabled();
                 }
-            }
-            catch (Exception _Exception)
-            {
-                ShowException(_Exception, "DiamondGui.Controls.ButtonStart()");
-            }
-        }
-    }
+
+
+
+				if (MainForm.button_start.Text == "Start") MainForm.button_start.Text = "Stop";
+				else MainForm.button_start.Text = "Start";
+
+				OptionsForm.textBox_token.Enabled = MainForm.button_start.Text == "Start";
+				OptionsForm.comboBox_logType.Enabled = MainForm.button_start.Text == "Start";
+			}
+			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Core.DiscordStart()"); }
+		}
+	}
 }

@@ -94,5 +94,41 @@ namespace DiamondGui.Properties {
                 this["StatusIndex"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string BotUrl {
+            get {
+                return ((string)(this["BotUrl"]));
+            }
+            set {
+                this["BotUrl"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DiscordUrl {
+            get {
+                return ((string)(this["DiscordUrl"]));
+            }
+            set {
+                this["DiscordUrl"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Domain {
+            get {
+                return ((string)(this["Domain"]));
+            }
+            set {
+                this["Domain"] = value;
+            }
+        }
     }
 }

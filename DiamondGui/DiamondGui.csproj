@@ -176,37 +176,46 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Functions\Controls\ButtonRefreshStatus.cs" />
+    <Compile Include="Functions\Core\Program\Options\OptionsSave.cs" />
+    <Compile Include="Functions\Core\Program\Options\OptionsLoad.cs" />
+    <Compile Include="Functions\ShowOptionsForm.cs" />
     <Compile Include="Functions\DiscordEasterEggs.cs" />
     <Compile Include="Modules\Diamond\HelloWorld.cs" />
     <Compile Include="Modules\Diamond\Information.cs" />
-    <Compile Include="Functions\Controls\CheckBoxRevealToken.cs" />
-    <Compile Include="Functions\Controls\ButtonStart.cs" />
-    <Compile Include="Functions\Controls\ButtonRefreshGame.cs" />
+    <Compile Include="Functions\RevealToken.cs" />
+    <Compile Include="Functions\Core\Discord\DiscordStart.cs" />
     <Compile Include="Functions\Core\Discord\InstallCommands.cs" />
     <Compile Include="Functions\Core\Discord\CommandHandler.cs" />
     <Compile Include="Functions\Core\Discord\Log.cs" />
     <Compile Include="Functions\Core\Discord\DiscordMain.cs" />
-    <Compile Include="Functions\Core\Program\MainClosing.cs" />
-    <Compile Include="Functions\Core\Program\MainLoad.cs" />
+    <Compile Include="Functions\Core\Program\Main\MainClosing.cs" />
+    <Compile Include="Functions\Core\Program\Main\MainLoad.cs" />
     <Compile Include="Functions\GetActivityType.cs" />
     <Compile Include="Functions\GetLogLevel.cs" />
     <Compile Include="Functions\GetUserStatus.cs" />
     <Compile Include="Functions\SetDiscordGame.cs" />
     <Compile Include="Functions\SetDiscordStatus.cs" />
     <Compile Include="Functions\ShowException.cs" />
-    <Compile Include="Functions\ToggleMainControlEnabled.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
+    <Compile Include="Options.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Options.Designer.cs">
+      <DependentUpon>Options.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Static.cs" />
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Options.resx">
+      <DependentUpon>Options.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -232,6 +241,7 @@
     <None Include="Templates\DiscordCommand.zip" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Functions\Controls\" />
     <Folder Include="Modules\Admin\" />
     <Folder Include="Modules\Joguinhos\" />
     <Folder Include="Modules\Random\" />

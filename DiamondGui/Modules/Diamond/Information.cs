@@ -1,11 +1,11 @@
 ﻿#region Using
 using System;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using static DiamondGui.Functions;
+
 using Discord;
 using Discord.Commands;
-using System.Diagnostics;
+
+using static DiamondGui.Functions;
 #endregion
 
 

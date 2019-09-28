@@ -1,10 +1,11 @@
 ﻿#region Usings
+using System;
+using System.Threading.Tasks;
+
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
+
 using static DiamondGui.Functions;
 using static DiamondGui.Static;
 #endregion Usings
@@ -13,7 +14,7 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-    internal static partial class Core
+	internal static partial class Core
 	{
 		internal static async Task DiscordMain()
 		{
@@ -37,27 +38,24 @@ namespace DiamondGui
 
 				Client.Log += DiscordLog;
 
-                // Remember to keep token private or to read it from an 
-                // external source! In this case, we are reading the token 
-                // from an environment variable. If you do not know how to set-up
-                // environment variables, you may find more information on the 
-                // Internet or by using other methods such as reading from 
-                // a configuration.
-                await Client.LoginAsync(TokenType.Bot, MainForm.textBox_token.Text);
-                await Client.StartAsync();
+				// Remember to keep token private or to read it from an 
+				// external source! In this case, we are reading the token 
+				// from an environment variable. If you do not know how to set-up
+				// environment variables, you may find more information on the 
+				// Internet or by using other methods such as reading from 
+				// a configuration.
+				await Client.LoginAsync(TokenType.Bot, OptionsForm.textBox_token.Text);
+				await Client.StartAsync();
 
-                SetDiscordGame();
-                SetDiscordStatus();
+				SetDiscordGame();
+				SetDiscordStatus();
 
-                await DiscordInstallCommands();
+				await DiscordInstallCommands();
 
-                // Block this task until the program is closed.
-                await Task.Delay(-1);
-            }
-            catch (Exception _Exception)
-            {
-                ShowException(_Exception, "DiamondGui.Core.DiscordMain()");
-            }
+				// Block this task until the program is closed.
+				await Task.Delay(-1);
+			}
+			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Core.DiscordMain()"); }
 		}
 	}
 }
