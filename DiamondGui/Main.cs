@@ -23,6 +23,7 @@ namespace DiamondGui
 
 				MainForm = this;
 				OptionsForm = new Options();
+				StatisticsForm = new Statistics();
 			}
 			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Main.Main()"); }
 		}
@@ -45,5 +46,7 @@ namespace DiamondGui
 		private void comboBox_status_SelectedIndexChanged(object sender, EventArgs e) => SetDiscordStatus(); // ComboBox 'Status'
 
 		private void timer_uptime_Tick(object sender, EventArgs e) => UpdateUptime(); // Timer 'Uptime'
+
+		private void button_statistics_Click(object sender, EventArgs e) => ShowStatisticsForm(); // Button 'Statistics'
 	}
 }

@@ -39,6 +39,7 @@
 			this.listView_log_message = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.button_options = new System.Windows.Forms.Button();
 			this.timer_uptime = new System.Windows.Forms.Timer(this.components);
+			this.button_statistics = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// button_start
@@ -119,15 +120,25 @@
 			// 
 			// timer_uptime
 			// 
-			this.timer_uptime.Enabled = true;
 			this.timer_uptime.Interval = 1000;
 			this.timer_uptime.Tick += new System.EventHandler(this.timer_uptime_Tick);
+			// 
+			// button_statistics
+			// 
+			this.button_statistics.Location = new System.Drawing.Point(573, 291);
+			this.button_statistics.Name = "button_statistics";
+			this.button_statistics.Size = new System.Drawing.Size(102, 22);
+			this.button_statistics.TabIndex = 4;
+			this.button_statistics.Text = "Statistics";
+			this.button_statistics.UseVisualStyleBackColor = true;
+			this.button_statistics.Click += new System.EventHandler(this.button_statistics_Click);
 			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(776, 314);
+			this.Controls.Add(this.button_statistics);
 			this.Controls.Add(this.comboBox_status);
 			this.Controls.Add(this.button_start);
 			this.Controls.Add(this.button_options);
@@ -149,9 +160,10 @@
         internal System.Windows.Forms.ColumnHeader listView_log_type;
         internal System.Windows.Forms.ColumnHeader listView_log_source;
         internal System.Windows.Forms.ColumnHeader listView_log_message;
-		private System.Windows.Forms.ColumnHeader listView_log_emptyBug;
-		private System.Windows.Forms.Button button_options;
-		private System.Windows.Forms.Timer timer_uptime;
+		internal System.Windows.Forms.ColumnHeader listView_log_emptyBug;
+		internal System.Windows.Forms.Button button_options;
+		internal System.Windows.Forms.Timer timer_uptime;
+		internal System.Windows.Forms.Button button_statistics;
 	}
 }
 

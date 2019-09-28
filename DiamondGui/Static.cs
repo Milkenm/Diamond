@@ -13,6 +13,7 @@ namespace DiamondGui
     {
 		internal static Main MainForm;
 		internal static Options OptionsForm;
+		internal static Statistics StatisticsForm;
 
         internal static DiscordSocketClient Client;
 		internal static CommandService Command;

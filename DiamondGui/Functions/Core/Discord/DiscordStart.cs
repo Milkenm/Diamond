@@ -39,6 +39,7 @@ namespace DiamondGui
 
 				OptionsForm.textBox_token.Enabled = MainForm.button_start.Text == "Start";
 				OptionsForm.comboBox_logType.Enabled = MainForm.button_start.Text == "Start";
+				MainForm.timer_uptime.Enabled = MainForm.button_start.Text == "Stop";
 			}
 			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Core.DiscordStart()"); }
 		}
