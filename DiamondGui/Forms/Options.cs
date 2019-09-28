@@ -1,9 +1,10 @@
 ﻿#region Usings
 using System;
 using System.Windows.Forms;
-using static DiamondGui.Functions;
+
 using static DiamondGui.Controls;
 using static DiamondGui.Core;
+using static DiamondGui.Functions;
 #endregion Usings
 
 
@@ -15,9 +16,7 @@ namespace DiamondGui
 		#region Options
 		public Options() => InitializeComponent();
 
-		private void Options_Load(object sender, EventArgs e) => OptionsLoad();
-
-		private void Options_FormClosing(object sender, FormClosingEventArgs e) => HideForm(this, e);
+		private void Options_FormClosing(object sender, FormClosingEventArgs e) => CloseForm(this, e);
 		#endregion Options
 
 

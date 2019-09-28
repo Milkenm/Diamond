@@ -20,10 +20,7 @@ namespace DiamondGui
 			try
 			{
 				InitializeComponent();
-
 				MainForm = this;
-				OptionsForm = new Options();
-				StatisticsForm = new Statistics();
 			}
 			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Main.Main()"); }
 		}

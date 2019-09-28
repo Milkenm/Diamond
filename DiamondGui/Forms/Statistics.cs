@@ -15,7 +15,7 @@ namespace DiamondGui
 		#region Statistics
 		public Statistics() => InitializeComponent();
 
-		private void Statistics_FormClosing(object sender, FormClosingEventArgs e) => HideForm(this, e);
+		private void Statistics_FormClosing(object sender, FormClosingEventArgs e) => CloseForm(this, e);
 		#endregion Statistics
 
 

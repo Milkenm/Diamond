@@ -17,6 +17,10 @@ namespace DiamondGui
 			{
 				// ComboBox
 				MainForm.comboBox_status.SelectedIndex = Settings.StatusIndex;
+
+				// Load other forms
+				OptionsForm = new Options(); OptionsLoad();
+				StatisticsForm = new Statistics();
 			}
 			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Core.Mainload()"); }
 		}

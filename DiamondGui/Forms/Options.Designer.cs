@@ -341,7 +341,6 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Options";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Options_FormClosing);
-			this.Load += new System.EventHandler(this.Options_Load);
 			this.groupBox_activity.ResumeLayout(false);
 			this.groupBox_activity.PerformLayout();
 			this.groupBox_general.ResumeLayout(false);
