@@ -42,18 +42,18 @@
 			this.label_streamUrl = new System.Windows.Forms.Label();
 			this.comboBox_activity = new System.Windows.Forms.ComboBox();
 			this.groupBox_general = new System.Windows.Forms.GroupBox();
+			this.label_adminId = new System.Windows.Forms.Label();
+			this.textBox_adminId = new System.Windows.Forms.TextBox();
+			this.label_discordUrl = new System.Windows.Forms.Label();
+			this.label_botUrl = new System.Windows.Forms.Label();
+			this.textBox_discordUrl = new System.Windows.Forms.TextBox();
+			this.textBox_botUrl = new System.Windows.Forms.TextBox();
 			this.button_save = new System.Windows.Forms.Button();
 			this.button_cancel = new System.Windows.Forms.Button();
 			this.groupBox_webHost = new System.Windows.Forms.GroupBox();
-			this.textBox_domain = new System.Windows.Forms.TextBox();
 			this.label_domain = new System.Windows.Forms.Label();
-			this.textBox_botUrl = new System.Windows.Forms.TextBox();
-			this.textBox_discordUrl = new System.Windows.Forms.TextBox();
-			this.label_botUrl = new System.Windows.Forms.Label();
-			this.label_discordUrl = new System.Windows.Forms.Label();
+			this.textBox_domain = new System.Windows.Forms.TextBox();
 			this.linkLabel_discordDev = new System.Windows.Forms.LinkLabel();
-			this.label_adminId = new System.Windows.Forms.Label();
-			this.textBox_adminId = new System.Windows.Forms.TextBox();
 			this.linkLabel_riotDev = new System.Windows.Forms.LinkLabel();
 			this.groupBox_activity.SuspendLayout();
 			this.groupBox_general.SuspendLayout();
@@ -87,6 +87,7 @@
 			this.checkBox_revealToken.Name = "checkBox_revealToken";
 			this.checkBox_revealToken.Size = new System.Drawing.Size(48, 17);
 			this.checkBox_revealToken.TabIndex = 4;
+			this.checkBox_revealToken.TabStop = false;
 			this.checkBox_revealToken.Text = "Hide";
 			this.checkBox_revealToken.UseVisualStyleBackColor = true;
 			this.checkBox_revealToken.CheckedChanged += new System.EventHandler(this.checkBox_revealToken_CheckedChanged);
@@ -205,6 +206,54 @@
 			this.groupBox_general.TabStop = false;
 			this.groupBox_general.Text = "General";
 			// 
+			// label_adminId
+			// 
+			this.label_adminId.AutoSize = true;
+			this.label_adminId.Location = new System.Drawing.Point(25, 127);
+			this.label_adminId.Name = "label_adminId";
+			this.label_adminId.Size = new System.Drawing.Size(53, 13);
+			this.label_adminId.TabIndex = 10;
+			this.label_adminId.Text = "Admin ID:";
+			// 
+			// textBox_adminId
+			// 
+			this.textBox_adminId.Location = new System.Drawing.Point(84, 124);
+			this.textBox_adminId.Name = "textBox_adminId";
+			this.textBox_adminId.Size = new System.Drawing.Size(430, 20);
+			this.textBox_adminId.TabIndex = 9;
+			// 
+			// label_discordUrl
+			// 
+			this.label_discordUrl.AutoSize = true;
+			this.label_discordUrl.Location = new System.Drawing.Point(7, 101);
+			this.label_discordUrl.Name = "label_discordUrl";
+			this.label_discordUrl.Size = new System.Drawing.Size(71, 13);
+			this.label_discordUrl.TabIndex = 8;
+			this.label_discordUrl.Text = "Discord URL:";
+			// 
+			// label_botUrl
+			// 
+			this.label_botUrl.AutoSize = true;
+			this.label_botUrl.Location = new System.Drawing.Point(27, 75);
+			this.label_botUrl.Name = "label_botUrl";
+			this.label_botUrl.Size = new System.Drawing.Size(51, 13);
+			this.label_botUrl.TabIndex = 7;
+			this.label_botUrl.Text = "Bot URL:";
+			// 
+			// textBox_discordUrl
+			// 
+			this.textBox_discordUrl.Location = new System.Drawing.Point(84, 98);
+			this.textBox_discordUrl.Name = "textBox_discordUrl";
+			this.textBox_discordUrl.Size = new System.Drawing.Size(430, 20);
+			this.textBox_discordUrl.TabIndex = 3;
+			// 
+			// textBox_botUrl
+			// 
+			this.textBox_botUrl.Location = new System.Drawing.Point(84, 72);
+			this.textBox_botUrl.Name = "textBox_botUrl";
+			this.textBox_botUrl.Size = new System.Drawing.Size(430, 20);
+			this.textBox_botUrl.TabIndex = 2;
+			// 
 			// button_save
 			// 
 			this.button_save.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -237,13 +286,6 @@
 			this.groupBox_webHost.TabStop = false;
 			this.groupBox_webHost.Text = "Web Host";
 			// 
-			// textBox_domain
-			// 
-			this.textBox_domain.Location = new System.Drawing.Point(84, 19);
-			this.textBox_domain.Name = "textBox_domain";
-			this.textBox_domain.Size = new System.Drawing.Size(430, 20);
-			this.textBox_domain.TabIndex = 0;
-			// 
 			// label_domain
 			// 
 			this.label_domain.AutoSize = true;
@@ -253,37 +295,12 @@
 			this.label_domain.TabIndex = 1;
 			this.label_domain.Text = "Domain:";
 			// 
-			// textBox_botUrl
+			// textBox_domain
 			// 
-			this.textBox_botUrl.Location = new System.Drawing.Point(84, 72);
-			this.textBox_botUrl.Name = "textBox_botUrl";
-			this.textBox_botUrl.Size = new System.Drawing.Size(430, 20);
-			this.textBox_botUrl.TabIndex = 2;
-			// 
-			// textBox_discordUrl
-			// 
-			this.textBox_discordUrl.Location = new System.Drawing.Point(84, 98);
-			this.textBox_discordUrl.Name = "textBox_discordUrl";
-			this.textBox_discordUrl.Size = new System.Drawing.Size(430, 20);
-			this.textBox_discordUrl.TabIndex = 3;
-			// 
-			// label_botUrl
-			// 
-			this.label_botUrl.AutoSize = true;
-			this.label_botUrl.Location = new System.Drawing.Point(27, 75);
-			this.label_botUrl.Name = "label_botUrl";
-			this.label_botUrl.Size = new System.Drawing.Size(51, 13);
-			this.label_botUrl.TabIndex = 7;
-			this.label_botUrl.Text = "Bot URL:";
-			// 
-			// label_discordUrl
-			// 
-			this.label_discordUrl.AutoSize = true;
-			this.label_discordUrl.Location = new System.Drawing.Point(7, 101);
-			this.label_discordUrl.Name = "label_discordUrl";
-			this.label_discordUrl.Size = new System.Drawing.Size(71, 13);
-			this.label_discordUrl.TabIndex = 8;
-			this.label_discordUrl.Text = "Discord URL:";
+			this.textBox_domain.Location = new System.Drawing.Point(84, 19);
+			this.textBox_domain.Name = "textBox_domain";
+			this.textBox_domain.Size = new System.Drawing.Size(430, 20);
+			this.textBox_domain.TabIndex = 0;
 			// 
 			// linkLabel_discordDev
 			// 
@@ -292,25 +309,8 @@
 			this.linkLabel_discordDev.Name = "linkLabel_discordDev";
 			this.linkLabel_discordDev.Size = new System.Drawing.Size(134, 13);
 			this.linkLabel_discordDev.TabIndex = 5;
-			this.linkLabel_discordDev.TabStop = true;
 			this.linkLabel_discordDev.Text = "» Discord Developer Portal";
 			this.linkLabel_discordDev.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel_discordDev_LinkClicked);
-			// 
-			// label_adminId
-			// 
-			this.label_adminId.AutoSize = true;
-			this.label_adminId.Location = new System.Drawing.Point(25, 127);
-			this.label_adminId.Name = "label_adminId";
-			this.label_adminId.Size = new System.Drawing.Size(53, 13);
-			this.label_adminId.TabIndex = 10;
-			this.label_adminId.Text = "Admin ID:";
-			// 
-			// textBox_adminId
-			// 
-			this.textBox_adminId.Location = new System.Drawing.Point(84, 124);
-			this.textBox_adminId.Name = "textBox_adminId";
-			this.textBox_adminId.Size = new System.Drawing.Size(430, 20);
-			this.textBox_adminId.TabIndex = 9;
 			// 
 			// linkLabel_riotDev
 			// 
@@ -319,7 +319,6 @@
 			this.linkLabel_riotDev.Name = "linkLabel_riotDev";
 			this.linkLabel_riotDev.Size = new System.Drawing.Size(117, 13);
 			this.linkLabel_riotDev.TabIndex = 6;
-			this.linkLabel_riotDev.TabStop = true;
 			this.linkLabel_riotDev.Text = "» Riot Developer Portal";
 			this.linkLabel_riotDev.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel_riotDev_LinkClicked);
 			// 

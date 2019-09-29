@@ -79,7 +79,8 @@
 			this.listView_log.Location = new System.Drawing.Point(1, 1);
 			this.listView_log.Name = "listView_log";
 			this.listView_log.Size = new System.Drawing.Size(774, 290);
-			this.listView_log.TabIndex = 3;
+			this.listView_log.TabIndex = 4;
+			this.listView_log.TabStop = false;
 			this.listView_log.UseCompatibleStateImageBehavior = false;
 			this.listView_log.View = System.Windows.Forms.View.Details;
 			// 
@@ -128,7 +129,7 @@
 			this.button_statistics.Location = new System.Drawing.Point(674, 291);
 			this.button_statistics.Name = "button_statistics";
 			this.button_statistics.Size = new System.Drawing.Size(102, 23);
-			this.button_statistics.TabIndex = 4;
+			this.button_statistics.TabIndex = 3;
 			this.button_statistics.Text = "Statistics";
 			this.button_statistics.UseVisualStyleBackColor = true;
 			this.button_statistics.Click += new System.EventHandler(this.button_statistics_Click);
