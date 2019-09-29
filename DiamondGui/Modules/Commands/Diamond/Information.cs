@@ -36,8 +36,8 @@ namespace DiamondGui
 
 				#region Invite Link
 				var _EmbedField_InviteLink = new EmbedFieldBuilder();
-				_EmbedField_InviteLink.Name = "➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖Invite Link";
-				_EmbedField_InviteLink.Value = $"{Settings.BotUrl}\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖";
+				_EmbedField_InviteLink.Name = $"➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖💠 **__Invite Link:__** {Settings.BotUrl} 💠";
+				_EmbedField_InviteLink.Value = "\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖";
 				#endregion Invite Link
 
 
