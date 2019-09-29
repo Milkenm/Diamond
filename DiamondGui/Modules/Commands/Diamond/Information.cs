@@ -37,16 +37,16 @@ namespace DiamondGui
 				#region Invite Link
 				var _EmbedField_InviteLink = new EmbedFieldBuilder();
 				_EmbedField_InviteLink.Name = "➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖Invite Link";
-				_EmbedField_InviteLink.Value = Settings.BotUrl + "\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖";
+				_EmbedField_InviteLink.Value = $"{Settings.BotUrl}\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖";
 				#endregion Invite Link
 
 
 
 				var embed = new EmbedBuilder();
-				embed.WithAuthor("Miłkenm 💦#6376", Settings.Domain + "Static/Img/DevIcon.png", Settings.DiscordUrl);
+				embed.WithAuthor("Miłkenm 💦#6376", $"{Settings.Domain}/Static/Img/DevIcon.png", Settings.DiscordUrl);
 				embed.WithFields(_EmbedField_RAM, _EmbedField_Uptime, _EmbedField_InviteLink);
-				embed.WithThumbnailUrl(Settings.Domain + "Static/Img/DiamondIcon.png");
-				embed.WithColor(new Color(255,255,255));
+				embed.WithThumbnailUrl($"{Settings.Domain}/Static/Img/DiamondIcons/DiamondIcon.png");
+				embed.WithColor(new Color(255, 255, 255));
 
 				await ReplyAsync(embed: embed.Build());
 			}
