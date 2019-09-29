@@ -4,4 +4,4 @@
 [![Beerpay](https://beerpay.io/Milkenm/Diamond/badge.svg?style=flat-square)](https://beerpay.io/Milkenm/Diamond)
 
 # READ THIS
-I do not own Diamond's image, and don't even know who made it (I think it was riot) but didn't find it anywhere. If there is any problem with my using this image please tell me.
+I do not own Diamond's image, and don't even know who made it (I think it was Riot) but didn't find it anywhere. If there is any problem with me using this image please tell me.
