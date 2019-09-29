@@ -41,7 +41,7 @@ namespace DiamondGui
 
 				SetDiscordGame();
 				SetDiscordStatus();
-
+				LoadEvents();
 				await DiscordInstallCommands();
 				
 				await Task.Delay(-1);
