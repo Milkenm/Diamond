@@ -145,7 +145,9 @@
             this.Controls.Add(this.button_start);
             this.Controls.Add(this.button_options);
             this.Controls.Add(this.listView_log);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Diamond 💎 Control Panel";
