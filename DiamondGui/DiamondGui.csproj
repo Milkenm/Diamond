@@ -184,7 +184,7 @@
     <Compile Include="Functions\ShowOptionsForm.cs" />
     <Compile Include="Functions\ShowStatisticsForm.cs" />
     <Compile Include="Functions\UpdateUptime.cs" />
-    <Compile Include="Modules\Commands\Diamond\HelloWorld.cs" />
+    <Compile Include="Modules\Commands\DevOnly\HelloWorld.cs" />
     <Compile Include="Modules\Commands\Diamond\Information.cs" />
     <Compile Include="Functions\RevealToken.cs" />
     <Compile Include="Core\Discord\DiscordStart.cs" />

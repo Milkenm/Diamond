@@ -26,10 +26,7 @@ namespace DiamondGui
                     await ReplyAsync("Hello World!");
                 }
             }
-            catch (Exception _Exception)
-            {
-                ShowException(_Exception);
-            }
-		}
-	}
+            catch (Exception _Exception) { ShowException(_Exception); }
+        }
+    }
 }
