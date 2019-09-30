@@ -82,7 +82,7 @@
             this.MaximizeBox = false;
             this.Name = "Statistics";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Statistics";
+            this.Text = "Diamond 💎 Statistics";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Statistics_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();

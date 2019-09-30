@@ -341,7 +341,7 @@
             this.MaximizeBox = false;
             this.Name = "Options";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Options";
+            this.Text = "Diamond 💎 Options";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Options_FormClosing);
             this.groupBox_activity.ResumeLayout(false);
             this.groupBox_activity.PerformLayout();
