@@ -29,7 +29,8 @@ namespace DiamondGui
 				MainForm.Invoke(new Action(() =>
 				{
 					MainForm.listView_log.Items.Add(new ListViewItem(_Log));
-				}));
+                    MainForm.listView_log.Items[MainForm.listView_log.Items.Count - 1].EnsureVisible();
+                }));
 			}
 			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Core.DiscordLog()"); }
 

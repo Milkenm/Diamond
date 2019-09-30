@@ -108,7 +108,7 @@
             // 
             this.listView_log_message.DisplayIndex = 2;
             this.listView_log_message.Text = "Message";
-            this.listView_log_message.Width = 640;
+            this.listView_log_message.Width = 623;
             // 
             // button_options
             // 
@@ -166,6 +166,6 @@
 		internal System.Windows.Forms.Button button_options;
 		internal System.Windows.Forms.Timer timer_uptime;
 		internal System.Windows.Forms.Button button_statistics;
-	}
+    }
 }
 
