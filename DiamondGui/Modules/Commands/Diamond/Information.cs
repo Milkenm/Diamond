@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 using Discord;
 using Discord.Commands;
-
+using static ScriptsLib.Device;
 using static DiamondGui.Static;
 using static DiamondGui.Functions;
 #endregion
@@ -24,7 +24,7 @@ namespace DiamondGui
 				var _EmbedField_RAM = new EmbedFieldBuilder();
 				_EmbedField_RAM.IsInline = true;
 				_EmbedField_RAM.Name = "RAM (Free | Max)";
-				_EmbedField_RAM.Value = $"<free ram> | <max ram> GB";
+				_EmbedField_RAM.Value = $"{GetRAM(RAMType.Free)} | {GetRAM(RAMType.Max)} GB";
 				#endregion RAM
 
 				#region Uptime
