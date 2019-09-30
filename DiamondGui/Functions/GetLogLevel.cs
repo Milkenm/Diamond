@@ -26,7 +26,7 @@ namespace DiamondGui
 					else if (OptionsForm.comboBox_logType.Text == "Warning") _LogType = LogSeverity.Warning;
 				}));
 			}
-			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Functions.GetLogLevel()"); }
+			catch (Exception _Exception) { ShowException(_Exception); }
 
 			return _LogType;
 		}

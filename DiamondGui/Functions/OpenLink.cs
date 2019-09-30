@@ -25,7 +25,7 @@ namespace DiamondGui
 						ExecuteCmdCommand("START https://developer.riotgames.com/"); break;
 				}
 			}
-			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Functions.OpenLink()"); }
+			catch (Exception _Exception) { ShowException(_Exception); }
 		}
 
 

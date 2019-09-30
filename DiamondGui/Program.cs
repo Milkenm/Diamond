@@ -20,7 +20,7 @@ namespace DiamondGui
             }
             catch (Exception _Exception)
             {
-                ShowException(_Exception, "DiamondGui.Program.Main()");
+                ShowException(_Exception);
             }
         }
     }

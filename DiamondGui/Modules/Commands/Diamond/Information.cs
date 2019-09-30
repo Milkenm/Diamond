@@ -50,7 +50,7 @@ namespace DiamondGui
 
 				await ReplyAsync(embed: embed.Build());
 			}
-			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.CommandsModule.Information()"); }
+			catch (Exception _Exception) { ShowException(_Exception); }
 		}
 	}
 }

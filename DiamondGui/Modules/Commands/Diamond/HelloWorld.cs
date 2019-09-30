@@ -28,7 +28,7 @@ namespace DiamondGui
             }
             catch (Exception _Exception)
             {
-                ShowException(_Exception, "DiamondGui.Commands.HelloWorld.CMD_HelloWorld()");
+                ShowException(_Exception);
             }
 		}
 	}

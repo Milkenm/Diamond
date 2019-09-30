@@ -23,10 +23,7 @@ namespace DiamondGui
                     else if (MainForm.comboBox_status.Text == "Invisible") _UserStatus = UserStatus.Invisible;
                 }));
             }
-            catch (Exception _Exception)
-            {
-                ShowException(_Exception, "DiamondGui.Functions.GetUserStatus()");
-            }
+            catch (Exception _Exception) { ShowException(_Exception); }
 
             return _UserStatus;
         }

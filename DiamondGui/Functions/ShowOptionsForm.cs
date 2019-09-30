@@ -17,7 +17,7 @@ namespace DiamondGui
 			{
 				OptionsForm.Show();
 			}
-			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Functions.ShowOptionsForm()"); }
+			catch (Exception _Exception) { ShowException(_Exception); }
 		}
 	}
 }

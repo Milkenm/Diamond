@@ -28,7 +28,7 @@ namespace DiamondGui
 					}
 				}
 			}
-			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Functions.SetDiscordStatus()"); }
+			catch (Exception _Exception) { ShowException(_Exception); }
 		}
 	}
 }

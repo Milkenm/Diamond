@@ -52,7 +52,7 @@ namespace DiamondGui
 				{
 					MainForm.button_start.PerformClick();
 				}));
-				ShowException(_Exception, "DiamondGui.Core.DiscordMain()");
+				ShowException(_Exception);
 			}
 		}
 	}

@@ -19,7 +19,7 @@ namespace DiamondGui
 				StatisticsForm.label_commandsUsed.Text = "Commands Used: " + Settings.CommandsUsed;
 				StatisticsForm.label_exceptions.Text = "Exceptions: " + Settings.Exceptions;
 			}
-			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Core.UpdateStatistics()"); }
+			catch (Exception _Exception) { ShowException(_Exception); }
 		}
 	}
 }

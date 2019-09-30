@@ -28,7 +28,7 @@ namespace DiamondGui
 					Form.Hide();
 				}
 			}
-			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Functions.CloseForm()"); }
+			catch (Exception _Exception) { ShowException(_Exception); }
 		}
 	}
 }

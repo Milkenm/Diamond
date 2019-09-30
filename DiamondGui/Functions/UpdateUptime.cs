@@ -19,7 +19,7 @@ namespace DiamondGui
 				Settings.Uptime += 1; Settings.Save();
 				CurrentUptime += 1;
 			}
-			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Functions.UpdateUptime()"); }
+			catch (Exception _Exception) { ShowException(_Exception); }
 		}
 	}
 }

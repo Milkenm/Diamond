@@ -30,7 +30,7 @@ namespace DiamondGui
 				OptionsForm.comboBox_logType.SelectedIndex = Settings.LogTypeIndex;
 				OptionsForm.comboBox_activity.SelectedIndex = Settings.ActivityIndex;
 			}
-			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Core.OptionsLoad()"); }
+			catch (Exception _Exception) { ShowException(_Exception); }
 		}
 	}
 }

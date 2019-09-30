@@ -18,7 +18,7 @@ namespace DiamondGui
                 if (OptionsForm.checkBox_revealToken.Checked == true)  OptionsForm.textBox_token.PasswordChar = '•';
                 else OptionsForm.textBox_token.PasswordChar = '\0';
 			}
-			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Functions.RevealToken()"); }
+			catch (Exception _Exception) { ShowException(_Exception); }
 		}
 	}
 }

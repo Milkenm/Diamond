@@ -23,7 +23,7 @@ namespace DiamondGui
 					else if (OptionsForm.comboBox_logType.Text == "Watching") _ActivityType = ActivityType.Watching;
 				}));
 			}
-			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Functions.GetActivityType()"); }
+			catch (Exception _Exception) { ShowException(_Exception); }
 
 			return _ActivityType;
 		}

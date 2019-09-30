@@ -32,7 +32,7 @@ namespace DiamondGui
                     MainForm.listView_log.Items[MainForm.listView_log.Items.Count - 1].EnsureVisible();
                 }));
 			}
-			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Core.DiscordLog()"); }
+			catch (Exception _Exception) { ShowException(_Exception); }
 
 			return Task.CompletedTask;
 		}

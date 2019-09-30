@@ -22,7 +22,7 @@ namespace DiamondGui
 				OptionsForm = new Options(); OptionsLoad();
 				StatisticsForm = new Statistics();
 			}
-			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Core.Mainload()"); }
+			catch (Exception _Exception) { ShowException(_Exception); }
 		}
 	}
 }

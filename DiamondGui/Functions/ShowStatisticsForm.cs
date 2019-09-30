@@ -16,7 +16,7 @@ namespace DiamondGui
 			{
 				StatisticsForm.Show();
 			}
-			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Functions.ShowStatisticsForm()"); }
+			catch (Exception _Exception) { ShowException(_Exception); }
 		}
 	}
 }

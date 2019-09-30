@@ -26,10 +26,7 @@ namespace DiamondGui
 
                 await Command.AddModulesAsync(Assembly.GetEntryAssembly(), null);
             }
-            catch (Exception _Exception)
-            {
-                ShowException(_Exception, "DiamondGui.Core.DiscordInstallCommands()");
-            }
+            catch (Exception _Exception) { ShowException(_Exception); }
         }
     }
 }

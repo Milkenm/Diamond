@@ -22,7 +22,7 @@ namespace DiamondGui
                 InitializeComponent();
                 MainForm = this;
             }
-            catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Main.Main()"); }
+            catch (Exception _Exception) { ShowException(_Exception); }
         }
 
         private void Main_Load(object sender, EventArgs e) => MainLoad();

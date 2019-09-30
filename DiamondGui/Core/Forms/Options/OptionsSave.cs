@@ -29,7 +29,7 @@ namespace DiamondGui
 
 				OptionsForm.Hide();
 			}
-			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Core.OptionsSave()"); }
+			catch (Exception _Exception) { ShowException(_Exception); }
 		}
 	}
 }
