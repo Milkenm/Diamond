@@ -260,6 +260,9 @@
     <Folder Include="Modules\Commands\Random\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Data\DiamondDB.mdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Images\Logos\DiamondIcon.ico" />
     <Content Include="Resources\Images\Logos\DiamondIcon.png" />
   </ItemGroup>
