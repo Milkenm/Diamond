@@ -12,38 +12,38 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-	public partial class Main : Form
-	{
-		#region Main
-		public Main()
-		{
-			try
-			{
-				InitializeComponent();
-				MainForm = this;
-			}
-			catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Main.Main()"); }
-		}
+    public partial class Main : Form
+    {
+        #region Main
+        public Main()
+        {
+            try
+            {
+                InitializeComponent();
+                MainForm = this;
+            }
+            catch (Exception _Exception) { ShowException(_Exception, "DiamondGui.Main.Main()"); }
+        }
 
-		private void Main_Load(object sender, EventArgs e) => MainLoad();
+        private void Main_Load(object sender, EventArgs e) => MainLoad();
 
-		private void Main_FormClosing(object sender, FormClosingEventArgs e) => CloseForm(this, e);
-		#endregion Main
-
-
+        private void Main_FormClosing(object sender, FormClosingEventArgs e) => CloseForm(this, e);
+        #endregion Main
 
 
 
 
 
-		private void button_start_Click(object sender, EventArgs e) => DiscordStart(); // Button 'Start'
 
-		private void button_options_Click(object sender, EventArgs e) => ShowOptionsForm(); // Button 'Options'
 
-		private void comboBox_status_SelectedIndexChanged(object sender, EventArgs e) => SetDiscordStatus(); // ComboBox 'Status'
+        private void button_start_Click(object sender, EventArgs e) => DiscordStart(); // Button 'Start'
 
-		private void timer_uptime_Tick(object sender, EventArgs e) => UpdateUptime(); // Timer 'Uptime'
+        private void button_options_Click(object sender, EventArgs e) => ShowOptionsForm(); // Button 'Options'
 
-		private void button_statistics_Click(object sender, EventArgs e) => ShowStatisticsForm(); // Button 'Statistics'
-	}
+        private void comboBox_status_SelectedIndexChanged(object sender, EventArgs e) => SetDiscordStatus(); // ComboBox 'Status'
+
+        private void timer_uptime_Tick(object sender, EventArgs e) => UpdateUptime(); // Timer 'Uptime'
+
+        private void button_statistics_Click(object sender, EventArgs e) => ShowStatisticsForm(); // Button 'Statistics'
+    }
 }
