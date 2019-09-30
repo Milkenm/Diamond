@@ -46,7 +46,7 @@ namespace DiamondGui
 				embed.WithAuthor("Miłkenm 💦#6376", $"{Settings.Domain}/Static/Img/DevIcon.png", Settings.DiscordUrl);
 				embed.WithFields(_EmbedField_RAM, _EmbedField_Uptime, _EmbedField_InviteLink);
 				embed.WithThumbnailUrl($"{Settings.Domain}/Static/Img/DiamondIcon.png");
-                embed.WithImageUrl($"{Settings.Domain}/Static/Img/EmbedGradient.png");
+                embed.WithImageUrl($"{Settings.Domain}/Static/Img/Gradient.png");
 				embed.WithColor(new Color(255, 255, 255));
 
 				await ReplyAsync(embed: embed.Build());
