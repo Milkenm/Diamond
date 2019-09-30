@@ -21,7 +21,7 @@ namespace DiamondGui
 
                 int _ArgPos = 0;
 
-                if ((_Message.HasCharPrefix('!', ref _ArgPos) || _Message.HasMentionPrefix(Client.CurrentUser, ref _ArgPos)) || _Message.Author.IsBot) return;
+                if (!(_Message.HasCharPrefix('!', ref _ArgPos) || _Message.HasMentionPrefix(Client.CurrentUser, ref _ArgPos)) || _Message.Author.IsBot) return;
 
                 var _Context = new SocketCommandContext(Client, _Message);
 
