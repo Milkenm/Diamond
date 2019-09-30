@@ -252,7 +252,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Templates\DiscordCommand.zip" />
+    <None Include="Templates\Items\DiscordCommand.zip" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Modules\Commands\Admin\" />
