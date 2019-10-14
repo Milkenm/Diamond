@@ -70,6 +70,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Libs\ScriptsLib.dll</HintPath>
     </Reference>
+    <Reference Include="SharpLink, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpLink.1.0.0-beta-0005\lib\netstandard2.0\SharpLink.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.AppContext.4.3.0\lib\net46\System.AppContext.dll</HintPath>
@@ -177,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Discord\EventHandler.cs" />
+    <Compile Include="Core\Discord\LoadLavaPlayer.cs" />
     <Compile Include="Forms\LittlePrograms\GradientGenerator.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -191,6 +195,7 @@
     <Compile Include="Functions\ShowOptionsForm.cs" />
     <Compile Include="Functions\ShowStatisticsForm.cs" />
     <Compile Include="Functions\UpdateUptime.cs" />
+    <Compile Include="Modules\Commands\Music\Play.cs" />
     <Compile Include="Modules\Commands\DevOnly\HelloWorld.cs" />
     <Compile Include="Modules\Commands\Diamond\Information.cs" />
     <Compile Include="Functions\RevealToken.cs" />

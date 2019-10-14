@@ -3,6 +3,7 @@ using DiamondGui.Properties;
 
 using Discord.Commands;
 using Discord.WebSocket;
+using SharpLink;
 #endregion Usings
 
 
@@ -20,7 +21,10 @@ namespace DiamondGui
         internal static DiscordSocketClient Client;
 		internal static CommandService Command;
 
-		// Other Items
-		internal static Settings Settings = new Settings();
+        // Lavalink
+        internal static LavalinkManager LavalinkManager;
+
+        // Other Items
+        internal static Settings Settings = new Settings();
     }
 }
