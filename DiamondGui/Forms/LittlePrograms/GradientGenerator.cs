@@ -4,22 +4,21 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
+
+using static DiamondGui.Functions;
 #endregion Usings
 
 // # = #
 // https://stackoverflow.com/questions/1493944/c-sharp-create-gradient-image
 // # = #
 
-namespace TestingProject
+namespace DiamondGui.LittlePrograms
 {
 	public partial class GradientGenerator : Form
 	{
 		static Button _ColorButton;
 
-		public GradientGenerator()
-		{
-			InitializeComponent();
-		}
+		public GradientGenerator() => InitializeComponent();
 
 		private void GradientGenerator_Load(object sender, EventArgs e)
 		{
@@ -83,9 +82,6 @@ namespace TestingProject
 			}
 		}
 
-		private void folderDialog_HelpRequest(object sender, EventArgs e)
-		{
-
-		}
+		private void GradientGenerator_FormClosing(object sender, FormClosingEventArgs e) => CloseForm(this, e);
 	}
 }

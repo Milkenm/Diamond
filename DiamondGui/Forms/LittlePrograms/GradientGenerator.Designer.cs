@@ -1,33 +1,33 @@
-﻿namespace TestingProject
+﻿namespace DiamondGui.LittlePrograms
 {
-    partial class GradientGenerator
-    {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private System.ComponentModel.IContainer components = null;
+	partial class GradientGenerator
+	{
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && (components != null))
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
 
-        #region Windows Form Designer generated code
+		#region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GradientGenerator));
 			this.numeric_width = new System.Windows.Forms.NumericUpDown();
@@ -204,10 +204,6 @@
 			this.button_save.UseVisualStyleBackColor = true;
 			this.button_save.Click += new System.EventHandler(this.button_save_Click);
 			// 
-			// folderDialog
-			// 
-			this.folderDialog.HelpRequest += new System.EventHandler(this.folderDialog_HelpRequest);
-			// 
 			// GradientGenerator
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -230,6 +226,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "GradientGenerator";
 			this.Text = "Gradient Generator";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GradientGenerator_FormClosing);
 			this.Load += new System.EventHandler(this.GradientGenerator_Load);
 			((System.ComponentModel.ISupportInitialize)(this.numeric_width)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numeric_height)).EndInit();
@@ -237,7 +234,7 @@
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
-        }
+		}
 
 		#endregion
 

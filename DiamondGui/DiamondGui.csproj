@@ -36,7 +36,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\Images\Logos\DiamondIcon.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Discord.Net.Commands, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -181,6 +182,14 @@
   <ItemGroup>
     <Compile Include="Core\Discord\EventHandler.cs" />
     <Compile Include="Core\Discord\LoadLavaPlayer.cs" />
+    <Compile Include="Forms\LittlePrograms\LpLauncher\ShowLp.cs" />
+    <Compile Include="Forms\LittlePrograms\LpLauncher\LpLauncher.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LittlePrograms\LpLauncher\LpLauncher.Designer.cs">
+      <DependentUpon>LpLauncher.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Main\ShowLittlePrograms.cs" />
     <Compile Include="Forms\LittlePrograms\GradientGenerator.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -204,17 +213,17 @@
     <Compile Include="Core\Discord\CommandHandler.cs" />
     <Compile Include="Core\Discord\Log.cs" />
     <Compile Include="Core\Discord\DiscordMain.cs" />
-    <Compile Include="Core\Forms\Main\MainLoad.cs" />
+    <Compile Include="Forms\Main\MainLoad.cs" />
     <Compile Include="Functions\GetActivityType.cs" />
     <Compile Include="Functions\GetLogLevel.cs" />
     <Compile Include="Functions\GetUserStatus.cs" />
     <Compile Include="Functions\SetDiscordGame.cs" />
     <Compile Include="Functions\SetDiscordStatus.cs" />
     <Compile Include="Functions\ShowException.cs" />
-    <Compile Include="Forms\Main.cs">
+    <Compile Include="Forms\Main\Main.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Main.Designer.cs">
+    <Compile Include="Forms\Main\Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Options.cs">
@@ -234,7 +243,10 @@
       <DependentUpon>Statistics.cs</DependentUpon>
     </Compile>
     <Compile Include="Debug\TestCodeSpeed.cs" />
-    <EmbeddedResource Include="Forms\Main.resx">
+    <EmbeddedResource Include="Forms\LittlePrograms\LpLauncher\LpLauncher.resx">
+      <DependentUpon>LpLauncher.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Main\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Options.resx">
@@ -270,6 +282,7 @@
     <None Include="Templates\Items\DiscordCommand.zip" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Core\Forms\Main\" />
     <Folder Include="Modules\Commands\Admin\" />
     <Folder Include="Modules\Commands\Joguinhos\" />
     <Folder Include="Modules\Commands\Random\" />
@@ -278,8 +291,9 @@
     <Content Include="Resources\Data\DiamondDB.mdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Images\Logos\DiamondIcon.ico" />
-    <Content Include="Resources\Images\Logos\DiamondIcon.png" />
+    <Content Include="Resources\Images\DiamondIcon\DiamondIcon.ico" />
+    <Content Include="Resources\Images\DiamondIcon\DiamondIcon.png" />
+    <Content Include="Resources\Images\Textures\ButtonGradient.png" />
     <Content Include="Resources\Libs\ScriptsLib.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
