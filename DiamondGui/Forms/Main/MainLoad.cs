@@ -1,6 +1,8 @@
 ﻿#region Usings
 using System;
-
+using System.Net;
+using System.Net.Sockets;
+using System.Windows.Forms;
 using DiamondGui.Forms;
 using DiamondGui.LittlePrograms;
 
@@ -13,9 +15,9 @@ using static DiamondGui.Static;
 namespace DiamondGui
 {
 	internal static partial class Core
-    {
-        internal static void MainLoad()
-        {
+	{
+		internal static void MainLoad()
+		{
 			try
 			{
 				// ComboBox
