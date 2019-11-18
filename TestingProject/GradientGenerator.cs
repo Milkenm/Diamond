@@ -14,7 +14,7 @@ namespace TestingProject
 {
 	public partial class GradientGenerator : Form
 	{
-		static Button _ColorButton;
+		private static Button _ColorButton;
 
 		public GradientGenerator()
 		{
@@ -32,7 +32,10 @@ namespace TestingProject
 
 		private void button_generate_Click(object sender, EventArgs e)
 		{
-			if (pictureBox_result.Image != null) pictureBox_result.Image.Dispose();
+			if (pictureBox_result.Image != null)
+			{
+				pictureBox_result.Image.Dispose();
+			}
 
 			Bitmap _Bitmap = new Bitmap((int)numeric_width.Value, (int)numeric_height.Value);
 			Graphics graphics = Graphics.FromImage(_Bitmap);
@@ -62,7 +65,10 @@ namespace TestingProject
 
 		private void timer_updateColor_Tick(object sender, EventArgs e)
 		{
-			if (_ColorButton != null) _ColorButton.BackColor = colorDialog.Color;
+			if (_ColorButton != null)
+			{
+				_ColorButton.BackColor = colorDialog.Color;
+			}
 		}
 
 		private void button_save_Click(object sender, EventArgs e)
