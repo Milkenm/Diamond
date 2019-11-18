@@ -3,7 +3,7 @@ using System;
 
 using static DiamondGui.Functions;
 using static DiamondGui.Static;
-using static ScriptsLib.nControls.SlTextBox;
+using static ScriptsLib.Controls.Tweaks.SlTextBox;
 #endregion Usings
 
 

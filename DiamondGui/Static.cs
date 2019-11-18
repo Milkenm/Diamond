@@ -14,7 +14,7 @@ using SharpLink;
 namespace DiamondGui
 {
 	internal static class Static
-    {
+	{
 		// Forms
 		internal static Main MainForm;
 		internal static Options OptionsForm;
@@ -25,13 +25,13 @@ namespace DiamondGui
 		internal static GradientGenerator LP_GradientGeneratorForm;
 
 		// Discord
-        internal static DiscordSocketClient Client;
+		internal static DiscordSocketClient Client;
 		internal static CommandService Command;
 
-        // Lavalink
-        internal static LavalinkManager LavalinkManager;
+		// Lavalink
+		internal static LavalinkManager LavalinkManager;
 
-        // Other Items
-        internal static Settings Settings = new Settings();
-    }
+		// Other Items
+		internal static Settings Settings = new Settings();
+	}
 }
