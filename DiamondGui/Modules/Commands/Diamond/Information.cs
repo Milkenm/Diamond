@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 
 using Discord;
 using Discord.Commands;
-using static ScriptsLib.Device;
-using static DiamondGui.Static;
+
 using static DiamondGui.Functions;
+using static DiamondGui.Main;
+using static DiamondGui.Static;
+using static ScriptsLib.Device;
 #endregion
 
 
@@ -21,28 +23,28 @@ namespace DiamondGui
 			try
 			{
 				#region RAM
-				var _EmbedField_RAM = new EmbedFieldBuilder();
+				EmbedFieldBuilder _EmbedField_RAM = new EmbedFieldBuilder();
 				_EmbedField_RAM.IsInline = true;
 				_EmbedField_RAM.Name = "RAM (Free | Max)";
 				_EmbedField_RAM.Value = $"{GetRAM(RAMType.Free)} | {GetRAM(RAMType.Max)} GB";
 				#endregion RAM
 
 				#region Uptime
-				var _EmbedField_Uptime = new EmbedFieldBuilder();
+				EmbedFieldBuilder _EmbedField_Uptime = new EmbedFieldBuilder();
 				_EmbedField_Uptime.IsInline = true;
 				_EmbedField_Uptime.Name = "Uptime (Session | Total)";
 				_EmbedField_Uptime.Value = $"{CurrentUptime} | {Settings.Uptime} seconds";
 				#endregion Uptime
 
 				#region Invite Link
-				var _EmbedField_InviteLink = new EmbedFieldBuilder();
+				EmbedFieldBuilder _EmbedField_InviteLink = new EmbedFieldBuilder();
 				_EmbedField_InviteLink.Name = $"➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖💠 **__Invite Link:__** {Settings.BotUrl} 💠";
 				_EmbedField_InviteLink.Value = "\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖";
 				#endregion Invite Link
 
 
 
-				var embed = new EmbedBuilder();
+				EmbedBuilder embed = new EmbedBuilder();
 				embed.WithAuthor("Miłkenm 💦#6376", $"{Settings.Domain}/Static/Img/DevIcon.png", Settings.DiscordUrl);
 				embed.WithFields(_EmbedField_RAM, _EmbedField_Uptime, _EmbedField_InviteLink);
 				embed.WithThumbnailUrl($"{Settings.Domain}/Static/Img/DiamondIcon.png");

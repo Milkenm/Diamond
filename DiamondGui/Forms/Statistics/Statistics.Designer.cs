@@ -1,4 +1,4 @@
-﻿namespace DiamondGui
+﻿namespace DiamondGui.Forms
 {
 	partial class Statistics
 	{

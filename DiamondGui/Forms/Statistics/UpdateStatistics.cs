@@ -9,7 +9,7 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-	internal static partial class Core
+	internal static partial class Statistics
 	{
 		internal static void UpdateStatistics()
 		{

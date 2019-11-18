@@ -9,14 +9,13 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-	internal static partial class Controls
+	internal static partial class Options
 	{
 		internal static void RevealToken()
 		{
 			try
 			{
-                if (OptionsForm.checkBox_revealToken.Checked == true)  OptionsForm.textBox_token.PasswordChar = '•';
-                else OptionsForm.textBox_token.PasswordChar = '\0';
+				OptionsForm.textBox_token.PasswordChar = OptionsForm.checkBox_revealToken.Checked == true ? '•' : '\0';
 			}
 			catch (Exception _Exception) { ShowException(_Exception); }
 		}

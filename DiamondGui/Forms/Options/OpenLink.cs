@@ -1,17 +1,14 @@
 ﻿#region Usings
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using static ScriptsLib.Tools;
-using System.Threading.Tasks;
 #endregion Usings
 
 
 
 namespace DiamondGui
 {
-	internal static partial class Functions
+	internal static partial class Options
 	{
 		internal static void OpenLink(Link Link)
 		{

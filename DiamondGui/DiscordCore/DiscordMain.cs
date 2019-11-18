@@ -14,7 +14,7 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-	internal static partial class Core
+	internal static partial class Discord
 	{
 		internal static async Task DiscordMain()
 		{
@@ -31,11 +31,11 @@ namespace DiamondGui
 					DefaultRunMode = RunMode.Async,
 					LogLevel = GetLogLevel(),
 				});
-				
+
 				Client = new DiscordSocketClient();
 
 				Client.Log += DiscordLog;
-				
+
 				await Client.LoginAsync(TokenType.Bot, OptionsForm.textBox_token.Text);
 				await Client.StartAsync();
 
@@ -43,7 +43,7 @@ namespace DiamondGui
 				SetDiscordStatus();
 				LoadEvents();
 				await DiscordInstallCommands();
-				
+
 				await Task.Delay(-1);
 			}
 			catch (Exception _Exception)

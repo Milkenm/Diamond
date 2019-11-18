@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
+using static DiamondGui.Discord;
 using static DiamondGui.Functions;
 using static DiamondGui.Static;
 #endregion Usings
@@ -10,7 +11,7 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-	internal static partial class Core
+	internal static partial class Main
 	{
 		internal static void DiscordStart()
 		{
@@ -28,14 +29,13 @@ namespace DiamondGui
 					new Task(new Action(() =>
 					{
 						Client.LogoutAsync();
-                        Client.StopAsync();
+						Client.StopAsync();
 					})).Start();
-                }
+				}
 
 
 
-				if (MainForm.button_start.Text == "Start") MainForm.button_start.Text = "Stop";
-				else MainForm.button_start.Text = "Start";
+				MainForm.button_start.Text = MainForm.button_start.Text == "Start" ? "Stop" : "Start";
 
 				OptionsForm.textBox_token.Enabled = MainForm.button_start.Text == "Start";
 				OptionsForm.comboBox_logType.Enabled = MainForm.button_start.Text == "Start";

@@ -7,7 +7,7 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-	internal static partial class Core
+	internal static partial class Discord
 	{
 		internal static void LoadEvents()
 		{

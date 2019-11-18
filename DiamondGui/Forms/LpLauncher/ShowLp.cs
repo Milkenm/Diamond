@@ -1,6 +1,7 @@
 ﻿#region Usings
 using System;
 
+using static DiamondGui.Functions;
 using static DiamondGui.Static;
 #endregion Usings
 
@@ -8,7 +9,7 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-	internal static partial class Functions
+	internal static partial class LpLauncher
 	{
 		internal static void ShowLp(LittleProgram _LP)
 		{

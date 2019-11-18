@@ -1,5 +1,4 @@
 ﻿#region Usings
-using DiamondGui.Forms;
 using DiamondGui.LittlePrograms;
 using DiamondGui.Properties;
 
@@ -16,10 +15,10 @@ namespace DiamondGui
 	internal static class Static
 	{
 		// Forms
-		internal static Main MainForm;
-		internal static Options OptionsForm;
-		internal static Statistics StatisticsForm;
-		internal static LpLauncher LpLauncherForm;
+		internal static Forms.Main MainForm;
+		internal static Forms.Options OptionsForm;
+		internal static Forms.Statistics StatisticsForm;
+		internal static Forms.LpLauncher LpLauncherForm;
 
 		// Little Programs
 		internal static GradientGenerator LP_GradientGeneratorForm;

@@ -50,6 +50,7 @@
 			// 
 			// comboBox_status
 			// 
+			this.comboBox_status.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboBox_status.FormattingEnabled = true;
 			this.comboBox_status.Items.AddRange(new object[] {
             "Online",

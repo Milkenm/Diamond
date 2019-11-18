@@ -2,9 +2,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-
 using Discord.Commands;
-
 using static DiamondGui.Functions;
 #endregion
 

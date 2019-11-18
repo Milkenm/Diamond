@@ -1,13 +1,9 @@
 ﻿#region Usings
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using static DiamondGui.Static;
-using System.Text;
-using static DiamondGui.Functions;
-using System.Threading.Tasks;
+
 using Discord;
-using System.Windows.Forms;
+
+using static DiamondGui.Static;
 #endregion Usings
 
 

@@ -9,13 +9,16 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-	internal static partial class Controls
+	internal static partial class Main
 	{
-		internal static void ShowOptionsForm()
+		internal static int CurrentUptime;
+
+		internal static void UpdateUptime()
 		{
 			try
 			{
-				OptionsForm.Show();
+				Settings.Uptime += 1; Settings.Save();
+				CurrentUptime += 1;
 			}
 			catch (Exception _Exception) { ShowException(_Exception); }
 		}

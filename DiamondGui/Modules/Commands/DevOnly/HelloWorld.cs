@@ -16,17 +16,17 @@ namespace DiamondGui
 	{
 		[Command("helloworld"), Alias("hello", "world"), Summary("Prints 'Hello World!' in event-channel.")]
 		public async Task HelloWorld()
-        {
-            try
-            {
+		{
+			try
+			{
 				Settings.CommandsUsed += 1; Settings.Save();
 
-                if (Context.User.Id == Settings.AdminId)
-                {
-                    await ReplyAsync("Hello World!");
-                }
-            }
-            catch (Exception _Exception) { ShowException(_Exception); }
-        }
-    }
+				if (Context.User.Id == Settings.AdminId)
+				{
+					await ReplyAsync("Hello World!");
+				}
+			}
+			catch (Exception _Exception) { ShowException(_Exception); }
+		}
+	}
 }

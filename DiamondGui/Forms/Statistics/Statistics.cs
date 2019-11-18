@@ -2,13 +2,13 @@
 using System;
 using System.Windows.Forms;
 
-using static DiamondGui.Core;
 using static DiamondGui.Functions;
+using static DiamondGui.Statistics;
 #endregion Usings
 
 
 
-namespace DiamondGui
+namespace DiamondGui.Forms
 {
 	public partial class Statistics : Form
 	{

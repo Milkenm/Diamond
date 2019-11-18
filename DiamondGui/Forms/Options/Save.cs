@@ -9,7 +9,7 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-	internal static partial class Core
+	internal static partial class Options
 	{
 		internal static void OptionsSave()
 		{
@@ -24,7 +24,9 @@ namespace DiamondGui
 				Settings.DiscordUrl = OptionsForm.textBox_discordUrl.Text;
 				Settings.Domain = OptionsForm.textBox_domain.Text;
 				Settings.AdminId = Convert.ToUInt64(OptionsForm.textBox_adminId.Text);
-				
+
+				SetDiscordGame();
+
 				Settings.Save();
 
 				OptionsForm.Hide();

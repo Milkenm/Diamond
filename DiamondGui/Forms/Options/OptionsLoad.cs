@@ -10,7 +10,7 @@ using static ScriptsLib.Controls.Tweaks.SlTextBox;
 
 namespace DiamondGui
 {
-	internal static partial class Core
+	internal static partial class Options
 	{
 		internal static void OptionsLoad()
 		{

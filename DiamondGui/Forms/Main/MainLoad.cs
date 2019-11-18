@@ -1,12 +1,10 @@
 ﻿#region Usings
 using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Windows.Forms;
-using DiamondGui.Forms;
+
 using DiamondGui.LittlePrograms;
 
 using static DiamondGui.Functions;
+using static DiamondGui.Options;
 using static DiamondGui.Static;
 #endregion Usings
 
@@ -14,7 +12,7 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-	internal static partial class Core
+	internal static partial class Main
 	{
 		internal static void MainLoad()
 		{
@@ -24,9 +22,9 @@ namespace DiamondGui
 				MainForm.comboBox_status.SelectedIndex = Settings.StatusIndex;
 
 				// Load other forms
-				OptionsForm = new Options(); OptionsLoad();
-				StatisticsForm = new Statistics();
-				LpLauncherForm = new LpLauncher();
+				OptionsForm = new Forms.Options(); OptionsLoad();
+				StatisticsForm = new Forms.Statistics();
+				LpLauncherForm = new Forms.LpLauncher();
 
 				// Load LittlePrograms
 				LP_GradientGeneratorForm = new GradientGenerator();

@@ -179,40 +179,37 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Discord\EventHandler.cs" />
-    <Compile Include="Core\Discord\LoadLavaPlayer.cs" />
-    <Compile Include="Forms\LittlePrograms\LpLauncher\ShowLp.cs" />
-    <Compile Include="Forms\LittlePrograms\LpLauncher\LpLauncher.cs">
+    <Compile Include="DiscordCore\EventHandler.cs" />
+    <Compile Include="DiscordCore\LoadLavaPlayer.cs" />
+    <Compile Include="Forms\LpLauncher\ShowLp.cs" />
+    <Compile Include="Forms\LpLauncher\LpLauncher.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\LittlePrograms\LpLauncher\LpLauncher.Designer.cs">
+    <Compile Include="Forms\LpLauncher\LpLauncher.Designer.cs">
       <DependentUpon>LpLauncher.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Main\ShowLittlePrograms.cs" />
-    <Compile Include="Forms\LittlePrograms\GradientGenerator.cs">
+    <Compile Include="LittlePrograms\GradientGenerator.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\LittlePrograms\GradientGenerator.Designer.cs">
+    <Compile Include="LittlePrograms\GradientGenerator.Designer.cs">
       <DependentUpon>GradientGenerator.cs</DependentUpon>
     </Compile>
-    <Compile Include="Functions\OpenLink.cs" />
-    <Compile Include="Core\Forms\Options\OptionsSave.cs" />
-    <Compile Include="Core\Forms\Options\OptionsLoad.cs" />
-    <Compile Include="Core\Forms\Statistics\UpdateStatistics.cs" />
+    <Compile Include="Forms\Options\OpenLink.cs" />
+    <Compile Include="Forms\Options\Save.cs" />
+    <Compile Include="Forms\Options\OptionsLoad.cs" />
+    <Compile Include="Forms\Statistics\UpdateStatistics.cs" />
     <Compile Include="Functions\CloseForm.cs" />
-    <Compile Include="Functions\ShowOptionsForm.cs" />
-    <Compile Include="Functions\ShowStatisticsForm.cs" />
-    <Compile Include="Functions\UpdateUptime.cs" />
+    <Compile Include="Forms\Main\UpdateUptime.cs" />
     <Compile Include="Modules\Commands\Games\LeagueOfLegends\LolMain.cs" />
     <Compile Include="Modules\Commands\Music\Play.cs" />
     <Compile Include="Modules\Commands\DevOnly\HelloWorld.cs" />
     <Compile Include="Modules\Commands\Diamond\Information.cs" />
-    <Compile Include="Functions\RevealToken.cs" />
-    <Compile Include="Core\Discord\DiscordStart.cs" />
-    <Compile Include="Core\Discord\InstallCommands.cs" />
-    <Compile Include="Core\Discord\CommandHandler.cs" />
-    <Compile Include="Core\Discord\Log.cs" />
-    <Compile Include="Core\Discord\DiscordMain.cs" />
+    <Compile Include="Forms\Options\RevealToken.cs" />
+    <Compile Include="Forms\Main\DiscordStart.cs" />
+    <Compile Include="DiscordCore\InstallCommands.cs" />
+    <Compile Include="DiscordCore\CommandHandler.cs" />
+    <Compile Include="DiscordCore\Log.cs" />
+    <Compile Include="DiscordCore\DiscordMain.cs" />
     <Compile Include="Forms\Main\MainLoad.cs" />
     <Compile Include="Functions\GetActivityType.cs" />
     <Compile Include="Functions\GetLogLevel.cs" />
@@ -226,33 +223,33 @@
     <Compile Include="Forms\Main\Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Options.cs">
+    <Compile Include="Forms\Options\Options.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Options.Designer.cs">
+    <Compile Include="Forms\Options\Options.Designer.cs">
       <DependentUpon>Options.cs</DependentUpon>
     </Compile>
     <Compile Include="Modules\Events\MessageReceived.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Static.cs" />
-    <Compile Include="Forms\Statistics.cs">
+    <Compile Include="Forms\Statistics\Statistics.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Statistics.Designer.cs">
+    <Compile Include="Forms\Statistics\Statistics.Designer.cs">
       <DependentUpon>Statistics.cs</DependentUpon>
     </Compile>
     <Compile Include="Debug\TestCodeSpeed.cs" />
-    <EmbeddedResource Include="Forms\LittlePrograms\LpLauncher\LpLauncher.resx">
+    <EmbeddedResource Include="Forms\LpLauncher\LpLauncher.resx">
       <DependentUpon>LpLauncher.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Main\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Options.resx">
+    <EmbeddedResource Include="Forms\Options\Options.resx">
       <DependentUpon>Options.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\LittlePrograms\GradientGenerator.resx">
+    <EmbeddedResource Include="LittlePrograms\GradientGenerator.resx">
       <DependentUpon>GradientGenerator.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -265,7 +262,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Forms\Statistics.resx">
+    <EmbeddedResource Include="Forms\Statistics\Statistics.resx">
       <DependentUpon>Statistics.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
@@ -279,10 +276,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Templates\Items\DiscordCommand.zip" />
+    <None Include="Resources\VSItems\DiscordCommand.zip" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Core\Forms\Main\" />
     <Folder Include="Modules\Commands\Admin\" />
     <Folder Include="Modules\Commands\Joguinhos\" />
     <Folder Include="Modules\Commands\Random\" />
@@ -291,9 +287,9 @@
     <Content Include="Resources\Data\DiamondDB.mdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Images\DiamondIcon\DiamondIcon.ico" />
-    <Content Include="Resources\Images\DiamondIcon\DiamondIcon.png" />
-    <Content Include="Resources\Images\Textures\ButtonGradient.png" />
+    <Content Include="Resources\DiamondIcon\DiamondIcon.ico" />
+    <Content Include="Resources\DiamondIcon\DiamondIcon.png" />
+    <Content Include="Resources\Textures\ButtonGradient.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
