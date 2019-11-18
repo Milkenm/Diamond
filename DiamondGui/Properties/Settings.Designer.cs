@@ -178,5 +178,29 @@ namespace DiamondGui.Properties {
                 this["AdminId"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string BotPrefix {
+            get {
+                return ((string)(this["BotPrefix"]));
+            }
+            set {
+                this["BotPrefix"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AllowMentionPrefix {
+            get {
+                return ((bool)(this["AllowMentionPrefix"]));
+            }
+            set {
+                this["AllowMentionPrefix"] = value;
+            }
+        }
     }
 }

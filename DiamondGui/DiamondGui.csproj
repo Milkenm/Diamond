@@ -200,7 +200,7 @@
     <Compile Include="Forms\Statistics\UpdateStatistics.cs" />
     <Compile Include="Functions\CloseForm.cs" />
     <Compile Include="Forms\Main\UpdateUptime.cs" />
-    <Compile Include="Modules\Commands\Games\LeagueOfLegends\LolMain.cs" />
+    <Compile Include="Modules\Commands\Games\LeagueOfLegends\Main.cs" />
     <Compile Include="Modules\Commands\Music\Play.cs" />
     <Compile Include="Modules\Commands\DevOnly\HelloWorld.cs" />
     <Compile Include="Modules\Commands\Diamond\Information.cs" />

@@ -24,6 +24,8 @@ namespace DiamondGui
 				Settings.DiscordUrl = OptionsForm.textBox_discordUrl.Text;
 				Settings.Domain = OptionsForm.textBox_domain.Text;
 				Settings.AdminId = Convert.ToUInt64(OptionsForm.textBox_adminId.Text);
+				Settings.BotPrefix = OptionsForm.textBox_botPrefix.Text;
+				Settings.AllowMentionPrefix = OptionsForm.checkBox_allowMentionPrefix.Checked;
 
 				SetDiscordGame();
 

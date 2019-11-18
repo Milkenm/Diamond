@@ -41,5 +41,11 @@
     <Setting Name="AdminId" Type="System.UInt64" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="BotPrefix" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AllowMentionPrefix" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

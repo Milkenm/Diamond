@@ -2,8 +2,11 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+
 using Discord.Commands;
+
 using static DiamondGui.Functions;
+using static ScriptsLib.Network.APIs.RiotAPI;
 #endregion
 
 
@@ -17,14 +20,9 @@ namespace DiamondGui
 		{
 			try
 			{
-
+				
 			}
 			catch (Exception _Exception) { ShowException(_Exception); }
-		}
-
-		public enum Regions
-		{
-			EUW,
 		}
 	}
 }

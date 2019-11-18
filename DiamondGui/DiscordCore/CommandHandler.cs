@@ -26,7 +26,7 @@ namespace DiamondGui
 
 				int _ArgPos = 0;
 
-				if (!(_Message.HasCharPrefix('!', ref _ArgPos) || _Message.HasMentionPrefix(Client.CurrentUser, ref _ArgPos)) || _Message.Author.IsBot)
+				if (!(_Message.HasStringPrefix(Settings.BotPrefix, ref _ArgPos) || _Message.HasMentionPrefix(Client.CurrentUser, ref _ArgPos) && Settings.AllowMentionPrefix == false) || _Message.Author.IsBot || !_Message.HasMentionPrefix(Client.CurrentUser, ref _ArgPos))
 				{
 					return;
 				}
