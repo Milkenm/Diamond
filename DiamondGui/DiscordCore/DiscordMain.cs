@@ -6,6 +6,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
+using static DiamondGui.EventsModule;
 using static DiamondGui.Functions;
 using static DiamondGui.Static;
 #endregion Usings
@@ -41,7 +42,7 @@ namespace DiamondGui
 
 				SetDiscordGame();
 				SetDiscordStatus();
-				LoadEvents();
+				Client.MessageReceived += MessageReceived;
 				await DiscordInstallCommands();
 
 				await Task.Delay(-1);

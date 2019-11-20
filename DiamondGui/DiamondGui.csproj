@@ -179,7 +179,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DiscordCore\EventHandler.cs" />
     <Compile Include="DiscordCore\LoadLavaPlayer.cs" />
     <Compile Include="Forms\LpLauncher\ShowLp.cs" />
     <Compile Include="Forms\LpLauncher\LpLauncher.cs">
