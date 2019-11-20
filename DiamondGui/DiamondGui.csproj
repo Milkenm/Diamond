@@ -205,7 +205,6 @@
     <Compile Include="Modules\Commands\Diamond\Information.cs" />
     <Compile Include="Forms\Options\RevealToken.cs" />
     <Compile Include="Forms\Main\DiscordStart.cs" />
-    <Compile Include="DiscordCore\InstallCommands.cs" />
     <Compile Include="DiscordCore\CommandHandler.cs" />
     <Compile Include="DiscordCore\Log.cs" />
     <Compile Include="DiscordCore\DiscordMain.cs" />

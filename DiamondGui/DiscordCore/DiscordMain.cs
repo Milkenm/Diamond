@@ -1,5 +1,6 @@
 ﻿#region Usings
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 
 using Discord;
@@ -43,7 +44,9 @@ namespace DiamondGui
 				SetDiscordGame();
 				SetDiscordStatus();
 				Client.MessageReceived += MessageReceived;
-				await DiscordInstallCommands();
+
+				Client.MessageReceived += DiscordCommandHandler;
+				await Command.AddModulesAsync(Assembly.GetEntryAssembly(), null);
 
 				await Task.Delay(-1);
 			}
