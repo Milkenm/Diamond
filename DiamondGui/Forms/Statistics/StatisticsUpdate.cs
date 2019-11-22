@@ -11,7 +11,7 @@ namespace DiamondGui
 {
 	internal static partial class Statistics
 	{
-		internal static void UpdateStatistics()
+		internal static void StatisticsUpdate()
 		{
 			try
 			{

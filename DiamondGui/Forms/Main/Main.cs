@@ -61,7 +61,7 @@ namespace DiamondGui.Forms
 
 		private void button_start_Click(object sender, EventArgs e) // Button 'Start'
 		{
-			DiscordStart();
+			MainDiscordStart();
 		}
 
 		private void button_options_Click(object sender, EventArgs e) // Button 'Options...'
@@ -76,7 +76,7 @@ namespace DiamondGui.Forms
 
 		private void timer_uptime_Tick(object sender, EventArgs e) // Timer 'Uptime'
 		{
-			UpdateUptime();
+			MainUpdateUptime();
 		}
 
 		private void button_statistics_Click(object sender, EventArgs e) // Button 'Statistics'

@@ -17,7 +17,7 @@ namespace DiamondGui.Forms
 
 		private void button_gradientGenerator_Click(object sender, System.EventArgs e)
 		{
-			ShowLp(LittleProgram.GradientGenerator);
+			LpLauncherShowLp(LittleProgram.GradientGenerator);
 		}
 
 		private void LpLauncher_FormClosing(object sender, FormClosingEventArgs e)

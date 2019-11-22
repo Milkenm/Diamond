@@ -13,7 +13,7 @@ namespace DiamondGui
 {
 	internal static partial class Main
 	{
-		internal static void DiscordStart()
+		internal static void MainDiscordStart()
 		{
 			try
 			{

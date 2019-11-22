@@ -230,7 +230,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\LpLauncher\ShowLp.cs" />
+    <Compile Include="Forms\LpLauncher\LpLauncherShowLp.cs" />
     <Compile Include="Forms\LpLauncher\LpLauncher.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -247,15 +247,15 @@
     <Compile Include="Forms\Options\OptionsOpenLink.cs" />
     <Compile Include="Forms\Options\OptionsSave.cs" />
     <Compile Include="Forms\Options\OptionsLoad.cs" />
-    <Compile Include="Forms\Statistics\UpdateStatistics.cs" />
+    <Compile Include="Forms\Statistics\StatisticsUpdate.cs" />
     <Compile Include="Functions\CloseForm.cs" />
-    <Compile Include="Forms\Main\UpdateUptime.cs" />
+    <Compile Include="Forms\Main\MainUpdateUptime.cs" />
     <Compile Include="Modules\Commands\Games\LeagueOfLegends\LolMain.cs" />
     <Compile Include="Modules\Commands\Music\Play.cs" />
     <Compile Include="Modules\Commands\DevOnly\HelloWorld.cs" />
     <Compile Include="Modules\Commands\Diamond\Information.cs" />
     <Compile Include="Forms\Options\OptionsRevealToken.cs" />
-    <Compile Include="Forms\Main\DiscordStart.cs" />
+    <Compile Include="Forms\Main\MainDiscordStart.cs" />
     <Compile Include="DiscordCore\DiscordCoreCommandHandler.cs" />
     <Compile Include="DiscordCore\DiscordCoreLogger.cs" />
     <Compile Include="DiscordCore\DiscordCoreMain.cs" />

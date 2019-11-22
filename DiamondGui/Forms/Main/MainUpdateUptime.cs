@@ -9,20 +9,18 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-	internal static partial class LpLauncher
+	internal static partial class Main
 	{
-		internal static void ShowLp(LittleProgram _LP)
+		internal static int CurrentUptime;
+
+		internal static void MainUpdateUptime()
 		{
 			try
 			{
-				LP_GradientGeneratorForm.Show();
+				Settings.Uptime += 1; Settings.Save();
+				CurrentUptime += 1;
 			}
 			catch (Exception _Exception) { ShowException(_Exception); }
-		}
-
-		internal enum LittleProgram
-		{
-			GradientGenerator,
 		}
 	}
 }
