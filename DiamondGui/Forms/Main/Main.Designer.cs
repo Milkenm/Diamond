@@ -62,6 +62,7 @@
 			this.comboBox_status.Name = "comboBox_status";
 			this.comboBox_status.Size = new System.Drawing.Size(161, 21);
 			this.comboBox_status.TabIndex = 1;
+			this.comboBox_status.TabStop = false;
 			this.comboBox_status.SelectedIndexChanged += new System.EventHandler(this.comboBox_status_SelectedIndexChanged);
 			// 
 			// listView_log
@@ -122,6 +123,7 @@
 			this.button_close.Name = "button_close";
 			this.button_close.Size = new System.Drawing.Size(23, 23);
 			this.button_close.TabIndex = 5;
+			this.button_close.TabStop = false;
 			this.button_close.Text = "X";
 			this.button_close.UseVisualStyleBackColor = true;
 			this.button_close.Click += new System.EventHandler(this.button_close_Click);
@@ -136,6 +138,7 @@
 			this.button_minimize.Name = "button_minimize";
 			this.button_minimize.Size = new System.Drawing.Size(23, 23);
 			this.button_minimize.TabIndex = 6;
+			this.button_minimize.TabStop = false;
 			this.button_minimize.Text = "_";
 			this.button_minimize.UseVisualStyleBackColor = true;
 			this.button_minimize.Click += new System.EventHandler(this.button_minimize_Click);
@@ -170,6 +173,7 @@
 			this.button_littlePrograms.Name = "button_littlePrograms";
 			this.button_littlePrograms.Size = new System.Drawing.Size(102, 23);
 			this.button_littlePrograms.TabIndex = 7;
+			this.button_littlePrograms.TabStop = false;
 			this.button_littlePrograms.Text = "Little Programs";
 			this.button_littlePrograms.UseVisualStyleBackColor = true;
 			this.button_littlePrograms.Click += new System.EventHandler(this.button_littlePrograms_Click);
@@ -183,6 +187,7 @@
 			this.button_statistics.Name = "button_statistics";
 			this.button_statistics.Size = new System.Drawing.Size(102, 23);
 			this.button_statistics.TabIndex = 3;
+			this.button_statistics.TabStop = false;
 			this.button_statistics.Text = "Statistics";
 			this.button_statistics.UseVisualStyleBackColor = true;
 			this.button_statistics.Click += new System.EventHandler(this.button_statistics_Click);
@@ -197,6 +202,7 @@
 			this.button_start.Name = "button_start";
 			this.button_start.Size = new System.Drawing.Size(126, 23);
 			this.button_start.TabIndex = 0;
+			this.button_start.TabStop = false;
 			this.button_start.Text = "Start";
 			this.button_start.UseVisualStyleBackColor = true;
 			this.button_start.Click += new System.EventHandler(this.button_start_Click);
@@ -210,6 +216,7 @@
 			this.button_options.Name = "button_options";
 			this.button_options.Size = new System.Drawing.Size(102, 23);
 			this.button_options.TabIndex = 2;
+			this.button_options.TabStop = false;
 			this.button_options.Text = "Options...";
 			this.button_options.UseVisualStyleBackColor = true;
 			this.button_options.Click += new System.EventHandler(this.button_options_Click);
@@ -224,6 +231,7 @@
 			this.button_reload.Name = "button_reload";
 			this.button_reload.Size = new System.Drawing.Size(68, 23);
 			this.button_reload.TabIndex = 10;
+			this.button_reload.TabStop = false;
 			this.button_reload.Text = "Reload";
 			this.button_reload.UseVisualStyleBackColor = true;
 			this.button_reload.Click += new System.EventHandler(this.button_reload_Click);
