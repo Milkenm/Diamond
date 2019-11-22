@@ -22,11 +22,11 @@ namespace DiamondGui
 		{
 			try
 			{
+				// Initialize
 				Client = new DiscordSocketClient(new DiscordSocketConfig
 				{
 					LogLevel = GetLogLevel(),
 				});
-
 				Command = new CommandService(new CommandServiceConfig
 				{
 					CaseSensitiveCommands = false,
@@ -34,20 +34,26 @@ namespace DiamondGui
 					LogLevel = GetLogLevel(),
 				});
 
-				Client = new DiscordSocketClient();
-
+				// Logs
 				Client.Log += DiscordLog;
 
+				// Status & Game
+				SetDiscordGame();
+				SetDiscordStatus();
+
+				// Message Event
+				Client.MessageReceived += MessageReceived;
+
+				// Command Handler
+				Client.MessageReceived += DiscordCommandHandler;
+				await Command.AddModulesAsync(Assembly.GetEntryAssembly(), null);
+				
+				// Login
 				await Client.LoginAsync(TokenType.Bot, OptionsForm.textBox_token.Text);
 				await Client.StartAsync();
 
-				SetDiscordGame();
-				SetDiscordStatus();
-				Client.MessageReceived += MessageReceived;
 
-				Client.MessageReceived += DiscordCommandHandler;
-				await Command.AddModulesAsync(Assembly.GetEntryAssembly(), null);
-
+				// Lock Task
 				await Task.Delay(-1);
 			}
 			catch (Exception _Exception)

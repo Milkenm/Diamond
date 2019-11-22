@@ -11,7 +11,7 @@ namespace DiamondGui
 {
 	internal static partial class Options
 	{
-		internal static void RevealToken()
+		internal static void OptionsRevealToken()
 		{
 			try
 			{

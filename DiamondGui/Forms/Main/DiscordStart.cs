@@ -21,7 +21,7 @@ namespace DiamondGui
 				{
 					new Task(new Action(() =>
 					{
-						DiscordMain().GetAwaiter().GetResult();
+						DiscordLoader().GetAwaiter().GetResult();
 					})).Start();
 				}
 				else

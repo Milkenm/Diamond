@@ -194,12 +194,36 @@ namespace DiamondGui.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool AllowMentionPrefix {
+        public bool AllowMention {
             get {
-                return ((bool)(this["AllowMentionPrefix"]));
+                return ((bool)(this["AllowMention"]));
             }
             set {
-                this["AllowMentionPrefix"] = value;
+                this["AllowMention"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AllowPrefix {
+            get {
+                return ((bool)(this["AllowPrefix"]));
+            }
+            set {
+                this["AllowPrefix"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DisableCommands {
+            get {
+                return ((bool)(this["DisableCommands"]));
+            }
+            set {
+                this["DisableCommands"] = value;
             }
         }
     }

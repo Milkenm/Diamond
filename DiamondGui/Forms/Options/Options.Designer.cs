@@ -54,11 +54,14 @@
 			this.linkLabel_riotDev = new System.Windows.Forms.LinkLabel();
 			this.tabs_options = new System.Windows.Forms.TabControl();
 			this.tab_general = new System.Windows.Forms.TabPage();
+			this.checkBox_allowMention = new System.Windows.Forms.CheckBox();
+			this.label_botPrefix = new System.Windows.Forms.Label();
+			this.textBox_botPrefix = new System.Windows.Forms.TextBox();
 			this.tab_activity = new System.Windows.Forms.TabPage();
 			this.tab_webhost = new System.Windows.Forms.TabPage();
-			this.textBox_botPrefix = new System.Windows.Forms.TextBox();
-			this.label_botPrefix = new System.Windows.Forms.Label();
-			this.checkBox_allowMentionPrefix = new System.Windows.Forms.CheckBox();
+			this.checkBox_disableCommands = new System.Windows.Forms.CheckBox();
+			this.checkBox_allowPrefix = new System.Windows.Forms.CheckBox();
+			this.label_commands = new System.Windows.Forms.Label();
 			this.tabs_options.SuspendLayout();
 			this.tab_general.SuspendLayout();
 			this.tab_activity.SuspendLayout();
@@ -298,7 +301,10 @@
 			// 
 			// tab_general
 			// 
-			this.tab_general.Controls.Add(this.checkBox_allowMentionPrefix);
+			this.tab_general.Controls.Add(this.label_commands);
+			this.tab_general.Controls.Add(this.checkBox_allowPrefix);
+			this.tab_general.Controls.Add(this.checkBox_disableCommands);
+			this.tab_general.Controls.Add(this.checkBox_allowMention);
 			this.tab_general.Controls.Add(this.label_botPrefix);
 			this.tab_general.Controls.Add(this.textBox_botPrefix);
 			this.tab_general.Controls.Add(this.label_adminId);
@@ -320,6 +326,32 @@
 			this.tab_general.Text = "General";
 			this.tab_general.UseVisualStyleBackColor = true;
 			// 
+			// checkBox_allowMention
+			// 
+			this.checkBox_allowMention.AutoSize = true;
+			this.checkBox_allowMention.Location = new System.Drawing.Point(298, 167);
+			this.checkBox_allowMention.Name = "checkBox_allowMention";
+			this.checkBox_allowMention.Size = new System.Drawing.Size(92, 17);
+			this.checkBox_allowMention.TabIndex = 13;
+			this.checkBox_allowMention.Text = "Allow Mention";
+			this.checkBox_allowMention.UseVisualStyleBackColor = true;
+			// 
+			// label_botPrefix
+			// 
+			this.label_botPrefix.AutoSize = true;
+			this.label_botPrefix.Location = new System.Drawing.Point(29, 144);
+			this.label_botPrefix.Name = "label_botPrefix";
+			this.label_botPrefix.Size = new System.Drawing.Size(55, 13);
+			this.label_botPrefix.TabIndex = 12;
+			this.label_botPrefix.Text = "Bot Prefix:";
+			// 
+			// textBox_botPrefix
+			// 
+			this.textBox_botPrefix.Location = new System.Drawing.Point(90, 141);
+			this.textBox_botPrefix.Name = "textBox_botPrefix";
+			this.textBox_botPrefix.Size = new System.Drawing.Size(430, 20);
+			this.textBox_botPrefix.TabIndex = 11;
+			// 
 			// tab_activity
 			// 
 			this.tab_activity.Controls.Add(this.textBox_activityName);
@@ -331,7 +363,7 @@
 			this.tab_activity.Location = new System.Drawing.Point(4, 22);
 			this.tab_activity.Name = "tab_activity";
 			this.tab_activity.Padding = new System.Windows.Forms.Padding(3);
-			this.tab_activity.Size = new System.Drawing.Size(590, 243);
+			this.tab_activity.Size = new System.Drawing.Size(679, 243);
 			this.tab_activity.TabIndex = 1;
 			this.tab_activity.Text = "Activity";
 			this.tab_activity.UseVisualStyleBackColor = true;
@@ -343,36 +375,40 @@
 			this.tab_webhost.Location = new System.Drawing.Point(4, 22);
 			this.tab_webhost.Name = "tab_webhost";
 			this.tab_webhost.Padding = new System.Windows.Forms.Padding(3);
-			this.tab_webhost.Size = new System.Drawing.Size(590, 243);
+			this.tab_webhost.Size = new System.Drawing.Size(679, 243);
 			this.tab_webhost.TabIndex = 2;
 			this.tab_webhost.Text = "Web Host";
 			this.tab_webhost.UseVisualStyleBackColor = true;
 			// 
-			// textBox_botPrefix
+			// checkBox_disableCommands
 			// 
-			this.textBox_botPrefix.Location = new System.Drawing.Point(90, 141);
-			this.textBox_botPrefix.Name = "textBox_botPrefix";
-			this.textBox_botPrefix.Size = new System.Drawing.Size(430, 20);
-			this.textBox_botPrefix.TabIndex = 11;
+			this.checkBox_disableCommands.AutoSize = true;
+			this.checkBox_disableCommands.Location = new System.Drawing.Point(90, 167);
+			this.checkBox_disableCommands.Name = "checkBox_disableCommands";
+			this.checkBox_disableCommands.Size = new System.Drawing.Size(116, 17);
+			this.checkBox_disableCommands.TabIndex = 14;
+			this.checkBox_disableCommands.Text = "Disable Commands";
+			this.checkBox_disableCommands.UseVisualStyleBackColor = true;
+			this.checkBox_disableCommands.CheckedChanged += new System.EventHandler(this.checkBox_disableCommands_CheckedChanged);
 			// 
-			// label_botPrefix
+			// checkBox_allowPrefix
 			// 
-			this.label_botPrefix.AutoSize = true;
-			this.label_botPrefix.Location = new System.Drawing.Point(29, 144);
-			this.label_botPrefix.Name = "label_botPrefix";
-			this.label_botPrefix.Size = new System.Drawing.Size(55, 13);
-			this.label_botPrefix.TabIndex = 12;
-			this.label_botPrefix.Text = "Bot Prefix:";
+			this.checkBox_allowPrefix.AutoSize = true;
+			this.checkBox_allowPrefix.Location = new System.Drawing.Point(212, 167);
+			this.checkBox_allowPrefix.Name = "checkBox_allowPrefix";
+			this.checkBox_allowPrefix.Size = new System.Drawing.Size(80, 17);
+			this.checkBox_allowPrefix.TabIndex = 15;
+			this.checkBox_allowPrefix.Text = "Allow Prefix";
+			this.checkBox_allowPrefix.UseVisualStyleBackColor = true;
 			// 
-			// checkBox_allowMentionPrefix
+			// label_commands
 			// 
-			this.checkBox_allowMentionPrefix.AutoSize = true;
-			this.checkBox_allowMentionPrefix.Location = new System.Drawing.Point(526, 143);
-			this.checkBox_allowMentionPrefix.Name = "checkBox_allowMentionPrefix";
-			this.checkBox_allowMentionPrefix.Size = new System.Drawing.Size(121, 17);
-			this.checkBox_allowMentionPrefix.TabIndex = 13;
-			this.checkBox_allowMentionPrefix.Text = "Allow Mention Prefix";
-			this.checkBox_allowMentionPrefix.UseVisualStyleBackColor = true;
+			this.label_commands.AutoSize = true;
+			this.label_commands.Location = new System.Drawing.Point(22, 167);
+			this.label_commands.Name = "label_commands";
+			this.label_commands.Size = new System.Drawing.Size(62, 13);
+			this.label_commands.TabIndex = 16;
+			this.label_commands.Text = "Commands:";
 			// 
 			// Options
 			// 
@@ -434,6 +470,9 @@
 		internal System.Windows.Forms.TabPage tab_general;
 		internal System.Windows.Forms.TabPage tab_activity;
 		internal System.Windows.Forms.TabPage tab_webhost;
-		internal System.Windows.Forms.CheckBox checkBox_allowMentionPrefix;
+		internal System.Windows.Forms.CheckBox checkBox_allowMention;
+		internal System.Windows.Forms.CheckBox checkBox_allowPrefix;
+		internal System.Windows.Forms.CheckBox checkBox_disableCommands;
+		internal System.Windows.Forms.Label label_commands;
 	}
 }

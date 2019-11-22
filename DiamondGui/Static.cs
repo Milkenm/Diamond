@@ -27,9 +27,6 @@ namespace DiamondGui
 		internal static DiscordSocketClient Client;
 		internal static CommandService Command;
 
-		// Lavalink
-		internal static LavalinkManager LavalinkManager;
-
 		// Other Items
 		internal static Settings Settings = new Settings();
 	}

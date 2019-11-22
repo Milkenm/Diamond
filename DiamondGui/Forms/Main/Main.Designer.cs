@@ -39,13 +39,14 @@
 			this.timer_uptime = new System.Windows.Forms.Timer(this.components);
 			this.button_close = new System.Windows.Forms.Button();
 			this.button_minimize = new System.Windows.Forms.Button();
-			this.label1 = new System.Windows.Forms.Label();
-			this.pictureBox1 = new System.Windows.Forms.PictureBox();
+			this.label_title = new System.Windows.Forms.Label();
+			this.pictureBox_titleIcon = new System.Windows.Forms.PictureBox();
 			this.button_littlePrograms = new System.Windows.Forms.Button();
 			this.button_statistics = new System.Windows.Forms.Button();
 			this.button_start = new System.Windows.Forms.Button();
 			this.button_options = new System.Windows.Forms.Button();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+			this.button_reload = new System.Windows.Forms.Button();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox_titleIcon)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// comboBox_status
@@ -139,26 +140,26 @@
 			this.button_minimize.UseVisualStyleBackColor = true;
 			this.button_minimize.Click += new System.EventHandler(this.button_minimize_Click);
 			// 
-			// label1
+			// label_title
 			// 
-			this.label1.AutoSize = true;
-			this.label1.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label1.ForeColor = System.Drawing.Color.DarkTurquoise;
-			this.label1.Location = new System.Drawing.Point(26, 1);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(107, 22);
-			this.label1.TabIndex = 8;
-			this.label1.Text = "Diamond GUI";
+			this.label_title.AutoSize = true;
+			this.label_title.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label_title.ForeColor = System.Drawing.Color.DarkTurquoise;
+			this.label_title.Location = new System.Drawing.Point(26, 1);
+			this.label_title.Name = "label_title";
+			this.label_title.Size = new System.Drawing.Size(107, 22);
+			this.label_title.TabIndex = 8;
+			this.label_title.Text = "Diamond GUI";
 			// 
-			// pictureBox1
+			// pictureBox_titleIcon
 			// 
-			this.pictureBox1.Image = global::DiamondGui.Properties.Resources.DiamondIcon1;
-			this.pictureBox1.Location = new System.Drawing.Point(4, 2);
-			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(20, 20);
-			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-			this.pictureBox1.TabIndex = 9;
-			this.pictureBox1.TabStop = false;
+			this.pictureBox_titleIcon.Image = global::DiamondGui.Properties.Resources.DiamondIcon1;
+			this.pictureBox_titleIcon.Location = new System.Drawing.Point(4, 2);
+			this.pictureBox_titleIcon.Name = "pictureBox_titleIcon";
+			this.pictureBox_titleIcon.Size = new System.Drawing.Size(20, 20);
+			this.pictureBox_titleIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+			this.pictureBox_titleIcon.TabIndex = 9;
+			this.pictureBox_titleIcon.TabStop = false;
 			// 
 			// button_littlePrograms
 			// 
@@ -213,14 +214,29 @@
 			this.button_options.UseVisualStyleBackColor = true;
 			this.button_options.Click += new System.EventHandler(this.button_options_Click);
 			// 
+			// button_reload
+			// 
+			this.button_reload.BackgroundImage = global::DiamondGui.Properties.Resources.ButtonGradient;
+			this.button_reload.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+			this.button_reload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.button_reload.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+			this.button_reload.Location = new System.Drawing.Point(287, 314);
+			this.button_reload.Name = "button_reload";
+			this.button_reload.Size = new System.Drawing.Size(68, 23);
+			this.button_reload.TabIndex = 10;
+			this.button_reload.Text = "Reload";
+			this.button_reload.UseVisualStyleBackColor = true;
+			this.button_reload.Click += new System.EventHandler(this.button_reload_Click);
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
 			this.ClientSize = new System.Drawing.Size(776, 337);
-			this.Controls.Add(this.pictureBox1);
-			this.Controls.Add(this.label1);
+			this.Controls.Add(this.button_reload);
+			this.Controls.Add(this.pictureBox_titleIcon);
+			this.Controls.Add(this.label_title);
 			this.Controls.Add(this.button_littlePrograms);
 			this.Controls.Add(this.button_minimize);
 			this.Controls.Add(this.button_close);
@@ -237,7 +253,7 @@
 			this.Text = "Diamond 💎 Control Panel";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
 			this.Load += new System.EventHandler(this.Main_Load);
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox_titleIcon)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -257,8 +273,9 @@
 		private System.Windows.Forms.Button button_close;
 		private System.Windows.Forms.Button button_minimize;
 		private System.Windows.Forms.Button button_littlePrograms;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.PictureBox pictureBox1;
+		private System.Windows.Forms.Label label_title;
+		private System.Windows.Forms.PictureBox pictureBox_titleIcon;
+		internal System.Windows.Forms.Button button_reload;
 	}
 }
 

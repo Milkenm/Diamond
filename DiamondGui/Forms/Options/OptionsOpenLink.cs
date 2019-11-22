@@ -10,16 +10,18 @@ namespace DiamondGui
 {
 	internal static partial class Options
 	{
-		internal static void OpenLink(Link Link)
+		internal static void OptionsOpenLink(Link Link)
 		{
 			try
 			{
 				switch (Link)
 				{
 					case Link.DiscordDev:
-						ExecuteCmdCommand("START https://discordapp.com/developers/applications/"); break;
+						ExecuteCmdCommand("START https://discordapp.com/developers/applications/");
+						break;
 					case Link.RiotDev:
-						ExecuteCmdCommand("START https://developer.riotgames.com/"); break;
+						ExecuteCmdCommand("START https://developer.riotgames.com/");
+						break;
 				}
 			}
 			catch (Exception _Exception) { ShowException(_Exception); }

@@ -25,12 +25,12 @@ namespace DiamondGui
 				Settings.Domain = OptionsForm.textBox_domain.Text;
 				Settings.AdminId = Convert.ToUInt64(OptionsForm.textBox_adminId.Text);
 				Settings.BotPrefix = OptionsForm.textBox_botPrefix.Text;
-				Settings.AllowMentionPrefix = OptionsForm.checkBox_allowMentionPrefix.Checked;
-
+				Settings.AllowMention = OptionsForm.checkBox_allowMention.Checked;
+				Settings.AllowPrefix = OptionsForm.checkBox_allowPrefix.Checked;
+				Settings.DisableCommands = OptionsForm.checkBox_disableCommands.Checked;
+				
 				SetDiscordGame();
-
 				Settings.Save();
-
 				OptionsForm.Hide();
 			}
 			catch (Exception _Exception) { ShowException(_Exception); }

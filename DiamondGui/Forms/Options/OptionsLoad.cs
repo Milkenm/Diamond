@@ -25,10 +25,17 @@ namespace DiamondGui
 				OptionsForm.textBox_domain.Text = Settings.Domain;
 				OptionsForm.textBox_adminId.Text = Settings.AdminId.ToString();
 				OnlyNumbersTextBox(OptionsForm.textBox_adminId);
+				OptionsForm.textBox_botPrefix.Text = Settings.BotPrefix;
 
 				// ComboBox
 				OptionsForm.comboBox_logType.SelectedIndex = Settings.LogTypeIndex;
 				OptionsForm.comboBox_activity.SelectedIndex = Settings.ActivityIndex;
+
+				// CheckBox
+				OptionsForm.checkBox_allowMention.Checked = Settings.AllowMention;
+				OptionsForm.checkBox_disableCommands.Checked = Settings.DisableCommands;
+				OptionsForm.checkBox_allowPrefix.Checked = Settings.AllowPrefix;
+				OptionsForm.checkBox_allowMention.Checked = Settings.AllowMention;
 			}
 			catch (Exception _Exception) { ShowException(_Exception); }
 		}

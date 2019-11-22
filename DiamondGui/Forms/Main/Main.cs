@@ -1,6 +1,8 @@
 ﻿#region Usings
 using System;
 using System.Windows.Forms;
+
+using static DiamondGui.Discord;
 using static DiamondGui.Functions;
 using static DiamondGui.Main;
 using static DiamondGui.Static;
@@ -57,7 +59,6 @@ namespace DiamondGui.Forms
 
 
 
-
 		private void button_start_Click(object sender, EventArgs e) // Button 'Start'
 		{
 			DiscordStart();
@@ -96,6 +97,11 @@ namespace DiamondGui.Forms
 		private void button_littlePrograms_Click(object sender, EventArgs e) // Button 'Little Programs'
 		{
 			LpLauncherForm.Show();
+		}
+
+		private void button_reload_Click(object sender, EventArgs e) // Button 'Reload'
+		{
+			DiscordLoader().GetAwaiter();
 		}
 	}
 }

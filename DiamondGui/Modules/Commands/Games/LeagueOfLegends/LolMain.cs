@@ -20,7 +20,7 @@ namespace DiamondGui
 		{
 			try
 			{
-				
+				await ReplyAsync(summoner + " | " + region);
 			}
 			catch (Exception _Exception) { ShowException(_Exception); }
 		}
