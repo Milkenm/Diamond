@@ -4,8 +4,6 @@ using DiamondGui.Properties;
 
 using Discord.Commands;
 using Discord.WebSocket;
-
-using SharpLink;
 #endregion Usings
 
 

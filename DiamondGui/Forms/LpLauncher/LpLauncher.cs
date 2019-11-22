@@ -1,8 +1,7 @@
 ﻿#region Usings
 using System.Windows.Forms;
-
-using static DiamondGui.LpLauncher;
 using static DiamondGui.Functions;
+using static DiamondGui.LpLauncher;
 #endregion Usings
 
 

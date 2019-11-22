@@ -47,7 +47,7 @@ namespace DiamondGui
 				// Command Handler
 				Client.MessageReceived += DiscordCommandHandler;
 				await Command.AddModulesAsync(Assembly.GetEntryAssembly(), null);
-				
+
 				// Login
 				await Client.LoginAsync(TokenType.Bot, OptionsForm.textBox_token.Text);
 				await Client.StartAsync();

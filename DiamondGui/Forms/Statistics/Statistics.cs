@@ -13,9 +13,15 @@ namespace DiamondGui.Forms
 	public partial class Statistics : Form
 	{
 		#region Statistics
-		public Statistics() => InitializeComponent();
+		public Statistics()
+		{
+			InitializeComponent();
+		}
 
-		private void Statistics_FormClosing(object sender, FormClosingEventArgs e) => CloseForm(this, e);
+		private void Statistics_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			CloseForm(this, e);
+		}
 		#endregion Statistics
 
 
@@ -24,6 +30,9 @@ namespace DiamondGui.Forms
 
 
 
-		private void timer_updater_Tick(object sender, EventArgs e) => UpdateStatistics();
+		private void timer_updater_Tick(object sender, EventArgs e)
+		{
+			UpdateStatistics();
+		}
 	}
 }

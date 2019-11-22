@@ -1,7 +1,7 @@
 ﻿#region Usings
 using System;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+
 using Discord.Commands;
 using Discord.WebSocket;
 
