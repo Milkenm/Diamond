@@ -225,7 +225,8 @@
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "GradientGenerator";
-			this.Text = "Gradient Generator";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+			this.Text = "Diamond 💎 Gradient Generator";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GradientGenerator_FormClosing);
 			this.Load += new System.EventHandler(this.GradientGenerator_Load);
 			((System.ComponentModel.ISupportInitialize)(this.numeric_width)).EndInit();
