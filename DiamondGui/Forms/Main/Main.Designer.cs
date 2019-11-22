@@ -148,7 +148,7 @@
 			this.label_title.AutoSize = true;
 			this.label_title.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label_title.ForeColor = System.Drawing.Color.DarkTurquoise;
-			this.label_title.Location = new System.Drawing.Point(26, 1);
+			this.label_title.Location = new System.Drawing.Point(24, 1);
 			this.label_title.Name = "label_title";
 			this.label_title.Size = new System.Drawing.Size(107, 22);
 			this.label_title.TabIndex = 8;
@@ -157,7 +157,7 @@
 			// pictureBox_titleIcon
 			// 
 			this.pictureBox_titleIcon.Image = global::DiamondGui.Properties.Resources.DiamondIcon1;
-			this.pictureBox_titleIcon.Location = new System.Drawing.Point(4, 2);
+			this.pictureBox_titleIcon.Location = new System.Drawing.Point(2, 2);
 			this.pictureBox_titleIcon.Name = "pictureBox_titleIcon";
 			this.pictureBox_titleIcon.Size = new System.Drawing.Size(20, 20);
 			this.pictureBox_titleIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
