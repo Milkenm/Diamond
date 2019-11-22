@@ -32,7 +32,7 @@ namespace DiamondGui.Forms
 
 		private void timer_updater_Tick(object sender, EventArgs e)
 		{
-			StatisticsUpdate();
+			S_UpdateStatistics();
 		}
 	}
 }
