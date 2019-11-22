@@ -13,9 +13,9 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-	internal static partial class Discord
+	internal static partial class DiscordCore
 	{
-		internal static async Task DiscordCommandHandler(SocketMessage _SocketMsg)
+		internal static async Task DiscordCoreCommandHandler(SocketMessage _SocketMsg)
 		{
 			try
 			{

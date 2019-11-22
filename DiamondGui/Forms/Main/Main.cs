@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Forms;
 
-using static DiamondGui.Discord;
+using static DiamondGui.DiscordCore;
 using static DiamondGui.Functions;
 using static DiamondGui.Main;
 using static DiamondGui.Static;
@@ -101,7 +101,7 @@ namespace DiamondGui.Forms
 
 		private void button_reload_Click(object sender, EventArgs e) // Button 'Reload'
 		{
-			DiscordLoader().GetAwaiter();
+			DiscordCoreLoader().GetAwaiter();
 		}
 	}
 }

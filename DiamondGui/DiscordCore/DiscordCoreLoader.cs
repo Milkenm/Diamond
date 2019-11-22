@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace DiamondGui
 {
-	internal static partial class Discord
+	internal static partial class DiscordCore
 	{
-		internal static async Task DiscordLoader([Optional][DefaultValue(null)] bool? reload)
+		internal static async Task DiscordCoreLoader([Optional][DefaultValue(null)] bool? reload)
 		{
 			// Unload
 			if (reload == true)
@@ -20,7 +20,7 @@ namespace DiamondGui
 
 
 			// Load
-			await DiscordMain();
+			await DiscordCoreMain();
 		}
 	}
 }

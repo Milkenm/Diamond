@@ -16,9 +16,9 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-	internal static partial class Discord
+	internal static partial class DiscordCore
 	{
-		internal static async Task DiscordMain()
+		internal static async Task DiscordCoreMain()
 		{
 			try
 			{
@@ -35,7 +35,7 @@ namespace DiamondGui
 				});
 
 				// Logs
-				Client.Log += DiscordLog;
+				Client.Log += DiscordCoreLogger;
 
 				// Status & Game
 				SetDiscordGame();
@@ -45,7 +45,7 @@ namespace DiamondGui
 				Client.MessageReceived += MessageReceived;
 
 				// Command Handler
-				Client.MessageReceived += DiscordCommandHandler;
+				Client.MessageReceived += DiscordCoreCommandHandler;
 				await Command.AddModulesAsync(Assembly.GetEntryAssembly(), null);
 
 				// Login

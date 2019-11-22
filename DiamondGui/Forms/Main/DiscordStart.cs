@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-using static DiamondGui.Discord;
+using static DiamondGui.DiscordCore;
 using static DiamondGui.Functions;
 using static DiamondGui.Static;
 #endregion Usings
@@ -21,7 +21,7 @@ namespace DiamondGui
 				{
 					new Task(new Action(() =>
 					{
-						DiscordLoader().GetAwaiter().GetResult();
+						DiscordCoreLoader().GetAwaiter().GetResult();
 					})).Start();
 				}
 				else

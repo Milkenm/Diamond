@@ -13,9 +13,9 @@ using static DiamondGui.Static;
 
 namespace DiamondGui
 {
-	internal static partial class Discord
+	internal static partial class DiscordCore
 	{
-		internal static Task DiscordLog(LogMessage LogMsg)
+		internal static Task DiscordCoreLogger(LogMessage LogMsg)
 		{
 			try
 			{
