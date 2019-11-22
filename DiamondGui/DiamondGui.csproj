@@ -231,12 +231,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Discord Core\DC Initialize.cs" />
-    <Compile Include="Forms\Lp Launcher\LPL Show Lp.cs" />
-    <Compile Include="Forms\Lp Launcher\Lp Launcher.cs">
+    <Compile Include="Forms\Lp Launcher\LPL Show LP.cs" />
+    <Compile Include="Forms\Lp Launcher\LP Launcher.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Lp Launcher\Lp Launcher.Designer.cs">
-      <DependentUpon>Lp Launcher.cs</DependentUpon>
+    <Compile Include="Forms\Lp Launcher\LP Launcher.Designer.cs">
+      <DependentUpon>LP Launcher.cs</DependentUpon>
     </Compile>
     <Compile Include="Discord Core\DC Loader.cs" />
     <Compile Include="Little Programs\Gradient Generator.cs">
@@ -290,8 +290,8 @@
       <DependentUpon>Statistics.cs</DependentUpon>
     </Compile>
     <Compile Include="Debug\Test Code Speed.cs" />
-    <EmbeddedResource Include="Forms\Lp Launcher\Lp Launcher.resx">
-      <DependentUpon>Lp Launcher.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Lp Launcher\LP Launcher.resx">
+      <DependentUpon>LP Launcher.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Main\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
