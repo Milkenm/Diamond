@@ -23,16 +23,7 @@ namespace DiamondGui
 			try
 			{
 				// Initialize
-				Client = new DiscordSocketClient(new DiscordSocketConfig
-				{
-					LogLevel = GetLogLevel(),
-				});
-				Command = new CommandService(new CommandServiceConfig
-				{
-					CaseSensitiveCommands = false,
-					DefaultRunMode = RunMode.Async,
-					LogLevel = GetLogLevel(),
-				});
+				await DiscordCoreInitialize();
 
 				// Logs
 				Client.Log += DiscordCoreLogger;

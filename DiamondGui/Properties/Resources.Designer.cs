@@ -63,9 +63,9 @@ namespace DiamondGui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ButtonGradient {
+        internal static System.Drawing.Bitmap Button_Gradient {
             get {
-                object obj = ResourceManager.GetObject("ButtonGradient", resourceCulture);
+                object obj = ResourceManager.GetObject("Button_Gradient", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace DiamondGui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon DiamondIcon {
+        internal static System.Drawing.Icon Diamond_Ico {
             get {
-                object obj = ResourceManager.GetObject("DiamondIcon", resourceCulture);
+                object obj = ResourceManager.GetObject("Diamond_Ico", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -83,9 +83,9 @@ namespace DiamondGui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap DiamondIcon1 {
+        internal static System.Drawing.Bitmap Diamond_Png {
             get {
-                object obj = ResourceManager.GetObject("DiamondIcon1", resourceCulture);
+                object obj = ResourceManager.GetObject("Diamond_Png", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
