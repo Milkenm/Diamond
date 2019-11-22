@@ -52,7 +52,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "LpLauncher";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "LP Launcher";
+			this.Text = "Diamond 💎 LP Launcher";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LpLauncher_FormClosing);
 			this.ResumeLayout(false);
 
