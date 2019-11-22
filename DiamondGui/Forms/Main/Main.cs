@@ -101,7 +101,12 @@ namespace DiamondGui.Forms
 
 		private void button_reload_Click(object sender, EventArgs e) // Button 'Reload'
 		{
-			DiscordCoreLoader().GetAwaiter();
+			DiscordCoreLoader(true).GetAwaiter();
+		}
+
+		private void Main_MouseDoubleClick(object sender, MouseEventArgs e)
+		{
+			MessageBox.Show("yup");
 		}
 	}
 }

@@ -4,8 +4,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 
 using Discord;
-using Discord.Commands;
-using Discord.WebSocket;
 
 using static DiamondGui.EventsModule;
 using static DiamondGui.Functions;
@@ -25,7 +23,7 @@ namespace DiamondGui
 				// Initialize
 				await DiscordCoreInitialize();
 
-				// Logs
+				// Logger
 				Client.Log += DiscordCoreLogger;
 
 				// Status & Game
@@ -42,8 +40,7 @@ namespace DiamondGui
 				// Login
 				await Client.LoginAsync(TokenType.Bot, OptionsForm.textBox_token.Text);
 				await Client.StartAsync();
-
-
+				
 				// Lock Task
 				await Task.Delay(-1);
 			}

@@ -238,7 +238,7 @@
     <Compile Include="Forms\Lp Launcher\LP Launcher.Designer.cs">
       <DependentUpon>LP Launcher.cs</DependentUpon>
     </Compile>
-    <Compile Include="Discord Core\DC Loader.cs" />
+    <Compile Include="Discord Core\DC Core Loader.cs" />
     <Compile Include="Little Programs\Gradient Generator.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -257,7 +257,7 @@
     <Compile Include="Modules\Commands\Diamond\Information.cs" />
     <Compile Include="Forms\Options\O Reveal Token.cs" />
     <Compile Include="Forms\Main\M Discord Start.cs" />
-    <Compile Include="Discord Core\DC CommandHandler.cs" />
+    <Compile Include="Discord Core\DC Command Handler.cs" />
     <Compile Include="Discord Core\DC Logger.cs" />
     <Compile Include="Discord Core\DC Main.cs" />
     <Compile Include="Forms\Main\M Load.cs" />

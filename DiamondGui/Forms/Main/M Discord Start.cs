@@ -34,8 +34,10 @@ namespace DiamondGui
 				}
 
 
+				
 
 				MainForm.button_start.Text = MainForm.button_start.Text == "Start" ? "Stop" : "Start";
+				MainForm.button_reload.Enabled = MainForm.button_start.Text == "Stop";
 
 				OptionsForm.textBox_token.Enabled = MainForm.button_start.Text == "Start";
 				OptionsForm.comboBox_logType.Enabled = MainForm.button_start.Text == "Start";

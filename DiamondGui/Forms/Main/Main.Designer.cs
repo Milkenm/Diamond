@@ -225,6 +225,7 @@
 			// 
 			this.button_reload.BackgroundImage = global::DiamondGui.Properties.Resources.Button_Gradient;
 			this.button_reload.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+			this.button_reload.Enabled = false;
 			this.button_reload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.button_reload.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
 			this.button_reload.Location = new System.Drawing.Point(287, 314);
@@ -256,6 +257,8 @@
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
+			this.MaximumSize = new System.Drawing.Size(776, 337);
+			this.MinimumSize = new System.Drawing.Size(776, 337);
 			this.Name = "Main";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Diamond 💎 Control Panel";
