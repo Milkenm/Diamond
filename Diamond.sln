@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.28307.852
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiamondGui", "DiamondGui\DiamondGui.csproj", "{1350C482-E38C-450F-B78D-78B0C504B933}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingProject", "TestingProject\TestingProject.csproj", "{C53CD678-F842-413B-B90E-518A399398D9}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{1350C482-E38C-450F-B78D-78B0C504B933}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1350C482-E38C-450F-B78D-78B0C504B933}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1350C482-E38C-450F-B78D-78B0C504B933}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C53CD678-F842-413B-B90E-518A399398D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C53CD678-F842-413B-B90E-518A399398D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C53CD678-F842-413B-B90E-518A399398D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C53CD678-F842-413B-B90E-518A399398D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
