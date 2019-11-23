@@ -1,0 +1,2 @@
+Update packages ("Some NuGet packages were installed using another version..."):
+	PM > update-package -reinstall
