@@ -61,11 +61,16 @@
 			this.label_botPrefix = new System.Windows.Forms.Label();
 			this.textBox_botPrefix = new System.Windows.Forms.TextBox();
 			this.tab_activity = new System.Windows.Forms.TabPage();
-			this.tab_webhost = new System.Windows.Forms.TabPage();
+			this.tab_webHost = new System.Windows.Forms.TabPage();
+			this.tab_apiKeys = new System.Windows.Forms.TabPage();
+			this.textBox_riotApi = new System.Windows.Forms.TextBox();
+			this.label_riotApi = new System.Windows.Forms.Label();
+			this.checkBox_riotApi = new System.Windows.Forms.CheckBox();
 			this.tabs_options.SuspendLayout();
 			this.tab_general.SuspendLayout();
 			this.tab_activity.SuspendLayout();
-			this.tab_webhost.SuspendLayout();
+			this.tab_webHost.SuspendLayout();
+			this.tab_apiKeys.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// label_token
@@ -292,7 +297,8 @@
 			// 
 			this.tabs_options.Controls.Add(this.tab_general);
 			this.tabs_options.Controls.Add(this.tab_activity);
-			this.tabs_options.Controls.Add(this.tab_webhost);
+			this.tabs_options.Controls.Add(this.tab_webHost);
+			this.tabs_options.Controls.Add(this.tab_apiKeys);
 			this.tabs_options.Location = new System.Drawing.Point(0, 0);
 			this.tabs_options.Name = "tabs_options";
 			this.tabs_options.SelectedIndex = 0;
@@ -398,17 +404,61 @@
 			this.tab_activity.Text = "Activity";
 			this.tab_activity.UseVisualStyleBackColor = true;
 			// 
-			// tab_webhost
+			// tab_webHost
 			// 
-			this.tab_webhost.Controls.Add(this.label_domain);
-			this.tab_webhost.Controls.Add(this.textBox_domain);
-			this.tab_webhost.Location = new System.Drawing.Point(4, 22);
-			this.tab_webhost.Name = "tab_webhost";
-			this.tab_webhost.Padding = new System.Windows.Forms.Padding(3);
-			this.tab_webhost.Size = new System.Drawing.Size(679, 243);
-			this.tab_webhost.TabIndex = 2;
-			this.tab_webhost.Text = "Web Host";
-			this.tab_webhost.UseVisualStyleBackColor = true;
+			this.tab_webHost.Controls.Add(this.label_domain);
+			this.tab_webHost.Controls.Add(this.textBox_domain);
+			this.tab_webHost.Location = new System.Drawing.Point(4, 22);
+			this.tab_webHost.Name = "tab_webHost";
+			this.tab_webHost.Padding = new System.Windows.Forms.Padding(3);
+			this.tab_webHost.Size = new System.Drawing.Size(679, 243);
+			this.tab_webHost.TabIndex = 2;
+			this.tab_webHost.Text = "Web Host";
+			this.tab_webHost.UseVisualStyleBackColor = true;
+			// 
+			// tab_apiKeys
+			// 
+			this.tab_apiKeys.Controls.Add(this.checkBox_riotApi);
+			this.tab_apiKeys.Controls.Add(this.label_riotApi);
+			this.tab_apiKeys.Controls.Add(this.textBox_riotApi);
+			this.tab_apiKeys.Location = new System.Drawing.Point(4, 22);
+			this.tab_apiKeys.Name = "tab_apiKeys";
+			this.tab_apiKeys.Padding = new System.Windows.Forms.Padding(3);
+			this.tab_apiKeys.Size = new System.Drawing.Size(679, 243);
+			this.tab_apiKeys.TabIndex = 3;
+			this.tab_apiKeys.Text = "API Keys";
+			this.tab_apiKeys.UseVisualStyleBackColor = true;
+			// 
+			// textBox_riotApi
+			// 
+			this.textBox_riotApi.Location = new System.Drawing.Point(90, 10);
+			this.textBox_riotApi.Name = "textBox_riotApi";
+			this.textBox_riotApi.PasswordChar = '•';
+			this.textBox_riotApi.Size = new System.Drawing.Size(430, 20);
+			this.textBox_riotApi.TabIndex = 0;
+			// 
+			// label_riotApi
+			// 
+			this.label_riotApi.AutoSize = true;
+			this.label_riotApi.Location = new System.Drawing.Point(35, 13);
+			this.label_riotApi.Name = "label_riotApi";
+			this.label_riotApi.Size = new System.Drawing.Size(49, 13);
+			this.label_riotApi.TabIndex = 1;
+			this.label_riotApi.Text = "Riot API:";
+			// 
+			// checkBox_riotApi
+			// 
+			this.checkBox_riotApi.AutoSize = true;
+			this.checkBox_riotApi.Checked = true;
+			this.checkBox_riotApi.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.checkBox_riotApi.Location = new System.Drawing.Point(526, 12);
+			this.checkBox_riotApi.Name = "checkBox_riotApi";
+			this.checkBox_riotApi.Size = new System.Drawing.Size(48, 17);
+			this.checkBox_riotApi.TabIndex = 5;
+			this.checkBox_riotApi.TabStop = false;
+			this.checkBox_riotApi.Text = "Hide";
+			this.checkBox_riotApi.UseVisualStyleBackColor = true;
+			this.checkBox_riotApi.CheckedChanged += new System.EventHandler(this.checkBox_riotApi_CheckedChanged);
 			// 
 			// Options
 			// 
@@ -432,8 +482,10 @@
 			this.tab_general.PerformLayout();
 			this.tab_activity.ResumeLayout(false);
 			this.tab_activity.PerformLayout();
-			this.tab_webhost.ResumeLayout(false);
-			this.tab_webhost.PerformLayout();
+			this.tab_webHost.ResumeLayout(false);
+			this.tab_webHost.PerformLayout();
+			this.tab_apiKeys.ResumeLayout(false);
+			this.tab_apiKeys.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -469,10 +521,14 @@
 		internal System.Windows.Forms.TabControl tabs_options;
 		internal System.Windows.Forms.TabPage tab_general;
 		internal System.Windows.Forms.TabPage tab_activity;
-		internal System.Windows.Forms.TabPage tab_webhost;
+		internal System.Windows.Forms.TabPage tab_webHost;
 		internal System.Windows.Forms.CheckBox checkBox_allowMention;
 		internal System.Windows.Forms.CheckBox checkBox_allowPrefix;
 		internal System.Windows.Forms.CheckBox checkBox_disableCommands;
 		internal System.Windows.Forms.Label label_commands;
+		internal System.Windows.Forms.TabPage tab_apiKeys;
+		internal System.Windows.Forms.Label label_riotApi;
+		internal System.Windows.Forms.TextBox textBox_riotApi;
+		internal System.Windows.Forms.CheckBox checkBox_riotApi;
 	}
 }

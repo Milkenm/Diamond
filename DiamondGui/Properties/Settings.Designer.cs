@@ -226,5 +226,17 @@ namespace DiamondGui.Properties {
                 this["DisableCommands"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RiotAPI {
+            get {
+                return ((string)(this["RiotAPI"]));
+            }
+            set {
+                this["RiotAPI"] = value;
+            }
+        }
     }
 }

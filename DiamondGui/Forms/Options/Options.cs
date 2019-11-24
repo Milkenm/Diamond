@@ -29,31 +29,38 @@ namespace DiamondGui.Forms
 
 
 
+		// CheckBox 'Reveal Token'
 		private void checkBox_revealToken_CheckedChanged(object sender, EventArgs e)
 		{
-			OptionsRevealToken(); // CheckBox 'Reveal Token'
+			OptionsReveal(checkBox_revealToken, textBox_token);
 		}
 
+		// Button 'Save'
 		private void button_save_Click(object sender, EventArgs e)
 		{
-			OptionsSave(); // Button 'Save'
+			OptionsSave();
 		}
 
+		// Button 'Cancel'
 		private void button_cancel_Click(object sender, EventArgs e)
 		{
-			Hide(); // Button 'Cancel'
+			OptionsLoad();
+			Hide();
 		}
 
+		// LinkLabel 'Discord Dev'
 		private void linkLabel_discordDev_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			OptionsOpenLink(Link.DiscordDev); // LinkLabel 'Discord Dev'
+			OptionsOpenLink(Link.DiscordDev);
 		}
 
+		// LinkLabel 'Riot Dev'
 		private void linkLabel_riotDev_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			OptionsOpenLink(Link.RiotDev); // LinkLabel 'Riot Dev'
+			OptionsOpenLink(Link.RiotDev);
 		}
 
+		// CheckBox 'Disable Commands'
 		private void checkBox_disableCommands_CheckedChanged(object sender, EventArgs e)
 		{
 			try
@@ -62,6 +69,12 @@ namespace DiamondGui.Forms
 				checkBox_allowMention.Enabled = !checkBox_disableCommands.Checked;
 			}
 			catch (Exception ex) { ShowException(ex); }
+		}
+
+		// CheckBox 'Reveal Riot API'
+		private void checkBox_riotApi_CheckedChanged(object sender, EventArgs e)
+		{
+			OptionsReveal(checkBox_riotApi, textBox_riotApi);
 		}
 	}
 }

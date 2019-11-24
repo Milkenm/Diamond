@@ -28,6 +28,7 @@ namespace DiamondGui
 				Settings.AllowMention = OptionsForm.checkBox_allowMention.Checked;
 				Settings.AllowPrefix = OptionsForm.checkBox_allowPrefix.Checked;
 				Settings.DisableCommands = OptionsForm.checkBox_disableCommands.Checked;
+				Settings.RiotAPI = OptionsForm.textBox_riotApi.Text;
 
 				SetDiscordGame();
 				Settings.Save();

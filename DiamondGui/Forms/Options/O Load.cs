@@ -36,6 +36,9 @@ namespace DiamondGui
 				OptionsForm.checkBox_disableCommands.Checked = Settings.DisableCommands;
 				OptionsForm.checkBox_allowPrefix.Checked = Settings.AllowPrefix;
 				OptionsForm.checkBox_allowMention.Checked = Settings.AllowMention;
+
+				// API Keys
+				OptionsForm.textBox_riotApi.Text = Settings.RiotAPI;
 			}
 			catch (Exception _Exception) { ShowException(_Exception); }
 		}

@@ -3,6 +3,8 @@ using System;
 
 using DiamondGui.LittlePrograms;
 
+using ScriptsLib.Network.APIs;
+
 using static DiamondGui.Functions;
 using static DiamondGui.Options;
 using static DiamondGui.Static;
@@ -28,6 +30,9 @@ namespace DiamondGui
 
 				// Load LittlePrograms
 				LP_GradientGeneratorForm = new GradientGenerator();
+
+				// Load APIs
+				RiotAPI.ApiKey = Settings.RiotAPI;
 			}
 			catch (Exception _Exception) { ShowException(_Exception); }
 		}
