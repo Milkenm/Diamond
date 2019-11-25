@@ -33,7 +33,6 @@ namespace DiamondGui
 					})).Start();
 				}
 
-
 				
 
 				MainForm.button_start.Text = MainForm.button_start.Text == "Start" ? "Stop" : "Start";

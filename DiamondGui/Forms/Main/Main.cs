@@ -1,11 +1,12 @@
 ﻿#region Usings
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
-
-using static DiamondGui.DiscordCore;
+using Discord.Commands;
 using static DiamondGui.Functions;
 using static DiamondGui.Main;
 using static DiamondGui.Static;
+using static DiamondGui.DiscordCore;
 #endregion Usings
 
 // # = #
@@ -102,11 +103,6 @@ namespace DiamondGui.Forms
 		private void button_reload_Click(object sender, EventArgs e) // Button 'Reload'
 		{
 			DiscordCoreLoader(true).GetAwaiter();
-		}
-
-		private void Main_MouseDoubleClick(object sender, MouseEventArgs e)
-		{
-			MessageBox.Show("yup");
 		}
 	}
 }
