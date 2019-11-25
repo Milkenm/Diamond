@@ -239,6 +239,8 @@
       <DependentUpon>LP Launcher.cs</DependentUpon>
     </Compile>
     <Compile Include="Discord Core\DC Core Loader.cs" />
+    <Compile Include="Functions\Load API Keys.cs" />
+    <Compile Include="Functions\LoL Region Parser.cs" />
     <Compile Include="Little Programs\Gradient Generator.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -251,11 +253,11 @@
     <Compile Include="Forms\Statistics\S Update Statistics.cs" />
     <Compile Include="Functions\Close Form.cs" />
     <Compile Include="Forms\Main\M Update Uptime.cs" />
-    <Compile Include="Modules\Commands\Games\League Of Legends\LoL Main.cs" />
+    <Compile Include="Modules\Commands\Games\League Of Legends\LoL Summoner.cs" />
     <Compile Include="Modules\Commands\Music\Play.cs" />
     <Compile Include="Modules\Commands\Dev Only\Hello World.cs" />
     <Compile Include="Modules\Commands\Diamond\Information.cs" />
-    <Compile Include="Forms\Options\O Reveal Token.cs" />
+    <Compile Include="Forms\Options\O Reveal.cs" />
     <Compile Include="Forms\Main\M Discord Start.cs" />
     <Compile Include="Discord Core\DC Command Handler.cs" />
     <Compile Include="Discord Core\DC Logger.cs" />

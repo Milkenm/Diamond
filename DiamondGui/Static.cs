@@ -25,7 +25,7 @@ namespace DiamondGui
 		internal static DiscordSocketClient Client;
 		internal static CommandService Command;
 
-		// Other Items
+		// Settings
 		internal static Settings Settings = new Settings();
 	}
 }

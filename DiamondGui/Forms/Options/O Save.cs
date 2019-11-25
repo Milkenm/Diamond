@@ -15,6 +15,7 @@ namespace DiamondGui
 		{
 			try
 			{
+				// Set Settings
 				Settings.BotToken = OptionsForm.textBox_token.Text;
 				Settings.LogTypeIndex = OptionsForm.comboBox_logType.SelectedIndex;
 				Settings.Game = OptionsForm.textBox_activityName.Text;
@@ -30,7 +31,11 @@ namespace DiamondGui
 				Settings.DisableCommands = OptionsForm.checkBox_disableCommands.Checked;
 				Settings.RiotAPI = OptionsForm.textBox_riotApi.Text;
 
+				// Refresh
+				LoadAPIKeys();
 				SetDiscordGame();
+
+				// Save Settings & Close
 				Settings.Save();
 				OptionsForm.Hide();
 			}

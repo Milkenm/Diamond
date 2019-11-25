@@ -32,7 +32,7 @@ namespace DiamondGui
 				LP_GradientGeneratorForm = new GradientGenerator();
 
 				// Load APIs
-				RiotAPI.ApiKey = Settings.RiotAPI;
+				LoadAPIKeys();
 			}
 			catch (Exception _Exception) { ShowException(_Exception); }
 		}
