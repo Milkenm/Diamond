@@ -1,6 +1,6 @@
 ﻿#region Usings
+using System;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 using Discord.Commands;
 using Discord.WebSocket;
@@ -17,17 +17,20 @@ namespace DiamondGui
 	{
 		internal static async Task DiscordCoreInitialize()
 		{
-			Client = new DiscordSocketClient(new DiscordSocketConfig
+			await Task.Run(new Action(() =>
 			{
-				LogLevel = GetLogLevel(),
-			});
+				Client = new DiscordSocketClient(new DiscordSocketConfig
+				{
+					LogLevel = GetLogLevel(),
+				});
 
-			Command = new CommandService(new CommandServiceConfig
-			{
-				CaseSensitiveCommands = false,
-				DefaultRunMode = RunMode.Async,
-				LogLevel = GetLogLevel(),
-			});
+				Command = new CommandService(new CommandServiceConfig
+				{
+					CaseSensitiveCommands = false,
+					DefaultRunMode = RunMode.Async,
+					LogLevel = GetLogLevel(),
+				});
+			}));
 		}
 	}
 }
