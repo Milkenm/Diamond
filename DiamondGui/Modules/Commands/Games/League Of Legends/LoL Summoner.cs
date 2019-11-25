@@ -1,10 +1,12 @@
 ﻿#region Using
-using System;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-
+using Discord;
 using Discord.Commands;
+
 using Newtonsoft.Json;
+
 using static DiamondGui.Functions;
 using static ScriptsLib.Network.APIs.RiotAPI;
 #endregion
@@ -18,22 +20,53 @@ namespace DiamondGui
 		[Command("lol summoner"), Alias("lol sum"), Summary("Gets the main champion of a summoner.")]
 		public async Task LolSummoner(string summoner, [Optional] string region)
 		{
-			try
+			Regions? reg = LolRegionParser(region);
+
+
+			if (reg != null)
 			{
-				Regions? reg = LolRegionParser(region);
+				Region = (Regions)reg;
+				string reqSum;
 
-
-				if (reg != null)
+				try
 				{
-					Region = (Regions)reg;
+					reqSum = Summoner.GetSummonerByName(summoner);
 				}
-				string reqSum = Summoner.GetSummonerByName(summoner);
+				catch (WebException ex)
+				{
+					int? error = GetHttpResponseCode(ex);
+
+					if (error != null)
+					{
+						if (error == 404)
+						{
+							await ReplyAsync("The summoner you searched for was not found. Double check the summoner name and region.");
+						}
+						else if (error == 503)
+						{
+							await ReplyAsync("The API service is currently down, please try again later.");
+						}
+						else
+						{
+							await ReplyAsync("Something went wrong with the request, please try again.\nIf the issue persists please contact the support.");
+						}
+					}
+					else
+					{
+						await ReplyAsync("An unknown error has ocurred.");
+					}
+
+					return;
+				}
 
 				SummonerJson sum = JsonConvert.DeserializeObject<SummonerJson>(reqSum);
 
 				await ReplyAsync(sum.summonerLevel + " | " + region);
 			}
-			catch (Exception _Exception) { ShowException(_Exception); }
+			else
+			{
+				await ReplyAsync("There was an error with the provided region, please double check.");
+			}
 		}
 
 		public class SummonerJson

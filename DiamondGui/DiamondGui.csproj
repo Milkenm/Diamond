@@ -239,6 +239,7 @@
       <DependentUpon>LP Launcher.cs</DependentUpon>
     </Compile>
     <Compile Include="Discord Core\DC Core Loader.cs" />
+    <Compile Include="Functions\Get HTTP Response Code.cs" />
     <Compile Include="Functions\Load API Keys.cs" />
     <Compile Include="Functions\LoL Region Parser.cs" />
     <Compile Include="Little Programs\Gradient Generator.cs">
