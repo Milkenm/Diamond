@@ -239,6 +239,7 @@
       <DependentUpon>LP Launcher.cs</DependentUpon>
     </Compile>
     <Compile Include="Discord Core\DC Core Loader.cs" />
+    <Compile Include="Functions\FinishEmbed.cs" />
     <Compile Include="Functions\Get HTTP Response Code.cs" />
     <Compile Include="Functions\Load API Keys.cs" />
     <Compile Include="Functions\LoL Region Parser.cs" />
@@ -282,6 +283,7 @@
     <Compile Include="Forms\Options\Options.Designer.cs">
       <DependentUpon>Options.cs</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Commands\_Unsorted\Loli.cs" />
     <Compile Include="Modules\Events\MessageReceived.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
