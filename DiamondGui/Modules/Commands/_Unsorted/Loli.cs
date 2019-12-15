@@ -28,7 +28,7 @@ namespace DiamondGui
 				{
 					if (type == LoliType.Futa || type == LoliType.Lewd || type == LoliType.Slave || type == LoliType.Monster)
 					{
-						await ReplyAsync("You need to be in a NSFW channel to use that command.");
+						await ReplyAsync("You must be on an NSFW channel to use this command.");
 						return;
 					}
 				}
