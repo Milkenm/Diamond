@@ -239,6 +239,7 @@
       <DependentUpon>LP Launcher.cs</DependentUpon>
     </Compile>
     <Compile Include="Discord Core\DC Core Loader.cs" />
+    <Compile Include="Functions\App Exit.cs" />
     <Compile Include="Functions\FinishEmbed.cs" />
     <Compile Include="Functions\Get HTTP Response Code.cs" />
     <Compile Include="Functions\Load API Keys.cs" />

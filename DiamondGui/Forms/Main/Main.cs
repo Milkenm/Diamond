@@ -35,7 +35,7 @@ namespace DiamondGui.Forms
 
 		private void Main_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			CloseForm(this, e);
+			AppExit();
 		}
 		#endregion Main
 
@@ -87,7 +87,7 @@ namespace DiamondGui.Forms
 
 		private void button_close_Click(object sender, EventArgs e) // Button 'X'
 		{
-			Application.Exit();
+			AppExit();
 		}
 
 		private void button_minimize_Click(object sender, EventArgs e) // Button '_'
