@@ -283,6 +283,7 @@
     <Compile Include="Forms\Options\Options.Designer.cs">
       <DependentUpon>Options.cs</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Commands\_Unsorted\NSFW.cs" />
     <Compile Include="Modules\Commands\_Unsorted\Loli.cs" />
     <Compile Include="Modules\Commands\Tools\Generate Random Number.cs" />
     <Compile Include="Modules\Events\MessageReceived.cs" />
