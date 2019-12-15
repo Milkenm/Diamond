@@ -22,6 +22,8 @@ namespace DiamondGui
 		{
 			try
 			{
+				Settings.CommandsUsed++;
+
 				#region RAM
 				EmbedFieldBuilder _EmbedField_RAM = new EmbedFieldBuilder();
 				_EmbedField_RAM.IsInline = true;

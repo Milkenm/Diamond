@@ -1,12 +1,11 @@
 ﻿#region Usings
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
-using Discord.Commands;
+
+using static DiamondGui.DiscordCore;
 using static DiamondGui.Functions;
 using static DiamondGui.Main;
 using static DiamondGui.Static;
-using static DiamondGui.DiscordCore;
 #endregion Usings
 
 // # = #

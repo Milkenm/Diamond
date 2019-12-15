@@ -19,7 +19,7 @@ namespace DiamondGui
 		{
 			try
 			{
-				Settings.CommandsUsed += 1; Settings.Save();
+				Settings.CommandsUsed++;
 
 				if (Context.User.Id == Settings.AdminId)
 				{

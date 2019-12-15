@@ -2,12 +2,14 @@
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+
 using Discord;
 using Discord.Commands;
 
 using Newtonsoft.Json;
 
 using static DiamondGui.Functions;
+using static DiamondGui.Static;
 using static ScriptsLib.Network.APIs.RiotAPI;
 #endregion
 
@@ -20,6 +22,8 @@ namespace DiamondGui
 		[Command("lol summoner"), Alias("lol sum"), Summary("Gets the main champion of a summoner.")]
 		public async Task LolSummoner(string summoner, [Optional] string region)
 		{
+			Settings.CommandsUsed++;
+
 			Regions? reg = LolRegionParser(region);
 
 

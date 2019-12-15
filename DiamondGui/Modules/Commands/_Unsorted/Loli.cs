@@ -9,6 +9,7 @@ using Discord.Commands;
 using Newtonsoft.Json;
 
 using static DiamondGui.Functions;
+using static DiamondGui.Static;
 using static ScriptsLib.Network.Requests;
 #endregion Usings
 
@@ -23,6 +24,8 @@ namespace DiamondGui
 		{
 			try
 			{
+				Settings.CommandsUsed++;
+
 				ITextChannel channel = Context.Channel as ITextChannel;
 				if (channel.IsNsfw == false)
 				{
