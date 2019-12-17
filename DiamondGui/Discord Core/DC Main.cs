@@ -40,7 +40,10 @@ namespace DiamondGui
 				// Login
 				await Client.LoginAsync(TokenType.Bot, OptionsForm.textBox_token.Text);
 				await Client.StartAsync();
-				
+
+				// LOAD PRIVATE CHAT EVENT
+				PrivateChat.LoadMessageReceivedEvent();
+
 				// Lock Task
 				await Task.Delay(-1);
 			}

@@ -231,14 +231,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Discord Core\DC Initialize.cs" />
-    <Compile Include="Forms\Lp Launcher\LPL Show LP.cs" />
-    <Compile Include="Forms\Lp Launcher\LP Launcher.cs">
+    <Compile Include="Forms\LP Launcher\LPL Show LP.cs" />
+    <Compile Include="Forms\LP Launcher\LP Launcher.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Lp Launcher\LP Launcher.Designer.cs">
+    <Compile Include="Forms\LP Launcher\LP Launcher.Designer.cs">
       <DependentUpon>LP Launcher.cs</DependentUpon>
     </Compile>
     <Compile Include="Discord Core\DC Core Loader.cs" />
+    <Compile Include="Forms\Private Chat\PM Create Tab.cs" />
+    <Compile Include="Forms\Private Chat\PM Load Message Event.cs" />
+    <Compile Include="Forms\Private Chat\PM Message Received.cs" />
+    <Compile Include="Forms\Private Chat\PM Open User Tab.cs" />
+    <Compile Include="Forms\Private Chat\PM Send Msg.cs" />
+    <Compile Include="Forms\Private Chat\PM TextBox Enter.cs" />
+    <Compile Include="Forms\Private Chat\Private Chat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Private Chat\Private Chat.Designer.cs">
+      <DependentUpon>Private Chat.cs</DependentUpon>
+    </Compile>
     <Compile Include="Functions\App Exit.cs" />
     <Compile Include="Functions\FinishEmbed.cs" />
     <Compile Include="Functions\Get HTTP Response Code.cs" />
@@ -303,7 +315,7 @@
       <DependentUpon>Statistics.cs</DependentUpon>
     </Compile>
     <Compile Include="Debug\Test Code Speed.cs" />
-    <EmbeddedResource Include="Forms\Lp Launcher\LP Launcher.resx">
+    <EmbeddedResource Include="Forms\LP Launcher\LP Launcher.resx">
       <DependentUpon>LP Launcher.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Main\Main.resx">
@@ -311,6 +323,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Options\Options.resx">
       <DependentUpon>Options.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Private Chat\Private Chat.resx">
+      <DependentUpon>Private Chat.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Little Programs\Gradient Generator.resx">
       <DependentUpon>Gradient Generator.cs</DependentUpon>

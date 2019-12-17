@@ -16,7 +16,8 @@ namespace DiamondGui
 		internal static Forms.Main MainForm;
 		internal static Forms.Options OptionsForm;
 		internal static Forms.Statistics StatisticsForm;
-		internal static Forms.LpLauncher LpLauncherForm;
+		internal static Forms.LPLauncher LpLauncherForm;
+		internal static Forms.PrivateChat PrivateChatForm;
 
 		// Little Programs
 		internal static GradientGenerator LP_GradientGeneratorForm;

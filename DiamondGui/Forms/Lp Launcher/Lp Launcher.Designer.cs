@@ -1,6 +1,6 @@
 ﻿namespace DiamondGui.Forms
 {
-	partial class LpLauncher
+	partial class LPLauncher
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -28,7 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LpLauncher));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LPLauncher));
 			this.button_gradientGenerator = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 

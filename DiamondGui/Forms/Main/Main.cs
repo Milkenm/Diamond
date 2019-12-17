@@ -103,5 +103,17 @@ namespace DiamondGui.Forms
 		{
 			DiscordCoreLoader(true).GetAwaiter();
 		}
+
+		private void button_privateChat_Click(object sender, EventArgs e)
+		{
+			if (Client != null)
+			{
+				PrivateChatForm.Show();
+			}
+			else
+			{
+				MessageBox.Show("Client not initialized.");
+			}
+		}
 	}
 }

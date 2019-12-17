@@ -8,9 +8,9 @@ using static DiamondGui.LpLauncher;
 
 namespace DiamondGui.Forms
 {
-	public partial class LpLauncher : Form
+	public partial class LPLauncher : Form
 	{
-		public LpLauncher()
+		public LPLauncher()
 		{
 			InitializeComponent();
 		}

@@ -46,6 +46,7 @@
 			this.button_start = new System.Windows.Forms.Button();
 			this.button_options = new System.Windows.Forms.Button();
 			this.button_reload = new System.Windows.Forms.Button();
+			this.button_privateChat = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox_titleIcon)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -237,12 +238,27 @@
 			this.button_reload.UseVisualStyleBackColor = true;
 			this.button_reload.Click += new System.EventHandler(this.button_reload_Click);
 			// 
+			// button_privateChat
+			// 
+			this.button_privateChat.BackgroundImage = global::DiamondGui.Properties.Resources.Button_Gradient;
+			this.button_privateChat.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+			this.button_privateChat.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.button_privateChat.Location = new System.Drawing.Point(371, 314);
+			this.button_privateChat.Name = "button_privateChat";
+			this.button_privateChat.Size = new System.Drawing.Size(102, 23);
+			this.button_privateChat.TabIndex = 11;
+			this.button_privateChat.TabStop = false;
+			this.button_privateChat.Text = "Private Chat";
+			this.button_privateChat.UseVisualStyleBackColor = true;
+			this.button_privateChat.Click += new System.EventHandler(this.button_privateChat_Click);
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
 			this.ClientSize = new System.Drawing.Size(776, 337);
+			this.Controls.Add(this.button_privateChat);
 			this.Controls.Add(this.button_reload);
 			this.Controls.Add(this.pictureBox_titleIcon);
 			this.Controls.Add(this.label_title);
@@ -287,6 +303,7 @@
 		private System.Windows.Forms.Label label_title;
 		private System.Windows.Forms.PictureBox pictureBox_titleIcon;
 		internal System.Windows.Forms.Button button_reload;
+		private System.Windows.Forms.Button button_privateChat;
 	}
 }
 

@@ -82,6 +82,18 @@ namespace DiamondGui
 				embed.WithAuthor(author);
 
 				await ReplyAsync(embed: FinishEmbed(embed, Context));
+
+				if (channel.IsNsfw == true)
+				{
+					int rand = new Random().Next(0, 100);
+					if (type == LoliType.Futa || type == LoliType.Lewd || type == LoliType.Slave || type == LoliType.Monster)
+					{
+						if (rand >= 0 && rand <= 10)
+						{
+							await ReplyAsync("https://tenor.com/Wp1T.gif");
+						}
+					}
+				}
 			}
 			catch (Exception _Exception) { ShowException(_Exception); }
 		}

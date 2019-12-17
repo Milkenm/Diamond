@@ -26,7 +26,8 @@ namespace DiamondGui
 				// Load other forms
 				OptionsForm = new Forms.Options(); OptionsLoad();
 				StatisticsForm = new Forms.Statistics();
-				LpLauncherForm = new Forms.LpLauncher();
+				LpLauncherForm = new Forms.LPLauncher();
+				PrivateChatForm = new Forms.PrivateChat();
 
 				// Load LittlePrograms
 				LP_GradientGeneratorForm = new GradientGenerator();
