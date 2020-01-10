@@ -296,9 +296,13 @@
     <Compile Include="Forms\Options\Options.Designer.cs">
       <DependentUpon>Options.cs</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Commands\_Unsorted\Meme.cs" />
+    <Compile Include="Modules\Commands\_Unsorted\Muda.cs" />
     <Compile Include="Modules\Commands\_Unsorted\NSFW.cs" />
     <Compile Include="Modules\Commands\_Unsorted\Loli.cs" />
     <Compile Include="Modules\Commands\Tools\Generate Random Number.cs" />
+    <Compile Include="Modules\Commands\_Unsorted\Ora.cs" />
+    <Compile Include="Modules\Commands\_Unsorted\ReqMuda.cs" />
     <Compile Include="Modules\Events\MessageReceived.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -362,6 +366,8 @@
     </Content>
     <Content Include="Resources\Diamond Icon\Diamond Icon.ico" />
     <Content Include="Resources\Diamond Icon\Diamond Icon.png" />
+    <None Include="Resources\Meme_ChangeMyMind.png" />
+    <None Include="Resources\Meme_TuxedoWinnieThePooh.png" />
     <Content Include="Resources\Textures\Button Gradient.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

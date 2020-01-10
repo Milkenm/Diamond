@@ -157,7 +157,7 @@
 			// 
 			// pictureBox_titleIcon
 			// 
-			this.pictureBox_titleIcon.Image = global::DiamondGui.Properties.Resources.Diamond_Png;
+			this.pictureBox_titleIcon.Image = global::DiamondGui.Properties.Resources.Icon_Diamond;
 			this.pictureBox_titleIcon.Location = new System.Drawing.Point(2, 2);
 			this.pictureBox_titleIcon.Name = "pictureBox_titleIcon";
 			this.pictureBox_titleIcon.Size = new System.Drawing.Size(20, 20);
@@ -167,7 +167,7 @@
 			// 
 			// button_littlePrograms
 			// 
-			this.button_littlePrograms.BackgroundImage = global::DiamondGui.Properties.Resources.Button_Gradient;
+			this.button_littlePrograms.BackgroundImage = global::DiamondGui.Properties.Resources.Control_ButtonGradient;
 			this.button_littlePrograms.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.button_littlePrograms.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.button_littlePrograms.Location = new System.Drawing.Point(472, 314);
@@ -181,7 +181,7 @@
 			// 
 			// button_statistics
 			// 
-			this.button_statistics.BackgroundImage = global::DiamondGui.Properties.Resources.Button_Gradient;
+			this.button_statistics.BackgroundImage = global::DiamondGui.Properties.Resources.Control_ButtonGradient;
 			this.button_statistics.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.button_statistics.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.button_statistics.Location = new System.Drawing.Point(674, 314);
@@ -195,7 +195,7 @@
 			// 
 			// button_start
 			// 
-			this.button_start.BackgroundImage = global::DiamondGui.Properties.Resources.Button_Gradient;
+			this.button_start.BackgroundImage = global::DiamondGui.Properties.Resources.Control_ButtonGradient;
 			this.button_start.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.button_start.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.button_start.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -210,7 +210,7 @@
 			// 
 			// button_options
 			// 
-			this.button_options.BackgroundImage = global::DiamondGui.Properties.Resources.Button_Gradient;
+			this.button_options.BackgroundImage = global::DiamondGui.Properties.Resources.Control_ButtonGradient;
 			this.button_options.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.button_options.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.button_options.Location = new System.Drawing.Point(573, 314);
@@ -224,7 +224,7 @@
 			// 
 			// button_reload
 			// 
-			this.button_reload.BackgroundImage = global::DiamondGui.Properties.Resources.Button_Gradient;
+			this.button_reload.BackgroundImage = global::DiamondGui.Properties.Resources.Control_ButtonGradient;
 			this.button_reload.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.button_reload.Enabled = false;
 			this.button_reload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -240,7 +240,7 @@
 			// 
 			// button_privateChat
 			// 
-			this.button_privateChat.BackgroundImage = global::DiamondGui.Properties.Resources.Button_Gradient;
+			this.button_privateChat.BackgroundImage = global::DiamondGui.Properties.Resources.Control_ButtonGradient;
 			this.button_privateChat.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.button_privateChat.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.button_privateChat.Location = new System.Drawing.Point(371, 314);
