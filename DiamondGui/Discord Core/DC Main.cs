@@ -1,16 +1,16 @@
 ﻿#region Usings
+
+using Discord;
+
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
 
-using Discord;
-
 using static DiamondGui.EventsModule;
 using static DiamondGui.Functions;
 using static DiamondGui.Static;
+
 #endregion Usings
-
-
 
 namespace DiamondGui
 {

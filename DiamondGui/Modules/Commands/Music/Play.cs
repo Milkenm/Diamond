@@ -1,10 +1,12 @@
 ﻿#region Usings
+
 using Discord.Commands;
+
 using SharpLink;
+
 using static DiamondGui.Static;
+
 #endregion Usings
-
-
 
 namespace Dota_Geek.Modules
 {

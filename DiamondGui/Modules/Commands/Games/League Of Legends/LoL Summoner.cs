@@ -1,19 +1,19 @@
 ﻿#region Using
-using System.Net;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 using Discord;
 using Discord.Commands;
 
 using Newtonsoft.Json;
 
+using System.Net;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+
 using static DiamondGui.Functions;
 using static DiamondGui.Static;
 using static ScriptsLib.Network.APIs.RiotAPI;
-#endregion
 
-
+#endregion Using
 
 namespace DiamondGui
 {
@@ -25,7 +25,6 @@ namespace DiamondGui
 			Settings.CommandsUsed++;
 
 			Regions? reg = LolRegionParser(region);
-
 
 			if (reg != null)
 			{

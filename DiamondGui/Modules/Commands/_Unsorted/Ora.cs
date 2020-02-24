@@ -1,15 +1,10 @@
-﻿#region Usings
-using System;
-using System.Drawing.Imaging;
-using System.Threading.Tasks;
-
-using Discord;
+﻿using Discord;
 using Discord.Commands;
 
+using System;
+using System.Threading.Tasks;
+
 using static DiamondGui.Functions;
-#endregion Usings
-
-
 
 namespace DiamondGui
 {

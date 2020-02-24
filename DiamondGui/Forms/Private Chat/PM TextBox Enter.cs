@@ -1,10 +1,10 @@
 ﻿#region Usings
-using System.Windows.Forms;
 
 using Discord.WebSocket;
+
+using System.Windows.Forms;
+
 #endregion Usings
-
-
 
 namespace DiamondGui
 {

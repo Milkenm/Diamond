@@ -1,12 +1,12 @@
 ﻿#region Usings
+
 using DiamondGui.LittlePrograms;
 using DiamondGui.Properties;
 
 using Discord.Commands;
 using Discord.WebSocket;
+
 #endregion Usings
-
-
 
 namespace DiamondGui
 {
@@ -14,6 +14,7 @@ namespace DiamondGui
 	{
 		// Forms
 		internal static Forms.Main MainForm;
+
 		internal static Forms.Options OptionsForm;
 		internal static Forms.Statistics StatisticsForm;
 		internal static Forms.LPLauncher LpLauncherForm;
@@ -24,6 +25,7 @@ namespace DiamondGui
 
 		// Discord
 		internal static DiscordSocketClient Client;
+
 		internal static CommandService Command;
 
 		// Settings

@@ -1,17 +1,17 @@
 ﻿#region Usings
-using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
 
 using Discord.Commands;
 
 using Newtonsoft.Json;
 
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+
 using static DiamondGui.Functions;
 using static ScriptsLib.Network.Requests;
+
 #endregion Usings
-
-
 
 namespace DiamondGui
 {
@@ -25,7 +25,7 @@ namespace DiamondGui
 				Stopwatch s = new Stopwatch();
 				s.Start();
 
-				var url = "https://www.reddit.com/r/memes/new.json?limit=100";
+				string url = "https://www.reddit.com/r/memes/new.json?limit=100";
 
 				MemeSchema meme = JsonConvert.DeserializeObject<MemeSchema>(GET(url));
 

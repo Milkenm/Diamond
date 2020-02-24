@@ -1,16 +1,14 @@
 ﻿#region Usings
-using System;
 
 using DiamondGui.LittlePrograms;
 
-using ScriptsLib.Network.APIs;
+using System;
 
 using static DiamondGui.Functions;
 using static DiamondGui.Options;
 using static DiamondGui.Static;
+
 #endregion Usings
-
-
 
 namespace DiamondGui
 {
