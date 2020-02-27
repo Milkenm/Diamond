@@ -1,16 +1,12 @@
-﻿#region Usings
+﻿using DiamondGui.LittlePrograms;
+
 using System;
-
-using DiamondGui.LittlePrograms;
-
-using ScriptsLib.Network.APIs;
 
 using static DiamondGui.Functions;
 using static DiamondGui.Options;
 using static DiamondGui.Static;
-#endregion Usings
 
-
+using static ScriptsLib.Controls.Tweaks.SlForm;
 
 namespace DiamondGui
 {
@@ -34,6 +30,9 @@ namespace DiamondGui
 
 				// Load APIs
 				LoadAPIKeys();
+
+				// Make the Main form dragable
+				AllowDrag(MainForm);
 			}
 			catch (Exception _Exception) { ShowException(_Exception); }
 		}
