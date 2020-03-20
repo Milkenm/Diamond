@@ -268,6 +268,7 @@
     <Compile Include="Forms\Statistics\S Update Statistics.cs" />
     <Compile Include="Functions\Close Form.cs" />
     <Compile Include="Forms\Main\M Update Uptime.cs" />
+    <Compile Include="Modules\ChillinRoom Commands.cs" />
     <Compile Include="Modules\Commands\Games\League Of Legends\LoL Summoner.cs" />
     <Compile Include="Modules\Commands\Music\Play.cs" />
     <Compile Include="Modules\Commands\Dev Only\Hello World.cs" />
