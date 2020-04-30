@@ -63,6 +63,16 @@ namespace DiamondGui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Board_PNG {
+            get {
+                object obj = ResourceManager.GetObject("Board_PNG", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Control_ButtonGradient {
             get {
                 object obj = ResourceManager.GetObject("Control_ButtonGradient", resourceCulture);
@@ -93,9 +103,9 @@ namespace DiamondGui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Meme_ChangeMyMind {
+        internal static System.Drawing.Bitmap O_PNG {
             get {
-                object obj = ResourceManager.GetObject("Meme_ChangeMyMind", resourceCulture);
+                object obj = ResourceManager.GetObject("O_PNG", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -103,9 +113,9 @@ namespace DiamondGui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Meme_TuxedoWinnieThePooh {
+        internal static System.Drawing.Bitmap X_PNG {
             get {
-                object obj = ResourceManager.GetObject("Meme_TuxedoWinnieThePooh", resourceCulture);
+                object obj = ResourceManager.GetObject("X_PNG", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

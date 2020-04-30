@@ -269,6 +269,7 @@
     <Compile Include="Functions\Close Form.cs" />
     <Compile Include="Forms\Main\M Update Uptime.cs" />
     <Compile Include="Modules\Commands\Games\League Of Legends\LoL Summoner.cs" />
+    <Compile Include="Modules\Commands\Joguinhos\TicTacToe.cs" />
     <Compile Include="Modules\Commands\Music\Play.cs" />
     <Compile Include="Modules\Commands\Dev Only\Hello World.cs" />
     <Compile Include="Modules\Commands\Diamond\Information.cs" />
@@ -360,6 +361,8 @@
     <Folder Include="Modules\Commands\Random\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\X_PNG.png" />
+    <None Include="Resources\Board_PNG.png" />
     <Content Include="Resources\Data\Diamond DB.mdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -367,6 +370,7 @@
     <Content Include="Resources\Diamond Icon\Diamond Icon.png" />
     <None Include="Resources\Meme_ChangeMyMind.png" />
     <None Include="Resources\Meme_TuxedoWinnieThePooh.png" />
+    <None Include="Resources\O_PNG.png" />
     <Content Include="Resources\Textures\Button Gradient.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
