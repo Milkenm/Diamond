@@ -8,10 +8,6 @@ using static DiamondGui.Main;
 using static DiamondGui.Static;
 #endregion Usings
 
-// # = #
-// 1* Move form without title bar: https://stackoverflow.com/questions/23966253/moving-form-without-title-bar
-// # = #
-
 namespace DiamondGui.Forms
 {
 	public partial class Main : Form
@@ -39,71 +35,65 @@ namespace DiamondGui.Forms
 		#endregion Main
 
 
-		protected override void WndProc(ref Message msg) // 1*
-		{
-			switch (msg.Msg)
-			{
-				case 0x84:
-					{
-						base.WndProc(ref msg);
-						if ((int)msg.Result == 0x1)
-						{
-							msg.Result = (IntPtr)0x2;
-						}
-
-						return;
-					}
-			}
-			base.WndProc(ref msg);
-		}
 
 
 
-		private void button_start_Click(object sender, EventArgs e) // Button 'Start'
+
+		// Button 'Start'
+		private void button_start_Click(object sender, EventArgs e)
 		{
 			MainDiscordStart();
 		}
 
-		private void button_options_Click(object sender, EventArgs e) // Button 'Options...'
+		// Button 'Options...'
+		private void button_options_Click(object sender, EventArgs e)
 		{
 			OptionsForm.Show();
 		}
 
-		private void comboBox_status_SelectedIndexChanged(object sender, EventArgs e) // ComboBox 'Status'
+		// ComboBox 'Status'
+		private void comboBox_status_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			SetDiscordStatus();
 		}
 
-		private void timer_uptime_Tick(object sender, EventArgs e) // Timer 'Uptime'
+		// Timer 'Uptime'
+		private void timer_uptime_Tick(object sender, EventArgs e)
 		{
 			MainUpdateUptime();
 		}
 
-		private void button_statistics_Click(object sender, EventArgs e) // Button 'Statistics'
+		// Button 'Statistics'
+		private void button_statistics_Click(object sender, EventArgs e)
 		{
 			StatisticsForm.Show();
 		}
 
-		private void button_close_Click(object sender, EventArgs e) // Button 'X'
+		// Button <close> 'X'
+		private void button_close_Click(object sender, EventArgs e)
 		{
 			AppExit();
 		}
 
-		private void button_minimize_Click(object sender, EventArgs e) // Button '_'
+		// Button <minimize> '_'
+		private void button_minimize_Click(object sender, EventArgs e)
 		{
 			WindowState = FormWindowState.Minimized;
 		}
 
-		private void button_littlePrograms_Click(object sender, EventArgs e) // Button 'Little Programs'
+		// Button 'Little Programs'
+		private void button_littlePrograms_Click(object sender, EventArgs e)
 		{
 			LpLauncherForm.Show();
 		}
 
-		private void button_reload_Click(object sender, EventArgs e) // Button 'Reload'
+		// Button 'Reload'
+		private void button_reload_Click(object sender, EventArgs e)
 		{
 			DiscordCoreLoader(true).GetAwaiter();
 		}
 
+		// Button 'Private Chat'
 		private void button_privateChat_Click(object sender, EventArgs e)
 		{
 			if (Client != null)

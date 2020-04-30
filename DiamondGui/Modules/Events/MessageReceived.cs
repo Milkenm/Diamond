@@ -10,13 +10,17 @@ namespace DiamondGui
 {
 	internal static partial class EventsModule
 	{
-		internal static Task MessageReceived(SocketMessage _Message)
+		internal static Task MessageReceived(SocketMessage msg)
 		{
-			if (_Message.Author.IsBot == false)
+			if (!msg.Author.IsBot)
 			{
-				if (_Message.Content == "(╯°□°）╯︵ ┻━┻")
+				if (msg.Content == "(╯°□°）╯︵ ┻━┻")
 				{
-					_Message.Channel.SendMessageAsync("┬─┬ ノ( ゜-゜ノ)");
+					msg.Channel.SendMessageAsync("┬─┬ ノ( ゜-゜ノ)");
+				}
+				if (msg.Content.Contains("discord.gg"))
+				{
+					ChillinRoomModule.DiscordLinkPosted(msg);
 				}
 			}
 

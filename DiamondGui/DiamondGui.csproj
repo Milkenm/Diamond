@@ -68,8 +68,8 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="ScriptsLib, Version=6.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ScriptsLib.6.3.0\lib\ScriptsLib.dll</HintPath>
+    <Reference Include="ScriptsLib, Version=6.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ScriptsLib.6.3.1\lib\ScriptsLib.dll</HintPath>
     </Reference>
     <Reference Include="SharpLink, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpLink.1.0.0-beta-0005\lib\netstandard2.0\SharpLink.dll</HintPath>
@@ -268,6 +268,7 @@
     <Compile Include="Forms\Statistics\S Update Statistics.cs" />
     <Compile Include="Functions\Close Form.cs" />
     <Compile Include="Forms\Main\M Update Uptime.cs" />
+    <Compile Include="Modules\ChillinRoom Commands.cs" />
     <Compile Include="Modules\Commands\Games\League Of Legends\LoL Summoner.cs" />
     <Compile Include="Modules\Commands\Joguinhos\TicTacToe.cs" />
     <Compile Include="Modules\Commands\Music\Play.cs" />
