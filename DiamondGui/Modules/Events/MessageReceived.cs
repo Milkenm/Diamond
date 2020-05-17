@@ -10,21 +10,21 @@ namespace DiamondGui
 {
 	internal static partial class EventsModule
 	{
-		internal static Task MessageReceived(SocketMessage msg)
+		internal static async Task MessageReceived(SocketMessage msg)
 		{
+			await msg.Channel.SendMessageAsync(msg.Author.ToString());
+
 			if (!msg.Author.IsBot)
 			{
 				if (msg.Content == "(╯°□°）╯︵ ┻━┻")
 				{
-					msg.Channel.SendMessageAsync("┬─┬ ノ( ゜-゜ノ)");
+					await msg.Channel.SendMessageAsync("┬─┬ ノ( ゜-゜ノ)");
 				}
 				if (msg.Content.Contains("discord.gg"))
 				{
-					ChillinRoomModule.DiscordLinkPosted(msg);
+					await ChillinRoomModule.DiscordLinkPosted(msg);
 				}
 			}
-
-			return Task.CompletedTask;
 		}
 	}
 }
