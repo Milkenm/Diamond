@@ -11,7 +11,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DiamondGui.Modules.Commands.Joguinhos
+namespace DiamondGui
 {
 	public partial class CommandsModule : ModuleBase<SocketCommandContext>
 	{
@@ -22,6 +22,7 @@ namespace DiamondGui.Modules.Commands.Joguinhos
 		private static int playCount;
 		private static Bitmap playerX = new Bitmap(Resources.X_PNG);
 		private static Bitmap playerO = new Bitmap(Resources.O_PNG);
+
 		private static readonly int[] combosList =
 		{
 			123, 147, 159, // 1
@@ -35,24 +36,20 @@ namespace DiamondGui.Modules.Commands.Joguinhos
 			978, 936, 915 // 9
 		};
 
-
-
-
-
 		[Command("tictactoe"), Alias("jogodogalo", "jc"), Summary("Play Tik Tak Toe against your friend.")]
 		public async Task TikTakToe(IUser opponent)
 		{
-			Static.Settings.CommandsUsed++;
+			Static.settings.CommandsUsed++;
 
 			if (opponent.IsBot || opponent == Context.User)
 			{
 				string message = opponent.IsBot ? "You cannot play against bots!" : "You cannot play against yourself! (are you that lonely?)";
-				await ReplyAsync(message);
+				await ReplyAsync(message).ConfigureAwait(false);
 			}
 			else
 			{
 				string reply = $"Host: {Context.User.Mention}\nOpponent: {opponent.Mention}\n\n\n{board}";
-				await Context.Channel.SendFileAsync(SaveBitMap(), "lmao functiona.png");
+				await Context.Channel.SendFileAsync(SaveBitMap(), "lmao functiona.png").ConfigureAwait(false);
 			}
 		}
 
@@ -70,7 +67,7 @@ namespace DiamondGui.Modules.Commands.Joguinhos
 			boardImage.Save(filename, System.Drawing.Imaging.ImageFormat.Bmp);
 			return filename;
 		}
-		
+
 		private void ButtonClick(object sender, EventArgs e)
 		{
 			Button b = (Button)sender;
@@ -97,14 +94,7 @@ namespace DiamondGui.Modules.Commands.Joguinhos
 					UpdateBoard(new Point(96, 96)); break;
 			}
 
-			if (player == "X")
-			{
-				player = "O";
-			}
-			else
-			{
-				player = "X";
-			}
+			player = player == "X" ? "O" : "X";
 		}
 
 		public void UpdateBoard(Point position)
@@ -121,7 +111,6 @@ namespace DiamondGui.Modules.Commands.Joguinhos
 				bGraphics.DrawImage(playerO, position);
 			}
 		}
-
 
 		private static bool CheckCombo(int combo, Bitmap player)
 		{
@@ -188,12 +177,7 @@ namespace DiamondGui.Modules.Commands.Joguinhos
 				}
 			}
 
-			if (playCount == 9)
-			{
-				return "D";
-			}
-
-			return null;
+			return playCount == 9 ? "D" : null;
 		}
 	}
 }

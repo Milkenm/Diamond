@@ -4,11 +4,9 @@ using Discord.Commands;
 
 using Newtonsoft.Json;
 
-using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-using static DiamondGui.Functions;
 using static ScriptsLib.Network.Requests;
 
 #endregion Usings
@@ -20,20 +18,16 @@ namespace DiamondGui
 		[Command("meme"), Summary("Gives you a meme.")]
 		public async Task CMD_Meme()
 		{
-			try
-			{
-				Stopwatch s = new Stopwatch();
-				s.Start();
+			Stopwatch s = new Stopwatch();
+			s.Start();
 
-				string url = "https://www.reddit.com/r/memes/new.json?limit=100";
+			string url = "https://www.reddit.com/r/memes/new.json?limit=100";
 
-				MemeSchema meme = JsonConvert.DeserializeObject<MemeSchema>(GET(url));
+			MemeSchema meme = JsonConvert.DeserializeObject<MemeSchema>(GET(url));
 
-				s.Stop();
-				await ReplyAsync(s.ElapsedMilliseconds + "ms");
-				await ReplyAsync(meme.data.children[0].data.author_fullname.ToString());
-			}
-			catch (Exception _Exception) { ShowException(_Exception); }
+			s.Stop();
+			await ReplyAsync(s.ElapsedMilliseconds + "ms");
+			await ReplyAsync(meme.data.children[0].data.author_fullname.ToString());
 		}
 
 		public class MemeSchema

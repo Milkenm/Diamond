@@ -1,9 +1,9 @@
 ﻿#region Usings
+
 using System;
 using System.Windows.Forms;
+
 #endregion Usings
-
-
 
 namespace TestingProject
 {
@@ -14,7 +14,7 @@ namespace TestingProject
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new GradientGenerator());
+			Application.Run(new SQLite());
 		}
 	}
 }

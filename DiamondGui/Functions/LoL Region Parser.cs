@@ -1,8 +1,8 @@
 ﻿#region Usings
+
 using static ScriptsLib.Network.APIs.RiotAPI;
+
 #endregion Usings
-
-
 
 namespace DiamondGui
 {
@@ -10,33 +10,45 @@ namespace DiamondGui
 	{
 		internal static Regions? LolRegionParser(string regionString)
 		{
-			switch (regionString.ToLower())
+			if (!string.IsNullOrEmpty(regionString))
 			{
-				case "br":
-					return Regions.BR1;
-				case "eune":
-					return Regions.EUN1;
-				case "euw":
-					return Regions.EUW1;
-				case "jp":
-					return Regions.JP1;
-				case "kr":
-					return Regions.KR;
-				case "lan":
-					return Regions.LA1;
-				case "las":
-					return Regions.LA2;
-				case "na":
-					return Regions.NA1;
-				case "oce":
-					return Regions.OC1;
-				case "ru":
-					return Regions.RU;
-				case "tr":
-					return Regions.TR1;
-				default:
-					return null;
+				switch (regionString.ToLower())
+				{
+					case "br":
+						return Regions.BR1;
+
+					case "eune":
+						return Regions.EUN1;
+
+					case "euw":
+						return Regions.EUW1;
+
+					case "jp":
+						return Regions.JP1;
+
+					case "kr":
+						return Regions.KR;
+
+					case "lan":
+						return Regions.LA1;
+
+					case "las":
+						return Regions.LA2;
+
+					case "na":
+						return Regions.NA1;
+
+					case "oce":
+						return Regions.OC1;
+
+					case "ru":
+						return Regions.RU;
+
+					case "tr":
+						return Regions.TR1;
+				}
 			}
+			return null;
 		}
 	}
 }

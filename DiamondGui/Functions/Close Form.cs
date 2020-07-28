@@ -1,11 +1,10 @@
 ﻿#region Usings
-using System;
+
 using System.Windows.Forms;
 
 using static DiamondGui.Static;
+
 #endregion Usings
-
-
 
 namespace DiamondGui
 {
@@ -13,25 +12,21 @@ namespace DiamondGui
 	{
 		internal static void CloseForm(Form form, FormClosingEventArgs e)
 		{
-			try
+			if (form.Name == "Main")
 			{
-				if (form.Name == "Main")
+				if (mainForm.button_start.Text == "Stop")
 				{
-					if (MainForm.button_start.Text == "Stop")
-					{
-						MainForm.button_start.PerformClick();
-					}
+					mainForm.button_start.PerformClick();
+				}
 
-					Settings.StatusIndex = MainForm.comboBox_status.SelectedIndex;
-					Settings.Save();
-				}
-				else
-				{
-					e.Cancel = true;
-					form.Hide();
-				}
+				settings.StatusIndex = mainForm.comboBox_status.SelectedIndex;
+				settings.Save();
 			}
-			catch (Exception _Exception) { ShowException(_Exception); }
+			else
+			{
+				e.Cancel = true;
+				form.Hide();
+			}
 		}
 	}
 }

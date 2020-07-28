@@ -1,14 +1,12 @@
 ﻿#region Usings
-using System;
-using System.Threading.Tasks;
 
 using Discord.Commands;
 
-using static DiamondGui.Functions;
+using System.Threading.Tasks;
+
 using static DiamondGui.Static;
+
 #endregion Usings
-
-
 
 namespace DiamondGui
 {
@@ -17,16 +15,12 @@ namespace DiamondGui
 		[Command("helloworld"), Alias("hello", "world"), Summary("Prints 'Hello World!' in event-channel.")]
 		public async Task HelloWorld()
 		{
-			try
-			{
-				Settings.CommandsUsed++;
+			settings.CommandsUsed++;
 
-				if (Context.User.Id == Settings.AdminId)
-				{
-					await ReplyAsync("Hello World!");
-				}
+			if (Context.User.Id == settings.AdminId)
+			{
+				await ReplyAsync("Hello World!").ConfigureAwait(false);
 			}
-			catch (Exception _Exception) { ShowException(_Exception); }
 		}
 	}
 }

@@ -238,5 +238,29 @@ namespace DiamondGui.Properties {
                 this["RiotAPI"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string BinaryFilePath {
+            get {
+                return ((string)(this["BinaryFilePath"]));
+            }
+            set {
+                this["BinaryFilePath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string BinaryFileName {
+            get {
+                return ((string)(this["BinaryFileName"]));
+            }
+            set {
+                this["BinaryFileName"] = value;
+            }
+        }
     }
 }

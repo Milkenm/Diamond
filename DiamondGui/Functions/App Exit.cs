@@ -1,16 +1,16 @@
 ﻿#region Usings
+
 using System.Windows.Forms;
 
 using static DiamondGui.Static;
+
 #endregion Usings
-
-
 
 namespace DiamondGui
 {
 	internal static partial class Functions
 	{
-		internal static bool Closing = false;
+		internal static bool Closing;
 
 		internal static void AppExit()
 		{
@@ -18,13 +18,10 @@ namespace DiamondGui
 			{
 				Closing = true;
 
+				settings.Save();
 
-				Settings.Save();
-
-				OptionsForm.Close();
-				StatisticsForm.Close();
-				LpLauncherForm.Close();
-				MainForm.Close();
+				optionsForm.Close();
+				mainForm.Close();
 
 				Application.Exit();
 			}

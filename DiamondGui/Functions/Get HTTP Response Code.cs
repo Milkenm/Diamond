@@ -1,5 +1,7 @@
 ﻿#region Usings
+
 using System.Net;
+
 #endregion Usings
 
 // # = #
@@ -12,13 +14,7 @@ namespace DiamondGui
 	{
 		internal static int? GetHttpResponseCode(WebException ex)
 		{
-			HttpWebResponse resp = ex.Response as HttpWebResponse;
-
-			if (resp != null)
-			{
-				return (int)resp.StatusCode;
-			}
-			return null;
+			return ex.Response is HttpWebResponse resp ? (int)resp.StatusCode : (int?)null;
 		}
 	}
 }

@@ -1,40 +1,29 @@
 ﻿#region Usings
-using System;
 
 using Discord;
 
-using static DiamondGui.Static;
 #endregion Usings
-
-
 
 namespace DiamondGui
 {
 	internal static partial class Functions
 	{
-		internal static UserStatus GetUserStatus()
+		internal static UserStatus GetUserStatus(string statusString)
 		{
 			UserStatus _UserStatus = UserStatus.Online;
 
-			try
+			if (statusString == "Do Not Disturb")
 			{
-				MainForm.Invoke(new Action(() =>
-				{
-					if (MainForm.comboBox_status.Text == "Do Not Disturb")
-					{
-						_UserStatus = UserStatus.DoNotDisturb;
-					}
-					else if (MainForm.comboBox_status.Text == "Idle")
-					{
-						_UserStatus = UserStatus.Idle;
-					}
-					else if (MainForm.comboBox_status.Text == "Invisible")
-					{
-						_UserStatus = UserStatus.Invisible;
-					}
-				}));
+				_UserStatus = UserStatus.DoNotDisturb;
 			}
-			catch (Exception _Exception) { ShowException(_Exception); }
+			else if (statusString == "Idle")
+			{
+				_UserStatus = UserStatus.Idle;
+			}
+			else if (statusString == "Invisible")
+			{
+				_UserStatus = UserStatus.Invisible;
+			}
 
 			return _UserStatus;
 		}

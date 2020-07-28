@@ -3,8 +3,7 @@
 using Discord;
 using Discord.Commands;
 
-using Newtonsoft.Json;
-
+using System;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -22,65 +21,66 @@ namespace DiamondGui
 		[Command("lol summoner"), Alias("lol sum"), Summary("Gets the main champion of a summoner.")]
 		public async Task LolSummoner(string summoner, [Optional] string region)
 		{
-			Settings.CommandsUsed++;
-
 			Regions? reg = LolRegionParser(region);
 
-			if (reg != null)
+			if (reg == null)
 			{
-				Region = (Regions)reg;
-				string reqSum;
-
-				try
-				{
-					reqSum = Summoner.GetSummonerByName(summoner);
-				}
-				catch (WebException ex)
-				{
-					int? error = GetHttpResponseCode(ex);
-
-					if (error != null)
-					{
-						if (error == 404)
-						{
-							await ReplyAsync("The summoner you searched for was not found. Double check the summoner name and region.");
-						}
-						else if (error == 503)
-						{
-							await ReplyAsync("The API service is currently down, please try again later.");
-						}
-						else
-						{
-							await ReplyAsync("Something went wrong with the request, please try again.\nIf the issue persists please contact the support.");
-						}
-					}
-					else
-					{
-						await ReplyAsync("An unknown error has ocurred.");
-					}
-
-					return;
-				}
-
-				SummonerJson sum = JsonConvert.DeserializeObject<SummonerJson>(reqSum);
-
-				await ReplyAsync(sum.summonerLevel + " | " + region);
+				await ReplyAsync("There was an error with the provided region, check if the region is correct.").ConfigureAwait(false);
 			}
 			else
 			{
-				await ReplyAsync("There was an error with the provided region, please double check.");
+				Region = (Regions)reg;
+
+				try
+				{
+					SummonerDTO sum = Summoner.GetSummonerByName(summoner, true);
+
+					EmbedBuilder embed = new EmbedBuilder();
+					embed.WithThumbnailUrl(settings.Domain + $"lol/icons/{sum.profileIconId}.png");
+					embed.WithTitle(sum.name);
+
+					await Context.Channel.SendMessageAsync("", false, FinishEmbed(embed, Context)).ConfigureAwait(false);
+				}
+				catch (Exception ex)
+				{
+					int? error = GetHttpResponseCode((WebException)ex);
+
+					string msg;
+					if (error == null)
+					{
+						msg = "An unknown error has ocurred.";
+					}
+					else
+					{
+						if (error == 404)
+						{
+							msg = "The summoner you searched for was not found. Double check the summoner name and region.";
+						}
+						else if (error == 503)
+						{
+							msg = "The API service is currently down, try again later.";
+						}
+						else
+						{
+							msg = "Something went wrong with the request, please try again.";
+						}
+					}
+					await ReplyAsync(msg).ConfigureAwait(false);
+
+					return;
+				}
 			}
 		}
 
 		public class SummonerJson
 		{
-			public string id { get; set; }
-			public string accountId { get; set; }
-			public string puuid { get; set; }
-			public string name { get; set; }
-			public string profileIconId { get; set; }
-			public string revisionDate { get; set; }
-			public string summonerLevel { get; set; }
+			public string id;
+			public string accountId;
+			public string puuid;
+			public string name;
+			public string profileIconId;
+			public string revisionDate;
+			public string summonerLevel;
 		}
 	}
 }

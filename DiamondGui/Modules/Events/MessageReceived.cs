@@ -1,10 +1,6 @@
-﻿#region Usings
+﻿using Discord.WebSocket;
+
 using System.Threading.Tasks;
-
-using Discord.WebSocket;
-#endregion Usings
-
-
 
 namespace DiamondGui
 {
@@ -12,18 +8,13 @@ namespace DiamondGui
 	{
 		internal static async Task MessageReceived(SocketMessage msg)
 		{
-			await msg.Channel.SendMessageAsync(msg.Author.ToString());
-
-			if (!msg.Author.IsBot)
+			if (msg.Content.Contains("discord.gg"))
 			{
-				if (msg.Content == "(╯°□°）╯︵ ┻━┻")
-				{
-					await msg.Channel.SendMessageAsync("┬─┬ ノ( ゜-゜ノ)");
-				}
-				if (msg.Content.Contains("discord.gg"))
-				{
-					await ChillinRoomModule.DiscordLinkPosted(msg);
-				}
+				await ChillinRoomModule.DiscordLinkPosted(msg).ConfigureAwait(false);
+			}
+			if (msg.Content == "(╯°□°）╯︵ ┻━┻")
+			{
+				await msg.Channel.SendMessageAsync("┬─┬ ノ( ゜-゜ノ)").ConfigureAwait(false);
 			}
 		}
 	}

@@ -1,10 +1,10 @@
 ﻿#region Usings
+
 using ScriptsLib.Network.APIs;
 
 using static DiamondGui.Static;
+
 #endregion Usings
-
-
 
 namespace DiamondGui
 {
@@ -12,7 +12,7 @@ namespace DiamondGui
 	{
 		internal static void LoadAPIKeys()
 		{
-			RiotAPI.ApiKey = Settings.RiotAPI;
+			RiotAPI.ApiKey = settings.RiotAPI;
 		}
 	}
 }

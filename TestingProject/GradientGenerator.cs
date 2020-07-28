@@ -1,9 +1,11 @@
 ﻿#region Usings
+
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
+
 #endregion Usings
 
 // # = #
@@ -89,7 +91,6 @@ namespace TestingProject
 
 		private void folderDialog_HelpRequest(object sender, EventArgs e)
 		{
-
 		}
 	}
 }

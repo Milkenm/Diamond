@@ -1,12 +1,12 @@
 ﻿#region Usings
-using System;
 
 using Discord;
 
+using System;
+
 using static DiamondGui.Static;
+
 #endregion Usings
-
-
 
 namespace DiamondGui
 {
@@ -16,25 +16,21 @@ namespace DiamondGui
 		{
 			ActivityType _ActivityType = ActivityType.Playing;
 
-			try
+			mainForm.Invoke(new Action(() =>
 			{
-				MainForm.Invoke(new Action(() =>
+				if (optionsForm.comboBox_logType.Text == "Listening")
 				{
-					if (OptionsForm.comboBox_logType.Text == "Listening")
-					{
-						_ActivityType = ActivityType.Listening;
-					}
-					else if (OptionsForm.comboBox_logType.Text == "Streaming")
-					{
-						_ActivityType = ActivityType.Streaming;
-					}
-					else if (OptionsForm.comboBox_logType.Text == "Watching")
-					{
-						_ActivityType = ActivityType.Watching;
-					}
-				}));
-			}
-			catch (Exception _Exception) { ShowException(_Exception); }
+					_ActivityType = ActivityType.Listening;
+				}
+				else if (optionsForm.comboBox_logType.Text == "Streaming")
+				{
+					_ActivityType = ActivityType.Streaming;
+				}
+				else if (optionsForm.comboBox_logType.Text == "Watching")
+				{
+					_ActivityType = ActivityType.Watching;
+				}
+			}));
 
 			return _ActivityType;
 		}

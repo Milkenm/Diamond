@@ -1,34 +1,20 @@
-﻿#region Usings
-
-using DiamondGui.LittlePrograms;
+﻿using DiamondGui.Forms;
 using DiamondGui.Properties;
-
-using Discord.Commands;
-using Discord.WebSocket;
-
-#endregion Usings
 
 namespace DiamondGui
 {
 	internal static class Static
 	{
 		// Forms
-		internal static Forms.Main MainForm;
+		internal static Main mainForm;
 
-		internal static Forms.Options OptionsForm;
-		internal static Forms.Statistics StatisticsForm;
-		internal static Forms.LPLauncher LpLauncherForm;
-		internal static Forms.PrivateChat PrivateChatForm;
-
-		// Little Programs
-		internal static GradientGenerator LP_GradientGeneratorForm;
+		internal static Options optionsForm;
+		internal static PrivateChat privateChatForm;
 
 		// Discord
-		internal static DiscordSocketClient Client;
-
-		internal static CommandService Command;
+		internal static DiamondCore diamondCore;
 
 		// Settings
-		internal static Settings Settings = new Settings();
+		internal static Settings settings = new Settings();
 	}
 }
