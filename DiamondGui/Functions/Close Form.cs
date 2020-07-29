@@ -1,10 +1,6 @@
-﻿#region Usings
-
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 using static DiamondGui.Static;
-
-#endregion Usings
 
 namespace DiamondGui
 {

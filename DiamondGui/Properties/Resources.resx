@@ -121,8 +121,8 @@
   <data name="Board_PNG" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Board_PNG.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Control_ButtonGradient" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\gui\textures\button gradient.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="ButtonGradient_PNG" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\gui\textures\buttongradient_png.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Diamond_Ico" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\diamond icon\diamond icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -132,6 +132,12 @@
   </data>
   <data name="O_PNG" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\O_PNG.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PixelClose_PNG" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\gui\textures\pixelclose_png.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PixelMinimize_PNG" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\gui\textures\pixelminimize_png.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="X_PNG" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\X_PNG.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

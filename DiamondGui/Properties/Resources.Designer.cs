@@ -73,9 +73,9 @@ namespace DiamondGui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Control_ButtonGradient {
+        internal static System.Drawing.Bitmap ButtonGradient_PNG {
             get {
-                object obj = ResourceManager.GetObject("Control_ButtonGradient", resourceCulture);
+                object obj = ResourceManager.GetObject("ButtonGradient_PNG", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -106,6 +106,26 @@ namespace DiamondGui.Properties {
         internal static System.Drawing.Bitmap O_PNG {
             get {
                 object obj = ResourceManager.GetObject("O_PNG", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PixelClose_PNG {
+            get {
+                object obj = ResourceManager.GetObject("PixelClose_PNG", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PixelMinimize_PNG {
+            get {
+                object obj = ResourceManager.GetObject("PixelMinimize_PNG", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

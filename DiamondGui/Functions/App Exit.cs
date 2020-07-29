@@ -1,22 +1,18 @@
-﻿#region Usings
-
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 using static DiamondGui.Static;
-
-#endregion Usings
 
 namespace DiamondGui
 {
 	internal static partial class Functions
 	{
-		internal static bool Closing;
+		private static bool closing;
 
 		internal static void AppExit()
 		{
-			if (!Closing)
+			if (!closing)
 			{
-				Closing = true;
+				closing = true;
 
 				settings.Save();
 

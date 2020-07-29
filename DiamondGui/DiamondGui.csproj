@@ -264,10 +264,10 @@
     <Compile Include="Enums\Link.cs" />
     <Compile Include="Enums\Loli Type.cs" />
     <Compile Include="Enums\NSFW Type.cs" />
-    <Compile Include="Forms\Private Chat.cs">
+    <Compile Include="GUI\Forms\Private Chat.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Private Chat.Designer.cs">
+    <Compile Include="GUI\Forms\Private Chat.Designer.cs">
       <DependentUpon>Private Chat.cs</DependentUpon>
     </Compile>
     <Compile Include="Functions\App Exit.cs" />
@@ -279,35 +279,42 @@
     <Compile Include="Functions\Load API Keys.cs" />
     <Compile Include="Functions\LoL Region Parser.cs" />
     <Compile Include="Functions\Close Form.cs" />
-    <Compile Include="Modules\Commands\Server Specific\ChillinRoom\Discord Link Moderation.cs" />
-    <Compile Include="Modules\Commands\Games\League Of Legends\LoL Summoner.cs" />
-    <Compile Include="Modules\Commands\Joguinhos\TicTacToe.cs" />
-    <Compile Include="Modules\Commands\Dev Only\Hello World.cs" />
-    <Compile Include="Modules\Commands\Diamond\Information.cs" />
+    <Compile Include="Commands\Server Specific\ChillinRoom\Discord Link Moderation.cs" />
+    <Compile Include="Commands\Games\League Of Legends\LoL Summoner.cs" />
+    <Compile Include="Commands\Joguinhos\TicTacToe.cs" />
+    <Compile Include="Commands\Dev Only\Hello World.cs" />
+    <Compile Include="Commands\Diamond\Information.cs" />
     <Compile Include="Functions\Get Activity Type.cs" />
     <Compile Include="Functions\Get User Status.cs" />
     <Compile Include="Functions\Show Exception.cs" />
-    <Compile Include="Forms\Main.cs">
+    <Compile Include="GUI\Forms\Main.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Main.Designer.cs">
+    <Compile Include="GUI\Forms\Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Options.cs">
+    <Compile Include="GUI\Forms\Options.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Options.Designer.cs">
+    <Compile Include="GUI\Forms\Options.Designer.cs">
       <DependentUpon>Options.cs</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Commands\Admin\Member Count.cs" />
-    <Compile Include="Modules\Commands\Items\Item System.cs" />
-    <Compile Include="Modules\Commands\Tools\Calculate.cs" />
-    <Compile Include="Modules\Commands\_Unsorted\Meme.cs" />
-    <Compile Include="Modules\Commands\Admin\Message Clear.cs" />
-    <Compile Include="Modules\Commands\NSFW\NSFW.cs" />
-    <Compile Include="Modules\Commands\NSFW\Loli.cs" />
-    <Compile Include="Modules\Commands\Tools\Generate Random Number.cs" />
-    <Compile Include="Modules\Events\MessageReceived.cs" />
+    <Compile Include="Commands\Admin\Member Count.cs" />
+    <Compile Include="Commands\Items\Item System.cs" />
+    <Compile Include="Commands\Tools\Calculate.cs" />
+    <Compile Include="Commands\Fun\Meme.cs" />
+    <Compile Include="Commands\Admin\Message Clear.cs" />
+    <Compile Include="Commands\NSFW\NSFW.cs" />
+    <Compile Include="Commands\NSFW\Loli.cs" />
+    <Compile Include="Commands\Tools\Generate Random Number.cs" />
+    <Compile Include="Events\MessageReceived.cs" />
+    <Compile Include="GUI\Controls\PixelTitleBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Controls\PixelTitleBar.Designer.cs">
+      <DependentUpon>PixelTitleBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\WinAPI.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -316,13 +323,16 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Static.cs" />
-    <EmbeddedResource Include="Forms\Main.resx">
+    <EmbeddedResource Include="GUI\Controls\PixelTitleBar.resx">
+      <DependentUpon>PixelTitleBar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Forms\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Options.resx">
+    <EmbeddedResource Include="GUI\Forms\Options.resx">
       <DependentUpon>Options.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Private Chat.resx">
+    <EmbeddedResource Include="GUI\Forms\Private Chat.resx">
       <DependentUpon>Private Chat.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -349,14 +359,19 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\GUI\Textures\Button Gradient.png" />
+    <Content Include="GUI\Textures\ButtonGradient_PNG.png" />
     <None Include="Resources\X_PNG.png" />
     <None Include="Resources\Board_PNG.png" />
+    <Content Include="GUI\Textures\PixelClose_PNG.png" />
+    <Content Include="GUI\Textures\PixelMinimize_PNG.png" />
     <Content Include="Resources\Diamond Icon\Diamond Icon.ico" />
     <Content Include="Resources\Diamond Icon\Diamond Icon.png" />
     <None Include="Resources\Meme_ChangeMyMind.png" />
     <None Include="Resources\Meme_TuxedoWinnieThePooh.png" />
     <None Include="Resources\O_PNG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Commands\_Unsorted\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
