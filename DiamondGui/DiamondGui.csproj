@@ -352,9 +352,6 @@
     <Content Include="Resources\GUI\Textures\Button Gradient.png" />
     <None Include="Resources\X_PNG.png" />
     <None Include="Resources\Board_PNG.png" />
-    <Content Include="Resources\Data\Diamond DB.mdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Resources\Diamond Icon\Diamond Icon.ico" />
     <Content Include="Resources\Diamond Icon\Diamond Icon.png" />
     <None Include="Resources\Meme_ChangeMyMind.png" />
