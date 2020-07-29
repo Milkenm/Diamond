@@ -349,6 +349,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\GUI\Textures\Button Gradient.png" />
     <None Include="Resources\X_PNG.png" />
     <None Include="Resources\Board_PNG.png" />
     <Content Include="Resources\Data\Diamond DB.mdb">
@@ -359,7 +360,6 @@
     <None Include="Resources\Meme_ChangeMyMind.png" />
     <None Include="Resources\Meme_TuxedoWinnieThePooh.png" />
     <None Include="Resources\O_PNG.png" />
-    <Content Include="Resources\Textures\Button Gradient.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
