@@ -23,6 +23,12 @@ namespace Diamond.Core
 			AddModules(assembly);
 		}
 
+		public bool IsRunning
+		{
+			get;
+			private set;
+		}
+
 		public DiamondCore(string token, LogSeverity logLevel)
 		{
 			Token = token;
@@ -123,6 +129,8 @@ namespace Diamond.Core
 
 		public async void Start()
 		{
+			IsRunning = true;
+
 			// Status & Game
 			SetGame(ActivityType, ActivityText, StreamUrl);
 			SetStatus(UserStatus);
@@ -137,6 +145,8 @@ namespace Diamond.Core
 
 		public async void Stop()
 		{
+			IsRunning = false;
+
 			await Client.LogoutAsync().ConfigureAwait(false);
 			await Client.StopAsync().ConfigureAwait(false);
 		}
