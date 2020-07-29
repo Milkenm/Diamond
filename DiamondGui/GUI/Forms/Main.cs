@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 using static DiamondGui.Functions;
 using static DiamondGui.Static;
+using Diamond.Core;
 
 namespace DiamondGui.Forms
 {

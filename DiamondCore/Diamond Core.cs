@@ -6,7 +6,7 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace DiamondGui
+namespace Diamond.Core
 {
 	public class DiamondCore
 	{
