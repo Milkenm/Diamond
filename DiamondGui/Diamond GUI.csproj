@@ -353,9 +353,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DiamondCore\DiamondCore.csproj">
+    <ProjectReference Include="..\DiamondCore\Diamond Core.csproj">
       <Project>{62f5bb37-7d3d-4a5b-bd37-14edb0f57f6b}</Project>
-      <Name>DiamondCore</Name>
+      <Name>Diamond Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
