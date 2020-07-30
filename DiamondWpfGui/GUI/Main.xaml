@@ -5,9 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DiamondWpfGui"
         mc:Ignorable="d"
-        Title="Diamond GUI" SizeToContent="WidthAndHeight" Loaded="Window_Loaded">
-	<Grid Width="800" Height="359">
-		<ListBox Name="listBox_log" HorizontalAlignment="Left" Height="308" Margin="10,10,0,0" VerticalAlignment="Top" Width="780"/>
-		<Button Name="button_start" Content="Start" HorizontalAlignment="Left" Margin="10,323,0,0" VerticalAlignment="Top" Width="92" Height="26" Click="Button_start_Click"/>
-	</Grid>
+        Title="Diamond GUI" SizeToContent="WidthAndHeight" Loaded="Window_Loaded" Closing="Window_Closing" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Storyboard x:Key="OnLoaded1"/>
+    </Window.Resources>
+    <Grid Width="800" Height="359">
+        <ListBox x:Name="listBox_log" HorizontalAlignment="Left" Height="308" Margin="10,10,0,0" VerticalAlignment="Top" Width="780" Background="White" BorderThickness="2" Grid.RowSpan="2" FontFamily="Verdana">
+            <ListBox.BorderBrush>
+                <LinearGradientBrush EndPoint="0.877,1.599" StartPoint="0.201,-1.026">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="#FF0097FF" Offset="0.872"/>
+                </LinearGradientBrush>
+            </ListBox.BorderBrush>
+        </ListBox>
+        <Button x:Name="button_start" Content="Start" HorizontalAlignment="Left" Margin="10,323,0,0" VerticalAlignment="Top" Width="92" Height="26" Click="Button_start_Click" Grid.RowSpan="2" BorderThickness="2" Background="#3B0074FF" Opacity="0.865" FontFamily="Verdana" FontSize="14">
+            <Button.Effect>
+                <DropShadowEffect Direction="314" Opacity="0.18" RenderingBias="Quality" ShadowDepth="8" BlurRadius="0"/>
+            </Button.Effect>
+            <Button.BorderBrush>
+                <LinearGradientBrush EndPoint="0.877,1.599" StartPoint="0.201,-1.026">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="#FF0097FF" Offset="0.872"/>
+                </LinearGradientBrush>
+            </Button.BorderBrush>
+        </Button>
+    </Grid>
 </Window>

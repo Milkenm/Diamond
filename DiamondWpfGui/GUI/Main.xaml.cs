@@ -1,6 +1,8 @@
 ﻿using Diamond.Core;
 using Diamond.WPF.SQLite;
+
 using Discord;
+
 using System;
 using System.Data;
 using System.Reflection;
@@ -55,11 +57,18 @@ namespace DiamondWpfGui
 			if (!diamondCore.IsRunning)
 			{
 				diamondCore.Start();
+                button_start.Content = "Stop";
 			}
 			else
 			{
 				diamondCore.Stop();
+                button_start.Content = "Start";
 			}
+		}
+
+		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			diamondCore.Stop();
 		}
 	}
 }
