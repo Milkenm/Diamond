@@ -7,12 +7,12 @@ namespace Diamond.WPF.Utils
     {
         public static Embed GenerateErrorEmbed(string message, SocketCommandContext context)
         {
-            EmbedBuilder embed = new EmbedBuilder()
-                .WithTitle("❌ Error!")
-                .WithDescription(message)
-                .WithFooter(context.User.Username)
-                .WithCurrentTimestamp()
-                .WithColor(Color.DarkPurple);
+            EmbedBuilder embed = new EmbedBuilder();
+            embed.WithTitle("❌ Error!");
+            embed.WithDescription(message);
+            embed.WithFooter(context.User.Username);
+            embed.WithCurrentTimestamp();
+            embed.WithColor(Color.DarkPurple);
 
             return embed.Build();
         }
