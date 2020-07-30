@@ -4,7 +4,7 @@ using Discord;
 using Discord.Commands;
 
 using NCalc;
-using System.Diagnostics;
+
 using System.Threading.Tasks;
 
 namespace Diamond.WPF.Commands
@@ -16,13 +16,22 @@ namespace Diamond.WPF.Commands
         {
             Expression e = new Expression(expression);
 
-            Debug.WriteLineIf(e.HasErrors(), "deeeebug: " + e.Error);
+            expression = expression.Replace("*", @"\*").Replace("_", @"\_").Replace("~", @"\~").Replace("`", @"\`");
+            bool errors = e.HasErrors();
+            string result = null;
 
-            EmbedBuilder embed = new EmbedBuilder()
+            try
             {
-                Title = "Calculate",
-                Description = "Expression: " + expression + "\n\nResult: " + e.Evaluate().ToString(),
-            };
+                result = e.Evaluate().ToString();
+            }
+            catch
+            {
+                errors = true;
+            }
+
+            EmbedBuilder embed = new EmbedBuilder();
+            embed.WithTitle("Calculate");
+            embed.WithDescription("**Expression:** " + expression + "\n**Result:** " + (!errors ? result : "__❌ Error! (Invalid expression)__"));
 
             await ReplyAsync(embed: Embeds.FinishEmbed(embed, Context)).ConfigureAwait(false);
         }
