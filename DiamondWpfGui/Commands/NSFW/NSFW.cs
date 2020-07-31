@@ -18,12 +18,12 @@ using static ScriptsLib.Network.Requests;
 // http://media.oboobs.ru/<preview>
 // # = #
 
-namespace DiamondGui.Commands
+namespace Diamond.WPF.Commands
 {
-    public class CommandsModule : ModuleBase<SocketCommandContext>
+    public partial class NSFW_Module : ModuleBase<SocketCommandContext>
     {
-        [Command("nsfw")]
-        public async Task CMD_NSFW(NsfwType type)
+        [Name("NSFW"), Command("nsfw"), Summary("Gives you a NSFW image"), RequireNsfw(ErrorMessage = "1You must be on an NSFW channel to use this command.")]
+        public async Task NSFW(NsfwType type)
         {
             // CHECK IF IT IS NSFW CHANNEL
             ITextChannel channel = Context.Channel as ITextChannel;
@@ -43,8 +43,8 @@ namespace DiamondGui.Commands
 
             // CREATE THE EMBED
             EmbedBuilder embed = new EmbedBuilder();
-            embed.WithTitle("NSFW");
-            embed.WithDescription(!string.IsNullOrEmpty(nsfw.model) ? "**Model: **" + nsfw.model : "**Unknown model**");
+            embed.WithTitle("🔞 NSFW");
+            embed.AddField("**Model**", !string.IsNullOrEmpty(nsfw.model) ? nsfw.model : "Unknown model");
             embed.WithImageUrl($"http://media.o{typeString}.ru/" + nsfw.preview);
 
             // REPLY

@@ -9,9 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingProject", "TestingPr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond Core", "DiamondCore\Diamond Core.csproj", "{62F5BB37-7D3D-4A5B-BD37-14EDB0F57F6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond WPF GUI", "DiamondWpfGui\Diamond WPF GUI.csproj", "{04D15669-D89D-4DC0-A899-7C301BAC4D94}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond WPF", "DiamondWpfGui\Diamond WPF.csproj", "{04D15669-D89D-4DC0-A899-7C301BAC4D94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond Stuff", "Diamond Stuff\Diamond Stuff.csproj", "{B617EE78-AA02-454B-AA2E-009279422B90}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stuff", "Diamond Stuff\Stuff.csproj", "{B617EE78-AA02-454B-AA2E-009279422B90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

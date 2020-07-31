@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace Diamond.WPF.Commands
 {
-    public partial class CommandsModule : ModuleBase<SocketCommandContext>
+    public partial class Tools_Module : ModuleBase<SocketCommandContext>
     {
         [Name("Calculate"), Command("calculate"), Alias("calc"), Summary("Calculate math expression.")]
         public async Task Calculate(string expression)
         {
             Expression e = new Expression(expression);
 
-            expression = expression.Replace("*", @"\*").Replace("_", @"\_").Replace("~", @"\~").Replace("`", @"\`");
+            expression = Text.Purify(expression);
             bool errors = e.HasErrors();
             string result = null;
 
@@ -30,8 +30,17 @@ namespace Diamond.WPF.Commands
             }
 
             EmbedBuilder embed = new EmbedBuilder();
-            embed.WithTitle("Calculate");
-            embed.WithDescription("**Expression:** " + expression + "\n**Result:** " + (!errors ? result : "__❌ Error! (Invalid expression)__"));
+            embed.WithTitle("🧮 Calculate");
+
+            if (!errors)
+            {
+                embed.AddField("**Expression**", expression);
+                embed.AddField("**Result**", result);
+            }
+            else
+            {
+                embed.WithDescription("**❌ Error:** Invalid expression.");
+            }
 
             await ReplyAsync(embed: Embeds.FinishEmbed(embed, Context)).ConfigureAwait(false);
         }
