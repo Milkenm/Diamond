@@ -1,4 +1,5 @@
 ﻿using Diamond.WPF.Utils;
+
 using Discord;
 using Discord.Commands;
 
@@ -13,7 +14,7 @@ namespace Diamond.WPF.Commands
         public async Task ClearMessage(int amount, bool onlyBots = false, bool keepMessage = false)
         {
             EmbedBuilder embed = new EmbedBuilder();
-            embed.WithTitle("🗑 Clear Messages");
+            embed.WithAuthor("Clear Messages", Twemoji.GetEmojiUrlFromEmoji("🗑"));
 
             if (!onlyBots)
             {

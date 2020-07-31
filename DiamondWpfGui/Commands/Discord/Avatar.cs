@@ -25,12 +25,11 @@ namespace Diamond.WPF.Commands
                 string avatar = user.GetAvatarUrl();
                 avatar = avatar.Replace("?size=128", "?size=" + size);
 
-                EmbedBuilder embed = new EmbedBuilder()
-                {
-                    Title = "📸 Avatar",
-                    Description = "**User:** " + user.Mention + "\n**Size:** x" + size,
-                    ImageUrl = avatar,
-                };
+                EmbedBuilder embed = new EmbedBuilder();
+                embed.WithAuthor("Avatar", Twemoji.GetEmojiUrlFromEmoji("📸"));
+                embed.AddField("**User**", user.Mention);
+                embed.AddField("**Size**", $"{size} x {size} px");
+                embed.WithImageUrl(avatar);
 
                 await ReplyAsync(embed: Embeds.FinishEmbed(embed, Context)).ConfigureAwait(false);
             }

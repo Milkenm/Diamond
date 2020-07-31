@@ -14,7 +14,7 @@ namespace Diamond.WPF.Commands
         public async Task GenerateRandomNumber(int min, int max)
         {
             EmbedBuilder embed = new EmbedBuilder();
-            embed.WithTitle("🎲 Random Number Generator");
+            embed.WithAuthor("Random Number Generator", Twemoji.GetEmojiUrlFromEmoji("🎲"));
 
             if (min < max)
             {

@@ -12,8 +12,9 @@ namespace Diamond.WPF.Commands
     public partial class Tools_Module : ModuleBase<SocketCommandContext>
     {
         [Name("Calculate"), Command("calculate"), Alias("calc"), Summary("Calculate math expression.")]
-        public async Task Calculate(string expression)
+        public async Task Calculate([Remainder]string expression)
         {
+            expression = expression.Replace(" ", "");
             Expression e = new Expression(expression);
 
             expression = Text.Purify(expression);
@@ -30,7 +31,7 @@ namespace Diamond.WPF.Commands
             }
 
             EmbedBuilder embed = new EmbedBuilder();
-            embed.WithTitle("🧮 Calculate");
+            embed.WithAuthor("Calculate", Twemoji.GetEmojiUrlFromEmoji("🧮"));
 
             if (!errors)
             {
