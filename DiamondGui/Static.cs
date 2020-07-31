@@ -1,5 +1,6 @@
 ﻿using DiamondGui.Forms;
 using DiamondGui.Properties;
+using Diamond.Core;
 
 namespace DiamondGui
 {

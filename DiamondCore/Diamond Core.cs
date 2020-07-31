@@ -6,7 +6,7 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace DiamondGui
+namespace Diamond.Core
 {
 	public class DiamondCore
 	{
@@ -21,6 +21,12 @@ namespace DiamondGui
 
 			Client.Log += logFunction;
 			AddModules(assembly);
+		}
+
+		public bool IsRunning
+		{
+			get;
+			private set;
 		}
 
 		public DiamondCore(string token, LogSeverity logLevel)
@@ -123,6 +129,8 @@ namespace DiamondGui
 
 		public async void Start()
 		{
+			IsRunning = true;
+
 			// Status & Game
 			SetGame(ActivityType, ActivityText, StreamUrl);
 			SetStatus(UserStatus);
@@ -137,6 +145,8 @@ namespace DiamondGui
 
 		public async void Stop()
 		{
+			IsRunning = false;
+
 			await Client.LogoutAsync().ConfigureAwait(false);
 			await Client.StopAsync().ConfigureAwait(false);
 		}
