@@ -61,16 +61,6 @@ namespace Diamond.WPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Board_PNG {
-            get {
-                object obj = ResourceManager.GetObject("Board_PNG", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon DiamondIcon_ICO {
@@ -86,26 +76,6 @@ namespace Diamond.WPF.Properties {
         internal static System.Drawing.Bitmap DiamondIcon_PNG {
             get {
                 object obj = ResourceManager.GetObject("DiamondIcon_PNG", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap O_PNG {
-            get {
-                object obj = ResourceManager.GetObject("O_PNG", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap X_PNG {
-            get {
-                object obj = ResourceManager.GetObject("X_PNG", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
