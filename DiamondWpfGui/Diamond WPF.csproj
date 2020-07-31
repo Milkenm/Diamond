@@ -132,6 +132,7 @@
     </Compile>
     <Compile Include="Commands\Discord\Avatar.cs" />
     <Compile Include="Commands\Discord\Clear Messages.cs" />
+    <Compile Include="Commands\Games\Tic Tac Toe.cs" />
     <Compile Include="Commands\NSFW\NSFW.cs" />
     <Compile Include="Commands\Owner\SQL Query.cs" />
     <Compile Include="Commands\Tools\Calculate.cs" />
@@ -194,7 +195,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Commands\Games\" />
+    <None Include="Resources\Board_PNG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\O_PNG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\X_PNG.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
