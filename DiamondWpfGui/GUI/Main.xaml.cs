@@ -7,7 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows;
 
 namespace Diamond.WPF.GUI

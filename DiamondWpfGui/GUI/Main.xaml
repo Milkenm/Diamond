@@ -18,7 +18,7 @@
                 </LinearGradientBrush>
             </ListBox.BorderBrush>
         </ListBox>
-        <Button x:Name="button_start" Content="Start" HorizontalAlignment="Left" Margin="10,323,0,0" VerticalAlignment="Top" Width="92" Height="26" Click="Button_start_Click" Grid.RowSpan="2" BorderThickness="2" Background="#3B0074FF" Opacity="0.865" FontFamily="Verdana" FontSize="14">
+        <Button x:Name="button_start" Content="Start" HorizontalAlignment="Left" Margin="10,323,0,0" VerticalAlignment="Top" Width="150" Height="26" Click="Button_start_Click" BorderThickness="2" Background="#3B0074FF" Opacity="0.865" FontFamily="Verdana" FontSize="14">
             <Button.Effect>
                 <DropShadowEffect Direction="314" Opacity="0.18" RenderingBias="Quality" ShadowDepth="8" BlurRadius="0"/>
             </Button.Effect>
@@ -29,7 +29,7 @@
                 </LinearGradientBrush>
             </Button.BorderBrush>
         </Button>
-        <Button x:Name="button_start_Copy" Content="Settings" HorizontalAlignment="Left" Margin="698,323,0,0" VerticalAlignment="Top" Width="92" Height="26" BorderThickness="2" Background="#3B0074FF" Opacity="0.865" FontFamily="Verdana" FontSize="14">
+        <Button x:Name="button_start_Copy" Content="Settings" HorizontalAlignment="Left" Margin="690,323,0,0" VerticalAlignment="Top" Width="100" Height="26" BorderThickness="2" Background="#3B0074FF" Opacity="0.865" FontFamily="Verdana" FontSize="14">
             <Button.Effect>
                 <DropShadowEffect Direction="314" Opacity="0.18" RenderingBias="Quality" ShadowDepth="8" BlurRadius="0"/>
             </Button.Effect>

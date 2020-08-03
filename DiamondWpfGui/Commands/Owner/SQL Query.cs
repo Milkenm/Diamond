@@ -14,14 +14,14 @@ namespace Diamond.WPF.Commands
     public partial class Owner_Module : ModuleBase<SocketCommandContext>
     {
         [Name("SQL Query"), Command("sqlquery"), Alias("sql"), Summary("Executes a SQL Query."), RequireOwner]
-        public async Task SQLQuery(string query, string exportName, bool sendToPrivate = true)
+        public async Task SQLQuery(string query, string exportName = null, bool sendToPrivate = true)
         {
-            string xmlPath = Main.folders[Main.EFolder.Temp].CreateFolder() + @"SQL_Query.xml";
+            string xmlPath = Main.folders[Main.EFolder.Temp].CreateFolder() + "SQL_Query.xml";
 
             bool hasErrors = false;
 
             EmbedBuilder embed = new EmbedBuilder();
-            embed.WithTitle("📜 SQL Query");
+            embed.WithAuthor("SQL Query", Twemoji.GetEmojiUrlFromEmoji("📜"));
 
             try
             {
@@ -44,7 +44,7 @@ namespace Diamond.WPF.Commands
             }
 
             Embed e = Embeds.FinishEmbed(embed, Context);
-            if (!hasErrors)
+            if (!hasErrors && !string.IsNullOrEmpty(exportName))
             {
                 if (sendToPrivate)
                 {

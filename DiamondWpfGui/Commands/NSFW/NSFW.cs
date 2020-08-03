@@ -43,7 +43,7 @@ namespace Diamond.WPF.Commands
 
             // CREATE THE EMBED
             EmbedBuilder embed = new EmbedBuilder();
-            embed.WithTitle("🔞 NSFW");
+            embed.WithAuthor("NSFW", Twemoji.GetEmojiUrlFromEmoji("🔞"));
             embed.AddField("**Model**", !string.IsNullOrEmpty(nsfw.model) ? nsfw.model : "Unknown model");
             embed.WithImageUrl($"http://media.o{typeString}.ru/" + nsfw.preview);
 
