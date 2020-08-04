@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Diamond.WPF.Commands
 {
-    public partial class Discord_Module : ModuleBase<SocketCommandContext>
+    public partial class DiscordModule : ModuleBase<SocketCommandContext>
     {
         [Name("Emoji"), Command("emoji"), Alias("twemoji"), Summary("Gets the provided emoji.")]
         public async Task Emoji(string emoji)

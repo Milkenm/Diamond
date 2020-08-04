@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Diamond.WPF.Commands
 {
-    public partial class Tools_Module : ModuleBase<SocketCommandContext>
+    public partial class ToolsModule : ModuleBase<SocketCommandContext>
     {
         [Name("Random Number Generator"), Command("random number"), Alias("rnum", "rand num", "rand number", "random num", "rn", "random", "rnd", "rand"), Summary("Generates a random number between min and max numbers.")]
         public async Task GenerateRandomNumber(int min, int max)

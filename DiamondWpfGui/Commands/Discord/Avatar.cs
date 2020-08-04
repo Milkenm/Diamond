@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Diamond.WPF.Commands
 {
-    public partial class Discord_Module : ModuleBase<SocketCommandContext>
+    public partial class DiscordModule : ModuleBase<SocketCommandContext>
     {
         [Name("Avatar"), Command("avatar"), Summary("Gets the avatar image of the selected user.")]
         public async Task Avatar(IUser user, int size = 256)
