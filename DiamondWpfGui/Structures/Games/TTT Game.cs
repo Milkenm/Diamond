@@ -12,14 +12,15 @@ namespace Diamond.WPF.Structures.Games
 {
     public class TTTGame
     {
-        public TTTGame(IUserMessage msg, SocketUser host, SocketUser opponent)
+        public TTTGame(IUserMessage msg, SocketUser host, SocketUser opponent, bool giveTurn = false)
         {
             GameMesage = msg;
             Host = host;
             Opponent = opponent;
             Channel = GameMesage.Channel;
+            GiveTurn = giveTurn;
 
-            Turn = DateTime.Now.Millisecond % 2 == 0 ? Host : Opponent;
+            Turn = giveTurn ? opponent : DateTime.Now.Millisecond % 2 == 0 ? Host : Opponent;
 
             GlobalData.TTTGamesDataTable.AddGame(this, host, opponent, GameMesage.Id, GameMesage.Channel.Id);
 
@@ -30,6 +31,7 @@ namespace Diamond.WPF.Structures.Games
         private readonly SocketUser Opponent;
         private IUserMessage GameMesage;
         private readonly IMessageChannel Channel;
+        private readonly bool GiveTurn;
         private SocketUser Turn;
         private readonly List<int> NumberPlays = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         private readonly List<IEmote> GameBoard = new List<IEmote>() { new Emoji("1️⃣"), new Emoji("2️⃣"), new Emoji("3️⃣"), new Emoji("4️⃣"), new Emoji("5️⃣"), new Emoji("6️⃣"), new Emoji("7️⃣"), new Emoji("8️⃣"), new Emoji("9️⃣") };

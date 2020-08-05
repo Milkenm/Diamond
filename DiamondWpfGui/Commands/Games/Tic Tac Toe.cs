@@ -13,7 +13,7 @@ namespace Diamond.WPF.Commands
     public partial class GamesModule : ModuleBase<SocketCommandContext>
     {
         [Name("Tic Tac Toe"), Command("tictactoe"), Alias("ttt"), Summary("Play a game of Tic Tac Toe with a friend on Discord.")]
-        public async Task TicTacToe(SocketUser opponent)
+        public async Task TicTacToe(SocketUser opponent, bool giveTurn = false)
         {
             EmbedBuilder embed = new EmbedBuilder();
             embed.WithAuthor("Tic Tac Toe", Twemoji.GetEmojiUrlFromEmoji("🕹"));
@@ -48,7 +48,7 @@ namespace Diamond.WPF.Commands
 
                 IUserMessage gameMsg = await ReplyAsync(embed: Embeds.FinishEmbed(embed, Context)).ConfigureAwait(false);
 
-                TTTGame game = new TTTGame(gameMsg, Context.User, opponent);
+                TTTGame game = new TTTGame(gameMsg, Context.User, opponent, giveTurn);
             }
         }
     }
