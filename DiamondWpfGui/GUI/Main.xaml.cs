@@ -52,7 +52,6 @@ namespace Diamond.WPF.GUI
             try
             {
                 DataTable dt = GlobalData.DB.ExecuteSQL("SELECT Value FROM Configs WHERE Config = 'BotToken'");
-
                 token = dt.Rows[0][0].ToString();
             }
             catch (Exception ex)
@@ -68,6 +67,7 @@ namespace Diamond.WPF.GUI
             GlobalData.DiamondCore.Client.ReactionAdded += new ClientEvents().ReactionAdded;
             GlobalData.DiamondCore.Commands.CommandExecuted += new CommandEvents().CommandExecuted;
             GlobalData.DiamondCore.Client.MessageReceived += new ClientEvents().MessageReceived;
+            GlobalData.DiamondCore.AddDebugChannels(657392886966517782, 622150096720756736, 681532995374415895);
 
             GlobalData.Folders.Add(EFolder.AppData, new Folder(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Milkenm\Diamond\"));
             GlobalData.Folders.Add(EFolder.Temp, new Folder(GlobalData.Folders[EFolder.AppData].Path + @"Temp\"));
