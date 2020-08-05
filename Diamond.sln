@@ -3,15 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.852
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond GUI", "DiamondGui\Diamond GUI.csproj", "{1350C482-E38C-450F-B78D-78B0C504B933}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingProject", "TestingProject\TestingProject.csproj", "{C53CD678-F842-413B-B90E-518A399398D9}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond Core", "DiamondCore\Diamond Core.csproj", "{62F5BB37-7D3D-4A5B-BD37-14EDB0F57F6B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond WPF", "DiamondWpfGui\Diamond WPF.csproj", "{04D15669-D89D-4DC0-A899-7C301BAC4D94}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stuff", "Diamond Stuff\Stuff.csproj", "{B617EE78-AA02-454B-AA2E-009279422B90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1350C482-E38C-450F-B78D-78B0C504B933}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1350C482-E38C-450F-B78D-78B0C504B933}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1350C482-E38C-450F-B78D-78B0C504B933}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1350C482-E38C-450F-B78D-78B0C504B933}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C53CD678-F842-413B-B90E-518A399398D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C53CD678-F842-413B-B90E-518A399398D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C53CD678-F842-413B-B90E-518A399398D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C53CD678-F842-413B-B90E-518A399398D9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{62F5BB37-7D3D-4A5B-BD37-14EDB0F57F6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{62F5BB37-7D3D-4A5B-BD37-14EDB0F57F6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62F5BB37-7D3D-4A5B-BD37-14EDB0F57F6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -35,10 +21,6 @@ Global
 		{04D15669-D89D-4DC0-A899-7C301BAC4D94}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04D15669-D89D-4DC0-A899-7C301BAC4D94}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04D15669-D89D-4DC0-A899-7C301BAC4D94}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B617EE78-AA02-454B-AA2E-009279422B90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B617EE78-AA02-454B-AA2E-009279422B90}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B617EE78-AA02-454B-AA2E-009279422B90}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B617EE78-AA02-454B-AA2E-009279422B90}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
