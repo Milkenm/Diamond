@@ -169,12 +169,7 @@ namespace Diamond.WPF.Structures.Games
 
                 Turn = user == Host ? Opponent : Host;
 
-                bool win = await CheckVictory(user).ConfigureAwait(false);
-
-                if (!win)
-                {
-                    await SendGameEmbed().ConfigureAwait(false);
-                }
+                await CheckVictory(user).ConfigureAwait(false);
             }
         }
 
@@ -197,7 +192,7 @@ namespace Diamond.WPF.Structures.Games
             await GameMesage.RemoveAllReactionsAsync().ConfigureAwait(false);
         }
 
-        private async Task<bool> CheckVictory(IUser player)
+        private async Task CheckVictory(IUser player)
         {
             IEmote reaction = player == Host ? HostReaction : OpponentReaction;
 
@@ -206,16 +201,17 @@ namespace Diamond.WPF.Structures.Games
                 if (CheckCombo(combo, reaction))
                 {
                     await EndGame(player == Host ? Ends.HostWins : Ends.OpponentWins).ConfigureAwait(false);
-                    return true;
+                    return;
                 }
             }
 
             if (PlayCount == 9)
             {
                 await EndGame(Ends.Draw).ConfigureAwait(false);
+                return;
             }
 
-            return false;
+            await SendGameEmbed().ConfigureAwait(false);
         }
 
         private bool CheckCombo(int combo, IEmote playerReaction)

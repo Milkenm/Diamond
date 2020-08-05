@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Resources;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 
@@ -9,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Milkenm")]
-[assembly: AssemblyProduct("DiamondWpfGui")]
+[assembly: AssemblyProduct("Diamond WPF")]
 [assembly: AssemblyCopyright("Copyright © Milkenm 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -47,5 +48,7 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("0.2.1.1")]
+[assembly: AssemblyFileVersion("0.2.1.1")]
+[assembly: NeutralResourcesLanguage("en")]
+
