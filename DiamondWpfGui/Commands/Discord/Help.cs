@@ -1,4 +1,4 @@
-﻿using Diamond.WPF.GUI;
+﻿using Diamond.WPF.Data;
 using Diamond.WPF.Utils;
 
 using Discord;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Diamond.WPF.Commands
 {
-    public partial class Discord_Module : ModuleBase<SocketCommandContext>
+    public partial class DiscordModule : ModuleBase<SocketCommandContext>
     {
         [Name("Help"), Command("help"), Alias("commands", "cmd", "cmds"), Remarks("lel"), Summary("Returns a list with every command available.")]
         public async Task Help()
@@ -16,7 +16,7 @@ namespace Diamond.WPF.Commands
             EmbedBuilder embed = new EmbedBuilder();
             embed.WithAuthor("Help", Twemoji.GetEmojiUrlFromEmoji("📔"));
 
-            foreach (CommandInfo ci in Main.diamondCore.Commands.Commands)
+            foreach (CommandInfo ci in GlobalData.DiamondCore.Commands.Commands)
             {
                 embed.AddField(ci.Name, "-" + ci.Remarks);
             }

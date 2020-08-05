@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Diamond.WPF.Commands
 {
-    public partial class Tools_Module : ModuleBase<SocketCommandContext>
+    public partial class ToolsModule : ModuleBase<SocketCommandContext>
     {
         [Name("Calculate"), Command("calculate"), Alias("calc"), Summary("Calculate math expression.")]
         public async Task Calculate([Remainder]string expression)

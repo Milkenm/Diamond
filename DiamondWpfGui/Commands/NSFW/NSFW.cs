@@ -20,7 +20,7 @@ using static ScriptsLib.Network.Requests;
 
 namespace Diamond.WPF.Commands
 {
-    public partial class NSFW_Module : ModuleBase<SocketCommandContext>
+    public partial class NSFWModule : ModuleBase<SocketCommandContext>
     {
         [Name("NSFW"), Command("nsfw"), Summary("Gives you a NSFW image"), RequireNsfw(ErrorMessage = "1You must be on an NSFW channel to use this command.")]
         public async Task NSFW(NsfwType type)

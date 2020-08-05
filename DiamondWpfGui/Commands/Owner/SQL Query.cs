@@ -1,4 +1,5 @@
-﻿using Diamond.WPF.GUI;
+﻿using Diamond.WPF.Data;
+using Diamond.WPF.GUI;
 using Diamond.WPF.Utils;
 
 using Discord;
@@ -11,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace Diamond.WPF.Commands
 {
-    public partial class Owner_Module : ModuleBase<SocketCommandContext>
+    public partial class OwnerModule : ModuleBase<SocketCommandContext>
     {
         [Name("SQL Query"), Command("sqlquery"), Alias("sql"), Summary("Executes a SQL Query."), RequireOwner]
         public async Task SQLQuery(string query, string exportName = null, bool sendToPrivate = true)
         {
-            string xmlPath = Main.folders[Main.EFolder.Temp].CreateFolder() + "SQL_Query.xml";
+            string xmlPath = GlobalData.Folders[Main.EFolder.Temp].CreateFolder() + "SQL_Query.xml";
 
             bool hasErrors = false;
 
@@ -25,7 +26,7 @@ namespace Diamond.WPF.Commands
 
             try
             {
-                DataTable data = Main.database.ExecuteSQL(query);
+                DataTable data = GlobalData.DB.ExecuteSQL(query);
                 data.TableName = exportName;
                 data.WriteXml(xmlPath);
 

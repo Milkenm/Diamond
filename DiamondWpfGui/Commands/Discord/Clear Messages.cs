@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Diamond.WPF.Commands
 {
-    public partial class Discord_Module : ModuleBase<SocketCommandContext>
+    public partial class DiscordModule : ModuleBase<SocketCommandContext>
     {
         [Name("Clear Messsage"), Command("clearmessages"), Alias("clear", "prune", "purge"), Summary("Deletes the first 'x' messages from the current channel.")]
         public async Task ClearMessage(int amount, bool onlyBots = false, bool keepMessage = false)

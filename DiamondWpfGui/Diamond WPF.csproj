@@ -133,16 +133,25 @@
     </Compile>
     <Compile Include="Commands\Discord\Avatar.cs" />
     <Compile Include="Commands\Discord\Clear Messages.cs" />
+    <Compile Include="Commands\Games\Tic Tac Toe.cs" />
     <Compile Include="Commands\Discord\Help.cs" />
     <Compile Include="Commands\Discord\Emoji.cs" />
     <Compile Include="Commands\NSFW\NSFW.cs" />
     <Compile Include="Commands\Owner\SQL Query.cs" />
     <Compile Include="Commands\Tools\Calculate.cs" />
     <Compile Include="Commands\Tools\Generate Random Number.cs" />
+    <Compile Include="Global Data.cs" />
+    <Compile Include="Events\Log.cs" />
+    <Compile Include="Events\Command Events\Command Executed.cs" />
+    <Compile Include="Events\Client Events\Message Received.cs" />
+    <Compile Include="Events\Client Events\Reaction Added.cs" />
+    <Compile Include="Events\Game Events\TTT Game Events.cs" />
     <Compile Include="Structures\Folder.cs" />
     <Compile Include="GUI\Main.xaml.cs">
       <DependentUpon>Main.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Structures\Games\TTT Games DataTable.cs" />
+    <Compile Include="Structures\Games\TTT Game.cs" />
     <Compile Include="Structures\SQLite.cs" />
     <Compile Include="Utils\Embeds\Generate Error Embed.cs" />
     <Compile Include="Utils\Embeds\Finish Embed.cs" />
@@ -198,7 +207,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Commands\Games\" />
+    <None Include="Resources\Board_PNG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\O_PNG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\X_PNG.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
