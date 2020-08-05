@@ -6,7 +6,6 @@ using Discord.WebSocket;
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Diamond.WPF.Structures.Games
@@ -18,37 +17,50 @@ namespace Diamond.WPF.Structures.Games
             GameMesage = msg;
             Host = host;
             Opponent = opponent;
+            Channel = GameMesage.Channel;
 
             Turn = DateTime.Now.Millisecond % 2 == 0 ? Host : Opponent;
 
-            GlobalData.TTTGamesDataTable.AddGame(host, opponent, GameMesage.Id, GameMesage.Channel.Id, this);
+            GlobalData.TTTGamesDataTable.AddGame(this, host, opponent, GameMesage.Id, GameMesage.Channel.Id);
 
-            InitializeGame();
+            InitializeGame().GetAwaiter();
         }
 
         private readonly SocketUser Host;
         private readonly SocketUser Opponent;
-        private readonly IUserMessage GameMesage;
+        private IUserMessage GameMesage;
+        private readonly IMessageChannel Channel;
         private SocketUser Turn;
         private readonly List<int> NumberPlays = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         private readonly List<IEmote> GameBoard = new List<IEmote>() { new Emoji("1️⃣"), new Emoji("2️⃣"), new Emoji("3️⃣"), new Emoji("4️⃣"), new Emoji("5️⃣"), new Emoji("6️⃣"), new Emoji("7️⃣"), new Emoji("8️⃣"), new Emoji("9️⃣") };
-        private readonly List<IEmote> EmotePlays = new List<IEmote>() { new Emoji("1️⃣"), new Emoji("2️⃣"), new Emoji("3️⃣"), new Emoji("4️⃣"), new Emoji("5️⃣"), new Emoji("6️⃣"), new Emoji("7️⃣"), new Emoji("8️⃣"), new Emoji("9️⃣") };
-        private readonly IEmote[] EmotesList = { new Emoji("1️⃣"), new Emoji("2️⃣"), new Emoji("3️⃣"), new Emoji("4️⃣"), new Emoji("5️⃣"), new Emoji("6️⃣"), new Emoji("7️⃣"), new Emoji("8️⃣"), new Emoji("9️⃣") };
         private readonly IEmote HostReaction = new Emoji("❎");
-        private readonly IEmote OpponentReaction = new Emoji("✅");
-        private int PlayCount = 0;
+        private readonly IEmote OpponentReaction = new Emoji("🅾️");
+        private int PlayCount;
+        private readonly IEmote SurrenderReaction = new Emoji("❌");
+        private readonly IEmote CallDownReaction = new Emoji("⬇️");
 
         public ulong MessageId { get { return GameMesage.Id; } }
         public ulong ChannelId { get { return GameMesage.Channel.Id; } }
 
-        public void InitializeGame()
+        public async Task InitializeGame(bool callDown = false)
         {
-            GameMesage.ModifyAsync(msg =>
+            if (!callDown)
             {
-                msg.Content = null;
-                msg.Embed = GenerateEmbed();
-            }).ConfigureAwait(false);
-            GameMesage.AddReactionsAsync(EmotePlays.ToArray()).ConfigureAwait(false);
+                await GameMesage.ModifyAsync(msg =>
+                {
+                    msg.Content = null;
+                    msg.Embed = FinishEmbed(GenerateEmbed());
+                }).ConfigureAwait(false);
+            }
+            else
+            {
+                await GameMesage.DeleteAsync().ConfigureAwait(false);
+
+                GameMesage = await Channel.SendMessageAsync(embed: FinishEmbed(GenerateEmbed())).ConfigureAwait(false);
+                GlobalData.TTTGamesDataTable.UpdateGame(this, TTTGamesDataTable.Column.MessageId, GameMesage.Id);
+            }
+
+            await GameMesage.AddReactionsAsync(new IEmote[] { SurrenderReaction, CallDownReaction }).ConfigureAwait(false);
         }
 
         public async Task HandlePlay(SocketMessage msg)
@@ -56,17 +68,21 @@ namespace Diamond.WPF.Structures.Games
             int.TryParse(msg.Content, out int play);
             if (IsUserTurn(msg.Author) && NumberPlays.Contains(play))
             {
-                Debug.Listeners.Add(new TextWriterTraceListener(Console.Out));
-                Debug.WriteLine(play);
-                NumberPlays.Remove(play);
-                await MakePlay(msg.Author, EmotesList[play - 1]).ConfigureAwait(false);
+                await MakePlay(msg.Author, play).ConfigureAwait(false);
                 await msg.DeleteAsync().ConfigureAwait(false);
             }
         }
 
-        public async Task HandlePlay(SocketReaction reaction)
+        public async Task HandleReaction(SocketReaction reaction)
         {
-            await MakePlay(reaction.User.Value, reaction.Emote).ConfigureAwait(false);
+            if (reaction.Emote.Equals(SurrenderReaction))
+            {
+                await EndGame(reaction.User.Value == Host ? Ends.HostSurrender : Ends.OpponentSurrender).ConfigureAwait(false);
+            }
+            else if (reaction.Emote.Equals(CallDownReaction))
+            {
+                await InitializeGame(true).ConfigureAwait(false);
+            }
         }
 
         public bool IsPlayValid(ulong msgId, IUser user)
@@ -84,26 +100,54 @@ namespace Diamond.WPF.Structures.Games
             return Turn == user;
         }
 
-        public Embed GenerateEmbed()
-        {
-            EmbedBuilder embed = GenerateBaseEmbed();
-
-            embed.AddField("**Turn**", Turn.Mention);
-
-            embed.AddField("Board", GetBoard());
-
-            return Embeds.FinishEmbed(embed, Host);
-        }
-
-        public EmbedBuilder GenerateBaseEmbed()
+        private EmbedBuilder GenerateEmbed(Ends end = Ends.None)
         {
             EmbedBuilder embed = new EmbedBuilder();
             embed.WithAuthor("Tic Tac Toe", Twemoji.GetEmojiUrlFromEmoji("🕹"));
+            embed.WithDescription($"*__Type from 1 to 9 in chat to play.__*\nPress {SurrenderReaction} to surrender.\nPress {CallDownReaction} to call the message.");
 
             embed.AddField("**Host**", Host.Mention, true);
             embed.AddField("**Opponent**", Opponent.Mention, true);
 
+            embed.AddField("Board", GetBoard());
+
+            if (end == Ends.None)
+            {
+                embed.AddField("**Turn**", Turn.Mention);
+            }
+            else
+            {
+                embed.WithDescription("Game over!");
+
+                string title = "**Winner**";
+                if (end == Ends.OpponentSurrender || end == Ends.HostSurrender)
+                {
+                    title += " (by surrender)";
+                }
+
+                object result = null;
+                if (end == Ends.HostWins || end == Ends.OpponentSurrender)
+                {
+                    result = Host.Mention;
+                }
+                else if (end == Ends.OpponentWins || end == Ends.HostSurrender)
+                {
+                    result = Opponent.Mention;
+                }
+                else
+                {
+                    result = "Draw!";
+                }
+
+                embed.AddField(title, result);
+            }
+
             return embed;
+        }
+
+        public Embed FinishEmbed(EmbedBuilder embed)
+        {
+            return Embeds.FinishEmbed(embed, Host);
         }
 
         public string GetBoard()
@@ -111,46 +155,49 @@ namespace Diamond.WPF.Structures.Games
             return $"{GameBoard[0]}{GameBoard[1]}{GameBoard[2]}\n{GameBoard[3]}{GameBoard[4]}{GameBoard[5]}\n{GameBoard[6]}{GameBoard[7]}{GameBoard[8]}";
         }
 
-        public async Task MakePlay(IUser user, IEmote reaction)
+        public async Task MakePlay(IUser user, int play)
         {
-            await GameMesage.RemoveReactionAsync(reaction, user).ConfigureAwait(false);
-            await GameMesage.RemoveReactionAsync(reaction, GlobalData.DiamondCore.Client.CurrentUser).ConfigureAwait(false);
-
-            if (EmotePlays.Contains(reaction))
+            if (NumberPlays.Contains(play))
             {
                 PlayCount++;
 
-                EmotePlays.Remove(reaction);
+                NumberPlays.Remove(play);
 
-                int emoteIndex = GameBoard.IndexOf(reaction);
+                int emoteIndex = play - 1;
                 GameBoard.RemoveAt(emoteIndex);
                 GameBoard.Insert(emoteIndex, Turn == Host ? HostReaction : OpponentReaction);
 
                 Turn = user == Host ? Opponent : Host;
 
-                bool win = CheckVictory(user);
+                bool win = await CheckVictory(user).ConfigureAwait(false);
 
                 if (!win)
                 {
-                    await GameMesage.ModifyAsync(msg => msg.Embed = GenerateEmbed()).ConfigureAwait(false);
+                    await SendGameEmbed().ConfigureAwait(false);
                 }
             }
         }
 
-        public async void EndGame(IUser winner)
+        public async Task SendGameEmbed(Embed embed = null)
         {
-            EmbedBuilder embed = GenerateBaseEmbed();
-
-            embed.WithDescription("Game over!");
-            embed.AddField("**Winner**", winner != null ? winner.Mention : "Draw!");
-
-            await GameMesage.ModifyAsync(msg => msg.Embed = Embeds.FinishEmbed(embed, winner)).ConfigureAwait(false);
-            await GameMesage.RemoveAllReactionsAsync().ConfigureAwait(false);
-
-            GlobalData.TTTGamesDataTable.RemoveGame(this);
+            if (embed == null)
+            {
+                embed = FinishEmbed(GenerateEmbed());
+            }
+            await GameMesage.ModifyAsync(msg => msg.Embed = embed).ConfigureAwait(false);
         }
 
-        private bool CheckVictory(IUser player)
+        private async Task EndGame(Ends end)
+        {
+            GlobalData.TTTGamesDataTable.RemoveGame(this);
+
+            EmbedBuilder embed = GenerateEmbed(end);
+
+            await SendGameEmbed(FinishEmbed(embed)).ConfigureAwait(false);
+            await GameMesage.RemoveAllReactionsAsync().ConfigureAwait(false);
+        }
+
+        private async Task<bool> CheckVictory(IUser player)
         {
             IEmote reaction = player == Host ? HostReaction : OpponentReaction;
 
@@ -158,14 +205,14 @@ namespace Diamond.WPF.Structures.Games
             {
                 if (CheckCombo(combo, reaction))
                 {
-                    EndGame(player);
+                    await EndGame(player == Host ? Ends.HostWins : Ends.OpponentWins).ConfigureAwait(false);
                     return true;
                 }
             }
 
             if (PlayCount == 9)
             {
-                EndGame(null);
+                await EndGame(Ends.Draw).ConfigureAwait(false);
             }
 
             return false;
@@ -194,5 +241,15 @@ namespace Diamond.WPF.Structures.Games
 			879, 825, // 8
 			978, 936, 915 // 9
 		};
+
+        private enum Ends
+        {
+            None,
+            HostWins,
+            OpponentWins,
+            Draw,
+            HostSurrender,
+            OpponentSurrender,
+        }
     }
 }

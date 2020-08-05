@@ -1,5 +1,4 @@
 ﻿using Diamond.WPF.Data;
-using Diamond.WPF.GUI;
 
 using Discord;
 using Discord.Commands;

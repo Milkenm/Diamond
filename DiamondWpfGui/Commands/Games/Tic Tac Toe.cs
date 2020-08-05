@@ -18,21 +18,25 @@ namespace Diamond.WPF.Commands
             EmbedBuilder embed = new EmbedBuilder();
             embed.WithAuthor("Tic Tac Toe", Twemoji.GetEmojiUrlFromEmoji("🕹"));
 
-            string msg = null;
-            if (GlobalData.TTTGamesDataTable.ContainsHost(Context.User) || GlobalData.TTTGamesDataTable.ContainsOpponent(opponent))
+            string msg = "**❌ Error:** ";
+            if (GlobalData.TTTGamesDataTable.ContainsChannelId(Context.Channel.Id))
             {
-                msg = "**❌ Error:** You or your opponent are already in-game!";
+                msg += "There is already a game running on this channel!";
+            }
+            else if (GlobalData.TTTGamesDataTable.ContainsHost(Context.User) || GlobalData.TTTGamesDataTable.ContainsOpponent(opponent))
+            {
+                msg += "You or your opponent are already in-game!";
             }
             else if (opponent.IsBot)
             {
-                msg = "**❌ Error:** You cannot play agaist bots!";
+                msg += "You cannot play agaist bots!";
             }
             else if (opponent == Context.User)
             {
-                msg = "**❌ Error:** You cannot play against yourself!";
+                msg += "You cannot play against yourself!";
             }
 
-            if (!string.IsNullOrEmpty(msg))
+            if (msg != "**❌ Error:** ")
             {
                 embed.WithDescription(msg);
 

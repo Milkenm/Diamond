@@ -20,14 +20,14 @@ namespace Diamond.WPF.Events
             }
         }
 
-        // EMOJI ADDED
+        // LEAVE/CALL EMOTES
         public static async Task TicTacToe(SocketReaction reaction)
         {
-            if (GlobalData.TTTGamesDataTable.ContainsChannelId(reaction.Channel.Id))
+            if (GlobalData.TTTGamesDataTable.ContainsMessageId(reaction.MessageId))
             {
                 TTTGame game = GlobalData.TTTGamesDataTable.GetGameByUser(reaction.User.Value);
 
-                await game?.HandlePlay(reaction);
+                await game?.HandleReaction(reaction);
             }
         }
     }

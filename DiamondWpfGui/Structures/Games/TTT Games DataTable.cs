@@ -10,19 +10,36 @@ namespace Diamond.WPF.Structures.Games
     {
         public TTTGamesDataTable()
         {
-            GamesTable.Columns.Add("Host", typeof(IUser));
-            GamesTable.Columns.Add("Opponent", typeof(IUser));
-            GamesTable.Columns.Add("MessageId", typeof(ulong));
-            GamesTable.Columns.Add("ChannelId", typeof(ulong));
-            GamesTable.Columns.Add("Game", typeof(TTTGame));
+            GamesTable.Columns.Add(nameof(Column.Game), typeof(TTTGame));
+            GamesTable.Columns.Add(nameof(Column.Host), typeof(IUser));
+            GamesTable.Columns.Add(nameof(Column.Opponent), typeof(IUser));
+            GamesTable.Columns.Add(nameof(Column.MessageId), typeof(ulong));
+            GamesTable.Columns.Add(nameof(Column.ChannelId), typeof(ulong));
         }
 
         private static readonly DataTable GamesTable = new DataTable();
         private static readonly EnumerableRowCollection<DataRow> GamesTableEnumerator = GamesTable.AsEnumerable();
 
-        public void AddGame(IUser host, IUser opponent, ulong msgId, ulong channelId, TTTGame game)
+        public enum Column
         {
-            GamesTable.Rows.Add(host, opponent, msgId, channelId, game);
+            Game,
+            Host,
+            Opponent,
+            MessageId,
+            ChannelId,
+        }
+
+        public void AddGame(TTTGame game, IUser host, IUser opponent, ulong msgId, ulong channelId)
+        {
+            GamesTable.Rows.Add(game, host, opponent, msgId, channelId);
+        }
+
+        public void UpdateGame(TTTGame game, Column column, object value)
+        {
+            List<TTTGame> games = GetGames();
+            int gameIndex = games.IndexOf(game);
+
+            GamesTable.Rows[gameIndex][column.ToString()] = value;
         }
 
         public void RemoveGame(TTTGame game)
@@ -84,6 +101,13 @@ namespace Diamond.WPF.Structures.Games
             if (hosts.Contains(user))
             {
                 int gameIndex = hosts.IndexOf(user);
+                return GetGames()[gameIndex];
+            }
+
+            List<IUser> opponents = GetOpponents();
+            if (opponents.Contains(user))
+            {
+                int gameIndex = opponents.IndexOf(user);
                 return GetGames()[gameIndex];
             }
 

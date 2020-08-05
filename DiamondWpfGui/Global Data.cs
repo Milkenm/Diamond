@@ -13,6 +13,7 @@ namespace Diamond.WPF.Data
     {
         // MAIN STUFF
         public static DiamondCore DiamondCore;
+
         public static SQLiteDB DB;
         public static Main Main;
 
