@@ -18,8 +18,6 @@ namespace Diamond.WPF.GUI
     /// </summary>
     public partial class Main : Window
     {
-        internal object database;
-
         public enum EFolder
         {
             AppData,

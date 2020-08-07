@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace Diamond.Core
 {
@@ -60,7 +59,6 @@ namespace Diamond.Core
         public string StreamUrl { get; private set; }
         public UserStatus UserStatus { get; private set; }
         public bool Debugging { get; private set; }
-
 
         private void Initialize()
         {
