@@ -68,7 +68,7 @@ namespace Diamond.WPF.Structures.Games
         public async Task HandlePlay(SocketMessage msg)
         {
             int.TryParse(msg.Content, out int play);
-            if (IsUserTurn(msg.Author) && NumberPlays.Contains(play))
+            if (Turn == msg.Author && NumberPlays.Contains(play))
             {
                 await MakePlay(msg.Author, play).ConfigureAwait(false);
                 await msg.DeleteAsync().ConfigureAwait(false);
@@ -85,21 +85,6 @@ namespace Diamond.WPF.Structures.Games
             {
                 await InitializeGame(true).ConfigureAwait(false);
             }
-        }
-
-        public bool IsPlayValid(ulong msgId, IUser user)
-        {
-            return IsGameMessage(msgId) && IsUserTurn(user);
-        }
-
-        public bool IsGameMessage(ulong msgId)
-        {
-            return msgId == GameMesage.Id;
-        }
-
-        public bool IsUserTurn(IUser user)
-        {
-            return Turn == user;
         }
 
         private EmbedBuilder GenerateEmbed(Ends end = Ends.None)
