@@ -1,11 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <AssemblyName>Diamond WPF Core</AssemblyName>
-    <RootNamespace>Diamond.WPFCore</RootNamespace>
+    <RootNamespace>Diamond.Brainz</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Diamond Brainz\Diamond Brainz.csproj" />
     <ProjectReference Include="..\DiamondCore\Diamond Core.csproj" />
   </ItemGroup>
 
