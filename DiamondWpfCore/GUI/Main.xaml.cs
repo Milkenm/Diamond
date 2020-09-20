@@ -18,11 +18,6 @@ namespace Diamond.WPFCore.GUI
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            InitBrainz();
-        }
-
-        void InitBrainz()
-        {
             Brainz.Brainz bz = new Brainz.Brainz();
             bz.Log += new Brainz.Brainz.LogEvent(async (msg) => await LogToListBox(msg).ConfigureAwait(false));
             bz.Error += new Brainz.Brainz.ErrorEvent(async (ex) => await LogToListBox(ex.Message).ConfigureAwait(false));

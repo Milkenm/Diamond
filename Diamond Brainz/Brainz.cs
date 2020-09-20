@@ -34,7 +34,7 @@ namespace Diamond.Brainz
 
             if (!string.IsNullOrEmpty(token))
             {
-                GlobalData.DiamondCore = new DiamondCore(token, LogSeverity.Info, "!", Assembly.GetEntryAssembly(), new MiscEvents().Log);
+                GlobalData.DiamondCore = new DiamondCore(token, LogSeverity.Info, "!", Assembly.GetAssembly(typeof(Brainz)), new MiscEvents().Log);
             }
 
             GlobalData.DiamondCore.Client.ReactionAdded += new ClientEvents().ReactionAdded;
