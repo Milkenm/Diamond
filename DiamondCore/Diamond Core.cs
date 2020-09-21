@@ -143,7 +143,7 @@ namespace Diamond.Core
 
         private async Task CommandHandler(SocketMessage socketMsg)
         {
-            if (!(socketMsg is SocketUserMessage msg) || (!Debugging && DebugChannels.Contains(msg.Channel.Id)))
+            if (!(socketMsg is SocketUserMessage msg) || (!Debugging && DebugChannels.Contains(msg.Channel.Id)) || (Debugging && !DebugChannels.Contains(msg.Channel.Id)))
             {
                 return;
             }
