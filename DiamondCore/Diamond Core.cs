@@ -135,7 +135,6 @@ namespace Diamond.Core
         public void Reload()
         {
             Stop();
-
             Client.Dispose();
 
             Start();
