@@ -3,7 +3,6 @@
 using Discord;
 using Discord.Commands;
 
-using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Threading.Tasks;
 
 namespace Diamond.Brainz.Commands
