@@ -1,9 +1,11 @@
-﻿using Diamond.Brainz.Structures;
+﻿using Diamond.Brainz.Data.Tables;
+using Diamond.Brainz.Structures;
 using Diamond.Brainz.Structures.Games;
 using Diamond.Core;
 
 using System.Collections.Generic;
 
+using static Diamond.Brainz.Commands.UnsortedModule;
 using static Diamond.Brainz.Utils.Folders;
 
 namespace Diamond.Brainz.Data
@@ -20,7 +22,8 @@ namespace Diamond.Brainz.Data
         // FOLDERS
         public static readonly Dictionary<EFolder, Folder> Folders = new Dictionary<EFolder, Folder>();
 
-        // TIC TAC TOE GAME
+        // DATA TABLES
         public static TTTGamesDataTable TTTGamesDataTable = new TTTGamesDataTable();
+        public static RRMessagesDataTable RRMessagesDataTable = new RRMessagesDataTable();
     }
 }
