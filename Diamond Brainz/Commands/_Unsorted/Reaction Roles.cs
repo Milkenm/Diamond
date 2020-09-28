@@ -6,7 +6,6 @@ using Discord.Commands;
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 using static Diamond.Brainz.Structures.ReactionRoles;
@@ -28,6 +27,11 @@ namespace Diamond.Brainz.Commands
         private async Task<EmbedBuilder> GetEmbed()
         {
             return await Task.FromResult(GlobalData.RRMessagesDataTable.GetMessageEmbed(GetMessageId())).ConfigureAwait(false);
+        }
+
+        private async Task EditMessage(EmbedBuilder newEmbed)
+        {
+            await (await GetMessage().ConfigureAwait(false)).ModifyAsync(msg => msg.Embed = Embeds.FinishEmbed(newEmbed, Context)).ConfigureAwait(false);
         }
 
         private readonly List<IEmote> Reactions = new List<IEmote>() { new Emoji("1️⃣"), new Emoji("2️⃣"), new Emoji("3️⃣"), new Emoji("4️⃣"), new Emoji("5️⃣"), new Emoji("6️⃣"), new Emoji("7️⃣"), new Emoji("8️⃣"), new Emoji("9️⃣") };
@@ -54,7 +58,7 @@ namespace Diamond.Brainz.Commands
             EmbedBuilder embed = (await GetEmbed().ConfigureAwait(false)).WithTitle(string.Join(' ', title));
 
             // UPDATE THE EMBED ON DISCORD
-            await (await GetMessage().ConfigureAwait(false)).ModifyAsync(msg => msg.Embed = Embeds.FinishEmbed(embed, Context)).ConfigureAwait(false);
+            await EditMessage(embed).ConfigureAwait(false);
         }
 
         [Name("Reaction Roles"), Command("reactionroles description"), Alias("rr d", "rr desc", "rr description"), Summary("Edits the Description of a Reaction Roles message.")]
@@ -64,18 +68,18 @@ namespace Diamond.Brainz.Commands
             EmbedBuilder embed = (await GetEmbed().ConfigureAwait(false)).WithDescription(string.Join(' ', desc));
 
             // UPDATE THE EMBED ON DISCORD
-            await (await GetMessage().ConfigureAwait(false)).ModifyAsync(msg => msg.Embed = Embeds.FinishEmbed(embed, Context)).ConfigureAwait(false);
+            await EditMessage(embed).ConfigureAwait(false);
         }
 
         [Name("Reaction Roles"), Command("reactionroles addrole"), Alias("rr ar", "rr add", "rr addrole", "rr addr"), Summary("Adds a Role to a Reaction Roles message.")]
-        public async Task ReactionRolesAddRole(IRole role, string emote, params string[] desc)
+        public async Task ReactionRolesAddRole(IRole role, string emote, params string[] description)
         {
-            string joinDesc = string.Join(' ', desc);
+            string desc = string.Join(' ', description);
             EmoteType emoteType;
 
             try // EMOJI
             {
-                var emoji = Twemoji.GetEmojiUrlFromEmoji(emote);
+                string emoji = Twemoji.GetEmojiUrlFromEmoji(emote);
                 emoteType = EmoteType.Emoji;
             }
             catch // EMOTE
@@ -92,10 +96,17 @@ namespace Diamond.Brainz.Commands
                 }
             }
 
-            ulong msgId = (await GetMessage()).Id;
-            GlobalData.RRMessagesDataTable.AddRoleLine(msgId, role, emoteType, emote, joinDesc);
+            /// TODO: Check for dupped emojis
 
-            await ReplyAsync($"**__Role Mention:__** {role.Mention}\n**__Emote Type:__** {emoteType}\n**__Description:__** {joinDesc}").ConfigureAwait(false);
+            EmbedBuilder embed = await GetEmbed().ConfigureAwait(false);
+            embed.AddField($"{emote} - {role.Mention}", $"**{desc}**");
+
+            await EditMessage(embed).ConfigureAwait(false);
+
+            ulong msgId = (await GetMessage().ConfigureAwait(false)).Id;
+            GlobalData.RRMessagesDataTable.AddRoleLine(msgId, role, emoteType, emote, desc);
+
+            await ReplyAsync($"**__Role Mention:__** {role.Mention}\n**__Emote Type:__** {emoteType}\n**__Description:__** {desc}").ConfigureAwait(false);
         }
     }
 }
