@@ -2,18 +2,18 @@
 
 using System;
 
-namespace Diamond.Brainz.Structures
+namespace Diamond.Brainz.Structures.ReactionRoles
 {
     public partial class ReactionRoles
     {
-        public struct RoleLine
+        public struct RoleLineRecord
         {
-            public RoleLine(IRole role, EmoteType emoteType, dynamic emote, string desc)
+            public RoleLineRecord(IRole role, EmoteType emoteType, dynamic emote, string description)
             {
                 Role = role;
                 EmoteType = emoteType;
                 Emote = emote;
-                Description = desc;
+                Description = description;
             }
 
             public IRole Role;

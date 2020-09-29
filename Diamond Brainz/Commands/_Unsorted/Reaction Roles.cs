@@ -1,48 +1,28 @@
 ﻿using Diamond.Brainz.Data;
+using Diamond.Brainz.Structures.ReactionRoles;
 using Diamond.Brainz.Utils;
 
 using Discord;
 using Discord.Commands;
 
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
-using static Diamond.Brainz.Structures.ReactionRoles;
 
 namespace Diamond.Brainz.Commands
 {
 	public partial class UnsortedModule : ModuleBase<SocketCommandContext>
 	{
-		public ulong GetMessageId()
-		{
-			return GlobalData.RRMessagesDataTable.GetLatestChannelMessage(Context.Channel.Id);
-		}
-
-		private async Task<IUserMessage> GetMessage()
-		{
-			return (IUserMessage)await Context.Channel.GetMessageAsync(GetMessageId()).ConfigureAwait(false);
-		}
-
-		private async Task<EmbedBuilder> GetEmbed()
-		{
-			return await Task.FromResult(GlobalData.RRMessagesDataTable.GetMessageEmbed(GetMessageId())).ConfigureAwait(false);
-		}
-
-		private async Task EditMessage(EmbedBuilder newEmbed)
-		{
-			await (await GetMessage().ConfigureAwait(false)).ModifyAsync(msg => msg.Embed = Embeds.FinishEmbed(newEmbed, Context)).ConfigureAwait(false);
-		}
-
 		private readonly List<IEmote> Reactions = new List<IEmote>() { new Emoji("1️⃣"), new Emoji("2️⃣"), new Emoji("3️⃣"), new Emoji("4️⃣"), new Emoji("5️⃣"), new Emoji("6️⃣"), new Emoji("7️⃣"), new Emoji("8️⃣"), new Emoji("9️⃣") };
 
 		[Name("Reaction Roles"), Command("reactionroles"), Alias("rr", "reactionrole"), Summary("Creates a message which users can react to and receive a role.")]
 		public async Task ReactionRoles()
 		{
 			// SEND THE MESSAGE TO DISCORD
-			IUserMessage reply = await ReplyAsync(embed: Embeds.FinishEmbed(new EmbedBuilder(), Context)).ConfigureAwait(false);
-			// SAVE THE MESSAGE ID ON THE DATABASE
-			GlobalData.RRMessagesDataTable.AddMessage(reply.Id, Context.Channel.Id, new EmbedBuilder(), false);
+			EmbedBuilder embed = new EmbedBuilder();
+			IUserMessage reply = await ReplyAsync(embed: Embeds.FinishEmbed(embed, Context)).ConfigureAwait(false);
+
+			// SAVE THE MESSAGE ON THE DATABASE
+			GlobalData.RRMessagesDataTable.AddMessage(Context, reply, embed);
 
 			// SEND HELP EMBED
 			EmbedBuilder helpEmbed = new EmbedBuilder();
@@ -54,56 +34,28 @@ namespace Diamond.Brainz.Commands
 		[Name("Reaction Roles"), Command("reactionroles title"), Alias("rr title", "rr t", "reactionroles settitle", "rr settitle"), Summary("Edits the Title of a Reaction Roles message.")]
 		public async Task ReactionRolesTitle(params string[] title)
 		{
-			// EDIT THE EMBED
-			EmbedBuilder embed = (await GetEmbed().ConfigureAwait(false)).WithTitle(string.Join(' ', title));
+			RRMessage rrMsg = GlobalData.RRMessagesDataTable.GetRRMessageByChannelId(Context.Channel.Id);
 
-			// UPDATE THE EMBED ON DISCORD
-			await EditMessage(embed).ConfigureAwait(false);
+			await rrMsg.SetTitle(title);
+			await rrMsg.ModifyDiscordEmbedAsync();
 		}
 
-		[Name("Reaction Roles"), Command("reactionroles description"), Alias("rr d", "rr desc", "rr description"), Summary("Edits the Description of a Reaction Roles message.")]
-		public async Task ReactionRolesDescription(params string[] desc)
+		[Name("Reaction Roles"), Command("reactionroles description"), Alias("rr description", "rr desc", "rr d"), Summary("Edits the Description of a Reaction Roles message.")]
+		public async Task ReactionRolesDescription(params string[] description)
 		{
-			// EDIT THE EMBED
-			EmbedBuilder embed = (await GetEmbed().ConfigureAwait(false)).WithDescription(string.Join(' ', desc));
+			RRMessage rrMsg = GlobalData.RRMessagesDataTable.GetRRMessageByChannelId(Context.Channel.Id);
 
-			// UPDATE THE EMBED ON DISCORD
-			await EditMessage(embed).ConfigureAwait(false);
+			await rrMsg.SetDescription(description);
+			await rrMsg.ModifyDiscordEmbedAsync();
 		}
 
-		[Name("Reaction Roles"), Command("reactionroles addrole"), Alias("rr ar", "rr add", "rr addrole", "rr addr"), Summary("Adds a Role to a Reaction Roles message.")]
+		[Name("Reaction Roles"), Command("reactionroles addrole"), Alias("rr ar", "rr addrole", "rr addr", "rr add"), Summary("Adds a Role to a Reaction Roles message.")]
 		public async Task ReactionRolesAddRole(IRole role, string emote, params string[] description)
 		{
-			string desc = string.Join(' ', description);
-			EmoteType emoteType;
+			RRMessage rrMsg = GlobalData.RRMessagesDataTable.GetRRMessageByChannelId(Context.Channel.Id);
 
-			try // EMOJI
-			{
-				string emoji = Twemoji.GetEmojiUrlFromEmoji(emote);
-				emoteType = EmoteType.Emoji;
-			}
-			catch // EMOTE
-			{
-				Emote.TryParse(emote, out Emote e);
-
-				if (e != null)
-				{
-					emoteType = EmoteType.Emote;
-				}
-				else
-				{
-					throw new Exception("Invalid emoji/emote.");
-				}
-			}
-
-			ulong msgId = (await GetMessage().ConfigureAwait(false)).Id;
-			GlobalData.RRMessagesDataTable.AddRoleLine(msgId, role, emoteType, emote, desc);
-
-			EmbedBuilder embed = await GetEmbed().ConfigureAwait(false);
-			embed.AddField($"{emote} - {role.Mention}", $"**{desc}**");
-
-			await EditMessage(embed).ConfigureAwait(false);
-
+			await rrMsg.AddRoleLine(role, emote, description);
+			await rrMsg.ModifyDiscordEmbedAsync();
 		}
 	}
 }

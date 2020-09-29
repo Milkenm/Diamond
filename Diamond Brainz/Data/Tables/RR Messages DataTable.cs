@@ -1,124 +1,133 @@
-﻿using Discord;
+﻿using Diamond.Brainz.Structures.ReactionRoles;
+
+using Discord;
+using Discord.Commands;
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-using static Diamond.Brainz.Structures.ReactionRoles;
-
 namespace Diamond.Brainz.Data.Tables
 {
-	public class RRMessagesDataTable
+	public class RRMessagesDataTable : IEnumerable
 	{
 		public RRMessagesDataTable()
 		{
 			DTable.Columns.Add(nameof(Column.MessageId), typeof(ulong));
 			DTable.Columns.Add(nameof(Column.ChannelId), typeof(ulong));
-			DTable.Columns.Add(nameof(Column.Embed), typeof(EmbedBuilder));
-			DTable.Columns.Add(nameof(Column.IsFinished), typeof(bool));
-			DTable.Columns.Add(nameof(Column.RoleLines), typeof(List<RoleLine>));
+			DTable.Columns.Add(nameof(Column.RRMessage), typeof(RRMessage));
+			DTable.Columns.Add(nameof(Column.IsEditing), typeof(bool));
+
+			DTable.PrimaryKey = new DataColumn[] { DTable.Columns[nameof(Column.MessageId)] };
 		}
 
-		public static DataTable DTable = new DataTable();
-		private static readonly EnumerableRowCollection<DataRow> MessagesTableEnumerator = DTable.AsEnumerable();
+		private static DataTable DTable = new DataTable();
+
+		public RRMessage this[int index]
+		{
+			get
+			{
+				return (RRMessage)DTable.Rows[index][nameof(Column.RRMessage)];
+			}
+		}
 
 		public enum Column
 		{
 			MessageId,
 			ChannelId,
-			Embed,
-			RoleLines,
-			IsFinished,
+			RRMessage,
+			IsEditing,
 		}
 
-		public void AddMessage(ulong messageId, ulong channelId, EmbedBuilder embed, bool isFinished, List<RoleLine> roleLines = null)
+		public void AddMessage(SocketCommandContext context, IUserMessage reply, EmbedBuilder embed, RoleLinesList roleLinesList = null)
 		{
-			DTable.Rows.Add(messageId, channelId, embed, isFinished, roleLines ?? new List<RoleLine>());
+			AddMessage(new RRMessage(context, reply, embed, roleLinesList ?? new RoleLinesList()));
 		}
 
-		public List<ulong> GetMessages()
+		public void AddMessage(RRMessage rrMessage, bool isEditing = true)
 		{
-			return MessagesTableEnumerator.Select(r => r.Field<ulong>(nameof(Column.MessageId))).ToList();
+			DTable.Rows.Add(rrMessage.GetReplyId(), rrMessage.GetChannelId(), rrMessage, isEditing);
 		}
 
-		public List<ulong> GetChannels()
+		public void StartEditing(ulong messageId)
 		{
-			return MessagesTableEnumerator.Select(r => r.Field<ulong>(nameof(Column.ChannelId))).ToList();
+			DataRow row = GetRowByMessageId(messageId);
+			UpdateRow(row, isEditing: true);
 		}
 
-		public List<ulong> GetMessagesByChannelId(ulong channelId)
+		public void StopEditing(ulong messageId)
 		{
-			return DTable.Select($"{nameof(Column.ChannelId)}={channelId}").Select(r => r.Field<ulong>(nameof(Column.MessageId))).ToList();
+			DataRow row = GetRowByMessageId(messageId);
+			UpdateRow(row, isEditing: false);
 		}
 
-		public ulong GetLatestChannelMessage(ulong channelId)
+		public RRMessage GetRRMessageByMessageId(ulong messageId)
 		{
-			List<ulong> messages = GetMessagesByChannelId(channelId);
-
-			return messages.Count > 0 ? messages[^1] : throw new Exception("No messages found for this channel.");
+			return (RRMessage)DTable.Select($"{nameof(Column.MessageId)}={messageId}")[0][nameof(Column.RRMessage)];
 		}
 
-		public EmbedBuilder GetMessageEmbed(ulong messageId)
+		public RRMessage GetRRMessageByChannelId(ulong channelId)
 		{
-			return DTable.Select($"{nameof(Column.MessageId)}={messageId}").Select(r => r.Field<EmbedBuilder>(nameof(Column.Embed))).ToList()[0];
-			// return embedList.Count > 0 ? embedList[0] : throw new Exception("No embed found for the message.");
-		}
-
-		public void RemoveMessage(ulong messageId)
-		{
-			List<ulong> messagesIds = GetMessages();
-			int gameIndex = messagesIds.IndexOf(messageId);
-
-			DTable.Rows.RemoveAt(gameIndex);
-		}
-
-		public void AddRoleLine(ulong messageId, IRole role, EmoteType emoteType, dynamic emote, string description)
-		{
-			AddRoleLine(messageId, new RoleLine(role, emoteType, emote, description));
-		}
-
-		public void AddRoleLine(ulong messageId, RoleLine roleLine)
-		{
-			if (!AlreadyHasEmote(messageId, roleLine.Emote))
+			DataRow[] selection = DTable.Select($"{nameof(Column.ChannelId)}={channelId} AND {nameof(Column.IsEditing)}={true}");
+			if (selection.Count() > 0)
 			{
-				List<RoleLine> rlList = (List<RoleLine>)DTable.Rows[GetRowIndexOfMessage(messageId)][nameof(Column.RoleLines)];
-				rlList.Add(roleLine);
-
-				DTable.Rows[GetRowIndexOfMessage(messageId)][nameof(Column.RoleLines)] = rlList;
+				return (RRMessage)selection[0][nameof(Column.RRMessage)];
 			}
 			else
 			{
-				throw new Exception("The message already has that emote.");
+				throw new Exception("There are no messages being edited on this channel.");
 			}
 		}
 
-		public DataRow GetRowByMessage(ulong messageId)
+		public void UpdateRRMessage(ulong messageId, RRMessage rrMessage)
 		{
-			DataRow[] selection = DTable.Select($"{nameof(Column.MessageId)}={messageId}");
-			return selection[0];
+			DataRow row = GetRowByMessageId(messageId);
+			UpdateRow(row, rrMessage: rrMessage);
 		}
 
-		public int GetRowIndexOfMessage(ulong messageId)
+		public void DeleteRRMessage(ulong messageId)
 		{
-			DataRow row = GetRowByMessage(messageId);
+			DataRow row = GetRowByMessageId(messageId);
+			DTable.Rows.Remove(row);
+		}
 
+		private DataRow GetRowByMessageId(ulong messageId)
+		{
+			return DTable.Rows.Find(messageId);
+		}
+
+		private int GetTableIndexByMessageId(ulong messageId)
+		{
+			DataRow row = GetRowByMessageId(messageId);
 			return DTable.Rows.IndexOf(row);
 		}
 
-		public bool AlreadyHasEmote(ulong messageId, dynamic emote)
+		private void UpdateRow(int rowIndex, ulong? messageId = null, ulong? channelId = null, RRMessage rrMessage = null, bool? isEditing = null)
 		{
-			List<RoleLine> selection = DTable.Select($"{nameof(Column.MessageId)}={messageId}").Select(r => r.Field<List<RoleLine>>(nameof(Column.RoleLines))).First();
+			DataRow row = DTable.Rows[rowIndex];
+			UpdateRow(row, messageId, channelId, rrMessage, isEditing);
+		}
 
-			foreach (RoleLine rl in selection)
-			{
-				if (rl.Emote == emote)
-				{
-					return true;
-				}
-			}
+		private void UpdateRow(DataRow row, ulong? messageId = null, ulong? channelId = null, RRMessage rrMessage = null, bool? isEditing = null)
+		{
+			int rowIndex = DTable.Rows.IndexOf(row);
 
-			return false;
+			DataRow newRow = DTable.NewRow();
+
+			newRow[nameof(Column.MessageId)] = messageId ?? row[nameof(Column.MessageId)];
+			newRow[nameof(Column.ChannelId)] = channelId ?? row[nameof(Column.ChannelId)];
+			newRow[nameof(Column.RRMessage)] = rrMessage ?? row[nameof(Column.RRMessage)];
+			newRow[nameof(Column.IsEditing)] = isEditing ?? row[nameof(Column.IsEditing)];
+
+			DTable.Rows.RemoveAt(rowIndex);
+			DTable.Rows.InsertAt(newRow, rowIndex);
+		}
+
+		public IEnumerator GetEnumerator()
+		{
+			return (IEnumerator<RRMessage>)DTable.Select($"{nameof(Column.RRMessage)}").GetEnumerator();
 		}
 	}
 }
