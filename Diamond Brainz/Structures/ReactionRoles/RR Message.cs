@@ -1,9 +1,13 @@
-﻿using Diamond.Brainz.Utils;
+﻿using Diamond.Brainz.Data;
+using Diamond.Brainz.Utils;
 
 using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 using static Diamond.Brainz.Structures.ReactionRoles.ReactionRoles;
@@ -28,7 +32,7 @@ namespace Diamond.Brainz.Structures.ReactionRoles
 
 		public ulong GetReplyId()
 		{
-			return Context.Message.Id;
+			return Reply.Id;
 		}
 
 		public ulong GetChannelId()
@@ -36,7 +40,7 @@ namespace Diamond.Brainz.Structures.ReactionRoles
 			return Context.Channel.Id;
 		}
 
-		public void AddRoleLine(IRole role, string emote, params string[] description)
+		public IEmote ParseEmote(string emote)
 		{
 			IEmote parsedEmote;
 
@@ -59,6 +63,13 @@ namespace Diamond.Brainz.Structures.ReactionRoles
 				}
 			}
 
+			return parsedEmote;
+		}
+
+		public void AddRoleLine(IRole role, string emote, params string[] description)
+		{
+			IEmote parsedEmote = ParseEmote(emote);
+
 			AddRoleLine(role, parsedEmote, string.Join(' ', description));
 		}
 
@@ -70,6 +81,12 @@ namespace Diamond.Brainz.Structures.ReactionRoles
 		public void RemoveRoleLine(IRole role)
 		{
 			RoleLinesList.RemoveRecord(role);
+		}
+
+		public void RemoveRoleLine(string emote)
+		{
+			IEmote parsedEmote = ParseEmote(emote);
+			RoleLinesList.RemoveRecord(parsedEmote);
 		}
 
 		public void UpdateEmbed(EmbedBuilder embed)
@@ -140,10 +157,10 @@ namespace Diamond.Brainz.Structures.ReactionRoles
 		{
 			AddRolesBlock();
 			await Reply.ModifyAsync(msg => msg.Embed = Embeds.FinishEmbed(Embed, Context)).ConfigureAwait(false);
-			AddReactions();
+			RefreshReactions();
 		}
 
-		public async void AddReactions()
+		public async void RefreshReactions()
 		{
 			foreach (IEmote emote in RoleLinesList.Emotes)
 			{
@@ -152,11 +169,82 @@ namespace Diamond.Brainz.Structures.ReactionRoles
 					await Reply.AddReactionsAsync(RoleLinesList.Emotes.ToArray()).ConfigureAwait(false);
 				}
 			}
+
+			foreach (KeyValuePair<IEmote, ReactionMetadata> emote in Reply.Reactions)
+			{
+				if (!RoleLinesList.Emotes.Contains(emote.Key))
+				{
+					await Reply.RemoveAllReactionsForEmoteAsync(emote.Key);
+				}
+			}
 		}
 
-		public async void RemoveReactions(IEmote emote)
+		public async void DeleteMessage()
 		{
+			await Reply.DeleteAsync();
+		}
 
+		private IRole GetRoleByEmote(IEmote emote)
+		{
+			for (int i = 0; i < RoleLinesList.Count; i++)
+			{
+				RoleLineRecord record = RoleLinesList.GetRecord(i);
+
+				if (record.Emote.Equals(emote))
+				{
+					return record.Role;
+				}
+			}
+
+			return null;
+		}
+
+		public async void HandleEmoteAdded(SocketReaction reaction)
+		{
+			IRole role = GetRoleByEmote(reaction.Emote);
+
+			if (role != null)
+			{
+				try
+				{
+					await ((IGuildUser)reaction.User.Value).AddRoleAsync(role);
+				}
+				catch { }
+			}
+			else
+			{
+				await Reply.RemoveAllReactionsForEmoteAsync(reaction.Emote);
+			}
+		}
+
+		public async void HandleEmoteRemoved(SocketReaction reaction)
+		{
+			IRole role = GetRoleByEmote(reaction.Emote);
+
+			if (role != null)
+			{
+				IGuildUser user = (IGuildUser)reaction.User.Value;
+
+				if (user.RoleIds.Contains(role.Id))
+				{
+					await user.RemoveRoleAsync(role);
+				}
+			}
+		}
+
+		public void StartEditing()
+		{
+			GlobalData.RRMessagesDataTable.StartEditing(Reply.Id);
+		}
+
+		public void StopEditing()
+		{
+			GlobalData.RRMessagesDataTable.StopEditing(Reply.Id);
+		}
+
+		public bool IsEditing()
+		{
+			return GlobalData.RRMessagesDataTable.IsEditing(Reply.Id);
 		}
 	}
 }

@@ -5,6 +5,7 @@ using Diamond.Brainz.Utils;
 using Discord;
 using Discord.Commands;
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -31,12 +32,12 @@ namespace Diamond.Brainz.Commands
 			helpEmbed.WithDescription("**__Use:__**\n**» !rr title <title>** to set the title\n**» !rr description <description>** to set the description\n**» !rr addrole <role> <emote> <description>** to add a role\n**» !rr delrole <role>** to remove a role\n**» !rr** to stop editing");
 			await ReplyAsync(embed: Embeds.FinishEmbed(helpEmbed, Context)).ConfigureAwait(false);
 		}
-
+		
 		// RR TITLE
 		[Name("Reaction Roles"), Command("reactionroles title"), Alias("rr title", "rr t", "reactionroles settitle", "rr settitle"), Summary("Edits the Title of a Reaction Roles message.")]
 		public async Task ReactionRolesTitle(params string[] title)
 		{
-			RRMessage rrMsg = GlobalData.RRMessagesDataTable.GetRRMessageByChannelId(Context.Channel.Id);
+			RRMessage rrMsg = GlobalData.RRMessagesDataTable.GetRREditingMessage(Context.Channel.Id);
 
 			rrMsg.SetTitle(title);
 			rrMsg.ModifyDiscordEmbedAsync();
@@ -46,7 +47,7 @@ namespace Diamond.Brainz.Commands
 		[Name("Reaction Roles"), Command("reactionroles description"), Alias("rr description", "rr desc", "rr d"), Summary("Edits the Description of a Reaction Roles message.")]
 		public async Task ReactionRolesDescription(params string[] description)
 		{
-			RRMessage rrMsg = GlobalData.RRMessagesDataTable.GetRRMessageByChannelId(Context.Channel.Id);
+			RRMessage rrMsg = GlobalData.RRMessagesDataTable.GetRREditingMessage(Context.Channel.Id);
 
 			rrMsg.SetDescription(description);
 			rrMsg.ModifyDiscordEmbedAsync();
@@ -56,10 +57,84 @@ namespace Diamond.Brainz.Commands
 		[Name("Reaction Roles"), Command("reactionroles addrole"), Alias("rr ar", "rr addrole", "rr addr", "rr add"), Summary("Adds a Role to a Reaction Roles message.")]
 		public async Task ReactionRolesAddRole(IRole role, string emote, params string[] description)
 		{
-			RRMessage rrMsg = GlobalData.RRMessagesDataTable.GetRRMessageByChannelId(Context.Channel.Id);
+			RRMessage rrMsg = GlobalData.RRMessagesDataTable.GetRREditingMessage(Context.Channel.Id);
 
 			rrMsg.AddRoleLine(role, emote, description);
 			rrMsg.ModifyDiscordEmbedAsync();
+		}
+
+		// RR REM
+		[Name("Reaction Roles"), Command("reactionroles removerole"), Alias("rr rem", "rr remove"), Summary("Removes a Role from a Reaction Roles message.")]
+		public async Task ReactionRolesRemoveRole(IRole role)
+		{
+			RRMessage rrMsg = GlobalData.RRMessagesDataTable.GetRREditingMessage(Context.Channel.Id);
+
+			rrMsg.RemoveRoleLine(role);
+			rrMsg.ModifyDiscordEmbedAsync();
+		}
+		[Name("Reaction Roles"), Command("reactionroles removerole"), Alias("rr rem", "rr del", "rr delete", "rr remove", "rr delrole", "rr remrole"), Summary("Removes a Role from a Reaction Roles message.")]
+		public async Task ReactionRolesRemoveRole(string emote)
+		{
+			RRMessage rrMsg = GlobalData.RRMessagesDataTable.GetRREditingMessage(Context.Channel.Id);
+
+			rrMsg.RemoveRoleLine(emote);
+			rrMsg.ModifyDiscordEmbedAsync();
+		}
+
+		// RR DELETE
+		[Name("Reaction Roles"), Command("reactionroles delete"), Alias("rr delete", "rr del"), Summary("Deletes a Reaction Roles message.")]
+		public async Task ReactionRolesDelete(ulong? messageId = null)
+		{
+			RRMessage rrMsg;
+
+			if (messageId == null)
+			{
+				rrMsg = GlobalData.RRMessagesDataTable.GetRREditingMessage(Context.Channel.Id);
+			}
+			else
+			{
+				rrMsg = GlobalData.RRMessagesDataTable.GetRRMessageByMessageId((ulong)messageId);
+			}
+
+			if (rrMsg != null)
+			{
+				rrMsg.DeleteMessage();
+			}
+			else
+			{
+				throw new Exception("No Reaction Roles messages found.");
+			}
+		}
+
+		// RR EDIT
+		[Name("Reaction Roles"), Command("reactionroles edit"), Alias("rr edit, rr startedit", "rr e"), Summary("Edits the selected Reaction Roles message")]
+		public async Task ReactionRolesStartEdit(ulong? messageId = null)
+		{
+			RRMessage rrMsg;
+
+			if (messageId != null)
+			{
+				rrMsg = GlobalData.RRMessagesDataTable.GetRRMessageByMessageId((ulong)messageId);
+			}
+			else
+			{
+				rrMsg = GlobalData.RRMessagesDataTable.GetLatestChannelRRMessage(Context.Channel.Id);
+			}
+
+			if (rrMsg != null)
+			{
+				GlobalData.RRMessagesDataTable.StopAllChannelEdits(Context.Channel.Id);
+				rrMsg.StartEditing();
+			}
+		}
+
+		// RR ENDEDIT
+		[Name("Reaction Roles"), Command("reactionroles endedit"), Alias("rr ee", "rr end", "rr endedit"), Summary("Ends the Reaction Roles message edit session.")]
+		public async Task ReactionRolesEndEdit()
+		{
+			RRMessage rrMsg = GlobalData.RRMessagesDataTable.GetRREditingMessage(Context.Channel.Id);
+
+			rrMsg?.StopEditing();
 		}
 	}
 }

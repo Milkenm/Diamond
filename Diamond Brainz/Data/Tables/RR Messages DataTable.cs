@@ -2,10 +2,9 @@
 
 using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
@@ -65,10 +64,12 @@ namespace Diamond.Brainz.Data.Tables
 
 		public RRMessage GetRRMessageByMessageId(ulong messageId)
 		{
-			return (RRMessage)DTable.Select($"{nameof(Column.MessageId)}={messageId}")[0][nameof(Column.RRMessage)];
+			DataRow[] rows = DTable.Select($"{nameof(Column.MessageId)}={messageId}");
+
+			return rows.Length > 0 ? (RRMessage)rows[0][nameof(Column.RRMessage)] : null;
 		}
 
-		public RRMessage GetRRMessageByChannelId(ulong channelId)
+		public RRMessage GetRREditingMessage(ulong channelId)
 		{
 			DataRow[] selection = DTable.Select($"{nameof(Column.ChannelId)}={channelId} AND {nameof(Column.IsEditing)}={true}");
 			if (selection.Length > 0)
@@ -98,7 +99,7 @@ namespace Diamond.Brainz.Data.Tables
 			return DTable.Rows.Find(messageId);
 		}
 
-		private int GetTableIndexByMessageId(ulong messageId)
+		private int GetIndexByMessageId(ulong messageId)
 		{
 			DataRow row = GetRowByMessageId(messageId);
 			return DTable.Rows.IndexOf(row);
@@ -123,6 +124,69 @@ namespace Diamond.Brainz.Data.Tables
 
 			DTable.Rows.RemoveAt(rowIndex);
 			DTable.Rows.InsertAt(newRow, rowIndex);
+		}
+
+		public void ReactionAddedEvent(SocketReaction reaction)
+		{
+			RRMessage rrMsg = GetRRMessageByMessageId(reaction.MessageId);
+			if (rrMsg != null)
+			{
+				rrMsg.HandleEmoteAdded(reaction);
+			}
+		}
+
+		public void ReactionRemovedEvent(SocketReaction reaction)
+		{
+			RRMessage rrMsg = GetRRMessageByMessageId(reaction.MessageId);
+			if (rrMsg != null)
+			{
+				rrMsg.HandleEmoteRemoved(reaction);
+			}
+		}
+
+		public RRMessage GetLatestChannelRRMessage(ulong channelId)
+		{
+			DataRow[] selection = DTable.Select($"{nameof(Column.ChannelId)}={channelId}");
+
+			if (selection.Count() > 0)
+			{
+				return (RRMessage)selection.Last()[nameof(Column.RRMessage)];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public RRMessage GetLatestNotEditingRRMessage(ulong channelId)
+		{
+			DataRow[] selection = DTable.Select($"{nameof(Column.ChannelId)}={channelId} AND {nameof(Column.IsEditing)}={false}");
+
+			if (selection.Count() > 0)
+			{
+				return (RRMessage)selection[0][nameof(Column.RRMessage)];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public bool IsEditing(ulong messageId)
+		{
+			DataRow[] selection = DTable.Select($"{nameof(Column.MessageId)}={messageId}");
+
+			return (bool)selection[0][nameof(Column.IsEditing)];
+		}
+
+		public void StopAllChannelEdits(ulong channelId)
+		{
+			DataRow[] selection = DTable.Select($"{nameof(Column.ChannelId)}={channelId} AND {nameof(Column.IsEditing)}={true}");
+
+			foreach (DataRow row in selection)
+			{
+				StopEditing((ulong)row[nameof(Column.MessageId)]);
+			}
 		}
 	}
 }

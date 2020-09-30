@@ -1,4 +1,6 @@
-﻿using Discord;
+﻿using Diamond.Brainz.Data;
+
+using Discord;
 using Discord.WebSocket;
 
 using System.Threading.Tasks;
@@ -12,6 +14,8 @@ namespace Diamond.Brainz.Events
             if (!reaction.User.Value.IsBot)
             {
                 await GameEvents.TicTacToe(reaction).ConfigureAwait(false);
+
+                GlobalData.RRMessagesDataTable.ReactionAddedEvent(reaction);
             }
         }
     }
