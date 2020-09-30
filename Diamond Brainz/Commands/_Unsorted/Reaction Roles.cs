@@ -14,6 +14,7 @@ namespace Diamond.Brainz.Commands
 	{
 		private readonly List<IEmote> Reactions = new List<IEmote>() { new Emoji("1️⃣"), new Emoji("2️⃣"), new Emoji("3️⃣"), new Emoji("4️⃣"), new Emoji("5️⃣"), new Emoji("6️⃣"), new Emoji("7️⃣"), new Emoji("8️⃣"), new Emoji("9️⃣") };
 
+		// RR
 		[Name("Reaction Roles"), Command("reactionroles"), Alias("rr", "reactionrole"), Summary("Creates a message which users can react to and receive a role.")]
 		public async Task ReactionRoles()
 		{
@@ -31,31 +32,34 @@ namespace Diamond.Brainz.Commands
 			await ReplyAsync(embed: Embeds.FinishEmbed(helpEmbed, Context)).ConfigureAwait(false);
 		}
 
+		// RR TITLE
 		[Name("Reaction Roles"), Command("reactionroles title"), Alias("rr title", "rr t", "reactionroles settitle", "rr settitle"), Summary("Edits the Title of a Reaction Roles message.")]
 		public async Task ReactionRolesTitle(params string[] title)
 		{
 			RRMessage rrMsg = GlobalData.RRMessagesDataTable.GetRRMessageByChannelId(Context.Channel.Id);
 
-			await rrMsg.SetTitle(title);
-			await rrMsg.ModifyDiscordEmbedAsync();
+			rrMsg.SetTitle(title);
+			rrMsg.ModifyDiscordEmbedAsync();
 		}
 
+		// RR DESC
 		[Name("Reaction Roles"), Command("reactionroles description"), Alias("rr description", "rr desc", "rr d"), Summary("Edits the Description of a Reaction Roles message.")]
 		public async Task ReactionRolesDescription(params string[] description)
 		{
 			RRMessage rrMsg = GlobalData.RRMessagesDataTable.GetRRMessageByChannelId(Context.Channel.Id);
 
-			await rrMsg.SetDescription(description);
-			await rrMsg.ModifyDiscordEmbedAsync();
+			rrMsg.SetDescription(description);
+			rrMsg.ModifyDiscordEmbedAsync();
 		}
 
+		// RR ADD
 		[Name("Reaction Roles"), Command("reactionroles addrole"), Alias("rr ar", "rr addrole", "rr addr", "rr add"), Summary("Adds a Role to a Reaction Roles message.")]
 		public async Task ReactionRolesAddRole(IRole role, string emote, params string[] description)
 		{
 			RRMessage rrMsg = GlobalData.RRMessagesDataTable.GetRRMessageByChannelId(Context.Channel.Id);
 
-			await rrMsg.AddRoleLine(role, emote, description);
-			await rrMsg.ModifyDiscordEmbedAsync();
+			rrMsg.AddRoleLine(role, emote, description);
+			rrMsg.ModifyDiscordEmbedAsync();
 		}
 	}
 }

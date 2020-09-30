@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Diamond.Brainz.Data.Tables
 {
-	public class RRMessagesDataTable : IEnumerable
+	public class RRMessagesDataTable
 	{
 		public RRMessagesDataTable()
 		{
@@ -23,7 +23,7 @@ namespace Diamond.Brainz.Data.Tables
 			DTable.PrimaryKey = new DataColumn[] { DTable.Columns[nameof(Column.MessageId)] };
 		}
 
-		private static DataTable DTable = new DataTable();
+		private static readonly DataTable DTable = new DataTable();
 
 		public RRMessage this[int index]
 		{
@@ -71,7 +71,7 @@ namespace Diamond.Brainz.Data.Tables
 		public RRMessage GetRRMessageByChannelId(ulong channelId)
 		{
 			DataRow[] selection = DTable.Select($"{nameof(Column.ChannelId)}={channelId} AND {nameof(Column.IsEditing)}={true}");
-			if (selection.Count() > 0)
+			if (selection.Length > 0)
 			{
 				return (RRMessage)selection[0][nameof(Column.RRMessage)];
 			}
@@ -123,11 +123,6 @@ namespace Diamond.Brainz.Data.Tables
 
 			DTable.Rows.RemoveAt(rowIndex);
 			DTable.Rows.InsertAt(newRow, rowIndex);
-		}
-
-		public IEnumerator GetEnumerator()
-		{
-			return (IEnumerator<RRMessage>)DTable.Select($"{nameof(Column.RRMessage)}").GetEnumerator();
 		}
 	}
 }

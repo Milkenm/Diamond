@@ -8,24 +8,16 @@ namespace Diamond.Brainz.Structures.ReactionRoles
     {
         public struct RoleLineRecord
         {
-            public RoleLineRecord(IRole role, EmoteType emoteType, dynamic emote, string description)
+            public RoleLineRecord(IRole role, IEmote emote, string description)
             {
                 Role = role;
-                EmoteType = emoteType;
                 Emote = emote;
                 Description = description;
             }
 
             public IRole Role;
-            public EmoteType EmoteType;
-            public dynamic Emote;
+            public IEmote Emote;
             public string Description;
-        }
-
-        public enum EmoteType
-        {
-            Emoji,
-            Emote,
         }
     }
 }

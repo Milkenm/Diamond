@@ -4,8 +4,7 @@ using Discord;
 using Discord.Commands;
 
 using System;
-using System.Data;
-using System.Threading.Tasks;
+using System.Text;
 
 using static Diamond.Brainz.Structures.ReactionRoles.ReactionRoles;
 
@@ -21,10 +20,11 @@ namespace Diamond.Brainz.Structures.ReactionRoles
 			RoleLinesList = roleLinesList ?? new RoleLinesList();
 		}
 
-		private SocketCommandContext Context;
-		private IUserMessage Reply;
+		private readonly SocketCommandContext Context;
+		private readonly IUserMessage Reply;
 		private EmbedBuilder Embed;
-		private RoleLinesList RoleLinesList;
+		private readonly RoleLinesList RoleLinesList;
+		private string BaseDescription;
 
 		public ulong GetReplyId()
 		{
@@ -36,89 +36,127 @@ namespace Diamond.Brainz.Structures.ReactionRoles
 			return Context.Channel.Id;
 		}
 
-		public async Task AddRoleLine(IRole role, string emote, params string[] description)
+		public void AddRoleLine(IRole role, string emote, params string[] description)
 		{
-			await Task.Run(new Action(async () =>
+			IEmote parsedEmote;
+
+			try // EMOJI
 			{
-				EmoteType emoteType = EmoteType.Emote;
-				dynamic parsedEmote = emote;
-
-				try // EMOJI
-				{
-					string emoji = Twemoji.GetEmojiUrlFromEmoji(emote);
-					emoteType = EmoteType.Emoji;
-				}
-				catch // EMOTE
-				{
-					Emote.TryParse(emote, out Emote e);
-
-					if (e != null)
-					{
-						 parsedEmote = e;
-					}
-					else
-					{
-						throw new Exception("Invalid emoji/emote.");
-					}
-				}
-
-				await AddRoleLine(role, emoteType, emote, string.Join(' ', description));
-			}));
-		}
-
-		public async Task AddRoleLine(IRole role, EmoteType emoteType, dynamic emote, string description)
-		{
-			await Task.Run(new Action(() => RoleLinesList.AddRecord(role, emoteType, emote, description)));
-		}
-
-		public async Task RemoveRoleLine(IRole role)
-		{
-			await Task.Run(new Action(() => RoleLinesList.RemoveRecord(role)));
-		}
-
-		public async Task UpdateEmbed(EmbedBuilder embed)
-		{
-			await Task.Run(new Action(() => Embed = embed));
-		}
-
-		public async Task SetTitle(params string[] title)
-		{
-			await Task.Run(new Action(async () => await SetTitle(string.Join(' ', title))));
-		}
-
-		public async Task SetTitle(string title)
-		{
-			await Task.Run(new Action(() => Embed.WithTitle(title)));
-		}
-
-		public async Task SetDescription(params string[] description)
-		{
-			await Task.Run(new Action(async () => await SetDescription(string.Join(' ', description))));
-		}
-
-		public async Task SetDescription(string description)
-		{
-			await Task.Run(new Action(() => Embed.WithDescription(description)));
-		}
-
-		public async Task ModifyDiscordEmbedAsync(EmbedBuilder embed = null)
-		{
-			if (RoleLinesList.Empty)
+				Twemoji.GetEmojiCode(emote);
+				parsedEmote = new Emoji(emote);
+			}
+			catch // EMOTE
 			{
-				embed.Fields.Clear();
+				Emote.TryParse(emote, out Emote e);
 
-				foreach (var a in RoleLinesList)
+				if (e != null)
 				{
-
+					parsedEmote = e;
+				}
+				else
+				{
+					throw new Exception("Invalid emoji/emote.");
 				}
 			}
 
-			if (embed != null)
+			AddRoleLine(role, parsedEmote, string.Join(' ', description));
+		}
+
+		public void AddRoleLine(IRole role, IEmote emote, string description)
+		{
+			RoleLinesList.AddRecord(role, emote, description);
+		}
+
+		public void RemoveRoleLine(IRole role)
+		{
+			RoleLinesList.RemoveRecord(role);
+		}
+
+		public void UpdateEmbed(EmbedBuilder embed)
+		{
+			Embed = embed;
+		}
+
+		public void SetTitle(params string[] title)
+		{
+			SetTitle(string.Join(' ', title));
+		}
+
+		public void SetTitle(string title)
+		{
+			Embed.WithTitle(title);
+		}
+
+		public void SetDescription(params string[] description)
+		{
+			string desc = string.Join(' ', description);
+			SetDescription(desc);
+			BaseDescription = desc;
+		}
+
+		public void SetDescription(string description)
+		{
+			Embed.WithDescription(description);
+			BaseDescription = description;
+		}
+
+		public void AddRolesBlock()
+		{
+			string rolesBlock = GenerateRolesBlock();
+
+			if (!string.IsNullOrEmpty(Embed.Description))
 			{
-				Embed = embed;
+				rolesBlock = "\n\n" + rolesBlock;
 			}
 
-			await Reply.ModifyAsync(msg => msg.Embed = Embeds.FinishEmbed(Embed, Context));
+			rolesBlock = BaseDescription + rolesBlock;
+
+			Embed.WithDescription(rolesBlock);
+		}
+
+		public string GenerateRolesBlock()
+		{
+			StringBuilder roles = new StringBuilder();
+			if (RoleLinesList.Count > 0)
+			{
+				bool newLine = false;
+				for (int i = 0; i < RoleLinesList.Count; i++)
+				{
+					if (newLine)
+					{
+						roles.Append("\n");
+					}
+
+					RoleLineRecord record = RoleLinesList.GetRecord(i);
+					roles.Append(record.Emote).Append(" ").Append(record.Role.Mention).Append(" : ").Append(record.Description);
+					newLine = true;
+				}
+			}
+
+			return roles.ToString();
+		}
+
+		public async void ModifyDiscordEmbedAsync()
+		{
+			AddRolesBlock();
+			await Reply.ModifyAsync(msg => msg.Embed = Embeds.FinishEmbed(Embed, Context)).ConfigureAwait(false);
+			AddReactions();
+		}
+
+		public async void AddReactions()
+		{
+			foreach (IEmote emote in RoleLinesList.Emotes)
+			{
+				if (!Reply.Reactions.ContainsKey(emote))
+				{
+					await Reply.AddReactionsAsync(RoleLinesList.Emotes.ToArray()).ConfigureAwait(false);
+				}
+			}
+		}
+
+		public async void RemoveReactions(IEmote emote)
+		{
+
 		}
 	}
 }

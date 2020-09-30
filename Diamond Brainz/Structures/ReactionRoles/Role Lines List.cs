@@ -1,9 +1,8 @@
 ﻿
 using Discord;
 
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using static Diamond.Brainz.Structures.ReactionRoles.ReactionRoles;
 
@@ -13,38 +12,49 @@ namespace Diamond.Brainz.Structures.ReactionRoles
 	{
 		public RoleLinesList() { }
 
-		public RoleLinesList(IRole role, EmoteType emoteType, dynamic emote, string description)
+		public RoleLinesList(IRole role, IEmote emote, string description)
 		{
 			Roles.Add(role);
-			EmoteTypes.Add(emoteType);
 			Emotes.Add(emote);
 			Descriptions.Add(description);
 		}
 
-		public List<IRole> Roles;
-		public List<EmoteType> EmoteTypes;
-		public List<dynamic> Emotes;
-		public List<string> Descriptions;
+		public List<IRole> Roles = new List<IRole>();
+		public List<IEmote> Emotes = new List<IEmote>();
+		public List<string> Descriptions = new List<string>();
+
+		public int Count { get { return Roles.Count; } }
 
 		public bool Empty { get { return Roles.Count > 0; } }
 
 		public void AddRecord(RoleLineRecord record)
 		{
-			AddRecord(record.Role, record.EmoteType, record.Emote, record.Description);
+			AddRecord(record.Role, record.Emote, record.Description);
 		}
 
-		public void AddRecord(IRole role, EmoteType emoteType, dynamic emote, string description)
+		public void AddRecord(IRole role, IEmote emote, string description)
 		{
 			if (!ContainsRole(role) && !ContainsEmote(emote))
 			{
 				Roles.Add(role);
-				EmoteTypes.Add(emoteType);
 				Emotes.Add(emote);
 				Descriptions.Add(description);
 			}
 		}
 
-		public void RemoveRecord(dynamic emote)
+		public RoleLineRecord GetRecord(int index)
+		{
+			if (Roles.Count >= index - 1)
+			{
+				return new RoleLineRecord(Roles[index], Emotes[index], Descriptions[index]);
+			}
+			else
+			{
+				throw new Exception("Record not found.");
+			}
+		}
+
+		public void RemoveRecord(IEmote emote)
 		{
 			int index = Emotes.IndexOf(emote);
 			RemoveRecord(index);
@@ -59,7 +69,6 @@ namespace Diamond.Brainz.Structures.ReactionRoles
 		private void RemoveRecord(int index)
 		{
 			Roles.RemoveAt(index);
-			EmoteTypes.RemoveAt(index);
 			Emotes.RemoveAt(index);
 			Descriptions.RemoveAt(index);
 		}
@@ -69,21 +78,9 @@ namespace Diamond.Brainz.Structures.ReactionRoles
 			return Roles.Contains(role);
 		}
 
-		private bool ContainsEmote(dynamic emote)
+		private bool ContainsEmote(IEmote emote)
 		{
 			return Emotes.Contains(emote);
-		}
-
-		public IEnumerator GetEnumerator()
-		{
-			List<RoleLineRecord> roleLines = new List<RoleLineRecord>();
-
-			for (int i = 0; i < Roles.Count; i++)
-			{
-				roleLines.Add(new RoleLineRecord(Roles[i], EmoteTypes[i], Emotes[i], Descriptions[i]));
-			}
-
-			return roleLines.AsEnumerable().GetEnumerator();
 		}
 	}
 }
