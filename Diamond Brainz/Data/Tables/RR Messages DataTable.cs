@@ -66,9 +66,9 @@ namespace Diamond.Brainz.Data.Tables
 
 		public RRMessage GetRRMessageByMessageId(ulong messageId)
 		{
-			DataRow[] rows = DTable.Select($"{nameof(Column.MessageId)}={messageId}");
+			DataRow[] selection = DTable.Select($"{nameof(Column.MessageId)}={messageId}");
 
-			return rows.Length > 0 ? (RRMessage)rows[0][nameof(Column.RRMessage)] : null;
+			return selection.Length > 0 ? (RRMessage)selection[0][nameof(Column.RRMessage)] : null;
 		}
 
 		public RRMessage GetRREditingMessage(ulong channelId)
