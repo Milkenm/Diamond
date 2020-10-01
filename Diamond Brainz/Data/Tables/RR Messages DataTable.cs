@@ -14,6 +14,8 @@ namespace Diamond.Brainz.Data.Tables
 	{
 		public RRMessagesDataTable()
 		{
+			DTable.TableName = "RR Messages DataTable";
+
 			DTable.Columns.Add(nameof(Column.MessageId), typeof(ulong));
 			DTable.Columns.Add(nameof(Column.ChannelId), typeof(ulong));
 			DTable.Columns.Add(nameof(Column.RRMessage), typeof(RRMessage));
@@ -22,7 +24,7 @@ namespace Diamond.Brainz.Data.Tables
 			DTable.PrimaryKey = new DataColumn[] { DTable.Columns[nameof(Column.MessageId)] };
 		}
 
-		private static readonly DataTable DTable = new DataTable();
+		public DataTable DTable = new DataTable();
 
 		public RRMessage this[int index]
 		{
@@ -162,7 +164,7 @@ namespace Diamond.Brainz.Data.Tables
 		{
 			DataRow[] selection = DTable.Select($"{nameof(Column.ChannelId)}={channelId} AND {nameof(Column.IsEditing)}={false}");
 
-			if (selection.Count() > 0)
+			if (selection.Length > 0)
 			{
 				return (RRMessage)selection[0][nameof(Column.RRMessage)];
 			}
@@ -172,7 +174,7 @@ namespace Diamond.Brainz.Data.Tables
 			}
 		}
 
-		public bool IsEditing(ulong messageId)
+		public bool IsMessageBeingEdited(ulong messageId)
 		{
 			DataRow[] selection = DTable.Select($"{nameof(Column.MessageId)}={messageId}");
 
@@ -187,6 +189,13 @@ namespace Diamond.Brainz.Data.Tables
 			{
 				StopEditing((ulong)row[nameof(Column.MessageId)]);
 			}
+		}
+
+		public bool AreMessagesBeingEditedOnChannel(ulong channelId)
+		{
+			DataRow[] selection = DTable.Select($"{nameof(Column.ChannelId)}={channelId} AND {nameof(Column.IsEditing)}={true}");
+
+			return selection.Length > 0;
 		}
 	}
 }

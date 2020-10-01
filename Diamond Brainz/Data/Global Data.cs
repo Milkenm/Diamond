@@ -5,25 +5,24 @@ using Diamond.Core;
 
 using System.Collections.Generic;
 
-using static Diamond.Brainz.Commands.UnsortedModule;
 using static Diamond.Brainz.Utils.Folders;
 
 namespace Diamond.Brainz.Data
 {
-    public static class GlobalData
-    {
-        // MAIN STUFF
-        public static DiamondCore DiamondCore;
-        public static Brainz Brainz;
+	public static class GlobalData
+	{
+		// MAIN STUFF
+		public static DiamondCore DiamondCore;
+		public static Brainz Brainz;
 
-        // DATA
-        public static SQLiteDB DB;
+		// DATA
+		public static SQLiteDB DB;
 
-        // FOLDERS
-        public static readonly Dictionary<EFolder, Folder> Folders = new Dictionary<EFolder, Folder>();
+		// FOLDERS
+		public static readonly Dictionary<EFolder, Folder> Folders = new Dictionary<EFolder, Folder>();
 
-        // DATA TABLES
-        public static TTTGamesDataTable TTTGamesDataTable = new TTTGamesDataTable();
-        public static RRMessagesDataTable RRMessagesDataTable = new RRMessagesDataTable();
-    }
+		// DATA TABLES
+		public static TTTGamesDataTable TTTGamesDataTable = new TTTGamesDataTable();
+		public static RRMessagesDataTable RRMessagesDataTable = new RRMessagesDataTable();
+	}
 }

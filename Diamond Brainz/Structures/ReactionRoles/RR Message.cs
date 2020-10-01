@@ -8,6 +8,8 @@ using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
 
 using static Diamond.Brainz.Structures.ReactionRoles.ReactionRoles;
@@ -24,10 +26,10 @@ namespace Diamond.Brainz.Structures.ReactionRoles
 			RoleLinesList = roleLinesList ?? new RoleLinesList();
 		}
 
-		private readonly SocketCommandContext Context;
-		private readonly IUserMessage Reply;
+		private SocketCommandContext Context;
+		private IUserMessage Reply;
 		private EmbedBuilder Embed;
-		private readonly RoleLinesList RoleLinesList;
+		private RoleLinesList RoleLinesList;
 		private string BaseDescription;
 
 		public ulong GetReplyId()
@@ -244,7 +246,7 @@ namespace Diamond.Brainz.Structures.ReactionRoles
 
 		public bool IsEditing()
 		{
-			return GlobalData.RRMessagesDataTable.IsEditing(Reply.Id);
+			return GlobalData.RRMessagesDataTable.IsMessageBeingEdited(Reply.Id);
 		}
 	}
 }
