@@ -19,35 +19,42 @@ namespace Diamond.Brainz.Commands
 		[Name("Download Emojis"), Command("downloademojis"), Alias("de", "download", "emojis", "downloademotes", "download emojis", "download emotes", "downloadcustomemotes", "download custom emotes", "dce", "downloadcustomemojis", "download custom emojis"), Summary("Download every custom emoji on the current server to a ZIP and uploads it to the channel.")]
 		public async Task DownloadEmojis()
 		{
-			IReadOnlyCollection<GuildEmote> emotes = Context.Guild.Emotes;
-
-			if (emotes.Count > 0)
+			if (!(Context.Channel is IPrivateChannel))
 			{
-				await ReplyAsync("Retrieving custom emojis. This may take a while...").ConfigureAwait(false);
+				IReadOnlyCollection<GuildEmote> emotes = Context.Guild.Emotes;
 
-				string path = GlobalData.Folders[EFolder.Temp].Path + $"{Context.Guild.Id}";
-
-				Directory.CreateDirectory($@"{path}\");
-
-				using (WebClient wc = new WebClient())
+				if (emotes.Count > 0)
 				{
-					foreach (GuildEmote emote in emotes)
+					await ReplyAsync("Retrieving custom emojis. This may take a while...").ConfigureAwait(false);
+
+					string path = GlobalData.Folders[EFolder.Temp].Path + $"{Context.Guild.Id}";
+
+					Directory.CreateDirectory($@"{path}\");
+
+					using (WebClient wc = new WebClient())
 					{
-						string extension = emote.Animated ? "gif" : "png";
-						wc.DownloadFile(emote.Url, $@"{path}\{emote.Name}.{extension}");
+						foreach (GuildEmote emote in emotes)
+						{
+							string extension = emote.Animated ? "gif" : "png";
+							wc.DownloadFile(emote.Url, $@"{path}\{emote.Name}.{extension}");
+						}
 					}
+
+					ZipFile.CreateFromDirectory($@"{path}\", $"{path}.zip");
+
+					await Context.Channel.SendFileAsync($"{path}.zip").ConfigureAwait(false);
+
+					Directory.Delete($@"{path}\", true);
+					File.Delete($"{path}.zip");
 				}
-
-				ZipFile.CreateFromDirectory($@"{path}\", $"{path}.zip");
-
-				await Context.Channel.SendFileAsync($"{path}.zip").ConfigureAwait(false);
-
-				Directory.Delete($@"{path}\", true);
-				File.Delete($"{path}.zip");
+				else
+				{
+					throw new Exception("This server has no custom emojis.");
+				}
 			}
 			else
 			{
-				throw new Exception("This server has no custom emojis.");
+				throw new Exception("This command can only be used on servers!");
 			}
 		}
 	}
