@@ -1,5 +1,5 @@
 using Diamond.Brainz.Data;
-using Diamond.Brainz.Data.Tables;
+using Diamond.Brainz.Data.DataTables;
 using Diamond.Brainz.Structures.ReactionRoles;
 using Diamond.Brainz.Utils;
 
@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System;
 
-using static Diamond.Brainz.Data.Tables.RRMessagesDataTable;
+using static Diamond.Brainz.Data.DataTables.RRMessagesDataTable;
 
 namespace DiamondTests
 {

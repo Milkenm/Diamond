@@ -2,251 +2,210 @@
 using Diamond.Brainz.Utils;
 
 using Discord;
-using Discord.Commands;
 using Discord.WebSocket;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Security.Permissions;
 using System.Text;
-
-using static Diamond.Brainz.Structures.ReactionRoles.ReactionRoles;
 
 namespace Diamond.Brainz.Structures.ReactionRoles
 {
 	public class RRMessage
 	{
-		public RRMessage(SocketCommandContext context, IUserMessage reply, EmbedBuilder embed, RoleLinesList roleLinesList)
+		public RRMessage() { }
+
+		public RRMessage(ulong messageId, ulong channelId, ulong guildId, ulong author, List<RoleEntry> roleEntriesList, string embedTitle, string embedDescription, bool isEditing)
 		{
-			Context = context;
-			Reply = reply;
-			Embed = embed;
-			RoleLinesList = roleLinesList ?? new RoleLinesList();
+			MessageId = messageId;
+			ChannelId = channelId;
+			GuildId = guildId;
+			AuthorId = author;
+			RoleEntriesList = roleEntriesList;
+			EmbedTitle = embedTitle;
+			EmbedDescription = embedDescription;
+			IsEditing = isEditing;
+
+			Message = (IUserMessage)GlobalData.DiamondCore.Client.GetGuild(GuildId).GetTextChannel(ChannelId).GetMessageAsync(MessageId).GetAwaiter().GetResult();
+			Author = GlobalData.DiamondCore.Client.GetUser(AuthorId);
 		}
 
-		private SocketCommandContext Context;
-		private IUserMessage Reply;
-		private EmbedBuilder Embed;
-		private RoleLinesList RoleLinesList;
-		private string BaseDescription;
+		public ulong MessageId;
+		public ulong ChannelId;
+		public ulong GuildId;
+		public ulong AuthorId;
+		public List<RoleEntry> RoleEntriesList;
+		public string EmbedTitle;
+		public string EmbedDescription;
+		public bool IsEditing;
 
-		public ulong GetReplyId()
-		{
-			return Reply.Id;
-		}
-
-		public ulong GetChannelId()
-		{
-			return Context.Channel.Id;
-		}
-
-		public IEmote ParseEmote(string emote)
-		{
-			IEmote parsedEmote;
-
-			try // EMOJI
-			{
-				Twemoji.GetEmojiCode(emote);
-				parsedEmote = new Emoji(emote);
-			}
-			catch // EMOTE
-			{
-				Emote.TryParse(emote, out Emote e);
-
-				if (e != null)
-				{
-					parsedEmote = e;
-				}
-				else
-				{
-					throw new Exception("Invalid emoji/emote.");
-				}
-			}
-
-			return parsedEmote;
-		}
-
-		public void AddRoleLine(IRole role, string emote, params string[] description)
-		{
-			IEmote parsedEmote = ParseEmote(emote);
-
-			AddRoleLine(role, parsedEmote, string.Join(' ', description));
-		}
-
-		public void AddRoleLine(IRole role, IEmote emote, string description)
-		{
-			RoleLinesList.AddRecord(role, emote, description);
-		}
-
-		public void RemoveRoleLine(IRole role)
-		{
-			RoleLinesList.RemoveRecord(role);
-		}
-
-		public void RemoveRoleLine(string emote)
-		{
-			IEmote parsedEmote = ParseEmote(emote);
-			RoleLinesList.RemoveRecord(parsedEmote);
-		}
-
-		public void UpdateEmbed(EmbedBuilder embed)
-		{
-			Embed = embed;
-		}
-
-		public void SetTitle(params string[] title)
-		{
-			SetTitle(string.Join(' ', title));
-		}
+		private IUserMessage Message;
+		private IUser Author;
 
 		public void SetTitle(string title)
 		{
-			Embed.WithTitle(title);
-		}
-
-		public void SetDescription(params string[] description)
-		{
-			string desc = string.Join(' ', description);
-			SetDescription(desc);
-			BaseDescription = desc;
+			EmbedTitle = title;
+			DiscordRefresh();
 		}
 
 		public void SetDescription(string description)
 		{
-			Embed.WithDescription(description);
-			BaseDescription = description;
+			EmbedDescription = description;
+			DiscordRefresh();
 		}
 
-		public void AddRolesBlock()
+		public void AddRole(ulong roleId, string emote, params string[] description)
 		{
-			string rolesBlock = GenerateRolesBlock();
-
-			if (!string.IsNullOrEmpty(Embed.Description))
+			foreach (RoleEntry entry in RoleEntriesList)
 			{
-				rolesBlock = "\n\n" + rolesBlock;
-			}
-
-			rolesBlock = BaseDescription + rolesBlock;
-
-			Embed.WithDescription(rolesBlock);
-		}
-
-		public string GenerateRolesBlock()
-		{
-			StringBuilder roles = new StringBuilder();
-			if (RoleLinesList.Count > 0)
-			{
-				bool newLine = false;
-				for (int i = 0; i < RoleLinesList.Count; i++)
+				if (entry.RoleId == roleId || entry.Emote == emote)
 				{
-					if (newLine)
-					{
-						roles.Append("\n");
-					}
-
-					RoleLineRecord record = RoleLinesList.GetRecord(i);
-					roles.Append(record.Emote).Append(" ").Append(record.Role.Mention).Append(" : ").Append(record.Description);
-					newLine = true;
+					throw new Exception("That role/emote already exists.");
 				}
 			}
 
-			return roles.ToString();
+			RoleEntriesList.Add(new RoleEntry(roleId, emote, string.Join(' ', description)));
+			DiscordRefresh();
 		}
 
-		public async void ModifyDiscordEmbedAsync()
+		public void RemoveRole(ulong roleId)
 		{
-			AddRolesBlock();
-			await Reply.ModifyAsync(msg => msg.Embed = Embeds.FinishEmbed(Embed, Context)).ConfigureAwait(false);
-			RefreshReactions();
-		}
-
-		public async void RefreshReactions()
-		{
-			foreach (IEmote emote in RoleLinesList.Emotes)
+			foreach (RoleEntry entry in RoleEntriesList)
 			{
-				if (!Reply.Reactions.ContainsKey(emote))
+				if (entry.RoleId == roleId)
 				{
-					await Reply.AddReactionsAsync(RoleLinesList.Emotes.ToArray()).ConfigureAwait(false);
+					RoleEntriesList.Remove(entry);
+					DiscordRefresh();
+					return;
 				}
 			}
 
-			foreach (KeyValuePair<IEmote, ReactionMetadata> emote in Reply.Reactions)
-			{
-				if (!RoleLinesList.Emotes.Contains(emote.Key))
-				{
-					await Reply.RemoveAllReactionsForEmoteAsync(emote.Key);
-				}
-			}
+			throw new Exception("That role does not exist!");
 		}
 
-		public async void DeleteMessage()
+		public void RemoveRole(string emote)
 		{
-			await Reply.DeleteAsync();
-		}
-
-		private IRole GetRoleByEmote(IEmote emote)
-		{
-			for (int i = 0; i < RoleLinesList.Count; i++)
+			foreach (RoleEntry entry in RoleEntriesList)
 			{
-				RoleLineRecord record = RoleLinesList.GetRecord(i);
-
-				if (record.Emote.Equals(emote))
+				if (entry.Emote == emote)
 				{
-					return record.Role;
+					RoleEntriesList.Remove(entry);
+					DiscordRefresh();
+					return;
 				}
 			}
 
+			throw new Exception("That emote does not exist!");
+		}
+
+		public RoleEntry GetEntryByEmote(string emote)
+		{
+			foreach (RoleEntry entry in RoleEntriesList)
+			{
+				if (entry.Emote == emote)
+				{
+					return entry;
+				}
+			}
 			return null;
 		}
 
-		public async void HandleEmoteAdded(SocketReaction reaction)
+		public void GiveRoleToUser(SocketReaction reaction)
 		{
-			IRole role = GetRoleByEmote(reaction.Emote);
+			RoleEntry re = GetEntryByEmote(reaction.Emote.Name);
+			if (re != null)
+			{
+				IGuild guild = GlobalData.DiamondCore.Client.GetGuild(GuildId);
+				IRole role = guild.GetRole(re.RoleId);
 
-			if (role != null)
-			{
-				try
-				{
-					await ((IGuildUser)reaction.User.Value).AddRoleAsync(role);
-				}
-				catch { }
-			}
-			else
-			{
-				await Reply.RemoveAllReactionsForEmoteAsync(reaction.Emote);
+				guild.GetUserAsync(reaction.UserId).GetAwaiter().GetResult().AddRoleAsync(role);
 			}
 		}
 
-		public async void HandleEmoteRemoved(SocketReaction reaction)
+		public void RemoveRoleFromUser(SocketReaction reaction)
 		{
-			IRole role = GetRoleByEmote(reaction.Emote);
-
-			if (role != null)
+			RoleEntry re = GetEntryByEmote(reaction.Emote.Name);
+			if (re != null)
 			{
-				IGuildUser user = (IGuildUser)reaction.User.Value;
+				IGuild guild = GlobalData.DiamondCore.Client.GetGuild(GuildId);
+				IRole role = guild.GetRole(re.RoleId);
 
-				if (user.RoleIds.Contains(role.Id))
-				{
-					await user.RemoveRoleAsync(role);
-				}
+				guild.GetUserAsync(reaction.UserId).GetAwaiter().GetResult().RemoveRoleAsync(role);
 			}
 		}
 
 		public void StartEditing()
 		{
-			GlobalData.RRMessagesDataTable.StartEditing(Reply.Id);
+			if (!IsEditing)
+			{
+				IsEditing = true;
+				UpdateMessageOnDataTable();
+			}
 		}
 
 		public void StopEditing()
 		{
-			GlobalData.RRMessagesDataTable.StopEditing(Reply.Id);
+			if (IsEditing)
+			{
+				IsEditing = false;
+				UpdateMessageOnDataTable();
+			}
 		}
 
-		public bool IsEditing()
+		public void DeleteMessage()
 		{
-			return GlobalData.RRMessagesDataTable.IsMessageBeingEdited(Reply.Id);
+			Message.DeleteAsync();
+		}
+
+		private void UpdateMessageOnDataTable()
+		{
+			GlobalData.RRMessagesDataTable.UpdateMessage(this);
+		}
+
+		private async void DiscordRefresh()
+		{
+			UpdateMessageOnDataTable();
+
+			List<IEmote> emotes = new List<IEmote>();
+
+			EmbedBuilder embed = new EmbedBuilder();
+			embed.WithTitle(EmbedTitle);
+			StringBuilder description = new StringBuilder(EmbedDescription);
+			bool firstLoop = true;
+			foreach (RoleEntry entry in RoleEntriesList)
+			{
+				if (firstLoop)
+				{
+					description.Append("\n");
+					firstLoop = false;
+				}
+
+				IGuild guild = GlobalData.DiamondCore.Client.GetGuild(GuildId);
+				IRole role = guild.GetRole(entry.RoleId);
+
+				description.Append('\n').Append(entry.Emote).Append(" : ").Append(role.Mention).Append(" » ").Append(entry.Description);
+
+				emotes.Add(Emotes.ParseEmote(entry.Emote));
+			}
+			embed.WithDescription(description.ToString());
+
+			await Message.ModifyAsync(msg => msg.Embed = Embeds.FinishEmbed(embed, Author)).ConfigureAwait(false);
+
+			List<IEmote> messageEmotes = Message.Reactions.Keys.ToList();
+			foreach (IEmote emote in messageEmotes) // REMOVE EMOTES
+			{
+				if (!emotes.Contains(emote))
+				{
+					await Message.RemoveAllReactionsForEmoteAsync(emote).ConfigureAwait(false);
+				}
+			}
+			foreach (IEmote emote in emotes) // ADD EMOTES
+			{
+				if (!messageEmotes.Contains(emote))
+				{
+					await Message.AddReactionAsync(emote).ConfigureAwait(false);
+				}
+			}
 		}
 	}
 }

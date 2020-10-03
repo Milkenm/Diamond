@@ -3,6 +3,8 @@
 using System.Threading.Tasks;
 using System.Windows;
 
+using static Diamond.Brainz.Brainz;
+
 namespace Diamond.WPFCore.GUI
 {
 	public partial class Main : Window
@@ -41,7 +43,7 @@ namespace Diamond.WPFCore.GUI
 
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			GlobalData.Brainz.DataTablesManager(Brainz.Brainz.DataTableAction.Save);
+			GlobalData.Brainz.DataTablesManager(DataTableAction.Save);
 			GlobalData.DiamondCore.Stop();
 		}
 	}

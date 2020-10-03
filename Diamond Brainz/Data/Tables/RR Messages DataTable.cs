@@ -1,14 +1,13 @@
 ﻿using Diamond.Brainz.Structures.ReactionRoles;
 
-using Discord;
-using Discord.Commands;
 using Discord.WebSocket;
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace Diamond.Brainz.Data.Tables
+namespace Diamond.Brainz.Data.DataTables
 {
 	public class RRMessagesDataTable
 	{
@@ -18,141 +17,132 @@ namespace Diamond.Brainz.Data.Tables
 
 			DTable.Columns.Add(nameof(Column.MessageId), typeof(ulong));
 			DTable.Columns.Add(nameof(Column.ChannelId), typeof(ulong));
-			DTable.Columns.Add(nameof(Column.RRMessage), typeof(RRMessage));
+			DTable.Columns.Add(nameof(Column.GuildId), typeof(ulong));
+			DTable.Columns.Add(nameof(Column.AuthorId), typeof(ulong));
+			DTable.Columns.Add(nameof(Column.RoleEntry), typeof(List<RoleEntry>));
+			DTable.Columns.Add(nameof(Column.EmbedTitle), typeof(string));
+			DTable.Columns.Add(nameof(Column.EmbedDescription), typeof(string));
 			DTable.Columns.Add(nameof(Column.IsEditing), typeof(bool));
 
 			DTable.PrimaryKey = new DataColumn[] { DTable.Columns[nameof(Column.MessageId)] };
-		}
-
-		public DataTable DTable = new DataTable();
-
-		public RRMessage this[int index]
-		{
-			get
-			{
-				return (RRMessage)DTable.Rows[index][nameof(Column.RRMessage)];
-			}
 		}
 
 		public enum Column
 		{
 			MessageId,
 			ChannelId,
-			RRMessage,
+			GuildId,
+			AuthorId,
+			RoleEntry,
+			EmbedTitle,
+			EmbedDescription,
 			IsEditing,
 		}
 
-		public void AddMessage(SocketCommandContext context, IUserMessage reply, EmbedBuilder embed, RoleLinesList roleLinesList = null)
+		public DataTable DTable = new DataTable();
+
+		public RRMessage this[ulong messageId]
 		{
-			AddMessage(new RRMessage(context, reply, embed, roleLinesList ?? new RoleLinesList()));
+			get
+			{
+				DataRow[] selection = DTable.Select($"{nameof(Column.MessageId)}={messageId}");
+
+				if (selection.Length > 0)
+				{
+					ulong channelId = (ulong)selection[0][nameof(Column.ChannelId)];
+					ulong guildId = (ulong)selection[0][nameof(Column.GuildId)];
+					ulong authorId = (ulong)selection[0][nameof(Column.AuthorId)];
+					List<RoleEntry> roleEntry = (List<RoleEntry>)selection[0][nameof(Column.RoleEntry)];
+					string embedTitle = (string)selection[0][nameof(Column.EmbedTitle)];
+					string embedDescription = (string)selection[0][nameof(Column.EmbedDescription)];
+					bool isEditing = (bool)selection[0][nameof(Column.IsEditing)];
+
+					return new RRMessage(messageId, channelId, guildId, authorId, roleEntry, embedTitle, embedDescription, isEditing);
+				}
+				else
+				{
+					return null;
+				}
+			}
 		}
 
-		public void AddMessage(RRMessage rrMessage, bool isEditing = true)
+		public void NewMessage(ulong messageId, ulong channelId, ulong guildId, ulong authorId)
 		{
-			DTable.Rows.Add(rrMessage.GetReplyId(), rrMessage.GetChannelId(), rrMessage, isEditing);
+			DTable.Rows.Add(messageId, channelId, guildId, authorId, new List<RoleEntry>(), "", "", true);
 		}
 
-		public void StartEditing(ulong messageId)
-		{
-			DataRow row = GetRowByMessageId(messageId);
-			UpdateRow(row, isEditing: true);
-		}
-
-		public void StopEditing(ulong messageId)
-		{
-			DataRow row = GetRowByMessageId(messageId);
-			UpdateRow(row, isEditing: false);
-		}
-
-		public RRMessage GetRRMessageByMessageId(ulong messageId)
+		public void DeleteMessage(ulong messageId)
 		{
 			DataRow[] selection = DTable.Select($"{nameof(Column.MessageId)}={messageId}");
 
-			return selection.Length > 0 ? (RRMessage)selection[0][nameof(Column.RRMessage)] : null;
-		}
-
-		public RRMessage GetRREditingMessage(ulong channelId)
-		{
-			DataRow[] selection = DTable.Select($"{nameof(Column.ChannelId)}={channelId} AND {nameof(Column.IsEditing)}={true}");
 			if (selection.Length > 0)
 			{
-				return (RRMessage)selection[0][nameof(Column.RRMessage)];
+				ulong msgId = (ulong)selection[0][nameof(Column.MessageId)];
+				RRMessage msg = this[msgId];
+
+				msg.DeleteMessage();
+
+				DTable.Rows.RemoveAt(DTable.Rows.IndexOf(selection[0]));
 			}
 			else
 			{
-				throw new Exception("There are no messages being edited on this channel.");
+				throw new Exception("Message not found.");
 			}
 		}
 
-		public void UpdateRRMessage(ulong messageId, RRMessage rrMessage)
+		public void UpdateMessage(RRMessage rrMsg)
 		{
-			DataRow row = GetRowByMessageId(messageId);
-			UpdateRow(row, rrMessage: rrMessage);
+			DataRow[] selection = DTable.Select($"{nameof(Column.MessageId)}={rrMsg.MessageId}");
+
+			if (selection.Length > 0)
+			{
+				selection[0][nameof(Column.RoleEntry)] = rrMsg.RoleEntriesList;
+				selection[0][nameof(Column.EmbedTitle)] = rrMsg.EmbedTitle;
+				selection[0][nameof(Column.EmbedDescription)] = rrMsg.EmbedDescription;
+				selection[0][nameof(Column.IsEditing)] = rrMsg.IsEditing;
+			}
+			else
+			{
+				throw new Exception("Message not found!");
+			}
 		}
 
-		public void DeleteRRMessage(ulong messageId)
+		public ulong GetLatestChannelMessageId(ulong channelId)
 		{
-			DataRow row = GetRowByMessageId(messageId);
-			DTable.Rows.Remove(row);
+			IEnumerable<ulong> selection = DTable.Select($"{nameof(Column.ChannelId)}={channelId}").Select(r => r.Field<ulong>(nameof(Column.MessageId)));
+
+			if (selection.Any())
+			{
+				return selection.Last();
+			}
+			else
+			{
+				throw new Exception("No messages found on the current channel.");
+			}
 		}
 
-		private DataRow GetRowByMessageId(ulong messageId)
+		public RRMessage GetMessageById(ulong messageId)
 		{
-			return DTable.Rows.Find(messageId);
-		}
+			RRMessage rrMsg = this[messageId];
 
-		private int GetIndexByMessageId(ulong messageId)
-		{
-			DataRow row = GetRowByMessageId(messageId);
-			return DTable.Rows.IndexOf(row);
-		}
-
-		private void UpdateRow(int rowIndex, ulong? messageId = null, ulong? channelId = null, RRMessage rrMessage = null, bool? isEditing = null)
-		{
-			DataRow row = DTable.Rows[rowIndex];
-			UpdateRow(row, messageId, channelId, rrMessage, isEditing);
-		}
-
-		private void UpdateRow(DataRow row, ulong? messageId = null, ulong? channelId = null, RRMessage rrMessage = null, bool? isEditing = null)
-		{
-			int rowIndex = DTable.Rows.IndexOf(row);
-
-			DataRow newRow = DTable.NewRow();
-
-			newRow[nameof(Column.MessageId)] = messageId ?? row[nameof(Column.MessageId)];
-			newRow[nameof(Column.ChannelId)] = channelId ?? row[nameof(Column.ChannelId)];
-			newRow[nameof(Column.RRMessage)] = rrMessage ?? row[nameof(Column.RRMessage)];
-			newRow[nameof(Column.IsEditing)] = isEditing ?? row[nameof(Column.IsEditing)];
-
-			DTable.Rows.RemoveAt(rowIndex);
-			DTable.Rows.InsertAt(newRow, rowIndex);
-		}
-
-		public void ReactionAddedEvent(SocketReaction reaction)
-		{
-			RRMessage rrMsg = GetRRMessageByMessageId(reaction.MessageId);
 			if (rrMsg != null)
 			{
-				rrMsg.HandleEmoteAdded(reaction);
+				return rrMsg;
+			}
+			else
+			{
+				throw new Exception("Message not found.");
 			}
 		}
 
-		public void ReactionRemovedEvent(SocketReaction reaction)
+		public RRMessage GetEditingMessageByChannelId(ulong channelId)
 		{
-			RRMessage rrMsg = GetRRMessageByMessageId(reaction.MessageId);
-			if (rrMsg != null)
-			{
-				rrMsg.HandleEmoteRemoved(reaction);
-			}
-		}
+			DataRow[] selection = DTable.Select($"{nameof(Column.ChannelId)}={channelId} AND {nameof(Column.IsEditing)}={true}");
 
-		public RRMessage GetLatestChannelRRMessage(ulong channelId)
-		{
-			DataRow[] selection = DTable.Select($"{nameof(Column.ChannelId)}={channelId}");
-
-			if (selection.Count() > 0)
+			if (selection.Length > 0)
 			{
-				return (RRMessage)selection.Last()[nameof(Column.RRMessage)];
+				ulong messageId = (ulong)selection[0][nameof(Column.MessageId)];
+				return this[messageId];
 			}
 			else
 			{
@@ -160,42 +150,14 @@ namespace Diamond.Brainz.Data.Tables
 			}
 		}
 
-		public RRMessage GetLatestNotEditingRRMessage(ulong channelId)
+		public void HandleReactionAdded(SocketReaction reaction)
 		{
-			DataRow[] selection = DTable.Select($"{nameof(Column.ChannelId)}={channelId} AND {nameof(Column.IsEditing)}={false}");
-
-			if (selection.Length > 0)
-			{
-				return (RRMessage)selection[0][nameof(Column.RRMessage)];
-			}
-			else
-			{
-				return null;
-			}
+			this[reaction.MessageId]?.GiveRoleToUser(reaction);
 		}
 
-		public bool IsMessageBeingEdited(ulong messageId)
+		public void HandleReactionRemoved(SocketReaction reaction)
 		{
-			DataRow[] selection = DTable.Select($"{nameof(Column.MessageId)}={messageId}");
-
-			return (bool)selection[0][nameof(Column.IsEditing)];
-		}
-
-		public void StopAllChannelEdits(ulong channelId)
-		{
-			DataRow[] selection = DTable.Select($"{nameof(Column.ChannelId)}={channelId} AND {nameof(Column.IsEditing)}={true}");
-
-			foreach (DataRow row in selection)
-			{
-				StopEditing((ulong)row[nameof(Column.MessageId)]);
-			}
-		}
-
-		public bool AreMessagesBeingEditedOnChannel(ulong channelId)
-		{
-			DataRow[] selection = DTable.Select($"{nameof(Column.ChannelId)}={channelId} AND {nameof(Column.IsEditing)}={true}");
-
-			return selection.Length > 0;
+			this[reaction.MessageId]?.RemoveRoleFromUser(reaction);
 		}
 	}
 }

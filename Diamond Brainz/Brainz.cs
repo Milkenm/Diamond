@@ -71,43 +71,17 @@ namespace Diamond.Brainz
 
 		public void DataTablesManager(DataTableAction action)
 		{
+			string fileName = GlobalData.Folders[EFolder.Data].Path + "RR Messages DataTable.bin";
+
 			if (action == DataTableAction.Save)
 			{
-				DataTableSaver.SaveToFile(@"C:\Testing\Kek.bin", GlobalData.RRMessagesDataTable.DTable);
+				DataTableSaver.SaveToFile(fileName, GlobalData.RRMessagesDataTable.DTable);
 			}
 			else if (action == DataTableAction.Read)
 			{
-				if (File.Exists(@"C:\Testing\Kek.bin"))
+				if (File.Exists(fileName))
 				{
-					GlobalData.RRMessagesDataTable.DTable = DataTableSaver.ReadFromFile(@"C:\Testing\Kek.bin");
-				}
-			}
-			return;
-
-			List<DataTable> dataTables = new List<DataTable>()
-			{
-				GlobalData.TTTGamesDataTable.GetDataTable(),
-				GlobalData.RRMessagesDataTable.DTable,
-			};
-
-			for (int i = 0; i < dataTables.Count; i++)
-			{
-				string fileName = GlobalData.Folders[EFolder.Data].Path + dataTables[i].TableName;
-
-				if (action == DataTableAction.Save)
-				{
-					if (File.Exists(fileName))
-					{
-						File.Delete(fileName);
-					}
-					DataTableSaver.SaveToFile(GlobalData.Folders[EFolder.Data].Path + dataTables[i].TableName, dataTables[i]);
-				}
-				else
-				{
-					if (File.Exists(fileName))
-					{
-						dataTables[i] = DataTableSaver.ReadFromFile(fileName);
-					}
+					GlobalData.RRMessagesDataTable.DTable = DataTableSaver.ReadFromFile(fileName);
 				}
 			}
 		}

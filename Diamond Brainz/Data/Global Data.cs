@@ -1,4 +1,4 @@
-﻿using Diamond.Brainz.Data.Tables;
+﻿using Diamond.Brainz.Data.DataTables;
 using Diamond.Brainz.Structures;
 using Diamond.Brainz.Structures.Games;
 using Diamond.Core;

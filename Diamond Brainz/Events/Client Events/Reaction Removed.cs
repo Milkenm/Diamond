@@ -13,7 +13,7 @@ namespace Diamond.Brainz.Events
         {
             if (!reaction.User.Value.IsBot)
             {
-                GlobalData.RRMessagesDataTable.ReactionRemovedEvent(reaction);
+                GlobalData.RRMessagesDataTable.HandleReactionRemoved(reaction);
             }
         }
     }

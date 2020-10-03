@@ -15,7 +15,7 @@ namespace Diamond.Brainz.Events
             {
                 await GameEvents.TicTacToe(reaction).ConfigureAwait(false);
 
-                GlobalData.RRMessagesDataTable.ReactionAddedEvent(reaction);
+               GlobalData.RRMessagesDataTable.HandleReactionAdded(reaction);
             }
         }
     }
