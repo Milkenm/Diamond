@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond WPF Core", "Diamond
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond Brainz", "Diamond Brainz\Diamond Brainz.csproj", "{A0CFF49E-5214-4078-80BC-12B2C0C72947}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond Tests", "DiamondTests\Diamond Tests.csproj", "{859EF535-A681-4210-ACCA-7A4760BBAE5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{A0CFF49E-5214-4078-80BC-12B2C0C72947}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0CFF49E-5214-4078-80BC-12B2C0C72947}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0CFF49E-5214-4078-80BC-12B2C0C72947}.Release|Any CPU.Build.0 = Release|Any CPU
+		{859EF535-A681-4210-ACCA-7A4760BBAE5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{859EF535-A681-4210-ACCA-7A4760BBAE5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{859EF535-A681-4210-ACCA-7A4760BBAE5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{859EF535-A681-4210-ACCA-7A4760BBAE5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
