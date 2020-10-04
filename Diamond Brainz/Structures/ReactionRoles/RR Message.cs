@@ -39,8 +39,8 @@ namespace Diamond.Brainz.Structures.ReactionRoles
 		public string EmbedDescription;
 		public bool IsEditing;
 
-		private IUserMessage Message;
-		private IUser Author;
+		private readonly IUserMessage Message;
+		private readonly IUser Author;
 
 		public void SetTitle(string title)
 		{
