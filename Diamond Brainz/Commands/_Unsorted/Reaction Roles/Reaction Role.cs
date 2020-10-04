@@ -13,7 +13,7 @@ namespace Diamond.Brainz.Commands
 	{
 		public partial class ReactionRoles : ModuleBase<SocketCommandContext>
 		{
-			[Name("Reaction Roles"), Command("reactionroles"), Alias("rr", "reactionrole"), Summary("Creates a message which users can react to and receive a role.")]
+			[Name("Reaction Roles"), Command("reactionroles"), Alias("rr", "reactionrole", "reactionroles edit", "rr edit"), Summary("Creates a message which users can react to and receive a role.")]
 			public async Task ReactionRole(ulong? messageId = null)
 			{
 				RRMessage editingMessage = GlobalData.RRMessagesDataTable.GetEditingMessageByChannelId(Context.Channel.Id);
