@@ -9,7 +9,7 @@ namespace Diamond.Brainz.Commands
 {
 	public partial class PokemonModule : ModuleBase<SocketCommandContext>
 	{
-		[Name("Pokemon Counters"), Command("pokecounters"), Alias("pcounters", "pcount"), Summary("Returns the counter for the provided element.")]
+		[Name("Pokemon Counters"), Command("pokecounters"), Alias("pcounters", "pcount", "pcnt"), Summary("Returns the counter for the provided element.")]
 		public async Task Calculate(string element)
 		{
 			element = Capitalize(element);
