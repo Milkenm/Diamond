@@ -6,10 +6,7 @@
         xmlns:local="clr-namespace:DiamondWpfCore"
         mc:Ignorable="d"
         Title="Diamond GUI" SizeToContent="WidthAndHeight" Loaded="Window_Loaded" Closing="Window_Closing" WindowStartupLocation="CenterScreen">
-    <Window.Resources>
-        <Storyboard x:Key="OnLoaded1" />
-    </Window.Resources>
-    <Grid Width="800" Height="359">
+	<Grid Width="800" Height="359">
         <ListBox x:Name="listBox_log" HorizontalAlignment="Left" Height="308" Margin="10,10,0,0" VerticalAlignment="Top" Width="780" Background="White" BorderThickness="2" Grid.RowSpan="2" FontFamily="Verdana">
             <ListBox.BorderBrush>
                 <LinearGradientBrush EndPoint="0.877,1.599" StartPoint="0.201,-1.026">
@@ -29,7 +26,7 @@
                 </LinearGradientBrush>
             </Button.BorderBrush>
         </Button>
-        <Button x:Name="button_start_Copy" Content="Settings" HorizontalAlignment="Left" Margin="690,323,0,0" VerticalAlignment="Top" Width="100" Height="26" BorderThickness="2" Background="#3B0074FF" Opacity="0.865" FontFamily="Verdana" FontSize="14">
+        <Button x:Name="button_settings" Content="Settings" HorizontalAlignment="Left" Margin="690,323,0,0" VerticalAlignment="Top" Width="100" Height="26" BorderThickness="2" Background="#3B0074FF" Opacity="0.865" FontFamily="Verdana" FontSize="14" Click="button_settings_Click">
             <Button.Effect>
                 <DropShadowEffect Direction="314" Opacity="0.18" RenderingBias="Quality" ShadowDepth="8" BlurRadius="0" />
             </Button.Effect>
