@@ -22,7 +22,7 @@ namespace Diamond.Brainz.Commands
 {
     public partial class NSFWModule : ModuleBase<SocketCommandContext>
     {
-        [Name("NSFW"), Command("nsfw"), Summary("Gives you a NSFW image"), RequireNsfw(ErrorMessage = "1You must be on an NSFW channel to use this command.")]
+        [Name("NSFW"), Command("nsfw"), Summary("Gives you a NSFW image"), RequireNsfw(ErrorMessage = "You must be on an NSFW channel to use this command.")]
         public async Task NSFW(NsfwType type)
         {
             // CHECK IF IT IS NSFW CHANNEL
