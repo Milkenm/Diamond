@@ -19,7 +19,7 @@ namespace Diamond.Brainz.Commands
 		[Name("Download Emojis"), Command("downloademojis"), Alias("de", "downloademotes", "downloadcustomemojis", "downloadcustomemotes", "dce"), Summary("Download every custom emoji on the current server to a ZIP and uploads it to the channel.")]
 		public async Task DownloadEmojis()
 		{
-			if (!(Context.Channel is IPrivateChannel))
+			if (Context.Guild != null)
 			{
 				IReadOnlyCollection<GuildEmote> emotes = Context.Guild.Emotes;
 
@@ -54,7 +54,7 @@ namespace Diamond.Brainz.Commands
 			}
 			else
 			{
-				throw new Exception("This command can only be used on servers!");
+				throw new Exception("This command can only be used on server channels!");
 			}
 		}
 	}
