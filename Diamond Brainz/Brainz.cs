@@ -61,7 +61,8 @@ namespace Diamond.Brainz
 					GlobalData.DiamondCore.Client.ReactionAdded += new ClientEvents().ReactionAdded;
 					GlobalData.DiamondCore.Client.ReactionRemoved += new ClientEvents().ReactionRemoved;
 					GlobalData.DiamondCore.Commands.CommandExecuted += new CommandEvents().CommandExecuted;
-					GlobalData.DiamondCore.AddDebugChannels(657392886966517782, 622150096720756736, 681532995374415895, 738383172084957254);
+					GlobalData.DiamondCore.AddDebugChannels(657392886966517782, 622150096720756736, 681532995374415895, 738383172084957254, 836345198439170109);
+					GlobalData.DiamondCore.Client.UserVoiceStateUpdated += new VoiceEvents().UserVoiceEvent;
 				}
 			}
 		}
