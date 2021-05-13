@@ -1,0 +1,27 @@
+﻿using Diamond.Brainz.Data;
+
+using Discord;
+using Discord.Commands;
+
+using System.Threading.Tasks;
+
+namespace Diamond.Brainz.Commands
+{
+	public partial class UnsortedModule
+	{
+		public partial class ReactionRoles : ModuleBase<SocketCommandContext>
+		{
+			[Name("Reaction Roles"), Command("reactionroles removerole"), Alias("rr rem", "rr remove", "rr delrole", "rr remrole"), Summary("Removes a Role from a Reaction Roles message.")]
+			public async Task ReactionRolesRemoveRole(IRole role)
+			{
+				GlobalData.RRMessagesDataTable.GetEditingMessageByChannelId(Context.Channel.Id).RemoveRole(role.Id);
+			}
+
+			[Name("Reaction Roles"), Command("reactionroles removerole"), Alias("rr rem", "rr remove", "rr delrole", "rr remrole"), Summary("Removes a Role from a Reaction Roles message.")]
+			public async Task ReactionRolesRemoveRole(string emote)
+			{
+				GlobalData.RRMessagesDataTable.GetEditingMessageByChannelId(Context.Channel.Id).RemoveRole(emote);
+			}
+		}
+	}
+}

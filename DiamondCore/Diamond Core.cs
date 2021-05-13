@@ -1,4 +1,6 @@
-﻿using Discord;
+﻿using Diamond.Core.TypeReaders;
+
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
@@ -7,7 +9,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace Diamond.Core
 {
@@ -21,9 +22,9 @@ namespace Diamond.Core
             Assembly = assembly;
 
             Initialize();
+            LoadModules(assembly);
 
             Client.Log += logFunction;
-            AddModules(assembly);
 
             CheckDebugMode();
         }
@@ -76,6 +77,13 @@ namespace Diamond.Core
                 DefaultRunMode = RunMode.Async,
                 LogLevel = LogLevel,
             });
+
+            Commands.AddTypeReader(typeof(Emote), new EmoteTypeReader());
+        }
+
+        public async void LoadModules(Assembly assembly, IServiceProvider services = null)
+        {
+            await Commands.AddModulesAsync(assembly, services).ConfigureAwait(false);
         }
 
         public async void SetGame(ActivityType type, string text, string streamUrl = null)
@@ -101,11 +109,6 @@ namespace Diamond.Core
             {
                 await Client.SetStatusAsync(UserStatus).ConfigureAwait(false);
             }
-        }
-
-        public async void AddModules(Assembly assembly, IServiceProvider services = null)
-        {
-            await Commands.AddModulesAsync(assembly, services).ConfigureAwait(false);
         }
 
         public async void Start()
@@ -135,7 +138,6 @@ namespace Diamond.Core
         public void Reload()
         {
             Stop();
-
             Client.Dispose();
 
             Start();
@@ -143,7 +145,7 @@ namespace Diamond.Core
 
         private async Task CommandHandler(SocketMessage socketMsg)
         {
-            if (!(socketMsg is SocketUserMessage msg) || (!Debugging && DebugChannels.Contains(msg.Channel.Id)))
+            if (!(socketMsg is SocketUserMessage msg) || (!Debugging && DebugChannels.Contains(msg.Channel.Id)) || (Debugging && !DebugChannels.Contains(msg.Channel.Id)))
             {
                 return;
             }

@@ -10,15 +10,17 @@ namespace Diamond.Brainz.Commands
 {
     public partial class DiscordModule : ModuleBase<SocketCommandContext>
     {
-        [Name("Clear Messsage"), Command("clearmessages"), Alias("clear", "prune", "purge"), Summary("Deletes the first 'x' messages from the current channel.")]
-        public async Task ClearMessage(int amount, bool onlyBots = false, bool keepMessage = false)
+        [Name("Clear Messsages"), Command("clearmessages"), Alias("clear", "prune", "purge", "cm"), Summary("Deletes the lastest 'x' messages from the current channel.")]
+        public async Task ClearMessages(int amount, bool onlyBots = false, bool keepMessage = false)
         {
+            amount++;
+
             EmbedBuilder embed = new EmbedBuilder();
             embed.WithAuthor("Clear Messages", Twemoji.GetEmojiUrlFromEmoji("🗑"));
 
             if (!onlyBots)
             {
-                ICollection<IMessage> messages = (ICollection<IMessage>)await Context.Channel.GetMessagesAsync(amount + 1).FlattenAsync().ConfigureAwait(false);
+                ICollection<IMessage> messages = (ICollection<IMessage>)await Context.Channel.GetMessagesAsync(amount).FlattenAsync().ConfigureAwait(false);
 
                 await ((ITextChannel)Context.Channel).DeleteMessagesAsync(messages).ConfigureAwait(false);
 
@@ -26,7 +28,7 @@ namespace Diamond.Brainz.Commands
             }
             else
             {
-                ICollection<IMessage> messages = (ICollection<IMessage>)await Context.Channel.GetMessagesAsync(500).FlattenAsync().ConfigureAwait(false);
+                ICollection<IMessage> messages = (ICollection<IMessage>)await Context.Channel.GetMessagesAsync(amount).FlattenAsync().ConfigureAwait(false);
                 List<IMessage> delMessages = new List<IMessage>();
 
                 foreach (IMessage msg in messages)
