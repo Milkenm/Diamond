@@ -66,6 +66,11 @@ namespace Diamond.Brainz
 			}
 		}
 
+		private Task Client_ReactionAdded(Cacheable<IUserMessage, ulong> arg1, Cacheable<IMessageChannel, ulong> arg2, Discord.WebSocket.SocketReaction arg3)
+		{
+			throw new NotImplementedException();
+		}
+
 		public void SetBotToken(string token)
 		{
 			if (token != null)
