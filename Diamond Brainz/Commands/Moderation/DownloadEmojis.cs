@@ -14,7 +14,7 @@ using static Diamond.Brainz.Utils.Folders;
 
 namespace Diamond.Brainz.Commands
 {
-	public partial class UnsortedModule : ModuleBase<SocketCommandContext>
+	public partial class ModerationModule : ModuleBase<SocketCommandContext>
 	{
 		[Name("Download Emojis"), Command("downloademojis"), Alias("de", "downloademotes", "downloadcustomemojis", "downloadcustomemotes", "dce"), Summary("Download every custom emoji on the current server to a ZIP and uploads it to the channel.")]
 		public async Task DownloadEmojis()

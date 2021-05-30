@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Diamond.Brainz.Commands
 {
-	public partial class UnsortedModule
+	public partial class ModerationModule
 	{
 		public partial class ReactionRoles : ModuleBase<SocketCommandContext>
 		{
