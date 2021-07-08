@@ -61,7 +61,7 @@ namespace Diamond.WPFCore.GUI
 
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			GlobalData.Brainz.DataTablesManager(DataTableAction.Save);
+			GlobalData.Bot.DataTablesManager(DataTableAction.Save);
 			if (GlobalData.DiamondCore != null)
 			{
 				GlobalData.DiamondCore.Stop();

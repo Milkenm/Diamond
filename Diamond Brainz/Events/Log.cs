@@ -11,7 +11,7 @@ namespace Diamond.Brainz.Events
     {
         public async Task Log(LogMessage arg)
         {
-            await GlobalData.Brainz.TriggerLogEventAsync(arg.Message).ConfigureAwait(false);
+            await GlobalData.Bot.TriggerLogEventAsync(arg.Message).ConfigureAwait(false);
         }
     }
 }

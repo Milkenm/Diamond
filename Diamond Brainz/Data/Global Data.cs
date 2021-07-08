@@ -13,7 +13,7 @@ namespace Diamond.Brainz.Data
 	{
 		// MAIN STUFF
 		public static DiamondCore DiamondCore;
-		public static Brainz Brainz;
+		public static Bot.Bot Bot;
 
 		// DATA
 		public static SQLiteDB DB;

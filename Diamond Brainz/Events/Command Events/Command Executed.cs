@@ -17,11 +17,11 @@ namespace Diamond.Brainz.Events
 				channel = $"the server \"{context.Guild.Name}\"";
 			}
 
-			await GlobalData.Brainz.TriggerLogEventAsync($"{context.User.Username} executed the command \"{command.Value.Name}\" on {channel}.").ConfigureAwait(false);
+			await GlobalData.Bot.TriggerLogEventAsync($"{context.User.Username} executed the command \"{command.Value.Name}\" on {channel}.").ConfigureAwait(false);
 
 			if (!string.IsNullOrEmpty(result?.ErrorReason) && command.IsSpecified)
 			{
-				await GlobalData.Brainz.TriggerLogEventAsync($"Error on command \"{command.Value.Name}\" (executed by \"{context.User.Username}\" on {channel})").ConfigureAwait(false);
+				await GlobalData.Bot.TriggerLogEventAsync($"Error on command \"{command.Value.Name}\" (executed by \"{context.User.Username}\" on {channel})").ConfigureAwait(false);
 				await context.Channel.SendMessageAsync(result.ErrorReason).ConfigureAwait(false);
 			}
 		}

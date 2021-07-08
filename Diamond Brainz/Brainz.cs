@@ -66,58 +66,9 @@ namespace Diamond.Brainz
 			}
 		}
 
-		public void SetBotToken(string token)
-		{
-			if (token != null)
-			{
-				if (GetBotToken() != null)
-				{
-					GlobalData.DB.ExecuteSQL($"UPDATE Configs SET Value='{token}' WHERE Config='BotToken'");
-				}
-				else
-				{
-					GlobalData.DB.ExecuteSQL($"INSERT INTO Configs (Config,Value) VALUES ('BotToken','{token}')");
-				}
+		
 
-				LoadCore();
-			}
-		}
-
-		public string GetBotToken()
-		{
-			string token = null;
-
-			DataTable dt = GlobalData.DB.ExecuteSQL("SELECT Value FROM Configs WHERE Config = 'BotToken'");
-			if (dt.Rows.Count > 0)
-			{
-				token = dt.Rows[0][0].ToString();
-			}
-
-			return token;
-		}
-
-		public void DataTablesManager(DataTableAction action)
-		{
-			string fileName = GlobalData.Folders[EFolder.Data].Path + "RR Messages DataTable.bin";
-
-			if (action == DataTableAction.Save)
-			{
-				DataTableSaver.SaveToFile(fileName, GlobalData.RRMessagesDataTable.DTable);
-			}
-			else if (action == DataTableAction.Read)
-			{
-				if (File.Exists(fileName))
-				{
-					GlobalData.RRMessagesDataTable.DTable = DataTableSaver.ReadFromFile(fileName);
-				}
-			}
-		}
-
-		public enum DataTableAction
-		{
-			Save,
-			Read,
-		}
+		
 
 		internal async Task TriggerLogEventAsync(object message)
 		{
