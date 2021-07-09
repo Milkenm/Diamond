@@ -48,7 +48,7 @@ namespace Diamond.Brainz.Commands
             embed.WithImageUrl($"http://media.o{typeString}.ru/" + nsfw.preview);
 
             // REPLY
-            await ReplyAsync(embed: Embeds.FinishEmbed(embed, Context)).ConfigureAwait(false);
+            await ReplyAsync(embed: embed.FinishEmbed( Context)).ConfigureAwait(false);
         }
 
         public class NsfwSchema

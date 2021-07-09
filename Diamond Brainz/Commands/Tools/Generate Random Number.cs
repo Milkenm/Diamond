@@ -27,7 +27,7 @@ namespace Diamond.Brainz.Commands
 				embed.WithDescription("**❌ Error:** Invalid numbers.");
 			}
 
-			await ReplyAsync(embed: Embeds.FinishEmbed(embed, Context)).ConfigureAwait(false);
+			await this.ReplyAsync(embed: embed.FinishEmbed(this.Context)).ConfigureAwait(false);
 		}
 	}
 }

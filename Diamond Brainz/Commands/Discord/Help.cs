@@ -13,15 +13,15 @@ namespace Diamond.Brainz.Commands
         [Name("Help"), Command("help"), Alias("commands", "cmd", "cmds"), Remarks("lel"), Summary("Returns a list with every command available.")]
         public async Task Help()
         {
-            EmbedBuilder embed = new EmbedBuilder();
-            embed.WithAuthor("Help", Twemoji.GetEmojiUrlFromEmoji("📔"));
+            //EmbedBuilder embed = new EmbedBuilder();
+            //embed.WithAuthor("Help", Twemoji.GetEmojiUrlFromEmoji("📔"));
 
-            foreach (CommandInfo ci in GlobalData.DiamondCore.Commands.Commands)
-            {
-                embed.AddField(ci.Name, "-" + ci.Remarks);
-            }
+            //foreach (CommandInfo ci in GlobalData.DiamondCore.Commands.Commands)
+            //{
+            //    embed.AddField(ci.Name, "-" + ci.Remarks);
+            //}
 
-            await ReplyAsync(embed: Embeds.FinishEmbed(embed, Context)).ConfigureAwait(false);
+            //await ReplyAsync(embed: Embeds.FinishEmbed(embed, Context)).ConfigureAwait(false);
         }
     }
 }

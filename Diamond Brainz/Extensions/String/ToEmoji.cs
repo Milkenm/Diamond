@@ -1,10 +1,10 @@
 ﻿using Discord;
 
-namespace Diamond.Brainz.Utils
+namespace Diamond.Brainz
 {
-	public static class Emotes
+	public static partial class Extensions
 	{
-		public static IEmote ParseEmote(string emote)
+		public static IEmote ToEmote(this string emote)
 		{
 			IEmote parsedEmote;
 

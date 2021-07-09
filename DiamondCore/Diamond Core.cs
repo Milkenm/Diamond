@@ -14,33 +14,27 @@ namespace Diamond.Core
 {
 	public class DiamondCore
 	{
-		public DiamondCore(string token, LogSeverity logLevel, string commandsPrefix, Assembly assembly, Func<LogMessage, Task> logFunction)
+		public DiamondCore(string token, LogSeverity logLevel, string commandsPrefix, Assembly assembly, Func<LogMessage, Task> logFunction, IServiceProvider serviceProvider)
 		{
-			Token = token;
-			LogLevel = logLevel;
+			this.Token = token;
+			this.LogLevel = logLevel;
 			CommandsPrefix = commandsPrefix;
-			Assembly = assembly;
+			this.Assembly = assembly;
+			this.ServiceProvider = serviceProvider;
 
-			Initialize();
-			LoadModules(assembly);
+			this.Initialize();
+			this.LoadModules(assembly, serviceProvider).ConfigureAwait(false);
+			this.CheckDebugMode();
 
 			Client.Log += logFunction;
-
-			CheckDebugMode();
-		}
-
-		public bool IsRunning
-		{
-			get;
-			private set;
 		}
 
 		public DiamondCore(string token, LogSeverity logLevel)
 		{
-			Token = token;
-			LogLevel = logLevel;
+			this.Token = token;
+			this.LogLevel = logLevel;
 
-			Initialize();
+			this.Initialize();
 		}
 
 		public DiscordSocketClient Client;
@@ -52,15 +46,18 @@ namespace Diamond.Core
 		public bool DisableCommands;
 		public readonly List<ulong> DebugChannels = new List<ulong>();
 
-		public Assembly Assembly { get; }
-		public LogSeverity LogLevel { get; }
 		public string Token { get; }
+		public LogSeverity LogLevel { get; }
+		public Assembly Assembly { get; }
+		public IServiceProvider ServiceProvider { get; }
 
 		public ActivityType ActivityType { get; private set; }
 		public string ActivityText { get; private set; }
 		public string StreamUrl { get; private set; }
 		public UserStatus UserStatus { get; private set; }
 		public bool Debugging { get; private set; }
+
+		public bool IsRunning { get; private set; }
 
 		private void Initialize()
 		{
@@ -69,7 +66,7 @@ namespace Diamond.Core
 				LogLevel = LogLevel,
 			});
 
-			Client.MessageReceived += CommandHandler;
+			Client.MessageReceived += this.CommandHandler;
 
 			Commands = new CommandService(new CommandServiceConfig
 			{
@@ -81,74 +78,71 @@ namespace Diamond.Core
 			Commands.AddTypeReader(typeof(Emote), new EmoteTypeReader());
 		}
 
-		public async void LoadModules(Assembly assembly, IServiceProvider services = null)
+		public async Task LoadModules(Assembly assembly, IServiceProvider services = null)
 		{
 			await Commands.AddModulesAsync(assembly, services).ConfigureAwait(false);
 		}
 
-		public async void SetGame(ActivityType type, string text, string streamUrl = null)
+		public async Task SetGame(ActivityType type, string text, string streamUrl = null)
 		{
-			ActivityType = type;
-			ActivityText = text;
+			this.ActivityType = type;
+			this.ActivityText = text;
 			if (!string.IsNullOrEmpty(streamUrl))
 			{
-				StreamUrl = streamUrl;
+				this.StreamUrl = streamUrl;
 			}
 
-			if (Client?.LoginState == LoginState.LoggedIn && !string.IsNullOrEmpty(ActivityText) && (ActivityType == ActivityType.Streaming && !string.IsNullOrEmpty(StreamUrl)))
+			if (Client?.LoginState == LoginState.LoggedIn && !string.IsNullOrEmpty(this.ActivityText) && (this.ActivityType == ActivityType.Streaming && !string.IsNullOrEmpty(this.StreamUrl)))
 			{
-				await Client.SetGameAsync(ActivityText, StreamUrl, ActivityType).ConfigureAwait(false);
+				await Client.SetGameAsync(this.ActivityText, this.StreamUrl, this.ActivityType).ConfigureAwait(false);
 			}
 		}
 
-		public async void SetStatus(UserStatus status)
+		public async Task SetStatus(UserStatus status)
 		{
-			UserStatus = status;
+			this.UserStatus = status;
 
 			if (Client?.LoginState == LoginState.LoggedIn)
 			{
-				await Client.SetStatusAsync(UserStatus).ConfigureAwait(false);
+				await Client.SetStatusAsync(this.UserStatus).ConfigureAwait(false);
 			}
 		}
 
-		public async void Start()
+		public async Task Start()
 		{
-			IsRunning = true;
+			this.IsRunning = true;
 
 			// Status & Game
-			SetGame(ActivityType, ActivityText, StreamUrl);
-			SetStatus(UserStatus);
+			await this.SetGame(this.ActivityType, this.ActivityText, this.StreamUrl);
+			await this.SetStatus(this.UserStatus);
 
 			// Login
-			await Client.LoginAsync(TokenType.Bot, Token).ConfigureAwait(false);
+			await Client.LoginAsync(TokenType.Bot, this.Token).ConfigureAwait(false);
 			await Client.StartAsync().ConfigureAwait(false);
-
-			// Lock Task
-			await Task.Delay(-1).ConfigureAwait(true);
 		}
 
-		public async void Stop()
+		public async Task Stop()
 		{
-			if (IsRunning)
+			if (this.IsRunning)
 			{
-				IsRunning = false;
+				this.IsRunning = false;
 
 				await Client.LogoutAsync().ConfigureAwait(false);
 				await Client.StopAsync().ConfigureAwait(false);
 			}
 		}
 
-		public void Reload()
+		public async Task Reload()
 		{
-			Stop();
+			await this.Stop();
 			Client.Dispose();
 
-			Start();
+			await this.Start();
 		}
 
 		private async Task CommandHandler(SocketMessage socketMsg)
 		{
-			if (!(socketMsg is SocketUserMessage msg) || (!Debugging && DebugChannels.Contains(msg.Channel.Id)) || (Debugging && !DebugChannels.Contains(msg.Channel.Id)))
+			if (!(socketMsg is SocketUserMessage msg) || (!this.Debugging && DebugChannels.Contains(msg.Channel.Id)) || (this.Debugging && !DebugChannels.Contains(msg.Channel.Id)))
 			{
 				return;
 			}
@@ -176,7 +170,7 @@ namespace Diamond.Core
 		[Conditional("DEBUG")]
 		public void CheckDebugMode()
 		{
-			Debugging = true;
+			this.Debugging = true;
 		}
 	}
 }

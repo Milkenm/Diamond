@@ -9,6 +9,8 @@ using ScriptsLib.Network;
 
 using System.Threading.Tasks;
 
+using static Diamond.Brainz.Models;
+
 // # = #
 // https://api.computerfreaker.cf/v1/hentai
 // # = #
@@ -30,12 +32,7 @@ namespace Diamond.Brainz.Commands
 			embed.WithImageUrl(resp.URL);
 
 			// REPLY
-			await this.ReplyAsync(embed: Embeds.FinishEmbed(embed, this.Context)).ConfigureAwait(false);
-		}
-
-		private class NekosLifeResponse
-		{
-			[JsonProperty("url")] public string URL;
+			await this.ReplyAsync(embed: embed.FinishEmbed(this.Context)).ConfigureAwait(false);
 		}
 	}
 }

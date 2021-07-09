@@ -14,13 +14,13 @@ namespace Diamond.Brainz.Commands
 			[Name("Reaction Roles"), Command("reactionroles removerole"), Alias("rr rem", "rr remove", "rr delrole", "rr remrole"), Summary("Removes a Role from a Reaction Roles message.")]
 			public async Task ReactionRolesRemoveRole(IRole role)
 			{
-				GlobalData.RRMessagesDataTable.GetEditingMessageByChannelId(Context.Channel.Id).RemoveRole(role.Id);
+				//GlobalData.RRMessagesDataTable.GetEditingMessageByChannelId(Context.Channel.Id).RemoveRole(role.Id);
 			}
 
 			[Name("Reaction Roles"), Command("reactionroles removerole"), Alias("rr rem", "rr remove", "rr delrole", "rr remrole"), Summary("Removes a Role from a Reaction Roles message.")]
 			public async Task ReactionRolesRemoveRole(string emote)
 			{
-				GlobalData.RRMessagesDataTable.GetEditingMessageByChannelId(Context.Channel.Id).RemoveRole(emote);
+				//GlobalData.RRMessagesDataTable.GetEditingMessageByChannelId(Context.Channel.Id).RemoveRole(emote);
 			}
 		}
 	}
