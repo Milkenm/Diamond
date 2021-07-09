@@ -1,19 +1,35 @@
-﻿using Diamond.Brainz;
+﻿
+using Diamond.Brainz;
+
+using Discord;
 
 using System;
+using System.Threading.Tasks;
 
 namespace Diamond_Test
 {
 	internal class Program
 	{
-		private static void Main(string[] args)
+		public static void Main()
 		{
-			Main bot = new Main();
-			bot.DCore.Start().GetAwaiter().GetResult();
-			bot.DCore.SetGame(Discord.ActivityType.Playing, "with Miłkenm 💦").GetAwaiter().GetResult();
-			Console.WriteLine("Running...\n\n\nPress <ENTER> to stop.");
-			Console.ReadLine();
-			bot.DCore.Stop().GetAwaiter().GetResult();
+			MainAsync().GetAwaiter().GetResult();
+		}
+
+		public static async Task MainAsync()
+		{
+			Bot bot = new Bot();
+			bot.Client.Log += Client_Log;
+
+			await bot.Start();
+			await bot.SetGame(ActivityType.Playing, "with Miłkenm 💦");
+
+			await Task.Delay(-1);
+		}
+
+		private static Task Client_Log(LogMessage arg)
+		{
+			Console.WriteLine(arg.Message);
+			return Task.CompletedTask;
 		}
 	}
 }

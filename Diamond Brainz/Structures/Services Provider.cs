@@ -26,6 +26,7 @@ namespace Diamond.Brainz
 			sc.AddSingleton(foldersDictionary);
 			sc.AddSingleton(config);
 			sc.AddSingleton(new Database(config.JsonConfig.DatabaseConfig));
+			sc.AddSingleton(new Logger());
 
 
 

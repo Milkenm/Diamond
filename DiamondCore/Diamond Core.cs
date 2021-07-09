@@ -14,7 +14,7 @@ namespace Diamond.Core
 {
 	public class DiamondCore
 	{
-		public DiamondCore(string token, LogSeverity logLevel, string commandsPrefix, Assembly assembly, Func<LogMessage, Task> logFunction, IServiceProvider serviceProvider)
+		public DiamondCore(string token, LogSeverity logLevel, string commandsPrefix, Assembly assembly, IServiceProvider serviceProvider)
 		{
 			this.Token = token;
 			this.LogLevel = logLevel;
@@ -22,19 +22,9 @@ namespace Diamond.Core
 			this.Assembly = assembly;
 			this.ServiceProvider = serviceProvider;
 
-			this.Initialize();
-			this.LoadModules(assembly, serviceProvider).ConfigureAwait(false);
 			this.CheckDebugMode();
-
-			Client.Log += logFunction;
-		}
-
-		public DiamondCore(string token, LogSeverity logLevel)
-		{
-			this.Token = token;
-			this.LogLevel = logLevel;
-
 			this.Initialize();
+			this.LoadModules(this.Assembly, this.ServiceProvider).GetAwaiter();
 		}
 
 		public DiscordSocketClient Client;
@@ -80,7 +70,7 @@ namespace Diamond.Core
 
 		public async Task LoadModules(Assembly assembly, IServiceProvider services = null)
 		{
-			await Commands.AddModulesAsync(assembly, services).ConfigureAwait(false);
+			await Commands.AddModulesAsync(assembly, services);
 		}
 
 		public async Task SetGame(ActivityType type, string text, string streamUrl = null)
@@ -94,7 +84,7 @@ namespace Diamond.Core
 
 			if (Client?.LoginState == LoginState.LoggedIn && !string.IsNullOrEmpty(this.ActivityText) && (this.ActivityType == ActivityType.Streaming && !string.IsNullOrEmpty(this.StreamUrl)))
 			{
-				await Client.SetGameAsync(this.ActivityText, this.StreamUrl, this.ActivityType).ConfigureAwait(false);
+				await Client.SetGameAsync(this.ActivityText, this.StreamUrl, this.ActivityType);
 			}
 		}
 
@@ -104,7 +94,7 @@ namespace Diamond.Core
 
 			if (Client?.LoginState == LoginState.LoggedIn)
 			{
-				await Client.SetStatusAsync(this.UserStatus).ConfigureAwait(false);
+				await Client.SetStatusAsync(this.UserStatus);
 			}
 		}
 
@@ -117,8 +107,8 @@ namespace Diamond.Core
 			await this.SetStatus(this.UserStatus);
 
 			// Login
-			await Client.LoginAsync(TokenType.Bot, this.Token).ConfigureAwait(false);
-			await Client.StartAsync().ConfigureAwait(false);
+			await Client.LoginAsync(TokenType.Bot, this.Token);
+			await Client.StartAsync();
 		}
 
 		public async Task Stop()
@@ -127,8 +117,8 @@ namespace Diamond.Core
 			{
 				this.IsRunning = false;
 
-				await Client.LogoutAsync().ConfigureAwait(false);
-				await Client.StopAsync().ConfigureAwait(false);
+				await Client.LogoutAsync();
+				await Client.StopAsync();
 			}
 		}
 
@@ -156,7 +146,7 @@ namespace Diamond.Core
 
 			SocketCommandContext context = new SocketCommandContext(Client, msg);
 
-			await Commands.ExecuteAsync(context, argPos, null).ConfigureAwait(false);
+			await Commands.ExecuteAsync(context, argPos, null);
 		}
 
 		public void AddDebugChannels(params ulong[] channelsIds)

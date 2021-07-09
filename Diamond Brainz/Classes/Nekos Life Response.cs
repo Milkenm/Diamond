@@ -2,7 +2,7 @@
 
 namespace Diamond.Brainz
 {
-	public static partial class Models
+	public static partial class Classes
 	{
 		public class NekosLifeResponse
 		{

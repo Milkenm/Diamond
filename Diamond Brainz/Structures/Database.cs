@@ -3,7 +3,7 @@
 using System.Data.Common;
 using System.Threading.Tasks;
 
-using static Diamond.Brainz.Models;
+using static Diamond.Brainz.Classes;
 
 // https://dev.mysql.com/doc/connector-net/en/connector-net-tutorials-sql-command.html
 

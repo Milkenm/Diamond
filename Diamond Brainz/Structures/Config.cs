@@ -2,7 +2,7 @@
 
 using System.IO;
 
-using static Diamond.Brainz.Models;
+using static Diamond.Brainz.Classes;
 
 namespace Diamond.Brainz
 {

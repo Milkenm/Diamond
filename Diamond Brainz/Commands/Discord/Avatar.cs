@@ -15,7 +15,7 @@ namespace Diamond.Brainz.Commands
 		{
 			int[] allowedSizes = { 16, 32, 64, 128, 256, 512 };
 
-			if (!allowedSizes.Contains(size))
+			if (allowedSizes.Contains(size) == false)
 			{
 				string allowedSizesString = string.Join(",", allowedSizes.Select(num => num.ToString()).ToArray());
 				await this.ReplyAsync(embed: new EmbedBuilder().GenerateErrorEmbed("**Invalid size!**\nValid sizes: " + allowedSizesString, this.Context)).ConfigureAwait(false);
@@ -28,7 +28,7 @@ namespace Diamond.Brainz.Commands
 				EmbedBuilder embed = new EmbedBuilder();
 				embed.WithAuthor("Avatar", Twemoji.GetEmojiUrlFromEmoji("📸"));
 				embed.AddField("**User**", user.Mention);
-				embed.AddField("**Size**", $"{size} x {size} px");
+				embed.AddField("**Size**", $"{size}²px");
 				embed.WithImageUrl(avatar);
 
 				await this.ReplyAsync(embed: embed.FinishEmbed(this.Context)).ConfigureAwait(false);

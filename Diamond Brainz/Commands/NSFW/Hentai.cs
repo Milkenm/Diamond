@@ -9,7 +9,7 @@ using ScriptsLib.Network;
 
 using System.Threading.Tasks;
 
-using static Diamond.Brainz.Models;
+using static Diamond.Brainz.Classes;
 
 // # = #
 // https://api.computerfreaker.cf/v1/hentai
