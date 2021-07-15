@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Diamond Brainz\Diamond Brainz.csproj" />
+    <ProjectReference Include="..\DiamondBrainz\Diamond Brainz.csproj" />
     <ProjectReference Include="..\DiamondCore\Diamond Core.csproj" />
   </ItemGroup>
 

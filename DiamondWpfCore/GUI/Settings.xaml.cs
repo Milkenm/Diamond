@@ -1,4 +1,8 @@
-﻿using System.Windows;
+﻿using Diamond.Brainz;
+
+using System.Windows;
+
+using static Diamond.Core.DiamondCore;
 
 namespace Diamond.WPFCore.GUI
 {
@@ -7,26 +11,25 @@ namespace Diamond.WPFCore.GUI
 	/// </summary>
 	public partial class Settings : Window
 	{
-		private Main main;
+		private readonly Bot Bot;
 
-		public Settings(Main m)
+		public Settings(Bot bot)
 		{
-			InitializeComponent();
+			this.InitializeComponent();
 
-			main = m;
+			Bot = bot;
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			textBox_token.Text = main.brainz.GetBotToken();
+			textBox_token.Text = Bot.Configuration.Token;
 		}
 
 		private void SaveSettings(object sender, RoutedEventArgs e)
 		{
-			if (textBox_token.Text != null)
-			{
-				main.brainz.SetBotToken(textBox_token.Text);
-			}
+			Config cfg = new Config();
+			cfg.Token = textBox_token.Text;
+			Bot.UpdateConfig(cfg).GetAwaiter();
 
 			this.Close();
 		}

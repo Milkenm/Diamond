@@ -1,4 +1,5 @@
-﻿using Diamond.Brainz.Utils;
+﻿using Diamond.Brainz.Classes;
+using Diamond.Brainz.Utils;
 
 using Discord;
 using Discord.Commands;
@@ -8,8 +9,6 @@ using Newtonsoft.Json;
 using ScriptsLib.Network;
 
 using System.Threading.Tasks;
-
-using static Diamond.Brainz.Classes;
 
 // # = #
 // https://api.computerfreaker.cf/v1/hentai

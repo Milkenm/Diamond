@@ -16,4 +16,10 @@
     <ProjectReference Include="..\DiamondCore\Diamond Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="db_config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
