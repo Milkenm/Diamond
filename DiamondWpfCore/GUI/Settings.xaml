@@ -5,27 +5,55 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Diamond.WPFCore.GUI"
         mc:Ignorable="d"
-        Title="Settings" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
-	<Grid Height="139" Width="505">
-		<TextBox Name="textBox_token" Margin="14,0,10,85" TextWrapping="Wrap" VerticalAlignment="Bottom" />
-		<Label Content="Token" HorizontalAlignment="Left" Margin="9,11,0,0" VerticalAlignment="Top"/>
-		<Button Click="SaveSettings" Content="Save" Margin="0,0,10,10" VerticalAlignment="Bottom" BorderThickness="2" Background="#3B0074FF" Opacity="0.865" FontFamily="Verdana" FontSize="14" HorizontalAlignment="Right" Width="71">
-			<Button.Effect>
-				<DropShadowEffect Direction="314" Opacity="0.18" RenderingBias="Quality" ShadowDepth="8" BlurRadius="0" />
-			</Button.Effect>
-			<Button.BorderBrush>
-				<LinearGradientBrush EndPoint="0.877,1.599" StartPoint="0.201,-1.026">
-					<GradientStop Color="Black" />
-					<GradientStop Color="#FF0097FF" Offset="0.872" />
-				</LinearGradientBrush>
-			</Button.BorderBrush>
-		</Button>
-		<TabControl TabStripPlacement="Left">
-			<TabItem Header="General">
-                <Label Content="Content goes here..." />
-            </TabItem>
-            <TabItem Header="Security" />
-            <TabItem Header="Details" />
-        </TabControl>
+        Title="Settings" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Background="#EDEDED">
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="/Resources/Styles/ButtonStyle.xaml"/>
+				<ResourceDictionary Source="/Resources/Styles/ImageStyle.xaml" />
+				<ResourceDictionary Source="/Resources/Styles/ListBoxStyle.xaml" />
+				<ResourceDictionary Source="/Resources/Styles/TabControlStyle.xaml"/>
+				<ResourceDictionary Source="/Resources/Styles/TabItemStyle.xaml" />
+				<ResourceDictionary Source="/Resources/Styles/TextBlockStyle.xaml" />
+				<ResourceDictionary Source="/Resources/Styles/TextBoxStyle.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Window.Resources>
+	<Window.Effect>
+		<DropShadowEffect/>
+	</Window.Effect>
+	<Grid Height="400" Width="1000" Background="#4a4a4a">
+		<TabControl Style="{StaticResource TabControlStyle}" TabStripPlacement="Left">
+			<TabItem Style="{StaticResource TabItemStyle}" Height="65" Width="85">
+				<TabItem.Header>
+					<Image Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Robot.png" />
+				</TabItem.Header>
+				<Grid>
+					<ListBox Style="{StaticResource ListBoxStyle}" Margin="10,10,10,59" />
+					<Button Style="{StaticResource ButtonStyle}" Content="Start" HorizontalAlignment="Left" Margin="758,356,0,0" VerticalAlignment="Top" Width="141" />
+					<TextBox Style="{StaticResource TextBoxStyle}" HorizontalAlignment="Left" Margin="10,356,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="536" />
+					<Button Style="{StaticResource ResourceKey=ButtonStyle}" Content="Run" HorizontalAlignment="Left" Margin="551,356,0,0" VerticalAlignment="Top" Width="68" />
+				</Grid>
+			</TabItem>
+			<TabItem Style="{StaticResource TabItemStyle}" Height="65" Width="85">
+				<TabItem.Header>
+					<Image Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Scroll.png" />
+				</TabItem.Header>
+				<Grid>
+
+				</Grid>
+			</TabItem>
+			<TabItem Style="{StaticResource TabItemStyle}" Height="65" Width="85">
+				<TabItem.Header>
+					<Image Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Gear.png" />
+				</TabItem.Header>
+				<Grid>
+					<TextBox Style="{StaticResource TextBoxStyle}" Text="lsdasd" Name="textBox_token" Margin="12,46,12,0" TextWrapping="Wrap" VerticalAlignment="Top" />
+					<TextBlock Style="{StaticResource TextBlockStyle}" HorizontalAlignment="Left" Margin="12,24,0,0" Text="Token" TextWrapping="Wrap" VerticalAlignment="Top"/>
+					<Button Style="{StaticResource ButtonStyle}" Click="SaveSettings" Content="Save" Margin="0,0,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="71">
+					</Button>
+				</Grid>
+			</TabItem>
+		</TabControl>
 	</Grid>
 </Window>

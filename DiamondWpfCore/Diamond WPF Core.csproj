@@ -2,16 +2,34 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>Diamond WPF Core</AssemblyName>
     <RootNamespace>Diamond.WPFCore</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Emojis\Gear.png" />
+    <None Remove="Resources\Emojis\Robot.png" />
+    <None Remove="Resources\Emojis\Scroll.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Diamond Brainz\Diamond Brainz.csproj" />
     <ProjectReference Include="..\DiamondBrainz\Diamond Brainz.csproj" />
     <ProjectReference Include="..\DiamondCore\Diamond Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Emojis\Gear.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Emojis\Robot.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Emojis\Scroll.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

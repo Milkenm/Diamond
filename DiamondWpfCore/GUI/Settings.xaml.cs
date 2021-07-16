@@ -1,6 +1,8 @@
 ﻿using Diamond.Brainz;
 
+using System;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 using static Diamond.Core.DiamondCore;
 

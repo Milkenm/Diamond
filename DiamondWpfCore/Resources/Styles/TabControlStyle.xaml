@@ -1,0 +1,22 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<Style BasedOn="{StaticResource {x:Type TabControl}}" TargetType="TabControl" x:Key="TabControlStyle">
+		<Setter Property="Effect">
+			<Setter.Value>
+				<DropShadowEffect Direction="314" Opacity="0.18" RenderingBias="Quality" ShadowDepth="8" BlurRadius="0" />
+			</Setter.Value>
+		</Setter>
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="Background">
+			<Setter.Value>
+				<LinearGradientBrush StartPoint="0.126, 0">
+					<GradientStop Color="#FFB62D40"/>
+					<GradientStop Color="#FF822BAA" Offset="0.6"/>
+					<GradientStop Color="#FF550F85" Offset="1"/>
+				</LinearGradientBrush>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+</ResourceDictionary>
