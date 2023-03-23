@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<SolidColorBrush x:Key="SolidGreyBrush" Color="{StaticResource Grey}"/>
+	<SolidColorBrush x:Key="SolidLightGreyBrush" Color="{StaticResource LightGrey}"/>
+
+	<LinearGradientBrush x:Key="LinearGradientBrush" StartPoint="0.126, 0">
+		<GradientStop Color="{StaticResource GradientColor1}"/>
+		<GradientStop Color="{StaticResource GradientColor2}" Offset="0.6"/>
+		<GradientStop Color="{StaticResource GradientColor3}" Offset="1"/>
+	</LinearGradientBrush>
+</ResourceDictionary>

@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using static ScriptsLib.Network.Requests;
+using ScriptsLibV2.Util;
 
 // # = #
 // http://api.obutts.ru/butts/0/1/random
@@ -37,7 +37,7 @@ namespace Diamond.Brainz.Commands
             string typeString = type == NsfwType.Butt ? "butts" : "boobs";
 
             // MAKE THE REQUEST AND DESERIALIZE IT
-            string request = GET($"http://api.o{typeString}.ru/{typeString}/0/1/random");
+            string request = RequestUtils.Get($"http://api.o{typeString}.ru/{typeString}/0/1/random");
             List<NsfwSchema> nsfwList = JsonConvert.DeserializeObject<List<NsfwSchema>>(request);
             NsfwSchema nsfw = nsfwList[0];
 

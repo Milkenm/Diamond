@@ -1,9 +1,24 @@
-﻿<Application x:Class="DiamondWpfCore.App"
+﻿<Application x:Class="Diamond.GUI.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:DiamondWpfCore"
-             StartupUri="GUI/Main.xaml">
+             xmlns:local="clr-namespace:Diamond.GUI"
+             StartupUri="AppWindow.xaml">
     <Application.Resources>
-         
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Resources/Style_Colors.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Resources/Style_Brushes.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Resources/Style_Effects.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_Button.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_Grid.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_Image.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_ListBox.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_TabControl.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_TabItem.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_TextBlock.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_TextBox.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_Window.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
     </Application.Resources>
 </Application>

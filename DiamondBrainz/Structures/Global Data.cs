@@ -13,12 +13,8 @@ namespace Diamond.Brainz
 	{
 		public GlobalData(string dbConfigPath = @"\db_config.json")
 		{
-			string dbConfigJson = File.ReadAllText(dbConfigPath);
-			DatabaseConfig dbConfig = JsonConvert.DeserializeObject<DatabaseConfig>(dbConfigJson);
-
 			FoldersDictionary = new Dictionary<FolderType, Folder>();
 			Logger = new Logger();
-			Database = new Database(dbConfig);
 
 			FoldersDictionary.Add(FolderType.AppData, new Folder(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Milkenm\Diamond\"));
 			FoldersDictionary.Add(FolderType.Temp, new Folder(FoldersDictionary[FolderType.AppData].Path + @"Temp\"));

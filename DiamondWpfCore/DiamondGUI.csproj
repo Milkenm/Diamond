@@ -2,11 +2,19 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <AssemblyName>Diamond WPF Core</AssemblyName>
-    <RootNamespace>Diamond.WPFCore</RootNamespace>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <UseWPF>True</UseWPF>
+    <AssemblyName>Diamond.GUI</AssemblyName>
+    <RootNamespace>Diamond.GUI</RootNamespace>
+    <StartupObject>Diamond.GUI.App</StartupObject>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="obj\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <None Remove="obj\**" />
+    <Page Remove="obj\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="Resources\Emojis\Gear.png" />
@@ -15,9 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Diamond Brainz\Diamond Brainz.csproj" />
-    <ProjectReference Include="..\DiamondBrainz\Diamond Brainz.csproj" />
-    <ProjectReference Include="..\DiamondCore\Diamond Core.csproj" />
+    <ProjectReference Include="..\DiamondBrainz\DiamondAPI.csproj" />
   </ItemGroup>
 
   <ItemGroup>

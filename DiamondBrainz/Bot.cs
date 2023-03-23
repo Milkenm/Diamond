@@ -1,20 +1,13 @@
-﻿using Diamond.Brainz.Events;
-using Diamond.Core;
-
-using Discord;
-
-using System.Reflection;
+﻿using ScriptsLibV2;
 
 namespace Diamond.Brainz
 {
-	public class Bot : DiamondCore
+	public class Bot : DiscordBot
 	{
-		public readonly GlobalData GlobalData;
-
-		public Bot(string botConfigPath = "", string dbConfigPath = "") : base(LogSeverity.Info, Assembly.GetAssembly(typeof(Bot)), null, botConfigPath)
+		public Bot(string token)
 		{
-			GlobalData = new GlobalData(dbConfigPath);
-			this.SetupEvents(new CommandEvents().CommandExecuted, new ClientEvents().MessageReceived, new ClientEvents().ReactionAdded, new ClientEvents().ReactionRemoved);
+			base.Token = token;
+			base.Initialize();
 		}
 	}
 }

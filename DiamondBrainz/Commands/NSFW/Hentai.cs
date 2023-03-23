@@ -6,7 +6,7 @@ using Discord.Commands;
 
 using Newtonsoft.Json;
 
-using ScriptsLib.Network;
+using ScriptsLibV2.Util;
 
 using System.Threading.Tasks;
 
@@ -22,7 +22,7 @@ namespace Diamond.Brainz.Commands
 		public async Task Hentai()
 		{
 			// GET IMAGE
-			string response = Requests.GET("https://nekos.life/api/v2/img/hentai");
+			string response = RequestUtils.Get("https://nekos.life/api/v2/img/hentai");
 			NekosLifeResponse resp = JsonConvert.DeserializeObject<NekosLifeResponse>(response);
 
 			// CREATE THE EMBED

@@ -1,0 +1,4 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<DropShadowEffect x:Key="ControlShadowEffect" Direction="314" Opacity="0.18" RenderingBias="Quality" ShadowDepth="8" BlurRadius="0"/>
+	<DropShadowEffect x:Key="IconShadowEffect" Opacity="0.5" RenderingBias="Quality" ShadowDepth="4" BlurRadius="16"/>
+</ResourceDictionary>
