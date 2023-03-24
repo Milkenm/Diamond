@@ -1,15 +1,4 @@
-﻿using Diamond.Brainz.Data;
-using Diamond.Brainz.Utils;
-
-using Discord;
-using Discord.WebSocket;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Diamond.Brainz.Structures.ReactionRoles
+﻿namespace Diamond.Brainz.Structures.ReactionRoles
 {
 	public class RRMessage
 	{

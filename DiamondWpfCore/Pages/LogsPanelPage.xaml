@@ -5,8 +5,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Diamond.GUI.Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="LogsPanelPage">
+      d:DesignHeight="396" d:DesignWidth="909" Width="909" Height="396"
+      Title="Logs">
 
     <Grid>
         

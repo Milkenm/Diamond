@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Diamond.Brainz.Structures.ReactionRoles
+﻿namespace Diamond.Brainz.Structures.ReactionRoles
 {
 	public class RoleEntry
 	{

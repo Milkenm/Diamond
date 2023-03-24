@@ -1,10 +1,10 @@
-﻿using Diamond.Brainz.Utils;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Discord;
 using Discord.Commands;
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using ScriptsLibV2.Util;
 
 namespace Diamond.Brainz.Commands
 {
@@ -16,7 +16,7 @@ namespace Diamond.Brainz.Commands
 			amount++;
 
 			EmbedBuilder embed = new EmbedBuilder();
-			embed.WithAuthor("Clear Messages", Twemoji.GetEmojiUrlFromEmoji("🗑"));
+			embed.WithAuthor("Clear Messages", TwemojiUtils.GetEmojiUrlFromEmoji("🗑"));
 
 			if (!onlyBots)
 			{

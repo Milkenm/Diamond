@@ -1,12 +1,10 @@
-﻿using Diamond.Brainz.Utils;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Discord;
 using Discord.Commands;
 
 using Newtonsoft.Json;
-
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 using ScriptsLibV2.Util;
 
@@ -20,50 +18,50 @@ using ScriptsLibV2.Util;
 
 namespace Diamond.Brainz.Commands
 {
-    public partial class NSFWModule : ModuleBase<SocketCommandContext>
-    {
-        [Name("NSFW"), Command("nsfw"), Summary("Gives you a NSFW image"), RequireNsfw(ErrorMessage = "You must be on an NSFW channel to use this command.")]
-        public async Task NSFW(NsfwType type)
-        {
-            // CHECK IF IT IS NSFW CHANNEL
-            ITextChannel channel = Context.Channel as ITextChannel;
-            if (!channel.IsNsfw)
-            {
-                await ReplyAsync("You must be on an NSFW channel to use this command.").ConfigureAwait(false);
-                return;
-            }
+	public partial class NSFWModule : ModuleBase<SocketCommandContext>
+	{
+		[Name("NSFW"), Command("nsfw"), Summary("Gives you a NSFW image"), RequireNsfw(ErrorMessage = "You must be on an NSFW channel to use this command.")]
+		public async Task NSFW(NsfwType type)
+		{
+			// CHECK IF IT IS NSFW CHANNEL
+			ITextChannel channel = Context.Channel as ITextChannel;
+			if (!channel.IsNsfw)
+			{
+				await ReplyAsync("You must be on an NSFW channel to use this command.").ConfigureAwait(false);
+				return;
+			}
 
-            // PARSE TYPE
-            string typeString = type == NsfwType.Butt ? "butts" : "boobs";
+			// PARSE TYPE
+			string typeString = type == NsfwType.Butt ? "butts" : "boobs";
 
-            // MAKE THE REQUEST AND DESERIALIZE IT
-            string request = RequestUtils.Get($"http://api.o{typeString}.ru/{typeString}/0/1/random");
-            List<NsfwSchema> nsfwList = JsonConvert.DeserializeObject<List<NsfwSchema>>(request);
-            NsfwSchema nsfw = nsfwList[0];
+			// MAKE THE REQUEST AND DESERIALIZE IT
+			string request = RequestUtils.Get($"http://api.o{typeString}.ru/{typeString}/0/1/random");
+			List<NsfwSchema> nsfwList = JsonConvert.DeserializeObject<List<NsfwSchema>>(request);
+			NsfwSchema nsfw = nsfwList[0];
 
-            // CREATE THE EMBED
-            EmbedBuilder embed = new EmbedBuilder();
-            embed.WithAuthor("NSFW", Twemoji.GetEmojiUrlFromEmoji("🔞"));
-            embed.AddField("**Model**", !string.IsNullOrEmpty(nsfw.model) ? nsfw.model : "Unknown model");
-            embed.WithImageUrl($"http://media.o{typeString}.ru/" + nsfw.preview);
+			// CREATE THE EMBED
+			EmbedBuilder embed = new EmbedBuilder();
+			embed.WithAuthor("NSFW", TwemojiUtils.GetEmojiUrlFromEmoji("🔞"));
+			embed.AddField("**Model**", !string.IsNullOrEmpty(nsfw.model) ? nsfw.model : "Unknown model");
+			embed.WithImageUrl($"http://media.o{typeString}.ru/" + nsfw.preview);
 
-            // REPLY
-            await ReplyAsync(embed: embed.FinishEmbed( Context)).ConfigureAwait(false);
-        }
+			// REPLY
+			await ReplyAsync(embed: embed.FinishEmbed(Context)).ConfigureAwait(false);
+		}
 
-        public class NsfwSchema
-        {
-            public string model;
-            public string preview;
-            public int id;
-            public int rank;
-            public string author;
-        }
+		public class NsfwSchema
+		{
+			public string model;
+			public string preview;
+			public int id;
+			public int rank;
+			public string author;
+		}
 
-        public enum NsfwType
-        {
-            Butt,
-            Boobs,
-        }
-    }
+		public enum NsfwType
+		{
+			Butt,
+			Boobs,
+		}
+	}
 }

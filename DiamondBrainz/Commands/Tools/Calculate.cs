@@ -1,11 +1,11 @@
-﻿using Diamond.Brainz.Utils;
+﻿using System.Threading.Tasks;
 
 using Discord;
 using Discord.Commands;
 
 using NCalc;
 
-using System.Threading.Tasks;
+using ScriptsLibV2.Util;
 
 namespace Diamond.Brainz.Commands
 {
@@ -31,7 +31,7 @@ namespace Diamond.Brainz.Commands
 			}
 
 			EmbedBuilder embed = new EmbedBuilder();
-			embed.WithAuthor("Calculate", Twemoji.GetEmojiUrlFromEmoji("🧮"));
+			embed.WithAuthor("Calculate", TwemojiUtils.GetEmojiUrlFromEmoji("🧮"));
 
 			if (!errors)
 			{

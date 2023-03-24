@@ -5,10 +5,13 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Diamond.GUI.Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="MainPanelPage">
+      d:DesignHeight="396" d:DesignWidth="909" Width="909" Height="396"
+      Title="Main">
 
-    <Grid>
-        
-    </Grid>
+	<Grid>
+		<ListBox Style="{StaticResource ListBoxStyle}" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="10,10,10,59"/>
+		<Button Style="{StaticResource ButtonStyle}" Content="Start" HorizontalAlignment="Left" Margin="758,356,0,0" VerticalAlignment="Top" Width="141"/>
+		<Button Style="{StaticResource ButtonStyle}" Content="Run" HorizontalAlignment="Left" Margin="551,356,0,0" VerticalAlignment="Top" Width="68"/>
+		<TextBox Style="{StaticResource TextBoxStyle}" HorizontalAlignment="Left" Margin="10,356,0,0" VerticalAlignment="Top" Width="536"/>
+	</Grid>
 </Page>

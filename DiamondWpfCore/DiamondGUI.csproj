@@ -19,6 +19,7 @@
   <ItemGroup>
     <None Remove="Resources\Emojis\Gear.png" />
     <None Remove="Resources\Emojis\Robot.png" />
+    <None Remove="Resources\Emojis\Satellite.png" />
     <None Remove="Resources\Emojis\Scroll.png" />
   </ItemGroup>
 
@@ -31,6 +32,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Emojis\Robot.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Emojis\Satellite.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Emojis\Scroll.png">

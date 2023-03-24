@@ -1,0 +1,9 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:System="clr-namespace:System;assembly=netstandard">
+	<Thickness x:Key="ControlsBorderThickness">0</Thickness>
+	<Thickness x:Key="InteractablesBorderThickness">1.5</Thickness>
+	<System:Double x:Key="InteractablesHeight">30</System:Double>
+	<CornerRadius x:Key="InteractablesCornerRadius">2</CornerRadius>
+	<CornerRadius x:Key="ControlsCornerRadius">2</CornerRadius>
+	<CornerRadius x:Key="TabsCornerRadius" TopLeft="3" BottomLeft="3"/>
+	<Thickness x:Key="ControlBottomPadding" Bottom="5"/>
+</ResourceDictionary>

@@ -1,10 +1,10 @@
-﻿using Diamond.Brainz.Utils;
+﻿using System.Linq;
+using System.Threading.Tasks;
 
 using Discord;
 using Discord.Commands;
 
-using System.Linq;
-using System.Threading.Tasks;
+using ScriptsLibV2.Util;
 
 namespace Diamond.Brainz.Commands
 {
@@ -26,7 +26,7 @@ namespace Diamond.Brainz.Commands
 				avatar = avatar.Replace("?size=128", "?size=" + size);
 
 				EmbedBuilder embed = new EmbedBuilder();
-				embed.WithAuthor("Avatar", Twemoji.GetEmojiUrlFromEmoji("📸"));
+				embed.WithAuthor("Avatar", TwemojiUtils.GetEmojiUrlFromEmoji("📸"));
 				embed.AddField("**User**", user.Mention);
 				embed.AddField("**Size**", $"{size}²px");
 				embed.WithImageUrl(avatar);

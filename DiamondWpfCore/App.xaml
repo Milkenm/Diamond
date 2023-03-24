@@ -9,9 +9,13 @@
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Resources/Style_Colors.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Resources/Style_Brushes.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Resources/Style_Effects.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Resources/Style_Fonts.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Resources/Style_Sizes.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_Button.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_Grid.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_Frame.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_Image.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_Label.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_ListBox.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_TabControl.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_TabItem.xaml"/>

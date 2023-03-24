@@ -1,10 +1,6 @@
-﻿using Diamond.Brainz.Data;
-using Diamond.Brainz.Structures.ReactionRoles;
+﻿using System.Threading.Tasks;
 
 using Discord.Commands;
-
-using System;
-using System.Threading.Tasks;
 
 namespace Diamond.Brainz.Commands
 {

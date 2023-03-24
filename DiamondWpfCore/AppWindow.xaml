@@ -6,18 +6,15 @@
         xmlns:local="clr-namespace:Diamond.GUI"
         mc:Ignorable="d"
         Title="Diamond Bot" Style="{StaticResource WindowStyle}" WindowStartupLocation="CenterScreen">
-	
-    <Grid Width="1000" Height="400">
+
+	<Grid Width="1000" Height="400">
 		<TabControl Style="{StaticResource TabControlStyle}">
 			<TabItem Style="{StaticResource TabItemStyle}">
 				<TabItem.Header>
 					<Image Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Robot.png" />
 				</TabItem.Header>
 				<Grid>
-					<ListBox Style="{StaticResource ListBoxStyle}" Margin="10,10,10,59" />
-					<Button Style="{StaticResource ButtonStyle}" Content="Start" HorizontalAlignment="Left" Margin="758,356,0,0" VerticalAlignment="Top" Width="141" />
-					<TextBox Style="{StaticResource TextBoxStyle}" HorizontalAlignment="Left" Margin="10,356,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="536" />
-					<Button Style="{StaticResource ButtonStyle}" Content="Run" HorizontalAlignment="Left" Margin="551,356,0,0" VerticalAlignment="Top" Width="68" />
+					<Frame Style="{StaticResource FrameStyle}" Source="/Pages/MainPanelPage.xaml"/>
 				</Grid>
 			</TabItem>
 			<TabItem Style="{StaticResource TabItemStyle}" Height="65" Width="85">
@@ -25,7 +22,15 @@
 					<Image Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Scroll.png" />
 				</TabItem.Header>
 				<Grid>
-
+					<Frame Style="{StaticResource FrameStyle}" Source="/Pages/LogsPanelPage.xaml"/>
+				</Grid>
+			</TabItem>
+			<TabItem Style="{StaticResource TabItemStyle}" Height="65" Width="85">
+				<TabItem.Header>
+					<Image Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Satellite.png" />
+				</TabItem.Header>
+				<Grid>
+					<Frame Style="{StaticResource FrameStyle}" Source="/Pages/RemotePanelPage.xaml"/>
 				</Grid>
 			</TabItem>
 			<TabItem Style="{StaticResource TabItemStyle}" Height="65" Width="85">
@@ -33,10 +38,7 @@
 					<Image Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Gear.png" />
 				</TabItem.Header>
 				<Grid>
-					<TextBox Style="{StaticResource TextBoxStyle}" Text="lsdasd" Name="textBox_token" Margin="12,46,12,0" TextWrapping="Wrap" VerticalAlignment="Top" />
-					<TextBlock Style="{StaticResource TextBlockStyle}" HorizontalAlignment="Left" Margin="12,24,0,0" Text="Token" TextWrapping="Wrap" VerticalAlignment="Top"/>
-					<Button Style="{StaticResource ButtonStyle}" Content="Save" Margin="0,0,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="71">
-					</Button>
+					<Frame Style="{StaticResource FrameStyle}" Source="/Pages/SettingsPanelPage.xaml"/>
 				</Grid>
 			</TabItem>
 		</TabControl>

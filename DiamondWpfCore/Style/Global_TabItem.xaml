@@ -1,11 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 	<Style x:Key="TabItemStyle" TargetType="{x:Type TabItem}">
-		<Setter Property="Background">
-			<Setter.Value>
-				<SolidColorBrush Color="DarkGray"/>
-			</Setter.Value>
-		</Setter>
-		<Setter Property="Width" Value="85"/>
 		<Setter Property="Height" Value="65"/>
 		<Setter Property="Template">
 			<Setter.Value>
@@ -13,30 +7,18 @@
 					<Border>
 						<Grid>
 							<Grid>
-								<Border x:Name="Background" Background="DarkGray" CornerRadius="0,0,0,0" Margin="0,-3,0,0"/>
+								<Border x:Name="_Border" Margin="0,-3,0,0" CornerRadius="{StaticResource TabsCornerRadius}"/>
 							</Grid>
 							<ContentPresenter ContentSource="Header" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="12,2,12,2"/>
 						</Grid>
 					</Border>
 					<ControlTemplate.Triggers>
-						<Trigger Property="IsMouseOver" Value="True">
-							<Setter TargetName="Background" Property="Background">
-								<Setter.Value>
-									<SolidColorBrush Color="Red" Opacity="0.3"/>
-								</Setter.Value>
-							</Setter>
-						</Trigger>
 						<Trigger Property="IsSelected" Value="True">
-							<Setter TargetName="Background" Property="Background" Value="#FFB62D40"/>
-							<Setter TargetName="Background" Property="BorderThickness" Value="1,1,0,2"/>
-							<Setter Property="Panel.ZIndex" Value="100"/>
+							<Setter TargetName="_Border" Property="Background" Value="{StaticResource SolidRedBrush}"/>
+							<Setter TargetName="_Border" Property="BorderThickness" Value="1,1,0,2"/>
 						</Trigger>
 						<Trigger Property="IsSelected" Value="False">
-							<Setter TargetName="Background" Property="Background">
-								<Setter.Value>
-									<SolidColorBrush Color="Black" Opacity="0.3"/>
-								</Setter.Value>
-							</Setter>
+							<Setter TargetName="_Border" Property="Background" Value="{StaticResource TabItemBackgroundBrush}"/>
 						</Trigger>
 					</ControlTemplate.Triggers>
 				</ControlTemplate>

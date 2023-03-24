@@ -1,10 +1,10 @@
-﻿using Diamond.Brainz.Utils;
+﻿using System;
+using System.Threading.Tasks;
 
 using Discord;
 using Discord.Commands;
 
-using System;
-using System.Threading.Tasks;
+using ScriptsLibV2.Util;
 
 namespace Diamond.Brainz.Commands
 {
@@ -14,7 +14,7 @@ namespace Diamond.Brainz.Commands
 		public async Task GenerateRandomNumber(int min, int max)
 		{
 			EmbedBuilder embed = new EmbedBuilder();
-			embed.WithAuthor("Random Number Generator", Twemoji.GetEmojiUrlFromEmoji("🎲"));
+			embed.WithAuthor("Random Number Generator", TwemojiUtils.GetEmojiUrlFromEmoji("🎲"));
 
 			if (min < max)
 			{

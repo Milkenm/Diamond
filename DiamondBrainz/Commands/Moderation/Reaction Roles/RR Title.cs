@@ -1,9 +1,6 @@
-﻿using Diamond.Brainz.Data;
+﻿using System.Threading.Tasks;
 
 using Discord.Commands;
-
-using System;
-using System.Threading.Tasks;
 
 namespace Diamond.Brainz.Commands
 {

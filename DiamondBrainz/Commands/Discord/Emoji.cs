@@ -1,9 +1,9 @@
-﻿using Diamond.Brainz.Utils;
+﻿using System.Threading.Tasks;
 
 using Discord;
 using Discord.Commands;
 
-using System.Threading.Tasks;
+using ScriptsLibV2.Util;
 
 namespace Diamond.Brainz.Commands
 {
@@ -13,8 +13,8 @@ namespace Diamond.Brainz.Commands
 		public async Task Emoji(string emoji)
 		{
 			EmbedBuilder embed = new EmbedBuilder();
-			embed.WithAuthor("Twemoji", Twemoji.GetEmojiUrlFromEmoji("😃"));
-			embed.WithImageUrl(Twemoji.GetEmojiUrlFromEmoji(emoji));
+			embed.WithAuthor("Twemoji", TwemojiUtils.GetEmojiUrlFromEmoji("😃"));
+			embed.WithImageUrl(TwemojiUtils.GetEmojiUrlFromEmoji(emoji));
 
 			await this.ReplyAsync(embed: embed.FinishEmbed(this.Context)).ConfigureAwait(false);
 		}
