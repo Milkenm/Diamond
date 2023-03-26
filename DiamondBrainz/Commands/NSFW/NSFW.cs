@@ -16,7 +16,7 @@ using ScriptsLibV2.Util;
 // http://media.oboobs.ru/<preview>
 // # = #
 
-namespace Diamond.Brainz.Commands
+namespace Diamond.API.Commands
 {
 	public partial class NSFWModule : ModuleBase<SocketCommandContext>
 	{
@@ -41,7 +41,7 @@ namespace Diamond.Brainz.Commands
 
 			// CREATE THE EMBED
 			EmbedBuilder embed = new EmbedBuilder();
-			embed.WithAuthor("NSFW", TwemojiUtils.GetEmojiUrlFromEmoji("🔞"));
+			embed.WithAuthor("NSFW", TwemojiUtils.GetUrlFromEmoji("🔞"));
 			embed.AddField("**Model**", !string.IsNullOrEmpty(nsfw.model) ? nsfw.model : "Unknown model");
 			embed.WithImageUrl($"http://media.o{typeString}.ru/" + nsfw.preview);
 

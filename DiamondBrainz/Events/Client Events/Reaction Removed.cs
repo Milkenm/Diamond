@@ -3,7 +3,7 @@
 using Discord;
 using Discord.WebSocket;
 
-namespace Diamond.Brainz.Events
+namespace Diamond.API.Events
 {
 	public partial class ClientEvents
 	{

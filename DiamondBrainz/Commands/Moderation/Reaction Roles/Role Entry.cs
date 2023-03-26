@@ -1,4 +1,4 @@
-﻿namespace Diamond.Brainz.Structures.ReactionRoles
+﻿namespace Diamond.API.Structures.ReactionRoles
 {
 	public class RoleEntry
 	{

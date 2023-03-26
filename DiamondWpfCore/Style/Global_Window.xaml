@@ -3,5 +3,7 @@
 		<Setter Property="Background" Value="{StaticResource SolidGreyBrush}"/>
 		<Setter Property="SizeToContent" Value="WidthAndHeight"/>
 		<Setter Property="ResizeMode" Value="CanMinimize"/>
+		<Setter Property="Icon" Value="pack://application:,,,/Diamond.GUI;component/Resources/Icon.png"/>
+		<Setter Property="Title" Value="Diamond GUI"/>
 	</Style>
 </ResourceDictionary>

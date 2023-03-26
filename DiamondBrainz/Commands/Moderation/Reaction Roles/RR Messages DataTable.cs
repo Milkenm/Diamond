@@ -1,4 +1,4 @@
-﻿namespace Diamond.Brainz.Data.DataTables
+﻿namespace Diamond.API.Data.DataTables
 {
 	public class RRMessagesDataTable
 	{

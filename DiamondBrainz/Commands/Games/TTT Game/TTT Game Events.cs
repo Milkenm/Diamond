@@ -2,7 +2,7 @@
 
 using Discord.WebSocket;
 
-namespace Diamond.Brainz.Events
+namespace Diamond.API.Events
 {
 	public static partial class GameEvents
 	{

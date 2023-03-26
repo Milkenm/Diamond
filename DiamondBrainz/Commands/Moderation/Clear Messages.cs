@@ -6,7 +6,7 @@ using Discord.Commands;
 
 using ScriptsLibV2.Util;
 
-namespace Diamond.Brainz.Commands
+namespace Diamond.API.Commands
 {
 	public partial class ModerationModule : ModuleBase<SocketCommandContext>
 	{
@@ -16,7 +16,7 @@ namespace Diamond.Brainz.Commands
 			amount++;
 
 			EmbedBuilder embed = new EmbedBuilder();
-			embed.WithAuthor("Clear Messages", TwemojiUtils.GetEmojiUrlFromEmoji("🗑"));
+			embed.WithAuthor("Clear Messages", TwemojiUtils.GetUrlFromEmoji("🗑"));
 
 			if (!onlyBots)
 			{

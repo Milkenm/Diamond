@@ -9,8 +9,8 @@
       Title="Main">
 
 	<Grid>
-		<ListBox Style="{StaticResource ListBoxStyle}" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="10,10,10,59"/>
-		<Button Style="{StaticResource ButtonStyle}" Content="Start" HorizontalAlignment="Left" Margin="758,356,0,0" VerticalAlignment="Top" Width="141"/>
+		<ListBox x:Name="listBox_output" Style="{StaticResource ListBoxStyle}" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="10,10,10,59"/>
+		<Button x:Name="button_start" Style="{StaticResource ButtonStyle}" Content="Start" HorizontalAlignment="Left" Margin="758,356,0,0" VerticalAlignment="Top" Width="141" Click="ButtonStart_Click"/>
 		<Button Style="{StaticResource ButtonStyle}" Content="Run" HorizontalAlignment="Left" Margin="551,356,0,0" VerticalAlignment="Top" Width="68"/>
 		<TextBox Style="{StaticResource TextBoxStyle}" HorizontalAlignment="Left" Margin="10,356,0,0" VerticalAlignment="Top" Width="536"/>
 	</Grid>

@@ -1,4 +1,4 @@
-﻿namespace Diamond.Brainz.Structures.Games
+﻿namespace Diamond.API.Structures.Games
 {
 	public class TTTGame
 	{

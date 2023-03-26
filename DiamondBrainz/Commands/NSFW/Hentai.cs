@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-using Diamond.Brainz.Classes;
+using Diamond.API.Classes;
 
 using Discord;
 using Discord.Commands;
@@ -13,7 +13,7 @@ using ScriptsLibV2.Util;
 // https://api.computerfreaker.cf/v1/hentai
 // # = #
 
-namespace Diamond.Brainz.Commands
+namespace Diamond.API.Commands
 {
 	public partial class NSFWModule : ModuleBase<SocketCommandContext>
 	{
@@ -26,7 +26,7 @@ namespace Diamond.Brainz.Commands
 
 			// CREATE THE EMBED
 			EmbedBuilder embed = new EmbedBuilder();
-			embed.WithAuthor("NSFW", TwemojiUtils.GetEmojiUrlFromEmoji("💮"));
+			embed.WithAuthor("NSFW", TwemojiUtils.GetUrlFromEmoji("💮"));
 			embed.WithImageUrl(resp.URL);
 
 			// REPLY

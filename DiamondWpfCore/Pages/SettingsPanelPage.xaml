@@ -6,11 +6,11 @@
       xmlns:local="clr-namespace:Diamond.GUI.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="396" d:DesignWidth="909" Width="909" Height="396"
-      Title="Settings">
+      Title="Settings" Loaded="Page_Loaded">
 
 	<Grid>
-		<TextBox Style="{StaticResource TextBoxStyle}" x:Name="textBox_token" Margin="12,46,12,0" TextWrapping="Wrap" VerticalAlignment="Top" />
-		<Label Style="{StaticResource LabelStyle}" HorizontalAlignment="Left" Margin="12,23,0,0" Content="Token" VerticalAlignment="Top"/>
-		<Button Style="{StaticResource ButtonStyle}" Content="Save" Margin="0,0,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="71"/>
+		<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_token" Margin="10,38,10,0" VerticalAlignment="Top" />
+		<Label Style="{StaticResource LabelStyle}" HorizontalAlignment="Left" Margin="10,10,0,0" Content="Token" VerticalAlignment="Top"/>
+		<Button Style="{StaticResource ButtonStyle}" Content="Save" Margin="0,0,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="71" Click="ButtonSave_Click"/>
 	</Grid>
 </Page>

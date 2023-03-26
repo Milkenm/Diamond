@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 
-namespace Diamond.Brainz
+namespace Diamond.API
 {
 	public static partial class Extensions
 	{

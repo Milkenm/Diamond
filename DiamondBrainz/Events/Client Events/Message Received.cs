@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Diamond.Brainz.Events
+namespace Diamond.API.Events
 {
     public partial class ClientEvents
     {

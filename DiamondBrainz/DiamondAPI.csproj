@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>Diamond.Brainz</RootNamespace>
+    <RootNamespace>Diamond.API</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +12,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\ScriptsLib\ScriptsLibV2\ScriptsLibV2.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DiamondDB.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

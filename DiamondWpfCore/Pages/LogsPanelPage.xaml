@@ -9,6 +9,6 @@
       Title="Logs">
 
     <Grid>
-        
-    </Grid>
+		<ListBox x:Name="listBox_log" Style="{StaticResource ListBoxStyle}" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="10,10,10,10"/>
+	</Grid>
 </Page>

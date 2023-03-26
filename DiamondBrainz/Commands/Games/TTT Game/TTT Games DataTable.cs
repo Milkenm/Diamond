@@ -4,7 +4,7 @@ using System.Linq;
 
 using Discord;
 
-namespace Diamond.Brainz.Structures.Games
+namespace Diamond.API.Structures.Games
 {
 	public class TTTGamesDataTable
 	{

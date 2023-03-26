@@ -3,7 +3,7 @@
 using Discord;
 using Discord.Commands;
 
-namespace Diamond.Brainz.Commands
+namespace Diamond.API.Commands
 {
 	public partial class ModerationModule
 	{

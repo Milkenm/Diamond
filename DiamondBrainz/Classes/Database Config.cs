@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Diamond.Brainz.Classes
+namespace Diamond.API.Classes
 {
 	public class DatabaseConfig
 	{

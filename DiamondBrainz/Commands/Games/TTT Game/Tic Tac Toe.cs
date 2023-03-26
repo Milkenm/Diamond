@@ -3,7 +3,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 
-namespace Diamond.Brainz.Commands
+namespace Diamond.API.Commands
 {
 	public partial class GamesModule : ModuleBase<SocketCommandContext>
 	{

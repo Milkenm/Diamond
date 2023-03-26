@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
+using Discord;
 
 namespace Diamond.GUI.Pages;
 /// <summary>
@@ -19,8 +9,25 @@ namespace Diamond.GUI.Pages;
 /// </summary>
 public partial class LogsPanelPage : Page
 {
+	private static LogsPanelPage Instance;
+
+	public static LogsPanelPage GetInstance()
+	{
+		return Instance ?? new LogsPanelPage();
+	}
+
 	public LogsPanelPage()
 	{
 		InitializeComponent();
+
+		Instance = this;
+	}
+
+	public async Task Log(LogMessage msg)
+	{
+		Dispatcher.Invoke(() =>
+		{
+			listBox_log.Items.Add(msg.Message);
+		});
 	}
 }

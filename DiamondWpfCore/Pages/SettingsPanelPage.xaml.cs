@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Diamond.GUI.Pages;
 /// <summary>
@@ -22,5 +10,16 @@ public partial class SettingsPanelPage : Page
 	public SettingsPanelPage()
 	{
 		InitializeComponent();
+	}
+
+	private void Page_Loaded(object sender, RoutedEventArgs e)
+	{
+		passwordBox_token.Password = AppWindow.GetInstance().Bot.Token;
+	}
+
+	private void ButtonSave_Click(object sender, RoutedEventArgs e)
+	{
+		AppWindow.GetInstance().Bot.SetToken(passwordBox_token.Password);
+		MessageBox.Show("Bot token updated!");
 	}
 }

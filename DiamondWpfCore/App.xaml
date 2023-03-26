@@ -17,6 +17,7 @@
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_Image.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_Label.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_ListBox.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_PasswordBox.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_TabControl.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_TabItem.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_TextBlock.xaml"/>
