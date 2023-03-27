@@ -5,6 +5,7 @@ using System.Windows;
 
 using Diamond.API;
 using Diamond.API.Bot;
+using Diamond.API.SlashCommands._TESTING;
 using Diamond.API.SlashCommands.Discord;
 using Diamond.API.SlashCommands.Moderation;
 using Diamond.API.SlashCommands.NSFW;
@@ -40,7 +41,7 @@ namespace Diamond.GUI
 				SlashCommandsManager slashCommandsManager = new SlashCommandsManager(bot.Client);
 				await Task.Run(async () =>
 				{
-					await slashCommandsManager.AddSlashCommandsAsync(new AvatarCommand(), new EmojiCommand(), new CalculateCommand(), new RandomNumberCommand(), new DownloadEmojis(), new NsfwCommand(), new RandomPasswordCommand());
+					await slashCommandsManager.AddSlashCommandsAsync(new AvatarCommand(), new EmojiCommand(), new CalculateCommand(), new RandomNumberCommand(), new DownloadEmojis(), new NsfwCommand(), new RandomPasswordCommand(), new ModalTestCommand());
 				});
 			});
 
@@ -52,7 +53,7 @@ namespace Diamond.GUI
 
 			// Set frames
 			frame_main.Navigate(new MainPanelPage(bot));
-			frame_logs.Navigate(new LogsPanelPage());
+			frame_logs.Navigate(new LogsPanelPage(bot));
 			frame_remote.Navigate(new RemotePanelPage());
 			frame_settings.Navigate(new SettingsPanelPage(bot));
 		}

@@ -7,7 +7,7 @@
     <AssemblyName>Diamond.GUI</AssemblyName>
     <RootNamespace>Diamond.GUI</RootNamespace>
     <StartupObject>Diamond.GUI.App</StartupObject>
-    <ApplicationIcon>Diamond Icon 2.ico</ApplicationIcon>
+    <ApplicationIcon>Diamond Icon 2 (round).ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,10 +23,11 @@
     <None Remove="Resources\Emojis\Robot.png" />
     <None Remove="Resources\Emojis\Satellite.png" />
     <None Remove="Resources\Emojis\Scroll.png" />
+    <None Remove="Resources\Icon_%28round%29.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Diamond Icon 2.ico" />
+    <Content Include="Diamond Icon 2 (round).ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,6 +48,7 @@
     <Resource Include="Resources\Emojis\Scroll.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\Icon_(round).png" />
   </ItemGroup>
 
 </Project>

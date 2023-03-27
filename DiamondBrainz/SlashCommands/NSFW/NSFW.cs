@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 using Discord;
@@ -17,25 +18,25 @@ namespace Diamond.API.SlashCommands.NSFW
 		protected override void SlashCommandBuilder()
 		{
 			Name = "nsfw";
-			Description = "Send sus stuff to the channel.";
+			Description = "Shows you a sus image.";
 			Options = new List<SlashCommandOptionBuilder>()
 			{
 				new SlashCommandOptionBuilder()
 				{
 					Name = "type",
-					Description = "sus type.",
+					Description = "Choose if you want butties or boobies",
 					Type = ApplicationCommandOptionType.String,
 					Choices = new List<ApplicationCommandOptionChoiceProperties>()
 					{
 						new ApplicationCommandOptionChoiceProperties()
 						{
 							Name = "butts",
-							Value = NsfwType.Butt.ToString().ToLower(),
+							Value = "butts",
 						},
 						new ApplicationCommandOptionChoiceProperties()
 						{
 							Name = "boobs",
-							Value = NsfwType.Boobs.ToString().ToLower(),
+							Value = "boobs",
 						},
 					},
 				},
@@ -45,18 +46,23 @@ namespace Diamond.API.SlashCommands.NSFW
 		protected override async Task Action(SocketSlashCommand command, DiscordSocketClient client)
 		{
 			// Parse type
-			NsfwType nsfwType = (NsfwType)command.Data.Options.ElementAt(0).Value;
+			string nsfwType = (string)command.Data.Options.ElementAt(0).Value;
 
 			// Make the request and deserialize it
-			string request = RequestUtils.Get($"http://api.o{nsfwType.ToString().ToLower()}.ru/{nsfwType.ToString().ToLower()}/0/1/random");
+			string request = RequestUtils.Get($"http://api.o{nsfwType}.ru/{nsfwType}/0/1/random");
 			List<NsfwSchema> nsfwList = JsonConvert.DeserializeObject<List<NsfwSchema>>(request);
 			NsfwSchema nsfw = nsfwList[0];
 
+			string imageLink = $"http://media.o{nsfwType}.ru/{nsfw.Preview}";
+			byte[] imageData = new WebClient().DownloadData(imageLink);
+			int imageSize = imageData.Length;
+
 			// Create the embed
 			EmbedBuilder embed = new EmbedBuilder();
-			embed.WithAuthor("NSFW", TwemojiUtils.GetUrlFromEmoji("🔞"));
-			embed.AddField("**Model**", !string.IsNullOrEmpty(nsfw.Model) ? nsfw.Model : "Unknown model");
-			embed.WithImageUrl($"http://media.o{nsfwType.ToString().ToLower()}.ru/" + nsfw.Preview);
+			embed.WithAuthor("NSFW", TwemojiUtils.GetUrlFromEmoji("🍑"));
+			embed.AddField("🚺 Model", !string.IsNullOrEmpty(nsfw.Model) ? nsfw.Model : "Unknown model", true);
+			embed.AddField("📁 Image Size", Utils.ByteSizeToString(imageSize), true);
+			embed.WithImageUrl(imageLink);
 
 			// Reply
 			await command.RespondAsync(embed: embed.FinishEmbed(command));
@@ -69,12 +75,6 @@ namespace Diamond.API.SlashCommands.NSFW
 			[JsonProperty("model")] public string Model;
 			[JsonProperty("preview")] public string Preview;
 			[JsonProperty("rank")] public int Rank;
-		}
-
-		private enum NsfwType
-		{
-			Butt,
-			Boobs,
 		}
 	}
 }

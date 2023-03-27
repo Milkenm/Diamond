@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Discord;
 using Discord.WebSocket;
 
 using ScriptsLibV2.ScriptsLib.DiscordBot;
-using ScriptsLibV2.Util;
 
 namespace Diamond.API.SlashCommands.Tools
 {
@@ -23,38 +22,74 @@ namespace Diamond.API.SlashCommands.Tools
 					Name = "min",
 					Description = "The minimum range.",
 					Type = ApplicationCommandOptionType.Integer,
-					IsRequired = true,
+					MinValue = int.MinValue + 1,
+					MaxValue = int.MaxValue - 1,
 				},
 				new SlashCommandOptionBuilder()
 				{
 					Name = "max",
 					Description = "The maximum range.",
 					Type = ApplicationCommandOptionType.Integer,
-					IsRequired = true,
+					MinValue = int.MinValue + 1,
+					MaxValue = int.MaxValue - 1,
 				}
 			};
 		}
 
 		protected override async Task Action(SocketSlashCommand command, DiscordSocketClient client)
 		{
-			long min = (long)command.Data.Options.ElementAt(0).Value;
-			long max = (long)command.Data.Options.ElementAt(1).Value;
+			long min = 1, max = 6;
 
-			DefaultEmbed embed = new DefaultEmbed("Random Number Generator", "🎲", command);
+			foreach (SocketSlashCommandDataOption option in command.Data.Options)
+			{
+				switch (option.Name)
+				{
+					case "min": min = (long)option.Value; break;
+					case "max": max = (long)option.Value; break;
+				}
+			}
 
-			if (min < max)
+			bool swapped = false;
+			if (min > max)
 			{
-				long randomNumber = Utils.RandomLong(min, max);
-				embed.AddField("**Minimum**", min, true);
-				embed.AddField("**Maximum**", max, true);
-				embed.AddField("**Generated Number**", randomNumber.ToString());
+				swapped = true;
+				(min, max) = (max, min);
 			}
-			else
-			{
-				embed.WithDescription("**❌ Error:** Invalid numbers.");
-			}
+
+			DefaultEmbed embed = new DefaultEmbed("Random Number", "🎲", command);
+
+			long randomNumber = new Random().Next((int)min, (int)max);
+			embed.AddField("🔽 Minimum", min, true);
+			embed.AddField("🔼 Maximum", max, true);
+			embed.WithDescription($"`Generated Number:` {NumberToEmoji(randomNumber)}\n`Text:` {randomNumber}{(swapped ? "\n\n:warning: **__Note__:** 'min' and 'max' have been swapped because\nthe minimum value was larger than the maximum one." : "")}");
 
 			await embed.SendAsync();
+		}
+
+		private string NumberToEmoji(long number)
+		{
+			string numbersString = number.ToString();
+
+			Dictionary<string, string> replacementsMap = new Dictionary<string, string>()
+			{
+				{ "0", "0️⃣" },
+				{ "1", "1️⃣" },
+				{ "2", "2️⃣" },
+				{ "3", "3️⃣" },
+				{ "4", "4️⃣" },
+				{ "5", "5️⃣" },
+				{ "6", "6️⃣" },
+				{ "7", "7️⃣" },
+				{ "8", "8️⃣" },
+				{ "9", "9️⃣" },
+			};
+
+			foreach (KeyValuePair<string, string> pair in replacementsMap)
+			{
+				numbersString = numbersString.Replace(pair.Key, pair.Value);
+			}
+
+			return numbersString;
 		}
 	}
 }

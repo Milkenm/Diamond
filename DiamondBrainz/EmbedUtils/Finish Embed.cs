@@ -4,7 +4,7 @@ using Discord.WebSocket;
 
 namespace Diamond.API
 {
-	public static partial class Extensions
+	public static partial class EmbedUtils
 	{
 		public static Embed FinishEmbed(this EmbedBuilder embed, IUser user)
 		{

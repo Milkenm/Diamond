@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
@@ -10,11 +9,15 @@ using Discord;
 using Discord.WebSocket;
 
 using ScriptsLibV2.ScriptsLib.DiscordBot;
+using ScriptsLibV2.Util;
 
 namespace Diamond.API.SlashCommands.Moderation
 {
 	public class DownloadEmojis : ISlashCommand
 	{
+		private const int AverageEmojiSize = 20_000;
+		private const int AverageGifSize = 125_000;
+
 		protected override void SlashCommandBuilder()
 		{
 			Name = "downloademojis";
@@ -24,23 +27,39 @@ namespace Diamond.API.SlashCommands.Moderation
 		protected override async Task Action(SocketSlashCommand command, DiscordSocketClient client)
 		{
 			SocketGuild guild = client.GetGuild((ulong)command.GuildId);
-			IReadOnlyCollection<GuildEmote> emotes = guild.Emotes;
+			IReadOnlyCollection<GuildEmote> guildEmotes = guild.Emotes;
 
 			DefaultEmbed embed = GetBaseEmbed(command);
 
-			if (emotes.Count == 0)
+			if (guildEmotes.Count == 0)
 			{
-				embed.WithDescription("This server has no custom emojis.");
+				embed.WithDescription(":x: This server has no custom emojis.");
 				return;
 			}
 
+			int emojisCount = 0, gifsCount = 0;
+			foreach (GuildEmote guildEmote in guildEmotes)
+			{
+				if (guildEmote.Animated)
+				{
+					gifsCount++;
+				}
+				else
+				{
+					emojisCount++;
+				}
+			}
+
+			embed.AddField("🙂 Emojis", emojisCount, true);
+			embed.AddField("😼 GIF Emojis", gifsCount, true);
+			embed.AddField("📁 Expected Size", Utils.ByteSizeToString((double)((emojisCount * AverageEmojiSize) + (gifsCount * AverageGifSize))), true);
 			embed.WithDescription("Retrieving custom emojis. This may take a while...");
 			await embed.SendAsync();
 
 			Dictionary<GuildEmote, byte[]> emojisDictionary = new Dictionary<GuildEmote, byte[]>();
 			using (WebClient wc = new WebClient())
 			{
-				foreach (GuildEmote guildEmoji in emotes)
+				foreach (GuildEmote guildEmoji in guildEmotes)
 				{
 					byte[] emojiBytes = wc.DownloadData(new Uri(guildEmoji.Url));
 					emojisDictionary.Add(guildEmoji, emojiBytes);
@@ -52,14 +71,13 @@ namespace Diamond.API.SlashCommands.Moderation
 			{
 				foreach (KeyValuePair<GuildEmote, byte[]> emojiPair in emojisDictionary)
 				{
-					ZipArchiveEntry zipEntry = zipArchive.CreateEntry(emojiPair.Key.Name);
-					Debug.WriteLine("zipentry: " + zipEntry.Length);
+					string extension = emojiPair.Key.Animated ? ".gif" : ".png";
+					ZipArchiveEntry zipEntry = zipArchive.CreateEntry(emojiPair.Key.Name + extension);
 
 					using (MemoryStream emojiFileStream = new MemoryStream(emojiPair.Value))
 					using (Stream zipEntryStream = zipEntry.Open())
 					{
 						emojiFileStream.CopyTo(zipEntryStream);
-						Debug.WriteLine("zipentrystream: " + emojiFileStream.Length + " | " + emojiFileStream.Length);
 					}
 				}
 			}
@@ -69,8 +87,9 @@ namespace Diamond.API.SlashCommands.Moderation
 				messageProperties.Embeds = null;
 
 				DefaultEmbed embed = GetBaseEmbed(command);
-				embed.AddField("Count", emotes.Count, true);
-				embed.AddField("Size", compressedFileStream.Length, true);
+				embed.AddField("🙂 Emojis", emojisCount, true);
+				embed.AddField("😼 GIF Emojis", gifsCount, true);
+				embed.AddField("📁 Size", Utils.ByteSizeToString((double)compressedFileStream.Length), true);
 
 				messageProperties.Embed = embed.FinishEmbed(command);
 			}));

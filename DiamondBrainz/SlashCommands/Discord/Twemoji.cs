@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -36,8 +37,11 @@ namespace Diamond.API.SlashCommands.Discord
 
 			try
 			{
+				Debug.WriteLine(emoji);
 				string emojiUrl = TwemojiUtils.GetUrlFromEmoji(emoji);
 				embed.WithImageUrl(emojiUrl);
+				embed.AddField("🔢 Code", TwemojiUtils.GetEmojiCode(emoji), true);
+				embed.AddField("📏 Size", "72px²", true);
 			}
 			catch
 			{

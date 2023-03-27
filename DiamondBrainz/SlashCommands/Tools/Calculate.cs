@@ -35,12 +35,13 @@ namespace Diamond.API.SlashCommands.Tools
 
 			DefaultEmbed embed = new DefaultEmbed("Calculate", "🧮", command);
 
+			embed.Description = $"`Result:` {expression.Evaluate()}";
+
 			try
 			{
 				if (!expression.HasErrors())
 				{
-					embed.AddField("**Expression**", expression.ToString());
-					embed.AddField("**Result**", expression.Evaluate().ToString());
+					embed.AddField("🟰 Expression", expression.ParsedExpression.ToString(), true);
 				}
 			}
 			catch

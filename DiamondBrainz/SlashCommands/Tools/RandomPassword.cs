@@ -13,6 +13,8 @@ namespace Diamond.API.SlashCommands.Tools
 {
 	public class RandomPasswordCommand : ISlashCommand
 	{
+		private const int MaxPasswordSize = 32;
+
 		protected override void SlashCommandBuilder()
 		{
 			Name = "randompassword";
@@ -24,6 +26,8 @@ namespace Diamond.API.SlashCommands.Tools
 					Name = "size",
 					Description = "The amount of characters to generate for the password.",
 					Type = ApplicationCommandOptionType.Integer,
+					MinValue = 1,
+					MaxValue = 64,
 				},
 				new SlashCommandOptionBuilder()
 				{
@@ -98,14 +102,14 @@ namespace Diamond.API.SlashCommands.Tools
 				embed.AddField("🔣 Special Characters", BoolToString(useSpecialCharacters), true);
 			}
 			embed.AddField("#️⃣ Password Size", $"{password.Length} characters", true);
-			embed.WithFancyDescription($"||{password}||", "🔑 Here is your password 🔑", "Tip: You can copy the password without releaving it by selecting the black square and hitting CTRL+C.");
+			embed.WithDescription($"`Generated password:` ||{password}||\n\nℹ️ **__Tip__:** You can copy the password without releaving it by selecting the black square and hitting CTRL+C.");
 
 			await embed.SendAsync(true);
 		}
 
 		private string BoolToString(bool value)
 		{
-			return value ? "Yes" : "No";
+			return value ? "✅ Yes" : "❌ No";
 		}
 	}
 }
