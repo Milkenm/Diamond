@@ -31,6 +31,12 @@ namespace Diamond.API
 			Color = Discord.Color.DarkMagenta;
 		}
 
+		public DefaultEmbed WithFancyDescription(string content, string title = " ", string footer = " ")
+		{
+			WithDescription($"```{title}```\n{content}\n\n```{footer}```");
+			return this;
+		}
+
 		public async Task SendAsync(bool ephemeral = false)
 		{
 			await _command.RespondAsync(embed: this.Build(), ephemeral: ephemeral);

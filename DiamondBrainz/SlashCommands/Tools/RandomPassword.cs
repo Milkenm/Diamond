@@ -83,22 +83,22 @@ namespace Diamond.API.SlashCommands.Tools
 				}
 				if (useSpecialCharacters)
 				{
-					passwordCharacters.Append("|\\!\"@#£$§%&/{([])}=?'«»´`~^*+¨ºª-_.:,;€<>");
+					passwordCharacters.Append("!\"@#£$§%&/{([])}=?'«»´`~^+¨ºª-.:,;€<>");
 				}
 			}
 
 			string password = Utils.GeneratePassword(passwordSize, passwordCharacters.ToString());
 
 			DefaultEmbed embed = new DefaultEmbed("Password Generator", "🔐", command);
-			embed.AddField("Allowed Characters", passwordCharacters.ToString());
+			embed.AddField("🔡 Allowed Characters", passwordCharacters.ToString());
 			if (allowedCharacters.IsEmpty())
 			{
-				embed.AddField("Use Letters", BoolToString(useLetters), true);
-				embed.AddField("Use Numbers", BoolToString(useNumbers), true);
-				embed.AddField("Use Special Characters", BoolToString(useSpecialCharacters), true);
+				embed.AddField("🔤 Letters", BoolToString(useLetters), true);
+				embed.AddField("🔢 Numbers", BoolToString(useNumbers), true);
+				embed.AddField("🔣 Special Characters", BoolToString(useSpecialCharacters), true);
 			}
-			embed.AddField("Password Size", password.Length, true);
-			embed.WithDescription($"🔑 **__Here is your password__:**\n||{password}||\n**__Tip__:** You can copy the password without releaving it by selecting the black square and hitting CTRL+C.");
+			embed.AddField("#️⃣ Password Size", $"{password.Length} characters", true);
+			embed.WithFancyDescription($"||{password}||", "🔑 Here is your password 🔑", "Tip: You can copy the password without releaving it by selecting the black square and hitting CTRL+C.");
 
 			await embed.SendAsync(true);
 		}
