@@ -98,7 +98,7 @@ namespace Diamond.API.SlashCommands.Tools
 				embed.AddField("Use Special Characters", BoolToString(useSpecialCharacters), true);
 			}
 			embed.AddField("Password Size", password.Length, true);
-			embed.WithDescription($"🔑 **__Here is your password__:**\n||{password}||");
+			embed.WithDescription($"🔑 **__Here is your password__:**\n||{password}||\n**__Tip__:** You can copy the password without releaving it by selecting the black square and hitting CTRL+C.");
 
 			await embed.SendAsync(true);
 		}
