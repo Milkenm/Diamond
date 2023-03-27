@@ -10,7 +10,6 @@ using Discord;
 using Discord.WebSocket;
 
 using ScriptsLibV2.ScriptsLib.DiscordBot;
-using ScriptsLibV2.Util;
 
 namespace Diamond.API.SlashCommands.Moderation
 {
@@ -27,7 +26,7 @@ namespace Diamond.API.SlashCommands.Moderation
 			SocketGuild guild = client.GetGuild((ulong)command.GuildId);
 			IReadOnlyCollection<GuildEmote> emotes = guild.Emotes;
 
-			EmbedBuilder embed = GetBaseEmbed();
+			DefaultEmbed embed = GetBaseEmbed(command);
 
 			if (emotes.Count == 0)
 			{
@@ -36,7 +35,7 @@ namespace Diamond.API.SlashCommands.Moderation
 			}
 
 			embed.WithDescription("Retrieving custom emojis. This may take a while...");
-			await command.RespondAsync(embed: embed.FinishEmbed(command));
+			await embed.SendAsync();
 
 			Dictionary<GuildEmote, byte[]> emojisDictionary = new Dictionary<GuildEmote, byte[]>();
 			using (WebClient wc = new WebClient())
@@ -69,7 +68,7 @@ namespace Diamond.API.SlashCommands.Moderation
 			{
 				messageProperties.Embeds = null;
 
-				EmbedBuilder embed = GetBaseEmbed();
+				DefaultEmbed embed = GetBaseEmbed(command);
 				embed.AddField("Count", emotes.Count, true);
 				embed.AddField("Size", compressedFileStream.Length, true);
 
@@ -79,11 +78,9 @@ namespace Diamond.API.SlashCommands.Moderation
 			compressedFileStream.Close();
 		}
 
-		private EmbedBuilder GetBaseEmbed()
+		private DefaultEmbed GetBaseEmbed(SocketSlashCommand command)
 		{
-			EmbedBuilder embed = new EmbedBuilder();
-			embed.WithAuthor("Download Emojis", TwemojiUtils.GetUrlFromEmoji("😀"));
-			return embed;
+			return new DefaultEmbed("Download Emojis", "😀", command);
 		}
 	}
 }

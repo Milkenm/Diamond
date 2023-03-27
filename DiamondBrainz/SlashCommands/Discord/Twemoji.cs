@@ -32,8 +32,7 @@ namespace Diamond.API.SlashCommands.Discord
 		{
 			string emoji = (string)command.Data.Options.ElementAt(0).Value;
 
-			EmbedBuilder embed = new EmbedBuilder();
-			embed.WithAuthor("Twemoji", TwemojiUtils.GetUrlFromEmoji("😃"));
+			DefaultEmbed embed = new DefaultEmbed("Twemoji", "😃", command);
 
 			try
 			{
@@ -45,7 +44,7 @@ namespace Diamond.API.SlashCommands.Discord
 				embed.WithDescription($"No valid twemoji found for '{emoji}'.");
 			}
 
-			await command.RespondAsync(embed: embed.FinishEmbed(command)).ConfigureAwait(false);
+			await embed.SendAsync();
 		}
 	}
 }

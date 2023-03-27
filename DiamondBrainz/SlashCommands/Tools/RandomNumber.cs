@@ -40,8 +40,7 @@ namespace Diamond.API.SlashCommands.Tools
 			long min = (long)command.Data.Options.ElementAt(0).Value;
 			long max = (long)command.Data.Options.ElementAt(1).Value;
 
-			EmbedBuilder embed = new EmbedBuilder();
-			embed.WithAuthor("Random Number Generator", TwemojiUtils.GetUrlFromEmoji("🎲"));
+			DefaultEmbed embed = new DefaultEmbed("Random Number Generator", "🎲", command);
 
 			if (min < max)
 			{
@@ -55,7 +54,7 @@ namespace Diamond.API.SlashCommands.Tools
 				embed.WithDescription("**❌ Error:** Invalid numbers.");
 			}
 
-			await command.RespondAsync(embed: embed.FinishEmbed(command)).ConfigureAwait(false);
+			await embed.SendAsync();
 		}
 	}
 }

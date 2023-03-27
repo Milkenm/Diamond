@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -20,17 +21,10 @@ namespace Diamond.GUI
 	/// </summary>
 	public partial class AppWindow : Window
 	{
-		private SlashCommandsManager SlashCommandsManager;
-
-		private static AppWindow Instance;
-		public static AppWindow GetInstance() => Instance ?? new AppWindow();
 		public AppWindow()
 		{
 			InitializeComponent();
-			Instance = this;
 		}
-
-		public DBot Bot { get; private set; }
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
@@ -38,24 +32,29 @@ namespace Diamond.GUI
 			Database db = new Database(Utils.GetInstallationFolder() + @"\DiamondDB.db");
 
 			// Initialize bot
-			Bot = new DBot(db);
-			Bot.Initialize();
-			SlashCommandsManager = new SlashCommandsManager(Bot.Client);
+			DiamondBot bot = new DiamondBot(db);
+			bot.Initialize();
 			// Bot events
-			Bot.Client.Log += MainPanelPage.GetInstance().Log;
-			Bot.Client.Ready += Client_Ready;
+			bot.Client.Ready += new Func<Task>(async () =>
+			{
+				SlashCommandsManager slashCommandsManager = new SlashCommandsManager(bot.Client);
+				await Task.Run(async () =>
+				{
+					await slashCommandsManager.AddSlashCommandsAsync(new AvatarCommand(), new EmojiCommand(), new CalculateCommand(), new RandomNumberCommand(), new DownloadEmojis(), new NsfwCommand(), new RandomPasswordCommand());
+				});
+			});
 
 			// Windows events
 			Closing += new CancelEventHandler((se, ev) =>
 			{
-				Bot.StopAsync().GetAwaiter();
+				bot.StopAsync().GetAwaiter();
 			});
-		}
 
-		private async Task Client_Ready()
-		{
-			await SlashCommandsManager.RemoveAllCommands();
-			await SlashCommandsManager.AddSlashCommandsAsync(new AvatarCommand(), new EmojiCommand(), new CalculateCommand(), new RandomNumberCommand(), new DownloadEmojis(), new NsfwCommand());
+			// Set frames
+			frame_main.Navigate(new MainPanelPage(bot));
+			frame_logs.Navigate(new LogsPanelPage());
+			frame_remote.Navigate(new RemotePanelPage());
+			frame_settings.Navigate(new SettingsPanelPage(bot));
 		}
 	}
 }

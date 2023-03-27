@@ -13,7 +13,7 @@
 					<Image Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Robot.png" />
 				</TabItem.Header>
 				<Grid>
-					<Frame Style="{StaticResource FrameStyle}" Source="/Pages/MainPanelPage.xaml"/>
+					<Frame x:Name="frame_main" Style="{StaticResource FrameStyle}"/>
 				</Grid>
 			</TabItem>
 			<TabItem Style="{StaticResource TabItemStyle}" Height="65" Width="85">
@@ -21,7 +21,7 @@
 					<Image Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Scroll.png" />
 				</TabItem.Header>
 				<Grid>
-					<Frame Style="{StaticResource FrameStyle}" Source="/Pages/LogsPanelPage.xaml"/>
+					<Frame x:Name="frame_logs" Style="{StaticResource FrameStyle}"/>
 				</Grid>
 			</TabItem>
 			<TabItem Style="{StaticResource TabItemStyle}" Height="65" Width="85">
@@ -29,7 +29,7 @@
 					<Image Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Satellite.png" />
 				</TabItem.Header>
 				<Grid>
-					<Frame Style="{StaticResource FrameStyle}" Source="/Pages/RemotePanelPage.xaml"/>
+					<Frame x:Name="frame_remote" Style="{StaticResource FrameStyle}"/>
 				</Grid>
 			</TabItem>
 			<TabItem Style="{StaticResource TabItemStyle}" Height="65" Width="85">
@@ -37,7 +37,7 @@
 					<Image Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Gear.png" />
 				</TabItem.Header>
 				<Grid>
-					<Frame Style="{StaticResource FrameStyle}" Source="/Pages/SettingsPanelPage.xaml"/>
+					<Frame x:Name="frame_settings" Style="{StaticResource FrameStyle}"/>
 				</Grid>
 			</TabItem>
 		</TabControl>

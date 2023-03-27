@@ -7,6 +7,7 @@
     <AssemblyName>Diamond.GUI</AssemblyName>
     <RootNamespace>Diamond.GUI</RootNamespace>
     <StartupObject>Diamond.GUI.App</StartupObject>
+    <ApplicationIcon>Diamond Icon 2.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +23,10 @@
     <None Remove="Resources\Emojis\Robot.png" />
     <None Remove="Resources\Emojis\Satellite.png" />
     <None Remove="Resources\Emojis\Scroll.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Diamond Icon 2.ico" />
   </ItemGroup>
 
   <ItemGroup>

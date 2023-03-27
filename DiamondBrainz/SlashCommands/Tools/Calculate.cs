@@ -8,7 +8,6 @@ using Discord.WebSocket;
 using NCalc;
 
 using ScriptsLibV2.ScriptsLib.DiscordBot;
-using ScriptsLibV2.Util;
 
 namespace Diamond.API.SlashCommands.Tools
 {
@@ -34,8 +33,7 @@ namespace Diamond.API.SlashCommands.Tools
 			string expressionString = (string)command.Data.Options.ElementAt(0).Value;
 			Expression expression = new Expression(expressionString);
 
-			EmbedBuilder embed = new EmbedBuilder();
-			embed.WithAuthor("Calculate", TwemojiUtils.GetUrlFromEmoji("🧮"));
+			DefaultEmbed embed = new DefaultEmbed("Calculate", "🧮", command);
 
 			try
 			{
@@ -50,7 +48,7 @@ namespace Diamond.API.SlashCommands.Tools
 				embed.WithDescription("❌ **Error:** Invalid expression.");
 			}
 
-			await command.RespondAsync(embed: embed.FinishEmbed(command)).ConfigureAwait(false);
+			await embed.SendAsync();
 		}
 	}
 }

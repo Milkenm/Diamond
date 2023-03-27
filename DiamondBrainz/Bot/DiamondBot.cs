@@ -4,12 +4,12 @@ using ScriptsLibV2.Extensions;
 
 namespace Diamond.API.Bot
 {
-	public class DBot : DiscordBot
+	public class DiamondBot : DiscordBot
 	{
 		// Load config from database
 		private readonly BotSetting TokenSetting;
 
-		public DBot(Database db)
+		public DiamondBot(Database db)
 		{
 			TokenSetting = new BotSetting(db);
 			TokenSetting.LoadConfig("Token");
