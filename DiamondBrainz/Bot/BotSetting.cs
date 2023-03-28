@@ -25,27 +25,15 @@ namespace Diamond.API.Bot
 		private byte[] Value;
 
 		[Getter("Setting")]
-		public string GetSettingName()
-		{
-			return SettingName;
-		}
+		public string GetSettingName() => SettingName;
 
 		[Setter("Setting", typeof(string))]
-		public void SetSettingName(string settingName)
-		{
-			SettingName = settingName;
-		}
+		public void SetSettingName(string settingName) => SettingName = settingName;
 
 		[Getter("Value")]
-		public byte[] GetValue()
-		{
-			return Value;
-		}
+		public byte[] GetValue() => Value;
 
 		[Setter("Value", typeof(byte[]))]
-		public void SetValue(byte[] value)
-		{
-			Value = value;
-		}
+		public void SetValue(byte[] value) => Value = value;
 	}
 }

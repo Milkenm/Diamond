@@ -8,6 +8,7 @@
     <RootNamespace>Diamond.GUI</RootNamespace>
     <StartupObject>Diamond.GUI.App</StartupObject>
     <ApplicationIcon>Diamond Icon 2 (round).ico</ApplicationIcon>
+    <UseWindowsForms>True</UseWindowsForms>
   </PropertyGroup>
 
   <ItemGroup>

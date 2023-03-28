@@ -41,6 +41,7 @@ namespace Diamond.API.SlashCommands.NSFW
 					},
 				},
 			};
+			IsNsfw = true;
 		}
 
 		protected override async Task Action(SocketSlashCommand command, DiscordSocketClient client)
