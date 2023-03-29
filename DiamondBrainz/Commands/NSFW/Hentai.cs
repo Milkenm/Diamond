@@ -15,7 +15,7 @@ using ScriptsLibV2.Util;
 
 namespace Diamond.API.Commands
 {
-	public partial class NSFWModule : ModuleBase<SocketCommandContext>
+	/*public partial class NSFWModule : ModuleBase<SocketCommandContext>
 	{
 		[Name("Hentai"), Command("hentai"), Summary("Gives you a NSFW image"), RequireNsfw(ErrorMessage = "You must be on an NSFW channel to use this command.")]
 		public async Task Hentai()
@@ -32,5 +32,5 @@ namespace Diamond.API.Commands
 			// REPLY
 			await this.ReplyAsync(embed: embed.FinishEmbed(this.Context)).ConfigureAwait(false);
 		}
-	}
+	}*/
 }

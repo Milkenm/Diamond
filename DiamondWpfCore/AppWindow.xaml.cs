@@ -3,16 +3,13 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 
-using Diamond.API;
 using Diamond.API.Bot;
-using Diamond.API.SlashCommands._TESTING;
-using Diamond.API.SlashCommands.Discord;
-using Diamond.API.SlashCommands.Moderation;
-using Diamond.API.SlashCommands.NSFW;
-using Diamond.API.SlashCommands.Tools;
 using Diamond.GUI.Pages;
 
-using ScriptsLibV2;
+using Discord.Interactions;
+
+using Microsoft.Extensions.DependencyInjection;
+
 using ScriptsLibV2.Util;
 
 namespace Diamond.GUI
@@ -22,40 +19,44 @@ namespace Diamond.GUI
 	/// </summary>
 	public partial class AppWindow : Window
 	{
-		public AppWindow()
+		private readonly DiamondBot _bot;
+		private readonly IServiceProvider _serviceProvider;
+
+		public AppWindow(DiamondBot bot, IServiceProvider serviceProvier)
 		{
 			InitializeComponent();
+
+			_bot = bot;
+			_serviceProvider = serviceProvier;
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			// Initialize database
-			Database db = new Database(Utils.GetInstallationFolder() + @"\DiamondDB.db");
-
 			// Initialize bot
-			DiamondBot bot = new DiamondBot(db);
-			bot.Initialize();
-			// Bot events
-			bot.Client.Ready += new Func<Task>(async () =>
+			_bot.Initialize();
+			InteractionService interactionService = new InteractionService(_bot.Client.Rest);
+			_bot.Client.Ready += new Func<Task>(async () =>
 			{
-				SlashCommandsManager slashCommandsManager = new SlashCommandsManager(bot.Client);
-				await Task.Run(async () =>
-				{
-					await slashCommandsManager.AddSlashCommandsAsync(new AvatarCommand(), new EmojiCommand(), new CalculateCommand(), new RandomNumberCommand(), new DownloadEmojis(), new NsfwCommand(), new RandomPasswordCommand(), new ModalTestCommand());
-				});
+				await interactionService.AddModulesAsync(Utils.GetAssemblyByName("DiamondAPI"), _serviceProvider);
+				await interactionService.RegisterCommandsGloballyAsync();
 			});
+			_bot.Client.SlashCommandExecuted += async (socketInteraction) =>
+			{
+				SocketInteractionContext context = new SocketInteractionContext(_bot.Client, socketInteraction);
+				await interactionService.ExecuteCommandAsync(context, _serviceProvider);
+			};
 
 			// Windows events
 			Closing += new CancelEventHandler((se, ev) =>
 			{
-				bot.StopAsync().GetAwaiter();
+				_bot.StopAsync().GetAwaiter();
 			});
 
 			// Set frames
-			frame_main.Navigate(new MainPanelPage(bot));
-			frame_logs.Navigate(new LogsPanelPage(bot));
-			frame_remote.Navigate(new RemotePanelPage());
-			frame_settings.Navigate(new SettingsPanelPage(bot));
+			frame_main.Navigate(_serviceProvider.GetRequiredService<MainPanelPage>());
+			frame_logs.Navigate(_serviceProvider.GetRequiredService<LogsPanelPage>());
+			frame_remote.Navigate(_serviceProvider.GetRequiredService<RemotePanelPage>());
+			frame_settings.Navigate(_serviceProvider.GetRequiredService<SettingsPanelPage>());
 		}
 	}
 }

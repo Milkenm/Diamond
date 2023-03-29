@@ -13,7 +13,7 @@ public partial class LogsPanelPage : Page
 {
 	private readonly DiamondBot _bot;
 
-	public LogsPanelPage(DiamondBot bot )
+	public LogsPanelPage(DiamondBot bot)
 	{
 		InitializeComponent();
 

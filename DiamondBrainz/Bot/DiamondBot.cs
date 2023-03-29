@@ -1,58 +1,45 @@
-﻿using Discord;
+﻿using System.Threading.Tasks;
+
+using Discord;
 
 using ScriptsLibV2;
-
 using ScriptsLibV2.Extensions;
 
 namespace Diamond.API.Bot
 {
 	public class DiamondBot : DiscordBot
 	{
-		// Load config from database
-		private readonly BotSetting TokenSetting;
-		private readonly BotSetting CacheSetting;
+		private readonly AppSettings _appSettings;
+		private readonly AppFolder _appFolder;
 
-		private Folder folder;
-
-		public DiamondBot(Database db)
+		public DiamondBot(AppSettings appSettings, AppFolder appFolder)
 		{
-			TokenSetting = new BotSetting(db);
-			TokenSetting.LoadConfig("Token");
+			_appSettings = appSettings;
+			_appFolder = appFolder;
 
-			CacheSetting = new BotSetting(db);
-			CacheSetting.LoadConfig("CacheFolderPath");
+			LogLevel = LogSeverity.Info;
 
-			byte[] pathBytes = CacheSetting.GetValue();
-			if (pathBytes != null && !pathBytes.ToObject<string>().IsEmpty())
-			{
-				folder = new Folder(CacheSetting.GetValue().ToString());
-			}
-
-			// Set bot token
-			byte[] tokenBytes = TokenSetting.GetValue();
-			if (tokenBytes != null)
-			{
-				LogLevel = LogSeverity.Info;
-				Token = tokenBytes.ToObject<string>();
-			}
-
+			RefreshSettings(false).Wait();
 			Initialize();
 		}
 
-		public void SetToken(string token)
+		public async Task RefreshSettings(bool saveToDatabase = true)
 		{
-			Token = token;
-			TokenSetting.SetValue(token.ToByteArray());
-			TokenSetting.SaveToDatabase();
-		}
-
-		public Folder GetCacheFolder() => folder;
-
-		public void SetCacheFolder(string path)
-		{
-			if (!path.IsEmpty())
+			Token = _appSettings.Settings.Token;
+			if (base.IsRunning)
 			{
-				folder = new Folder(path);
+				await base.RestartAsync();
+			}
+
+			if (!_appSettings.Settings.CacheFolderPath.IsEmpty())
+			{
+				_appFolder.Path = _appSettings.Settings.CacheFolderPath;
+				_appFolder.CreateFolder();
+			}
+
+			if (saveToDatabase)
+			{
+				_appSettings.SaveToDatabase();
 			}
 		}
 	}

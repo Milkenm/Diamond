@@ -10,7 +10,7 @@ namespace Diamond.API.Commands
 {
 	public partial class ModerationModule : ModuleBase<SocketCommandContext>
 	{
-		[Name("Clear Messsages"), Command("clearmessages"), Alias("clear", "prune", "purge", "cm"), Summary("Deletes the lastest 'x' messages from the current channel.")]
+		/*[Name("Clear Messsages"), Command("clearmessages"), Alias("clear", "prune", "purge", "cm"), Summary("Deletes the lastest 'x' messages from the current channel.")]
 		public async Task ClearMessages(int amount, bool onlyBots = false, bool keepMessage = false)
 		{
 			amount++;
@@ -51,6 +51,6 @@ namespace Diamond.API.Commands
 				await Task.Delay(3000).ConfigureAwait(false);
 				await reply.DeleteAsync().ConfigureAwait(false);
 			}
-		}
+		}*/
 	}
 }

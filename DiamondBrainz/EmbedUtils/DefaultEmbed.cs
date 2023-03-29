@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Discord;
+using Discord.Interactions;
 using Discord.WebSocket;
 
 using ScriptsLibV2.Util;
@@ -9,13 +10,15 @@ namespace Diamond.API
 {
 	public class DefaultEmbed : EmbedBuilder
 	{
-		private readonly SocketSlashCommand _command;
+		private readonly SocketInteractionContext _context;
 
-		public DefaultEmbed(string title, string emoji, SocketSlashCommand command)
+		public DefaultEmbed(string title, string emoji, SocketSlashCommand cmd) { }
+
+		public DefaultEmbed(string title, string emoji, SocketInteractionContext context)
 		{
-			_command = command;
+			_context = context;
 
-			SocketGuildUser guildUser = (SocketGuildUser)_command.User;
+			SocketGuildUser guildUser = (SocketGuildUser)_context.User;
 
 			Author = new EmbedAuthorBuilder()
 			{
@@ -44,10 +47,25 @@ namespace Diamond.API
 			return this;
 		}
 
+		/// <summary>
+		/// Sends the embed.
+		/// </summary>
+		/// <param name="ephemeral">If the message should only be visible to the user. This is ignored if DeferAsync() was used.</param>
 		public async Task SendAsync(bool ephemeral = false)
 		{
 			/*AddField("‍", "```👤 𝐔𝐬𝐞𝐫 👤```"); // There are some "zero-width-joiner"s in there*/
-			await _command.RespondAsync(embed: this.Build(), ephemeral: ephemeral);
+
+			if (_context.Interaction.HasResponded)
+			{
+				await _context.Interaction.ModifyOriginalResponseAsync((messageProperties) =>
+				{
+					messageProperties.Embed = this.Build();
+				});
+			}
+			else
+			{
+				await _context.Interaction.RespondAsync(embed: Build(), ephemeral: ephemeral);
+			}
 		}
 	}
 }

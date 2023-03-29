@@ -9,6 +9,7 @@ using Diamond.API.Bot;
 using Discord;
 
 using ScriptsLibV2.Extensions;
+
 namespace Diamond.GUI.Pages;
 /// <summary>
 /// Interaction logic for MainPanelPage.xaml
@@ -21,12 +22,12 @@ public partial class MainPanelPage : Page
 	{
 		InitializeComponent();
 
-		this._bot = bot;
+		_bot = bot;
 	}
 
 	private void Page_Loaded(object sender, RoutedEventArgs e)
 	{
-		_bot.Client.Log += new Func<LogMessage, Task>( (logMessage) => this.Log(logMessage.Message));
+		_bot.Client.Log += new Func<LogMessage, Task>((logMessage) => this.Log(logMessage.Message));
 	}
 
 	private void ButtonStart_Click(object sender, RoutedEventArgs e)

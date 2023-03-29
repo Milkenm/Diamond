@@ -8,11 +8,10 @@ using Discord.WebSocket;
 
 using Newtonsoft.Json;
 
-using ScriptsLibV2.ScriptsLib.DiscordBot;
 using ScriptsLibV2.Util;
 
 namespace Diamond.API.SlashCommands.NSFW
-{
+{/*
 	public class NsfwCommand : ISlashCommand
 	{
 		protected override void SlashCommandBuilder()
@@ -59,14 +58,13 @@ namespace Diamond.API.SlashCommands.NSFW
 			int imageSize = imageData.Length;
 
 			// Create the embed
-			EmbedBuilder embed = new EmbedBuilder();
-			embed.WithAuthor("NSFW", TwemojiUtils.GetUrlFromEmoji("🍑"));
+			DefaultEmbed embed = new DefaultEmbed("NSFW", "🍑", command);
 			embed.AddField("🚺 Model", !string.IsNullOrEmpty(nsfw.Model) ? nsfw.Model : "Unknown model", true);
 			embed.AddField("📁 Image Size", Utils.ByteSizeToString(imageSize), true);
 			embed.WithImageUrl(imageLink);
 
 			// Reply
-			await command.RespondAsync(embed: embed.FinishEmbed(command));
+			await embed.SendAsync();
 		}
 
 		private class NsfwSchema
@@ -77,5 +75,5 @@ namespace Diamond.API.SlashCommands.NSFW
 			[JsonProperty("preview")] public string Preview;
 			[JsonProperty("rank")] public int Rank;
 		}
-	}
+	}*/
 }
