@@ -11,11 +11,13 @@
 	<Grid>
 		<Label Style="{StaticResource LabelStyle}" HorizontalAlignment="Left" Margin="10,10,0,0" Content="Bot Token" VerticalAlignment="Top"/>
 		<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_token" Margin="10,38,10,0" VerticalAlignment="Top" />
-		<Label Style="{StaticResource LabelStyle}" Content="Cache Folder" HorizontalAlignment="Left" Margin="10,92,0,0" VerticalAlignment="Top"/>
-		<TextBox Style="{StaticResource TextBoxStyle}" x:Name="textBox_cachePath" Margin="10,120,86,0" VerticalAlignment="Top" />
-		<Button Style="{StaticResource ButtonStyle}" Content="..." Margin="0,0,10,246" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="71" Click="ButtonCache_Click"/>
-		<Label Style="{StaticResource LabelStyle}" HorizontalAlignment="Left" Margin="10,175,0,0" Content="OpenAI API Key" VerticalAlignment="Top"/>
-		<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_openaiApiKey" Margin="10,203,10,0" VerticalAlignment="Top" />
+		<Label Style="{StaticResource LabelStyle}" Content="Cache Folder" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top"/>
+		<TextBox Style="{StaticResource TextBoxStyle}" x:Name="textBox_cachePath" Margin="10,118,86,0" VerticalAlignment="Top" />
+		<Button Style="{StaticResource ButtonStyle}" Content="..." Margin="0,0,10,248" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="71" Click="ButtonCache_Click"/>
+		<Label Style="{StaticResource LabelStyle}" HorizontalAlignment="Left" Margin="10,170,0,0" Content="OpenAI API Key" VerticalAlignment="Top"/>
+		<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_openaiApiKey" Margin="10,198,415,0" VerticalAlignment="Top" />
+		<Label Style="{StaticResource LabelStyle}" HorizontalAlignment="Left" Margin="499,170,0,0" Content="NightAPI API Key" VerticalAlignment="Top"/>
+		<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_nightapiApiKey" Margin="499,198,10,0" VerticalAlignment="Top" />
 		<Button Style="{StaticResource ButtonStyle}" Content="Save" Margin="0,0,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="71" Click="ButtonSave_Click"/>
 	</Grid>
 </Page>

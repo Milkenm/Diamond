@@ -42,5 +42,6 @@ namespace Diamond.API
         public string Token { get; set; } = string.Empty;
         public string CacheFolderPath { get; set; } = string.Empty;
         public string OpenaiApiKey { get; set; } = string.Empty;
+        public string NightapiApiKey { get; set; } = string.Empty;
     }
 }

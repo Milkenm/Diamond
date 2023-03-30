@@ -33,6 +33,7 @@ public partial class SettingsPanelPage : Page
 		passwordBox_token.Password = _appSettings.Settings.Token;
 		textBox_cachePath.Text = _appSettings.Settings.CacheFolderPath;
 		passwordBox_openaiApiKey.Password = _appSettings.Settings.OpenaiApiKey;
+		passwordBox_nightapiApiKey.Password = _appSettings.Settings.NightapiApiKey;
 	}
 
 	private void ButtonSave_Click(object sender, RoutedEventArgs e)
@@ -42,6 +43,7 @@ public partial class SettingsPanelPage : Page
 			_appSettings.Settings.Token = passwordBox_token.Password;
 			_appSettings.Settings.CacheFolderPath = textBox_cachePath.Text;
 			_appSettings.Settings.OpenaiApiKey = passwordBox_openaiApiKey.Password;
+			_appSettings.Settings.NightapiApiKey = passwordBox_nightapiApiKey.Password;
 
 			_bot.RefreshSettings().Wait();
 			MessageBox.Show("Bot settings updated!");
