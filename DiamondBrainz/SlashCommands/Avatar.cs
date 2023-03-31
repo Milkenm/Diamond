@@ -5,10 +5,10 @@ using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands
 {
-    public class AvatarCommand : InteractionModuleBase<SocketInteractionContext>
+    public class Avatar : InteractionModuleBase<SocketInteractionContext>
     {
         [SlashCommand("avatar", "[Hidden] Gets the avatar image of the selected user.")]
-        public async Task AvatarCmd(
+        public async Task AvatarCommand(
             [Summary("user", "The users whos roles you want to be listed")] IUser user,
             [Summary("size", "The size of the avatar image")] AvatarSize avatarSize = AvatarSize.x128,
             [Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false

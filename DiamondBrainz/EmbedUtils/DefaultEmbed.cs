@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 
 using Discord;
-using Discord.Interactions;
 using Discord.WebSocket;
 
 using ScriptsLibV2.Util;
@@ -10,11 +9,9 @@ namespace Diamond.API
 {
 	public class DefaultEmbed : EmbedBuilder
 	{
-		private readonly SocketInteractionContext _context;
+		private readonly IInteractionContext _context;
 
-		public DefaultEmbed(string title, string emoji, SocketSlashCommand cmd) { }
-
-		public DefaultEmbed(string title, string emoji, SocketInteractionContext context)
+		public DefaultEmbed(string title, string emoji, IInteractionContext context)
 		{
 			_context = context;
 
@@ -65,6 +62,22 @@ namespace Diamond.API
 			else
 			{
 				await _context.Interaction.RespondAsync(embed: Build(), ephemeral: ephemeral);
+			}
+		}
+
+		public async Task SendAsync(MessageComponent component, bool ephemeral = false)
+		{
+			if (_context.Interaction.HasResponded)
+			{
+				await _context.Interaction.ModifyOriginalResponseAsync((messageProperties) =>
+				{
+					messageProperties.Embed = this.Build();
+					messageProperties.Components = component;
+				});
+			}
+			else
+			{
+				await _context.Interaction.RespondAsync(embed: Build(), ephemeral: ephemeral, components: component);
 			}
 		}
 	}

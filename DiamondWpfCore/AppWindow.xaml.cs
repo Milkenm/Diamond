@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 
+using Diamond.API;
 using Diamond.API.Bot;
 using Diamond.GUI.Pages;
 
@@ -39,6 +40,20 @@ namespace Diamond.GUI
 			{
 				await interactionService.AddModulesAsync(Utils.GetAssemblyByName("DiamondAPI"), _serviceProvider);
 				await interactionService.RegisterCommandsGloballyAsync();
+				interactionService.SlashCommandExecuted += async (command, context, result) =>
+				{
+					if (!result.IsSuccess)
+					{
+						DefaultEmbed errorEmbed = new DefaultEmbed("error :(", "❌", context);
+						errorEmbed.AddField("Cause", result.ErrorReason);
+
+						await context.Interaction.ModifyOriginalResponseAsync((og) =>
+						{
+							og.Embed = errorEmbed.Build();
+
+						});
+					}
+				};
 			});
 			_bot.Client.SlashCommandExecuted += async (socketInteraction) =>
 			{

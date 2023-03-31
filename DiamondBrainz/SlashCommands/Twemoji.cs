@@ -7,10 +7,10 @@ using ScriptsLibV2.Util;
 
 namespace Diamond.API.SlashCommands
 {
-    public class TwemojiCommand : InteractionModuleBase<SocketInteractionContext>
+    public class Twemoji : InteractionModuleBase<SocketInteractionContext>
     {
         [SlashCommand("twemoji", "[Hidden] Gets the provided twemoji.")]
-        public async Task TwemojiCmd(
+        public async Task TwemojiCommand(
             [Summary("twemoji", "The twemoji to get.")] string twemoji,
             [Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
         )

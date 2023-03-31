@@ -6,10 +6,10 @@ using NCalc;
 
 namespace Diamond.API.SlashCommands
 {
-	public class CalculateCommand : InteractionModuleBase<SocketInteractionContext>
+	public class Calculate : InteractionModuleBase<SocketInteractionContext>
 	{
 		[SlashCommand("calculate", "[Hidden] Calculate the value of the math expression.")]
-		public async Task SlashCommandBuilder(
+		public async Task CalculateCommand(
 			[Summary("expression", "The math expression to calculate.")] string expressionString,
 			[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
 		)

@@ -25,7 +25,7 @@ namespace Diamond.API.SlashCommands
         }
 
         [SlashCommand("downloademojis", "[Hidden] Downloads the custom emojis from a server.")]
-        public async Task DownloadEmojisCmd(
+        public async Task DownloadEmojisCommand(
             [Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
         )
         {

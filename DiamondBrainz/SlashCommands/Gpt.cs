@@ -11,17 +11,17 @@ using ScriptsLibV2.Extensions;
 
 namespace Diamond.API.SlashCommands
 {
-    public class GptCommand : InteractionModuleBase<SocketInteractionContext>
+    public class Gpt : InteractionModuleBase<SocketInteractionContext>
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public GptCommand(IServiceProvider serviceProvider)
+        public Gpt(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
 
         [SlashCommand("gpt", "[Hidden] Ask something to ChatGPT-3.")]
-        public async Task GptCmd(
+        public async Task GptCommand(
             [Summary("prompt", "Your question.")] string prompt,
             [Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
         )

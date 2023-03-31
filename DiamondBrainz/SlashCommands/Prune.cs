@@ -6,10 +6,10 @@ using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands
 {
-	public class PruneCommand : InteractionModuleBase<SocketInteractionContext>
+	public class Prune : InteractionModuleBase<SocketInteractionContext>
 	{
 		[SlashCommand("prune", "Delete messages from a channel.")]
-		public async Task PruneCmd(
+		public async Task PruneCommand(
 			[Summary("amount", "The amount of messages to delete.")] int amount,
 			[Summary("only-delete-bot-messages", "Only delete messages from bots in the last \"amount\" messages.")] bool onlyDeleteBotMessages = false,
 			[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = true
