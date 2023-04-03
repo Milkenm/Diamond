@@ -9,7 +9,7 @@ namespace Diamond.API.SlashCommands
 	public class Calculate : InteractionModuleBase<SocketInteractionContext>
 	{
 		[SlashCommand("calculate", "[Hidden] Calculate the value of the math expression.")]
-		public async Task CalculateCommand(
+		public async Task CalculateCommandAsync(
 			[Summary("expression", "The math expression to calculate.")] string expressionString,
 			[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
 		)
@@ -18,7 +18,7 @@ namespace Diamond.API.SlashCommands
 
 			Expression expression = new Expression(expressionString);
 
-			DefaultEmbed embed = new DefaultEmbed("Calculate", "🧮", Context)
+			DefaultEmbed embed = new DefaultEmbed("Calculate", "🧮", Context.Interaction)
 			{
 				Description = $"`Result:` {expression.Evaluate()}",
 			};

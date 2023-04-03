@@ -8,7 +8,7 @@ namespace Diamond.API.SlashCommands
     public class Avatar : InteractionModuleBase<SocketInteractionContext>
     {
         [SlashCommand("avatar", "[Hidden] Gets the avatar image of the selected user.")]
-        public async Task AvatarCommand(
+        public async Task AvatarCommandAsync(
             [Summary("user", "The users whos roles you want to be listed")] IUser user,
             [Summary("size", "The size of the avatar image")] AvatarSize avatarSize = AvatarSize.x128,
             [Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
@@ -21,7 +21,7 @@ namespace Diamond.API.SlashCommands
             string avatar = user.GetAvatarUrl();
             avatar = avatar.Replace("?size=128", "?size=" + size);
 
-            DefaultEmbed embed = new DefaultEmbed("Avatar", "📸", Context);
+            DefaultEmbed embed = new DefaultEmbed("Avatar", "📸", Context.Interaction);
             embed.AddField("👤 User", user.Mention, true);
             embed.AddField("📏 Size", $"{size}px²", true);
             embed.WithImageUrl(avatar);

@@ -9,13 +9,13 @@ namespace Diamond.API
 {
 	public class DefaultEmbed : EmbedBuilder
 	{
-		private readonly IInteractionContext _context;
+		private readonly IDiscordInteraction _interaction = null;
 
-		public DefaultEmbed(string title, string emoji, IInteractionContext context)
+		public DefaultEmbed(string title, string emoji, IDiscordInteraction interaction)
 		{
-			_context = context;
+			_interaction = interaction;
 
-			SocketGuildUser guildUser = (SocketGuildUser)_context.User;
+			SocketGuildUser guildUser = (SocketGuildUser)_interaction.User;
 
 			Author = new EmbedAuthorBuilder()
 			{
@@ -38,11 +38,9 @@ namespace Diamond.API
 		/// <param name="title"></param>
 		/// <param name="footer"></param>
 		/// <returns></returns>
-		public DefaultEmbed WithFancyDescription(string content, string title = "📜 𝐂𝐨𝐦𝐦𝐚𝐧𝐝 𝐎𝐮𝐭𝐩𝐮𝐭 📜", string footer = "⚙️ 𝐂𝐨𝐦𝐦𝐚𝐧𝐝 𝐒𝐞𝐭𝐭𝐢𝐧𝐠𝐬 ⚙️")
-		{
+		public DefaultEmbed WithFancyDescription(string content, string title = "📜 𝐂𝐨𝐦𝐦𝐚𝐧𝐝 𝐎𝐮𝐭𝐩𝐮𝐭 📜", string footer = "⚙️ 𝐂𝐨𝐦𝐦𝐚𝐧𝐝 𝐒𝐞𝐭𝐭𝐢𝐧𝐠𝐬 ⚙️") =>
 			/*WithDescription($"```{title}```\n{content}\n\n```{footer}```\n‍"); // There is a "zero-width-joiner" at the end of this string*/
-			return this;
-		}
+			this;
 
 		/// <summary>
 		/// Sends the embed.
@@ -52,32 +50,32 @@ namespace Diamond.API
 		{
 			/*AddField("‍", "```👤 𝐔𝐬𝐞𝐫 👤```"); // There are some "zero-width-joiner"s in there*/
 
-			if (_context.Interaction.HasResponded)
+			if (_interaction.HasResponded)
 			{
-				await _context.Interaction.ModifyOriginalResponseAsync((messageProperties) =>
+				await _interaction.ModifyOriginalResponseAsync((messageProperties) =>
 				{
-					messageProperties.Embed = this.Build();
+					messageProperties.Embed = Build();
 				});
 			}
 			else
 			{
-				await _context.Interaction.RespondAsync(embed: Build(), ephemeral: ephemeral);
+				await _interaction.RespondAsync(embed: Build(), ephemeral: ephemeral);
 			}
 		}
 
 		public async Task SendAsync(MessageComponent component, bool ephemeral = false)
 		{
-			if (_context.Interaction.HasResponded)
+			if (_interaction.HasResponded)
 			{
-				await _context.Interaction.ModifyOriginalResponseAsync((messageProperties) =>
+				await _interaction.ModifyOriginalResponseAsync((messageProperties) =>
 				{
-					messageProperties.Embed = this.Build();
+					messageProperties.Embed = Build();
 					messageProperties.Components = component;
 				});
 			}
 			else
 			{
-				await _context.Interaction.RespondAsync(embed: Build(), ephemeral: ephemeral, components: component);
+				await _interaction.RespondAsync(embed: Build(), ephemeral: ephemeral, components: component);
 			}
 		}
 	}

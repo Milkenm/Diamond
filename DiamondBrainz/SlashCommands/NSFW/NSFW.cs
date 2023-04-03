@@ -14,7 +14,7 @@ public class Nsfw : InteractionModuleBase<SocketInteractionContext>
 {
 	[RequireNsfw]
 	[SlashCommand("nsfw", "Shows you a sus image.")]
-	public async Task NsfwCommand(
+	public async Task NsfwCommandAsync(
 		[Summary("type", "Choose if you want boobies or butties.")] NSFWType nsfwType,
 		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
 	)
@@ -34,7 +34,7 @@ public class Nsfw : InteractionModuleBase<SocketInteractionContext>
 		int imageSize = imageData.Length;
 
 		// Create the embed
-		DefaultEmbed embed = new DefaultEmbed("NSFW", "🍑", Context);
+		DefaultEmbed embed = new DefaultEmbed("NSFW", "🍑", Context.Interaction);
 		embed.AddField("🚺 Model", !string.IsNullOrEmpty(nsfw.Model) ? nsfw.Model : "Unknown model", true);
 		embed.AddField("📁 Image Size", Utils.ByteSizeToString(imageSize), true);
 		embed.WithImageUrl(imageLink);

@@ -1,4 +1,4 @@
-﻿using Diamond.API.APIs;
+﻿using Diamond.API.Data;
 using Diamond.API.Schems;
 
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +10,7 @@ using ScriptsLibV2.Util;
 
 internal class Program
 {
-	private static void Main(string[] args)
-	{
-		RefreshCsgoItems();
-	}
+	private static void Main(string[] args) => RefreshCsgoItems();
 
 	private static readonly List<string> _addedIds = new List<string>();
 	private static readonly List<CsgoRarity> _addedRarities = new List<CsgoRarity>();
@@ -22,7 +19,7 @@ internal class Program
 	{
 		if (GetItemsList(out CsgoItemsList? csgoItemsEurList, out CsgoItemsList? csgoItemsUsdList, out CsgoItemsList? csgoItemsBrlList) && csgoItemsEurList != null)
 		{
-			using (CsgoDatabase? database = new CsgoDatabase())
+			using (CsgoItemsContext? database = new CsgoItemsContext())
 			{
 				ClearDatabase(database);
 
@@ -54,14 +51,14 @@ internal class Program
 		}
 	}
 
-	private static void ClearDatabase(CsgoDatabase database)
+	private static void ClearDatabase(CsgoItemsContext database)
 	{
 		database.Database.ExecuteSqlRaw("DELETE FROM Prices");
 		database.Database.ExecuteSqlRaw("DELETE FROM Items");
 		database.Database.ExecuteSqlRaw("DELETE FROM Rarities");
 	}
 
-	private static void CreateItems(CsgoItemsList? csgoItemsEurList, CsgoItemsList? csgoItemsUsdList, CsgoItemsList? csgoItemsBrlList, CsgoDatabase database)
+	private static void CreateItems(CsgoItemsList? csgoItemsEurList, CsgoItemsList? csgoItemsUsdList, CsgoItemsList? csgoItemsBrlList, CsgoItemsContext database)
 	{
 		foreach (CsgoItemInfo item in csgoItemsEurList.ItemsList.Values)
 		{
@@ -94,7 +91,7 @@ internal class Program
 		database.SaveChanges();
 	}
 
-	private static void CreatePrices(CsgoItemsList? itemsEur, CsgoDatabase database, CsgoItemInfo item, CsgoItem addItem)
+	private static void CreatePrices(CsgoItemsList? itemsEur, CsgoItemsContext database, CsgoItemInfo item, CsgoItem addItem)
 	{
 		List<string> timesList = new List<string>() { "24_hours", "7_days", "30_days", "all_time", };
 		List<string> currenciesList = new List<string>() { "eur", "usd", "brl" };

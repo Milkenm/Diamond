@@ -11,7 +11,7 @@ namespace Diamond.API.SlashCommands
     public class RandomPassword : InteractionModuleBase<SocketInteractionContext>
     {
         [SlashCommand("randompassword", "[Hidden] Generates a random password.")]
-        public async Task RandomPasswordCommand(
+        public async Task RandomPasswordCommandAsync(
             [Summary("size", "The amount of characters to generate for the password.")][MinValue(1)][MaxValue(32)] int passwordSize = 16,
             [Summary("use-letters", "Include lower and uppercase letters from 'a' to 'z' (ignored if 'allowedcharacters' is set).")] bool useLetters = true,
             [Summary("use-numbers", "Include numbers from 0 to 9 (ignored if 'allowedcharacters' is set).")] bool useNumbers = true,
@@ -41,7 +41,7 @@ namespace Diamond.API.SlashCommands
 
             string password = Utils.GeneratePassword(passwordSize, passwordCharacters.ToString());
 
-            DefaultEmbed embed = new DefaultEmbed("Password Generator", "🔐", Context);
+            DefaultEmbed embed = new DefaultEmbed("Password Generator", "🔐", Context.Interaction);
             embed.AddField("🔡 Allowed Characters", passwordCharacters.ToString());
             if (allowedCharacters.IsEmpty())
             {

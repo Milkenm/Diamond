@@ -25,7 +25,7 @@ namespace Diamond.API.SlashCommands
         }
 
         [SlashCommand("downloademojis", "[Hidden] Downloads the custom emojis from a server.")]
-        public async Task DownloadEmojisCommand(
+        public async Task DownloadEmojisCommandAsync(
             [Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
         )
         {
@@ -34,7 +34,7 @@ namespace Diamond.API.SlashCommands
             SocketGuild guild = _bot.Client.GetGuild(Context.Guild.Id);
             IReadOnlyCollection<GuildEmote> guildEmotes = guild.Emotes;
 
-            DefaultEmbed embed = new DefaultEmbed("Download Emojis", "😀", Context);
+            DefaultEmbed embed = new DefaultEmbed("Download Emojis", "😀", Context.Interaction);
 
             if (guildEmotes.Count == 0)
             {

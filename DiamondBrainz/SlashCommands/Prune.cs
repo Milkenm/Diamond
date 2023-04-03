@@ -9,7 +9,7 @@ namespace Diamond.API.SlashCommands
 	public class Prune : InteractionModuleBase<SocketInteractionContext>
 	{
 		[SlashCommand("prune", "Delete messages from a channel.")]
-		public async Task PruneCommand(
+		public async Task PruneCommandAsync(
 			[Summary("amount", "The amount of messages to delete.")] int amount,
 			[Summary("only-delete-bot-messages", "Only delete messages from bots in the last \"amount\" messages.")] bool onlyDeleteBotMessages = false,
 			[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = true
@@ -19,7 +19,7 @@ namespace Diamond.API.SlashCommands
 
 			amount++;
 
-			DefaultEmbed embed = new DefaultEmbed("Prune", "🔥️", Context);
+			DefaultEmbed embed = new DefaultEmbed("Prune", "🔥️", Context.Interaction);
 
 			IUserMessage responseMessage = await GetOriginalResponseAsync();
 

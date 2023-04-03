@@ -44,13 +44,15 @@ namespace Diamond.GUI
 				{
 					if (!result.IsSuccess)
 					{
-						DefaultEmbed errorEmbed = new DefaultEmbed("error :(", "❌", context);
+						DefaultEmbed errorEmbed = new DefaultEmbed("Error", "🔥", context.Interaction)
+						{
+							Description = "Something bad happened... :(",
+						};
 						errorEmbed.AddField("Cause", result.ErrorReason);
 
 						await context.Interaction.ModifyOriginalResponseAsync((og) =>
 						{
 							og.Embed = errorEmbed.Build();
-
 						});
 					}
 				};

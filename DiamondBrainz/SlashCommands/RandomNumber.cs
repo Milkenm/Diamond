@@ -9,7 +9,7 @@ namespace Diamond.API.SlashCommands
     public class RandomNumber : InteractionModuleBase<SocketInteractionContext>
     {
         [SlashCommand("randomnumber", "[Public] Generates a random number between \"min\" and \"max\".")]
-        public async Task RandomNumberCommand(
+        public async Task RandomNumberCommandAsync(
             [Summary("min", "The minimum range.")][MinValue(int.MinValue + 1)][MaxValue(int.MaxValue - 1)] int min = 1,
             [Summary("max", "The maximum range.")][MinValue(int.MinValue + 1)][MaxValue(int.MaxValue - 1)] int max = 6,
             [Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = true
@@ -24,7 +24,7 @@ namespace Diamond.API.SlashCommands
                 (min, max) = (max, min);
             }
 
-            DefaultEmbed embed = new DefaultEmbed("Random Number", "🎲", Context);
+            DefaultEmbed embed = new DefaultEmbed("Random Number", "🎲", Context.Interaction);
 
             long randomNumber = new Random().Next(min, max);
             embed.AddField("🔽 Minimum", min, true);

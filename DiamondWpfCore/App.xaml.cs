@@ -1,15 +1,16 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 
 using Diamond.API;
 using Diamond.API.Bot;
+using Diamond.API.Data;
 using Diamond.GUI.Pages;
 
 using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using ScriptsLibV2;
 using ScriptsLibV2.Util;
 
 namespace Diamond.GUI
@@ -23,7 +24,7 @@ namespace Diamond.GUI
 
 		public App()
 		{
-			Database db = new Database(Utils.GetInstallationFolder() + @"\DiamondDB.db");
+			Database db = new Database(Path.Join(Utils.GetInstallationFolder() + @"\Data\DiamondDB.db"));
 
 			_serviceProvider = new ServiceCollection()
 				.AddSingleton(this)
@@ -38,6 +39,9 @@ namespace Diamond.GUI
 				.AddSingleton<LogsPanelPage>()
 				.AddSingleton<RemotePanelPage>()
 				.AddSingleton<SettingsPanelPage>()
+				.AddSingleton<DiamondContext>()
+				.AddSingleton<CsgoItemsContext>()
+				.AddSingleton<PollsContext>()
 				.BuildServiceProvider();
 		}
 

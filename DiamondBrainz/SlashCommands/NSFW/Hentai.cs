@@ -20,7 +20,7 @@ public class Hentai : InteractionModuleBase<SocketInteractionContext>
 
 	[RequireNsfw]
 	[SlashCommand("hentai", "Gives you a sus image in 2D.")]
-	public async Task HentaiCommand(
+	public async Task HentaiCommandAsync(
 		[Summary("type", "The sus type.")] HentaiType type = HentaiType.Classic,
 		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
 	)
@@ -47,7 +47,7 @@ public class Hentai : InteractionModuleBase<SocketInteractionContext>
 		NightApiResponse resp = JsonConvert.DeserializeObject<NightApiResponse>(response);
 
 		// Create the embed
-		DefaultEmbed embed = new DefaultEmbed("Hentai", "💮", Context);
+		DefaultEmbed embed = new DefaultEmbed("Hentai", "💮", Context.Interaction);
 		embed.WithImageUrl(resp.Content.Url);
 
 		// Reply

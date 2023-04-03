@@ -21,7 +21,7 @@ namespace Diamond.API.SlashCommands
         }
 
         [SlashCommand("gpt", "[Hidden] Ask something to ChatGPT-3.")]
-        public async Task GptCommand(
+        public async Task GptCommandAsync(
             [Summary("prompt", "Your question.")] string prompt,
             [Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
         )
@@ -30,7 +30,7 @@ namespace Diamond.API.SlashCommands
 
             string response = await GenerateContent(prompt);
 
-            DefaultEmbed embed = new DefaultEmbed("ChatGPT", "🗨️", Context);
+            DefaultEmbed embed = new DefaultEmbed("ChatGPT", "🗨️", Context.Interaction);
             if (!response.IsEmpty())
             {
                 embed.Description = response;

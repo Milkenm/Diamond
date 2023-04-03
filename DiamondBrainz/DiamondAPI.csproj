@@ -23,7 +23,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="DiamondDB.db">
+    <None Update="Data\CsgoItemsDB.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\DiamondDB.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\PollsDB.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
