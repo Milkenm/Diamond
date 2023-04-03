@@ -25,11 +25,16 @@ public partial class LogsPanelPage : Page
 
 	}
 
-	public async Task Log(LogMessage msg)
+	public async Task Log(string msg)
 	{
 		Dispatcher.Invoke(() =>
 		{
-			listBox_log.Items.Add(msg.Message);
+			listBox_log.Items.Add(msg);
 		});
+	}
+
+	public async Task Log(LogMessage msg)
+	{
+		await Log(msg.Message);
 	}
 }

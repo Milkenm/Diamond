@@ -9,6 +9,8 @@ namespace Diamond.API
 {
 	public class DefaultEmbed : EmbedBuilder
 	{
+		public MessageComponent Component { get; set; }
+
 		private readonly IDiscordInteraction _interaction = null;
 
 		public DefaultEmbed(string title, string emoji, IDiscordInteraction interaction)
@@ -46,37 +48,56 @@ namespace Diamond.API
 		/// Sends the embed.
 		/// </summary>
 		/// <param name="ephemeral">If the message should only be visible to the user. This is ignored if DeferAsync() was used.</param>
-		public async Task SendAsync(bool ephemeral = false)
+		public async Task<ulong> SendAsync(bool ephemeral = false, bool isFollowUp = false)
 		{
 			/*AddField("‍", "```👤 𝐔𝐬𝐞𝐫 👤```"); // There are some "zero-width-joiner"s in there*/
 
-			if (_interaction.HasResponded)
+			if (isFollowUp)
+			{
+				IUserMessage followUp = await _interaction.FollowupAsync(embed: Build(), ephemeral: ephemeral, components: Component);
+				return followUp.Id;
+			}
+			else if (_interaction.HasResponded)
 			{
 				await _interaction.ModifyOriginalResponseAsync((messageProperties) =>
 				{
 					messageProperties.Embed = Build();
+					if (this.Component != null)
+					{
+						messageProperties.Components = Component;
+					}
 				});
 			}
 			else
 			{
-				await _interaction.RespondAsync(embed: Build(), ephemeral: ephemeral);
+				if (this.Component != null)
+				{
+					await _interaction.RespondAsync(embed: Build(), ephemeral: ephemeral);
+				}
+				else
+				{
+					await _interaction.RespondAsync(embed: Build(), components: Component, ephemeral: ephemeral);
+				}
 			}
+			return (await _interaction.GetOriginalResponseAsync()).Id;
 		}
 
-		public async Task SendAsync(MessageComponent component, bool ephemeral = false)
+		public async Task<ulong> SendAsync(MessageComponent component, bool ephemeral = false)
 		{
+			this.Component = component;
 			if (_interaction.HasResponded)
 			{
 				await _interaction.ModifyOriginalResponseAsync((messageProperties) =>
 				{
 					messageProperties.Embed = Build();
-					messageProperties.Components = component;
+					messageProperties.Components = this.Component;
 				});
 			}
 			else
 			{
-				await _interaction.RespondAsync(embed: Build(), ephemeral: ephemeral, components: component);
+				await _interaction.RespondAsync(embed: Build(), ephemeral: ephemeral, components: this.Component);
 			}
+			return (await _interaction.GetOriginalResponseAsync()).Id;
 		}
 	}
 }

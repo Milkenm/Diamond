@@ -17,7 +17,7 @@ namespace Diamond.API.SlashCommands
 {
     public class DownloadEmojis : InteractionModuleBase<SocketInteractionContext>
     {
-        private DiamondBot _bot;
+        private readonly DiamondBot _bot;
 
         public DownloadEmojis(DiamondBot bot)
         {

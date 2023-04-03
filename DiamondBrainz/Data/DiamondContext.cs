@@ -12,14 +12,6 @@ public class DiamondContext : IDatabaseContext
 
 	public DiamondContext() : base(Path.Join(Utils.GetInstallationFolder(), @"\Data\DiamondDB.db")) { }
 
-	public class Poll
-	{
-		public long Id { get; set; }
-		public ulong DiscordMessageId { get; set; }
-		public string Title { get; set; }
-		public string Description { get; set; }
-	}
-
 	public class Setting
 	{
 		public long Id { get; set; }

@@ -53,6 +53,8 @@ public partial class MainPanelPage : Page
 
 	public async Task Log(object message)
 	{
+		if (message == null) return;
+
 		Dispatcher.Invoke(() =>
 		{
 			listBox_output.Items.Add(message.ToString());
