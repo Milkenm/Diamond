@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 
 using Microsoft.EntityFrameworkCore;
@@ -18,9 +19,14 @@ public class PollsContext : IDatabaseContext
 	{
 		public long Id { get; set; }
 		public ulong DiscordMessageId { get; set; }
+		public ulong DiscordUserId { get; set; }
 		public string Title { get; set; }
 		public string Description { get; set; }
-		public bool IsPublished { get; set; } = false;
+		public string ImageUrl { get; set; }
+		public string ThumbnailUrl { get; set; }
+		[DefaultValue(false)] public bool IsPublished { get; set; }
+		public long CreatedAt { get; set; }
+		public long UpdatedAt { get; set; }
 	}
 
 	public class PollOption
@@ -37,5 +43,6 @@ public class PollsContext : IDatabaseContext
 		public ulong UserId { get; set; }
 		public Poll Poll { get; set; }
 		public PollOption PollOption { get; set; }
+		public long VotedAt { get; set; }
 	}
 }

@@ -22,7 +22,7 @@ namespace Diamond.API
 			Author = new EmbedAuthorBuilder()
 			{
 				Name = title,
-				IconUrl = TwemojiUtils.GetUrlFromEmoji(emoji),
+				IconUrl = TwemojiUtils.GetUrlFromEmoji(Emoji.Parse(emoji).ToString()),
 			};
 			Footer = new EmbedFooterBuilder()
 			{

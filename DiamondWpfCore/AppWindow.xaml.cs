@@ -22,13 +22,15 @@ namespace Diamond.GUI
 	{
 		private readonly DiamondBot _bot;
 		private readonly IServiceProvider _serviceProvider;
+		private readonly AppSettings _appSettings;
 
-		public AppWindow(DiamondBot bot, IServiceProvider serviceProvier)
+		public AppWindow(DiamondBot bot, IServiceProvider serviceProvier, AppSettings settings)
 		{
 			InitializeComponent();
 
 			_bot = bot;
 			_serviceProvider = serviceProvier;
+			_appSettings = settings;
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -39,7 +41,14 @@ namespace Diamond.GUI
 			_bot.Client.Ready += new Func<Task>(async () =>
 			{
 				await interactionService.AddModulesAsync(Utils.GetAssemblyByName("DiamondAPI"), _serviceProvider);
-				await interactionService.RegisterCommandsGloballyAsync();
+				if (Utils.IsDebugEnabled() && _appSettings.Settings.DebugGuildId != null)
+				{
+					await interactionService.RegisterCommandsToGuildAsync((ulong)_appSettings.Settings.DebugGuildId);
+				}
+				else
+				{
+					await interactionService.RegisterCommandsGloballyAsync();
+				}
 				interactionService.SlashCommandExecuted += async (command, context, result) =>
 				{
 					if (!result.IsSuccess)
@@ -59,6 +68,9 @@ namespace Diamond.GUI
 			});
 			_bot.Client.SlashCommandExecuted += async (socketInteraction) =>
 			{
+				// Ignore debug channel if debug is disabled and ignore normal channels if debug is enabled
+				if ((socketInteraction.ChannelId == _appSettings.Settings.DebugChannelId && !Utils.IsDebugEnabled()) || (socketInteraction.ChannelId != _appSettings.Settings.DebugChannelId && Utils.IsDebugEnabled())) return;
+
 				SocketInteractionContext context = new SocketInteractionContext(_bot.Client, socketInteraction);
 				await interactionService.ExecuteCommandAsync(context, _serviceProvider);
 			};

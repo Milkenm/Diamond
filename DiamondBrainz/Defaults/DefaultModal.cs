@@ -24,9 +24,6 @@ public class DefaultModal : ModalBuilder
 
 	private async Task Client_ModalSubmitted(SocketModal modal)
 	{
-		await modal.DeferAsync();
-
-		Debug.WriteLine("MODAL SUBMITTED");
 		if (modal.Data.CustomId == CustomId)
 		{
 			ulong messageId = Convert.ToUInt64(modal.Data.CustomId.Split("-")[1]);

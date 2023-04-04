@@ -67,4 +67,31 @@ public class PublishedVoteEmbed : BaseVoteEmbed
 			return (ulong)_messageId;
 		}
 	}
+
+	public static async Task ButtonHandlerAsync(SocketMessageComponent messageComponent, PollsContext pollsDb)
+	{
+		string[] buttonData = messageComponent.Data.CustomId.Split("-");
+		string buttonName = buttonData[0];
+
+		ulong messageId = messageComponent.Message.Id;
+
+		Poll poll = VoteUtils.GetPollByMessageId(pollsDb, messageId);
+		if (poll == null)
+		{
+			return;
+		}
+
+		switch (buttonName)
+		{
+			case "button_vote":
+				{
+					await messageComponent.DeferLoadingAsync(true);
+
+					VoteEmbed voteEmbed = new VoteEmbed(messageComponent, pollsDb, poll, messageId, null);
+
+					await voteEmbed.SendAsync(true, true);
+					break;
+				}
+		}
+	}
 }

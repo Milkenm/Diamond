@@ -34,6 +34,8 @@ public partial class SettingsPanelPage : Page
 		textBox_cachePath.Text = _appSettings.Settings.CacheFolderPath;
 		passwordBox_openaiApiKey.Password = _appSettings.Settings.OpenaiApiKey;
 		passwordBox_nightapiApiKey.Password = _appSettings.Settings.NightapiApiKey;
+		textBox_debugGuildId.Text = _appSettings.Settings.DebugGuildId != null ? _appSettings.Settings.DebugGuildId.ToString() : string.Empty;
+		textBox_debugChannelId.Text = _appSettings.Settings.DebugChannelId != null ? _appSettings.Settings.DebugChannelId.ToString() : string.Empty;
 	}
 
 	private void ButtonSave_Click(object sender, RoutedEventArgs e)
@@ -44,6 +46,8 @@ public partial class SettingsPanelPage : Page
 			_appSettings.Settings.CacheFolderPath = textBox_cachePath.Text;
 			_appSettings.Settings.OpenaiApiKey = passwordBox_openaiApiKey.Password;
 			_appSettings.Settings.NightapiApiKey = passwordBox_nightapiApiKey.Password;
+			_appSettings.Settings.DebugGuildId = !textBox_debugGuildId.Text.IsEmpty() ? Convert.ToUInt64(textBox_debugGuildId.Text) : null;
+			_appSettings.Settings.DebugChannelId = !textBox_debugChannelId.Text.IsEmpty() ? Convert.ToUInt64(textBox_debugChannelId.Text) : null;
 
 			_bot.RefreshSettings().Wait();
 			MessageBox.Show("Bot settings updated!");

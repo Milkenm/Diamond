@@ -9,5 +9,13 @@ public abstract class BaseVoteEmbed : DefaultEmbed
 	{
 		Title = poll.Title;
 		Description = poll.Description;
+		if (poll.ImageUrl != null)
+		{
+			ImageUrl = poll.ImageUrl;
+		}
+		if (poll.ThumbnailUrl != null)
+		{
+			ThumbnailUrl = poll.ThumbnailUrl;
+		}
 	}
 }
