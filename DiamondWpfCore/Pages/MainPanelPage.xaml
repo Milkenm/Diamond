@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:Diamond.GUI.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="396" d:DesignWidth="909" Width="909" Height="396"
-      Title="Main" Loaded="Page_Loaded">
+      Title="Main">
 
 	<Grid>
 		<ListBox x:Name="listBox_output" Style="{StaticResource ListBoxStyle}" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="10,10,10,59"/>

@@ -25,11 +25,6 @@ public partial class MainPanelPage : Page
 		_bot = bot;
 	}
 
-	private void Page_Loaded(object sender, RoutedEventArgs e)
-	{
-		_bot.Client.Log += new Func<LogMessage, Task>((logMessage) => this.Log(logMessage.Message));
-	}
-
 	private void ButtonStart_Click(object sender, RoutedEventArgs e)
 	{
 		// Start

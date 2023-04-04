@@ -7,6 +7,7 @@ using Diamond.API;
 using Diamond.API.Bot;
 using Diamond.GUI.Pages;
 
+using Discord;
 using Discord.Interactions;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -74,6 +75,7 @@ namespace Diamond.GUI
 				SocketInteractionContext context = new SocketInteractionContext(_bot.Client, socketInteraction);
 				await interactionService.ExecuteCommandAsync(context, _serviceProvider);
 			};
+			_bot.Client.Log += new Func<LogMessage, Task>((logMessage) => _serviceProvider.GetRequiredService<MainPanelPage>().Log(logMessage.Message));
 
 			// Windows events
 			Closing += new CancelEventHandler((se, ev) =>
