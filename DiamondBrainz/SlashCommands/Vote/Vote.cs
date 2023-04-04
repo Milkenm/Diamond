@@ -59,6 +59,8 @@ public class Vote : InteractionModuleBase<SocketInteractionContext>
 
 		ulong messageId = messageComponent.Message.Id;
 		long? selectedOptionId = null;
+
+		string buttonName = buttonData[0];
 		if (buttonData.Length == 2)
 		{
 			messageId = Convert.ToUInt64(buttonData[1]);
@@ -70,13 +72,12 @@ public class Vote : InteractionModuleBase<SocketInteractionContext>
 		}
 
 		Poll poll = VoteUtils.GetPollByMessageId(_pollsDb, messageId);
-
 		if (poll == null)
 		{
 			return;
 		}
 
-		switch (messageComponent.Data.CustomId.Split("-")[0])
+		switch (buttonName)
 		{
 			case "button_edit":
 				{
@@ -88,18 +89,10 @@ public class Vote : InteractionModuleBase<SocketInteractionContext>
 						poll.Description = fieldsMap["field_description"];
 						_pollsDb.SaveChanges();
 
-						try
-						{
-							await UpdateInteractionAsync(poll, modal, messageId);
-						}
-						catch { }
+						await UpdateInteractionAsync(poll, modal, messageId);
 					});
 
-					try
-					{
-						await messageComponent.RespondWithModalAsync(editModal.Build());
-					}
-					catch { }
+					await messageComponent.RespondWithModalAsync(editModal.Build());
 					break;
 				}
 			case "button_add":

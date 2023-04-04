@@ -4,6 +4,8 @@ using Diamond.API.Data;
 
 using Discord;
 
+using ScriptsLibV2.Extensions;
+
 using static Diamond.API.Data.PollsContext;
 
 namespace Diamond.API.SlashCommands.Vote.Embeds;
@@ -33,6 +35,8 @@ public class VoteEmbed : BaseVoteEmbed
 			if (optionId != null && optionId == pollOption.Id)
 			{
 				selectMenuOption.IsDefault = true;
+				// Add selected option as a field
+				AddField("Your vote", $"**{pollOption.Name}**{(!pollOption.Description.IsEmpty() ? $"\n{pollOption.Description}" : "")}", true);
 			}
 			selectMenu.AddOption(selectMenuOption);
 		}
