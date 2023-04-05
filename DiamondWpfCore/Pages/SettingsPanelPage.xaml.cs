@@ -31,7 +31,7 @@ public partial class SettingsPanelPage : Page
 	private void Page_Loaded(object sender, RoutedEventArgs e)
 	{
 		passwordBox_token.Password = _appSettings.Settings.Token;
-		textBox_cachePath.Text = _appSettings.Settings.CacheFolderPath;
+		textBox_dataFolderPath.Text = _appSettings.Settings.CacheFolderPath;
 		passwordBox_openaiApiKey.Password = _appSettings.Settings.OpenaiApiKey;
 		passwordBox_nightapiApiKey.Password = _appSettings.Settings.NightapiApiKey;
 		textBox_debugGuildId.Text = _appSettings.Settings.DebugGuildId != null ? _appSettings.Settings.DebugGuildId.ToString() : string.Empty;
@@ -40,27 +40,26 @@ public partial class SettingsPanelPage : Page
 
 	private void ButtonSave_Click(object sender, RoutedEventArgs e)
 	{
-		if (!passwordBox_token.Password.IsEmpty())
-		{
-			_appSettings.Settings.Token = passwordBox_token.Password;
-			_appSettings.Settings.CacheFolderPath = textBox_cachePath.Text;
-			_appSettings.Settings.OpenaiApiKey = passwordBox_openaiApiKey.Password;
-			_appSettings.Settings.NightapiApiKey = passwordBox_nightapiApiKey.Password;
-			_appSettings.Settings.DebugGuildId = !textBox_debugGuildId.Text.IsEmpty() ? Convert.ToUInt64(textBox_debugGuildId.Text) : null;
-			_appSettings.Settings.DebugChannelId = !textBox_debugChannelId.Text.IsEmpty() ? Convert.ToUInt64(textBox_debugChannelId.Text) : null;
+		if (passwordBox_token.Password.IsEmpty()) return;
 
-			_bot.RefreshSettings().Wait();
-			MessageBox.Show("Bot settings updated!");
-		}
+		_appSettings.Settings.Token = passwordBox_token.Password;
+		_appSettings.Settings.CacheFolderPath = textBox_dataFolderPath.Text;
+		_appSettings.Settings.OpenaiApiKey = passwordBox_openaiApiKey.Password;
+		_appSettings.Settings.NightapiApiKey = passwordBox_nightapiApiKey.Password;
+		_appSettings.Settings.DebugGuildId = !textBox_debugGuildId.Text.IsEmpty() ? Convert.ToUInt64(textBox_debugGuildId.Text) : null;
+		_appSettings.Settings.DebugChannelId = !textBox_debugChannelId.Text.IsEmpty() ? Convert.ToUInt64(textBox_debugChannelId.Text) : null;
+
+		_bot.RefreshSettings().Wait();
+		MessageBox.Show("Bot settings updated!");
 	}
 
 	private void ButtonCache_Click(object sender, RoutedEventArgs e)
 	{
 		FolderBrowserDialog folderDialog = new FolderBrowserDialog();
 		DialogResult result = folderDialog.ShowDialog();
-		if (result == DialogResult.OK && textBox_cachePath.Text != folderDialog.SelectedPath)
+		if (result == DialogResult.OK && textBox_dataFolderPath.Text != folderDialog.SelectedPath)
 		{
-			textBox_cachePath.Text = folderDialog.SelectedPath;
+			textBox_dataFolderPath.Text = folderDialog.SelectedPath;
 		}
 	}
 }

@@ -43,7 +43,7 @@ public class PublishedVoteEmbed : BaseVoteEmbed
 		ComponentBuilder builder = new ComponentBuilder();
 		builder.WithButton(new ButtonBuilder("Vote", "button_vote", ButtonStyle.Primary));
 
-		base.Component = builder.Build();
+		Component = builder.Build();
 	}
 
 	public async Task<ulong> SendAsync()
@@ -62,7 +62,7 @@ public class PublishedVoteEmbed : BaseVoteEmbed
 			await channel.ModifyMessageAsync((ulong)_messageId, (msg) =>
 			{
 				msg.Embed = embed;
-				msg.Components = base.Component;
+				msg.Components = Component;
 			});
 			return (ulong)_messageId;
 		}

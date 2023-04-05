@@ -26,9 +26,9 @@ namespace Diamond.API.Bot
 		public async Task RefreshSettings(bool saveToDatabase = true)
 		{
 			Token = _appSettings.Settings.Token;
-			if (base.IsRunning)
+			if (IsRunning)
 			{
-				await base.RestartAsync();
+				await RestartAsync();
 			}
 
 			if (!_appSettings.Settings.CacheFolderPath.IsEmpty())

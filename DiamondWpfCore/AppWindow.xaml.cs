@@ -5,6 +5,7 @@ using System.Windows;
 
 using Diamond.API;
 using Diamond.API.Bot;
+using Diamond.API.Stuff;
 using Diamond.GUI.Pages;
 
 using Discord;
@@ -36,6 +37,15 @@ namespace Diamond.GUI
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
+			MainPanelPage mainPanel = _serviceProvider.GetRequiredService<MainPanelPage>();
+
+			// Load csgo items
+			mainPanel.LogAsync("Loading CS:GO items...").GetAwaiter();
+			_serviceProvider.GetRequiredService<CsgoBackpack>().LoadItems().GetAwaiter().OnCompleted(async () =>
+			{
+				await mainPanel.LogAsync("CS:GO items loaded!");
+			});
+
 			// Initialize bot
 			_bot.Initialize();
 			InteractionService interactionService = new InteractionService(_bot.Client.Rest);
@@ -75,7 +85,7 @@ namespace Diamond.GUI
 				SocketInteractionContext context = new SocketInteractionContext(_bot.Client, socketInteraction);
 				await interactionService.ExecuteCommandAsync(context, _serviceProvider);
 			};
-			_bot.Client.Log += new Func<LogMessage, Task>((logMessage) => _serviceProvider.GetRequiredService<MainPanelPage>().Log(logMessage.Message));
+			_bot.Client.Log += new Func<LogMessage, Task>((logMessage) => _serviceProvider.GetRequiredService<MainPanelPage>().LogAsync(logMessage.Message));
 
 			// Windows events
 			Closing += new CancelEventHandler((se, ev) =>
@@ -84,7 +94,7 @@ namespace Diamond.GUI
 			});
 
 			// Set frames
-			frame_main.Navigate(_serviceProvider.GetRequiredService<MainPanelPage>());
+			frame_main.Navigate(mainPanel);
 			frame_logs.Navigate(_serviceProvider.GetRequiredService<LogsPanelPage>());
 			frame_remote.Navigate(_serviceProvider.GetRequiredService<RemotePanelPage>());
 			frame_settings.Navigate(_serviceProvider.GetRequiredService<SettingsPanelPage>());

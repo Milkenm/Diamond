@@ -46,7 +46,7 @@ public partial class MainPanelPage : Page
 		}
 	}
 
-	public async Task Log(object message)
+	public async Task LogAsync(object message)
 	{
 		if (message == null) return;
 

@@ -5,6 +5,7 @@ using System.Windows;
 using Diamond.API;
 using Diamond.API.Bot;
 using Diamond.API.Data;
+using Diamond.API.Stuff;
 using Diamond.GUI.Pages;
 
 using Discord.WebSocket;
@@ -42,6 +43,7 @@ namespace Diamond.GUI
 				.AddSingleton<DiamondContext>()
 				.AddSingleton<CsgoItemsContext>()
 				.AddSingleton<PollsContext>()
+				.AddSingleton<CsgoBackpack>()
 				.BuildServiceProvider();
 		}
 

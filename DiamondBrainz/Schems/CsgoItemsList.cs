@@ -24,6 +24,7 @@ namespace Diamond.API.Schems
 		[JsonProperty("rarity")] public string Rarity { get; set; }
 		[JsonProperty("rarity_color")] public string RarityHexColor { get; set; }
 		[JsonProperty("price")] public Dictionary<string, CsgoItemPriceInfo> Price { get; set; }
+		[JsonProperty("first_sale_date")] public long FirstSaleDate { get; set; }
 	}
 
 	public class CsgoItemPriceInfo

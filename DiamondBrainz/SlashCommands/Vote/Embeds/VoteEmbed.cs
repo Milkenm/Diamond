@@ -54,7 +54,7 @@ public class VoteEmbed : BaseVoteEmbed
 			.WithSelectMenu(selectMenu)
 			.WithButton(new ButtonBuilder("Submit Vote", $"button_submitVote-{optionId}-{messageId}", ButtonStyle.Success, isDisabled: optionId == null))
 			.WithButton(new ButtonBuilder("Cancel", $"button_cancelVote-{optionId}-{messageId}", ButtonStyle.Secondary));
-		base.Component = builder.Build();
+		Component = builder.Build();
 	}
 
 	public static async Task SelectMenuHandlerAsync(SocketMessageComponent menu, PollsContext pollsDb, DiscordSocketClient client)

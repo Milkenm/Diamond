@@ -42,7 +42,7 @@ public class EditorVoteEmbed : BaseVoteEmbed
 			builder.WithSelectMenu(selectMenu);
 		}
 
-		base.Component = builder.Build();
+		Component = builder.Build();
 	}
 
 	public static async Task SelectMenuHandlerAsync(SocketMessageComponent messageComponent, PollsContext pollsDb, DiscordSocketClient client)

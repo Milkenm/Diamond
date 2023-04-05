@@ -14,7 +14,7 @@ namespace Diamond.API
 		{
 			_serviceProvider = serviceProvider;
 
-			base.Path = _serviceProvider.GetRequiredService<AppSettings>().Settings.CacheFolderPath;
+			Path = _serviceProvider.GetRequiredService<AppSettings>().Settings.CacheFolderPath;
 		}
 	}
 }
