@@ -19,7 +19,7 @@ namespace Diamond.API.SlashCommands
 
 			amount++;
 
-			DefaultEmbed embed = new DefaultEmbed("Prune", "🔥️", Context.Interaction);
+			DefaultEmbed embed = new DefaultEmbed("Prune", "🔥", Context.Interaction);
 
 			IUserMessage responseMessage = await GetOriginalResponseAsync();
 
