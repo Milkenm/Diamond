@@ -1,10 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using Discord;
-using Discord.Commands;
-
-using ScriptsLibV2.Util;
+﻿using Discord.Commands;
 
 namespace Diamond.API.Commands
 {

@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 
+using Diamond.API.Data;
+
 using Discord.Interactions;
 
 using Newtonsoft.Json;
@@ -11,11 +13,11 @@ namespace Diamond.API.SlashCommands.NSFW;
 
 public class Hentai : InteractionModuleBase<SocketInteractionContext>
 {
-	private readonly AppSettings _appSettings;
+	private readonly DiamondDatabase _database;
 
-	public Hentai(AppSettings appSettings)
+	public Hentai(DiamondDatabase database)
 	{
-		_appSettings = appSettings;
+		_database = database;
 	}
 
 	[RequireNsfw]
@@ -41,7 +43,7 @@ public class Hentai : InteractionModuleBase<SocketInteractionContext>
 		// Request
 		WebHeaderCollection headers = new WebHeaderCollection
 		{
-			{ "authorization", _appSettings.Settings.NightapiApiKey }
+			{ "authorization", Utils.GetSetting(_database ,"NightapiApiKey")}
 		};
 		string response = RequestUtils.Get($"https://api.night-api.com/images/nsfw/{hentaiType}", headers);
 		NightApiResponse resp = JsonConvert.DeserializeObject<NightApiResponse>(response);

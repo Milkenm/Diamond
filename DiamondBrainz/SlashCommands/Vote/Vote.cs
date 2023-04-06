@@ -8,34 +8,32 @@ using Diamond.API.SlashCommands.Vote.Embeds;
 using Discord.Interactions;
 using Discord.WebSocket;
 
-using static Diamond.API.Data.PollsContext;
-
 namespace Diamond.API.SlashCommands.Vote;
 
 public class Vote : InteractionModuleBase<SocketInteractionContext>
 {
 	private readonly DiamondBot _bot;
-	private readonly PollsContext _pollsDb;
+	private readonly DiamondDatabase _database;
 
 	private static bool _initializedEvents = false;
 
-	public Vote(DiamondBot bot, PollsContext pollsDb)
+	public Vote(DiamondBot bot, DiamondDatabase database)
 	{
 		_bot = bot;
-		_pollsDb = pollsDb;
+		_database = database;
 
 		if (!_initializedEvents)
 		{
 			_bot.Client.SelectMenuExecuted += new Func<SocketMessageComponent, Task>(async (menu) =>
 			{
-				EditorVoteEmbed.SelectMenuHandlerAsync(menu, _pollsDb, _bot.Client).GetAwaiter();
-				VoteEmbed.SelectMenuHandlerAsync(menu, _pollsDb, _bot.Client).GetAwaiter();
+				EditorVoteEmbed.SelectMenuHandlerAsync(menu, _database, _bot.Client).GetAwaiter();
+				VoteEmbed.SelectMenuHandlerAsync(menu, _database, _bot.Client).GetAwaiter();
 			});
 			_bot.Client.ButtonExecuted += new Func<SocketMessageComponent, Task>((button) =>
 			{
-				EditorVoteEmbed.ButtonHandlerAsync(button, _bot.Client, _pollsDb).GetAwaiter();
-				PublishedVoteEmbed.ButtonHandlerAsync(button, _pollsDb).GetAwaiter();
-				VoteEmbed.ButtonHandlerAsync(button, _pollsDb, _bot.Client).GetAwaiter();
+				EditorVoteEmbed.ButtonHandlerAsync(button, _bot.Client, _database).GetAwaiter();
+				PublishedVoteEmbed.ButtonHandlerAsync(button, _database).GetAwaiter();
+				VoteEmbed.ButtonHandlerAsync(button, _database, _bot.Client).GetAwaiter();
 
 				return Task.CompletedTask;
 			});
@@ -57,7 +55,7 @@ public class Vote : InteractionModuleBase<SocketInteractionContext>
 
 		ulong deferId = (await GetOriginalResponseAsync()).Id;
 
-		await new EditorVoteEmbed(Context.Interaction, _pollsDb, poll, deferId).SendAsync(true);
+		await new EditorVoteEmbed(Context.Interaction, _database, poll, deferId).SendAsync(true);
 	}
 
 	private async Task<Poll> CreatePollAsync(string pollTitle, string pollDescription, string pollImageUrl, string pollThumbnailUrl)
@@ -74,8 +72,8 @@ public class Vote : InteractionModuleBase<SocketInteractionContext>
 			UpdatedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
 		};
 
-		_pollsDb.Add(newPoll);
-		await _pollsDb.SaveChangesAsync();
+		_database.Add(newPoll);
+		await _database.SaveChangesAsync();
 
 		return newPoll;
 	}

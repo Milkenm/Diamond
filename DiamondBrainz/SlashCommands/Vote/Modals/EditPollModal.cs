@@ -1,9 +1,8 @@
-﻿using Diamond.API.EmbedUtils;
+﻿using Diamond.API.Data;
+using Diamond.API.EmbedUtils;
 
 using Discord;
 using Discord.WebSocket;
-
-using static Diamond.API.Data.PollsContext;
 
 namespace Diamond.API.SlashCommands.Vote.Modals;
 public class EditPollModal : DefaultModal

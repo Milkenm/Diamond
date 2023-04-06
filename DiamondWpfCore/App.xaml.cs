@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Windows;
 
 using Diamond.API;
@@ -12,8 +11,6 @@ using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using ScriptsLibV2.Util;
-
 namespace Diamond.GUI
 {
 	/// <summary>
@@ -25,13 +22,8 @@ namespace Diamond.GUI
 
 		public App()
 		{
-			Database db = new Database(Path.Join(Utils.GetInstallationFolder() + @"\Data\DiamondDB.db"));
-
 			_serviceProvider = new ServiceCollection()
 				.AddSingleton(this)
-				.AddSingleton(db)
-				.AddSingleton<AppSettings>()
-				.AddSingleton<AppFolder>()
 				.AddSingleton<DiamondBot>()
 				.AddSingleton<AppWindow>()
 				.AddSingleton<OpenAIAPI>()
@@ -40,9 +32,7 @@ namespace Diamond.GUI
 				.AddSingleton<LogsPanelPage>()
 				.AddSingleton<RemotePanelPage>()
 				.AddSingleton<SettingsPanelPage>()
-				.AddSingleton<DiamondContext>()
-				.AddSingleton<CsgoItemsContext>()
-				.AddSingleton<PollsContext>()
+				.AddSingleton<DiamondDatabase>()
 				.AddSingleton<CsgoBackpack>()
 				.BuildServiceProvider();
 		}

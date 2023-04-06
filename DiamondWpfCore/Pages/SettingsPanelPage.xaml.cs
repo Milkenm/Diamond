@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
 
 using Diamond.API;
 using Diamond.API.Bot;
+using Diamond.API.Data;
 
 using ScriptsLibV2.Extensions;
 
@@ -17,49 +17,37 @@ namespace Diamond.GUI.Pages;
 public partial class SettingsPanelPage : Page
 {
 	private readonly IServiceProvider _serviceProvider;
-	private readonly AppSettings _appSettings;
+	private readonly DiamondDatabase _database;
 	private readonly DiamondBot _bot;
 
-	public SettingsPanelPage(AppSettings appSettings, DiamondBot bot)
+	public SettingsPanelPage(DiamondDatabase database, DiamondBot bot)
 	{
 		InitializeComponent();
 
-		_appSettings = appSettings;
+		_database = database;
 		_bot = bot;
 	}
 
 	private void Page_Loaded(object sender, RoutedEventArgs e)
 	{
-		passwordBox_token.Password = _appSettings.Settings.Token;
-		textBox_dataFolderPath.Text = _appSettings.Settings.CacheFolderPath;
-		passwordBox_openaiApiKey.Password = _appSettings.Settings.OpenaiApiKey;
-		passwordBox_nightapiApiKey.Password = _appSettings.Settings.NightapiApiKey;
-		textBox_debugGuildId.Text = _appSettings.Settings.DebugGuildId != null ? _appSettings.Settings.DebugGuildId.ToString() : string.Empty;
-		textBox_debugChannelId.Text = _appSettings.Settings.DebugChannelId != null ? _appSettings.Settings.DebugChannelId.ToString() : string.Empty;
+		passwordBox_token.Password = Utils.GetSetting(_database, "Token", false);
+		passwordBox_openaiApiKey.Password = Utils.GetSetting(_database, "OpenapiApiKey", false);
+		passwordBox_nightapiApiKey.Password = Utils.GetSetting(_database, "NightapiApiKey", false);
+		textBox_debugGuildId.Text = Utils.GetSetting(_database, "DebugGuildId", false);
+		textBox_debugChannelId.Text = Utils.GetSetting(_database, "DebugChannelId", false);
 	}
 
 	private void ButtonSave_Click(object sender, RoutedEventArgs e)
 	{
 		if (passwordBox_token.Password.IsEmpty()) return;
 
-		_appSettings.Settings.Token = passwordBox_token.Password;
-		_appSettings.Settings.CacheFolderPath = textBox_dataFolderPath.Text;
-		_appSettings.Settings.OpenaiApiKey = passwordBox_openaiApiKey.Password;
-		_appSettings.Settings.NightapiApiKey = passwordBox_nightapiApiKey.Password;
-		_appSettings.Settings.DebugGuildId = !textBox_debugGuildId.Text.IsEmpty() ? Convert.ToUInt64(textBox_debugGuildId.Text) : null;
-		_appSettings.Settings.DebugChannelId = !textBox_debugChannelId.Text.IsEmpty() ? Convert.ToUInt64(textBox_debugChannelId.Text) : null;
+		Utils.SetSetting(_database, "Token", passwordBox_token.Password);
+		Utils.SetSetting(_database, "OpenaiApiKey", passwordBox_openaiApiKey.Password);
+		Utils.SetSetting(_database, "NightapiApiKey", passwordBox_nightapiApiKey.Password);
+		Utils.SetSetting(_database, "DebugGuildId", !textBox_debugGuildId.Text.IsEmpty() ? Convert.ToUInt64(textBox_debugGuildId.Text) : string.Empty);
+		Utils.SetSetting(_database, "DebugChannelId", !textBox_debugChannelId.Text.IsEmpty() ? Convert.ToUInt64(textBox_debugChannelId.Text) : string.Empty);
 
 		_bot.RefreshSettings().Wait();
 		MessageBox.Show("Bot settings updated!");
-	}
-
-	private void ButtonCache_Click(object sender, RoutedEventArgs e)
-	{
-		FolderBrowserDialog folderDialog = new FolderBrowserDialog();
-		DialogResult result = folderDialog.ShowDialog();
-		if (result == DialogResult.OK && textBox_dataFolderPath.Text != folderDialog.SelectedPath)
-		{
-			textBox_dataFolderPath.Text = folderDialog.SelectedPath;
-		}
 	}
 }

@@ -7,8 +7,6 @@ using Diamond.API.Data;
 using Discord;
 using Discord.WebSocket;
 
-using static Diamond.API.Data.PollsContext;
-
 namespace Diamond.API.SlashCommands.Vote.Embeds;
 public class PublishedVoteEmbed : BaseVoteEmbed
 {
@@ -16,14 +14,14 @@ public class PublishedVoteEmbed : BaseVoteEmbed
 	private readonly DiscordSocketClient _client;
 	private readonly ulong? _messageId;
 
-	public PublishedVoteEmbed(IDiscordInteraction interaction, DiscordSocketClient client, PollsContext pollsDb, Poll poll, ulong? messageId) : base(interaction, poll)
+	public PublishedVoteEmbed(IDiscordInteraction interaction, DiscordSocketClient client, DiamondDatabase diamondDatabase, Poll poll, ulong? messageId) : base(interaction, poll)
 	{
 		_interaction = interaction;
 		_client = client;
 		_messageId = messageId;
 
-		List<PollVote> pollVotes = VoteUtils.GetPollVotes(pollsDb, poll);
-		List<PollOption> pollOptions = VoteUtils.GetPollOptions(pollsDb, poll);
+		List<PollVote> pollVotes = VoteUtils.GetPollVotes(diamondDatabase, poll);
+		List<PollOption> pollOptions = VoteUtils.GetPollOptions(diamondDatabase, poll);
 
 		foreach (PollOption pollOption in pollOptions)
 		{
@@ -68,14 +66,14 @@ public class PublishedVoteEmbed : BaseVoteEmbed
 		}
 	}
 
-	public static async Task ButtonHandlerAsync(SocketMessageComponent messageComponent, PollsContext pollsDb)
+	public static async Task ButtonHandlerAsync(SocketMessageComponent messageComponent, DiamondDatabase database)
 	{
 		string[] buttonData = messageComponent.Data.CustomId.Split("-");
 		string buttonName = buttonData[0];
 
 		ulong messageId = messageComponent.Message.Id;
 
-		Poll poll = VoteUtils.GetPollByMessageId(pollsDb, messageId);
+		Poll poll = VoteUtils.GetPollByMessageId(database, messageId);
 		if (poll == null)
 		{
 			return;
@@ -87,7 +85,7 @@ public class PublishedVoteEmbed : BaseVoteEmbed
 				{
 					await messageComponent.DeferLoadingAsync(true);
 
-					VoteEmbed voteEmbed = new VoteEmbed(messageComponent, pollsDb, poll, messageId, null);
+					VoteEmbed voteEmbed = new VoteEmbed(messageComponent, database, poll, messageId, null);
 
 					await voteEmbed.SendAsync(true, true);
 					break;

@@ -39,7 +39,7 @@ namespace Diamond.API.SlashCommands
                 }
             }
 
-            string password = Utils.GeneratePassword(passwordSize, passwordCharacters.ToString());
+            string password = ScriptsLibV2.Util.Utils.GeneratePassword(passwordSize, passwordCharacters.ToString());
 
             DefaultEmbed embed = new DefaultEmbed("Password Generator", "🔐", Context.Interaction);
             embed.AddField("🔡 Allowed Characters", passwordCharacters.ToString());

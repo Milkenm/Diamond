@@ -1,6 +1,6 @@
-﻿using Discord;
+﻿using Diamond.API.Data;
 
-using static Diamond.API.Data.PollsContext;
+using Discord;
 
 namespace Diamond.API.SlashCommands.Vote.Embeds;
 public abstract class BaseVoteEmbed : DefaultEmbed

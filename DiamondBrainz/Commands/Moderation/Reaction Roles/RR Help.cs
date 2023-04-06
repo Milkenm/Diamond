@@ -1,10 +1,4 @@
-﻿
-using System.Threading.Tasks;
-
-using Discord;
-using Discord.Commands;
-
-namespace Diamond.API.Commands
+﻿namespace Diamond.API.Commands
 {
 	public partial class ModerationModule
 	{

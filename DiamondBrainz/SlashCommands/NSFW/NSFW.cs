@@ -36,7 +36,7 @@ public class Nsfw : InteractionModuleBase<SocketInteractionContext>
 		// Create the embed
 		DefaultEmbed embed = new DefaultEmbed("NSFW", "🍑", Context.Interaction);
 		embed.AddField("🚺 Model", !string.IsNullOrEmpty(nsfw.Model) ? nsfw.Model : "Unknown model", true);
-		embed.AddField("📁 Image Size", Utils.ByteSizeToString(imageSize), true);
+		embed.AddField("📁 Image Size", ScriptsLibV2.Util.Utils.ByteSizeToString(imageSize), true);
 		embed.WithImageUrl(imageLink);
 
 		// Reply

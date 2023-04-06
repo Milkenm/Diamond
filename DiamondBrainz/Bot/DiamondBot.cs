@@ -1,45 +1,34 @@
 ﻿using System.Threading.Tasks;
 
+using Diamond.API.Data;
+
 using Discord;
 
 using ScriptsLibV2;
-using ScriptsLibV2.Extensions;
 
 namespace Diamond.API.Bot
 {
 	public class DiamondBot : DiscordBot
 	{
-		private readonly AppSettings _appSettings;
-		private readonly AppFolder _appFolder;
+		private readonly DiamondDatabase _database;
 
-		public DiamondBot(AppSettings appSettings, AppFolder appFolder)
+		public DiamondBot(DiamondDatabase database)
 		{
-			_appSettings = appSettings;
-			_appFolder = appFolder;
+			_database = database;
 
 			LogLevel = LogSeverity.Info;
 
-			RefreshSettings(false).Wait();
+			RefreshSettings().Wait();
 			Initialize();
 		}
 
-		public async Task RefreshSettings(bool saveToDatabase = true)
+		public async Task RefreshSettings()
 		{
-			Token = _appSettings.Settings.Token;
+			Token = Utils.GetSetting(_database, "Token");
+
 			if (IsRunning)
 			{
 				await RestartAsync();
-			}
-
-			if (!_appSettings.Settings.CacheFolderPath.IsEmpty())
-			{
-				_appFolder.Path = _appSettings.Settings.CacheFolderPath;
-				_appFolder.CreateFolder();
-			}
-
-			if (saveToDatabase)
-			{
-				_appSettings.SaveToDatabase();
 			}
 		}
 	}

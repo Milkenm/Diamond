@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Diamond.API.Schems;
@@ -37,7 +38,7 @@ public class CsgoSearch : InteractionModuleBase<SocketInteractionContext>
 		DefaultEmbed embed = new DefaultEmbed("CS:GO Item Search", "🔫", Context.Interaction)
 		{
 			Title = resultItem.CsgoItem.Name.Replace("&#39", "\""),
-			Description = $"**Released**: {UnixTimeStampToDateTime(resultItem.CsgoItem.FirstSaleDate).AddDays(1):dd/MM/yyyy}",
+			Description = $"**Released**: {UnixTimeStampToDateTime(resultItem.CsgoItem.FirstSaleDate).AddDays(1).ToString("dd/MM/yyyy")}",
 			ThumbnailUrl = $"https://community.cloudflare.steamstatic.com/economy/image/{resultItem.CsgoItem.IconUrl}/128fx128f",
 		};
 		ComponentBuilder builder = new ComponentBuilder()
@@ -45,11 +46,12 @@ public class CsgoSearch : InteractionModuleBase<SocketInteractionContext>
 
 		foreach (KeyValuePair<string, CsgoItemPriceInfo> priceKeyPair in resultItem.CsgoItem.Price)
 		{
-			embed.AddField(System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(priceKeyPair.Key.ToString().ToLower().Replace("_", " ")), $"__{priceKeyPair.Value.Average}__{CsgoBackpack.CurrencySymbols[currency]} *({priceKeyPair.Value.Sold} sold)*", true);
+			embed.AddField(Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(priceKeyPair.Key.ToString().ToLower().Replace("_", " ")), $"__{priceKeyPair.Value.Average}__{CsgoBackpack.CurrencySymbols[currency]} *({priceKeyPair.Value.Sold} sold)*", true);
 		}
 
-		Bitmap bmp = null;
 		string hexColor = resultItem.CsgoItem.RarityHexColor;
+
+		Bitmap bmp;
 		if (_raritiesCacheMap.ContainsKey(hexColor))
 		{
 			bmp = _raritiesCacheMap[hexColor];
@@ -78,7 +80,7 @@ public class CsgoSearch : InteractionModuleBase<SocketInteractionContext>
 		{
 			for (var y = 0; y < bitmap.Height; y++)
 			{
-				bitmap.SetPixel(x, y, ColorTranslator.FromHtml("#" + hexColor));
+				bitmap.SetPixel(x, y, ColorTranslator.FromHtml($"#{hexColor}"));
 			}
 		}
 
