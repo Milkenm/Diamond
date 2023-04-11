@@ -30,16 +30,19 @@ public partial class SettingsPanelPage : Page
 
 	private void Page_Loaded(object sender, RoutedEventArgs e)
 	{
-		passwordBox_token.Password = Utils.GetSetting(_database, "Token", false);
-		passwordBox_openaiApiKey.Password = Utils.GetSetting(_database, "OpenapiApiKey", false);
-		passwordBox_nightapiApiKey.Password = Utils.GetSetting(_database, "NightapiApiKey", false);
-		textBox_debugGuildId.Text = Utils.GetSetting(_database, "DebugGuildId", false);
-		textBox_debugChannelId.Text = Utils.GetSetting(_database, "DebugChannelId", false);
+		passwordBox_token.Password = (string)Utils.GetSetting(_database, "Token", false);
+		passwordBox_openaiApiKey.Password = (string)Utils.GetSetting(_database, "OpenapiApiKey", false);
+		passwordBox_nightapiApiKey.Password = (string)Utils.GetSetting(_database, "NightapiApiKey", false);
+		textBox_debugGuildId.Text = (string)Utils.GetSetting(_database, "DebugGuildId", false);
+		textBox_debugChannelId.Text = (string)Utils.GetSetting(_database, "DebugChannelId", false);
 	}
 
 	private void ButtonSave_Click(object sender, RoutedEventArgs e)
 	{
-		if (passwordBox_token.Password.IsEmpty()) return;
+		if (passwordBox_token.Password.IsEmpty())
+		{
+			return;
+		}
 
 		Utils.SetSetting(_database, "Token", passwordBox_token.Password);
 		Utils.SetSetting(_database, "OpenaiApiKey", passwordBox_openaiApiKey.Password);

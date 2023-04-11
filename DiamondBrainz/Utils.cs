@@ -6,7 +6,7 @@ using Diamond.API.Data;
 namespace Diamond.API;
 public static class Utils
 {
-	public static string? GetSetting(DiamondDatabase database, string settingName, bool exceptionIfNull = true)
+	public static object? GetSetting(DiamondDatabase database, string settingName, bool exceptionIfNull = true)
 	{
 		Setting setting = database.Settings.Where(s => s.Name == settingName).FirstOrDefault();
 		if (setting == null)
@@ -17,7 +17,7 @@ public static class Utils
 			}
 			return string.Empty;
 		}
-		return (string)setting.Value;
+		return setting.Value;
 	}
 
 	public static void SetSetting(DiamondDatabase database, string settingName, object value)

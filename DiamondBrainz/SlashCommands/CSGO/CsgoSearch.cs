@@ -39,7 +39,7 @@ public class CsgoSearch : InteractionModuleBase<SocketInteractionContext>
 		{
 			Title = resultItem.CsgoItem.Name.Replace("&#39", "\""),
 			Description = $"**Released**: {UnixTimeStampToDateTime(resultItem.CsgoItem.FirstSaleDate).AddDays(1).ToString("dd/MM/yyyy")}",
-			ThumbnailUrl = $"https://community.cloudflare.steamstatic.com/economy/image/{resultItem.CsgoItem.IconUrl}/128fx128f",
+			ThumbnailUrl = $"https://community.cloudflare.steamstatic.com/economy/image/{resultItem.CsgoItem.IconUrl}",
 		};
 		ComponentBuilder builder = new ComponentBuilder()
 			.WithButton(new ButtonBuilder("View on market", style: ButtonStyle.Link, url: $"https://steamcommunity.com/market/listings/730/{resultItem.CsgoItem.Name}".Replace(" ", "%20").Replace("|", "%7C"), emote: Emoji.Parse("🏪")));

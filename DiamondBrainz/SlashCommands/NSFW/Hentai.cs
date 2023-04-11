@@ -43,7 +43,7 @@ public class Hentai : InteractionModuleBase<SocketInteractionContext>
 		// Request
 		WebHeaderCollection headers = new WebHeaderCollection
 		{
-			{ "authorization", Utils.GetSetting(_database ,"NightapiApiKey")}
+			{ "authorization",(string) Utils.GetSetting(_database ,"NightapiApiKey")}
 		};
 		string response = RequestUtils.Get($"https://api.night-api.com/images/nsfw/{hentaiType}", headers);
 		NightApiResponse resp = JsonConvert.DeserializeObject<NightApiResponse>(response);

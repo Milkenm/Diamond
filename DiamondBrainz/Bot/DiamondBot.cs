@@ -24,7 +24,7 @@ namespace Diamond.API.Bot
 
 		public async Task RefreshSettings()
 		{
-			Token = Utils.GetSetting(_database, "Token");
+			Token = (string)Utils.GetSetting(_database, "Token");
 
 			if (IsRunning)
 			{
