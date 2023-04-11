@@ -13,7 +13,7 @@ public class Setting
 {
 	public long Id { get; set; }
 	[Column("Setting")] public string Name { get; set; }
-	[NotMapped] public object Value { get; set; }
+	public string Value { get; set; }
 }
 
 public class CacheRecord

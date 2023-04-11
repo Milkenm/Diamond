@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 using Diamond.API;
 using Diamond.API.Bot;
@@ -98,6 +100,46 @@ namespace Diamond.GUI
 			frame_logs.Navigate(_serviceProvider.GetRequiredService<LogsPanelPage>());
 			frame_remote.Navigate(_serviceProvider.GetRequiredService<RemotePanelPage>());
 			frame_settings.Navigate(_serviceProvider.GetRequiredService<SettingsPanelPage>());
+
+			// Check if settings are valid
+			if (!Utils.AreSettingsValid(_serviceProvider.GetRequiredService<DiamondDatabase>()))
+			{
+				ToggleUI(false);
+				tabControl_main.SelectedIndex = 3;
+			}
+		}
+
+		public void ToggleUI(bool enabled)
+		{
+			if (tabItem_main.IsEnabled == enabled) return;
+
+			DisableImage(image_main, !enabled);
+			tabItem_main.IsEnabled = enabled;
+
+			DisableImage(image_logs, !enabled);
+			tabItem_logs.IsEnabled = enabled;
+
+			DisableImage(image_rcon, !enabled);
+			tabItem_rcon.IsEnabled = enabled;
+		}
+
+		private static void DisableImage(System.Windows.Controls.Image image, bool grayout)
+		{
+			if (grayout)
+			{
+				// Get the source bitmap                        
+				if (image.Source is BitmapSource bitmapImage)
+				{
+					ImageBrush OpacityMask = new ImageBrush(bitmapImage);
+					image.Source = new FormatConvertedBitmap(bitmapImage, PixelFormats.Gray8, null, 0);
+					// reuse the opacity mask from the original image as FormatConvertedBitmap does not keep transparency info
+					image.OpacityMask = OpacityMask;
+				}
+			}
+			else
+			{
+				image.Source = ((FormatConvertedBitmap)image.Source).Source;
+			}
 		}
 	}
 }

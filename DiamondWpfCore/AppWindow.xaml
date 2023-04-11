@@ -7,34 +7,34 @@
         Style="{StaticResource WindowStyle}" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
 
 	<Grid Width="1000" Height="400">
-		<TabControl Style="{StaticResource TabControlStyle}">
-			<TabItem Style="{StaticResource TabItemStyle}">
+		<TabControl x:Name="tabControl_main" Style="{StaticResource TabControlStyle}">
+			<TabItem x:Name="tabItem_main" Style="{StaticResource TabItemStyle}">
 				<TabItem.Header>
-					<Image Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Robot.png" />
+					<Image x:Name="image_main" Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Robot.png" />
 				</TabItem.Header>
 				<Grid>
 					<Frame x:Name="frame_main" Style="{StaticResource FrameStyle}"/>
 				</Grid>
 			</TabItem>
-			<TabItem Style="{StaticResource TabItemStyle}" Height="65" Width="85">
+			<TabItem x:Name="tabItem_logs" Style="{StaticResource TabItemStyle}" Height="65" Width="85">
 				<TabItem.Header>
-					<Image Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Scroll.png" />
+					<Image Name="image_logs" Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Scroll.png" />
 				</TabItem.Header>
 				<Grid>
 					<Frame x:Name="frame_logs" Style="{StaticResource FrameStyle}"/>
 				</Grid>
 			</TabItem>
-			<TabItem Style="{StaticResource TabItemStyle}" Height="65" Width="85">
+			<TabItem x:Name="tabItem_rcon" Style="{StaticResource TabItemStyle}" Height="65" Width="85">
 				<TabItem.Header>
-					<Image Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Satellite.png" />
+					<Image x:Name="image_rcon" Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Satellite.png" />
 				</TabItem.Header>
 				<Grid>
 					<Frame x:Name="frame_remote" Style="{StaticResource FrameStyle}"/>
 				</Grid>
 			</TabItem>
-			<TabItem Style="{StaticResource TabItemStyle}" Height="65" Width="85">
+			<TabItem x:Name="tabItem_settings" Style="{StaticResource TabItemStyle}" Height="65" Width="85">
 				<TabItem.Header>
-					<Image Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Gear.png" />
+					<Image x:Name="image_settings" Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Gear.png" />
 				</TabItem.Header>
 				<Grid>
 					<Frame x:Name="frame_settings" Style="{StaticResource FrameStyle}"/>

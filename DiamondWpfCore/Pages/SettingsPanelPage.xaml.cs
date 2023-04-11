@@ -1,14 +1,9 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 using Diamond.API;
 using Diamond.API.Bot;
 using Diamond.API.Data;
-
-using ScriptsLibV2.Extensions;
-
-using MessageBox = System.Windows.MessageBox;
 
 namespace Diamond.GUI.Pages;
 /// <summary>
@@ -16,41 +11,38 @@ namespace Diamond.GUI.Pages;
 /// </summary>
 public partial class SettingsPanelPage : Page
 {
-	private readonly IServiceProvider _serviceProvider;
 	private readonly DiamondDatabase _database;
 	private readonly DiamondBot _bot;
+	private readonly AppWindow _appWindow;
 
-	public SettingsPanelPage(DiamondDatabase database, DiamondBot bot)
+	public SettingsPanelPage(DiamondDatabase database, DiamondBot bot, AppWindow appWindow)
 	{
 		InitializeComponent();
 
 		_database = database;
 		_bot = bot;
+		_appWindow = appWindow;
 	}
 
 	private void Page_Loaded(object sender, RoutedEventArgs e)
 	{
-		passwordBox_token.Password = (string)Utils.GetSetting(_database, "Token", false);
-		passwordBox_openaiApiKey.Password = (string)Utils.GetSetting(_database, "OpenapiApiKey", false);
-		passwordBox_nightapiApiKey.Password = (string)Utils.GetSetting(_database, "NightapiApiKey", false);
-		textBox_debugGuildId.Text = (string)Utils.GetSetting(_database, "DebugGuildId", false);
-		textBox_debugChannelId.Text = (string)Utils.GetSetting(_database, "DebugChannelId", false);
+		passwordBox_token.Password = Utils.GetSetting(_database, Utils.GetSettingString(Utils.Setting.Token));
+		passwordBox_openaiApiKey.Password = Utils.GetSetting(_database, Utils.GetSettingString(Utils.Setting.OpenAI_API_Key));
+		passwordBox_nightapiApiKey.Password = Utils.GetSetting(_database, Utils.GetSettingString(Utils.Setting.NightAPI_API_Key));
+		textBox_debugGuildId.Text = Utils.GetSetting(_database, Utils.GetSettingString(Utils.Setting.DebugGuildID));
+		textBox_debugChannelId.Text = Utils.GetSetting(_database, Utils.GetSettingString(Utils.Setting.DebugChannelID));
 	}
 
 	private void ButtonSave_Click(object sender, RoutedEventArgs e)
 	{
-		if (passwordBox_token.Password.IsEmpty())
-		{
-			return;
-		}
-
-		Utils.SetSetting(_database, "Token", passwordBox_token.Password);
-		Utils.SetSetting(_database, "OpenaiApiKey", passwordBox_openaiApiKey.Password);
-		Utils.SetSetting(_database, "NightapiApiKey", passwordBox_nightapiApiKey.Password);
-		Utils.SetSetting(_database, "DebugGuildId", !textBox_debugGuildId.Text.IsEmpty() ? Convert.ToUInt64(textBox_debugGuildId.Text) : string.Empty);
-		Utils.SetSetting(_database, "DebugChannelId", !textBox_debugChannelId.Text.IsEmpty() ? Convert.ToUInt64(textBox_debugChannelId.Text) : string.Empty);
+		Utils.SetSetting(_database, Utils.GetSettingString(Utils.Setting.Token), passwordBox_token.Password);
+		Utils.SetSetting(_database, Utils.GetSettingString(Utils.Setting.OpenAI_API_Key), passwordBox_openaiApiKey.Password);
+		Utils.SetSetting(_database, Utils.GetSettingString(Utils.Setting.NightAPI_API_Key), passwordBox_nightapiApiKey.Password);
+		Utils.SetSetting(_database, Utils.GetSettingString(Utils.Setting.DebugGuildID), textBox_debugGuildId.Text);
+		Utils.SetSetting(_database, Utils.GetSettingString(Utils.Setting.DebugChannelID), textBox_debugChannelId.Text);
 
 		_bot.RefreshSettings().Wait();
-		MessageBox.Show("Bot settings updated!");
+
+		_appWindow.ToggleUI(Utils.AreSettingsValid(_database));
 	}
 }
