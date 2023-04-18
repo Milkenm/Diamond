@@ -93,7 +93,7 @@ namespace Diamond.API.Stuff
 			{
 				foreach (CsgoItemInfo item in _itemsMap[currency].ItemsList.Values)
 				{
-					string itemName = item.Name.Replace("&#39", "\"").ToLower().Trim();
+					string itemName = item.Name.Replace("&#39", "'").ToLower().Trim();
 
 					double matches = 0;
 					foreach (string word in searchItemName.Split(" "))

@@ -9,11 +9,11 @@ using Discord.Interactions;
 namespace Diamond.API.SlashCommands.ServerInfo;
 public partial class ServerInfo
 {
-	[SlashCommand("user", "[Hidden] Show info about a server user.")]
+	/*[SlashCommand("user", "[Hidden] Show info about a server user.")]
 	public async Task ServerUserCommandAsync(
 			[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
 	)
 	{
 		await DeferAsync(!showEveryone);
-	}
+	}*/
 }

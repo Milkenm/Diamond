@@ -12,7 +12,8 @@ using Discord;
 using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.CSGO;
-public class CsgoSearch : InteractionModuleBase<SocketInteractionContext>
+
+public partial class CsgoSearch : InteractionModuleBase<SocketInteractionContext>
 {
 	private readonly CsgoBackpack _csgoBackpack;
 
@@ -23,7 +24,7 @@ public class CsgoSearch : InteractionModuleBase<SocketInteractionContext>
 		this._csgoBackpack = csgoBackpack;
 	}
 
-	[SlashCommand("csgo", "Search for a CS:GO item.")]
+	[SlashCommand("item", "Search for a CS:GO item.")]
 	public async Task CsgoSearchCommandAsync(
 		[Summary("search", "The name of the item to search for.")] string search,
 		[Summary("currency", "The currency to return the price in.")] Currency currency = Currency.EUR,
@@ -37,7 +38,7 @@ public class CsgoSearch : InteractionModuleBase<SocketInteractionContext>
 
 		DefaultEmbed embed = new DefaultEmbed("CS:GO Item Search", "🔫", Context.Interaction)
 		{
-			Title = resultItem.CsgoItem.Name.Replace("&#39", "\""),
+			Title = resultItem.CsgoItem.Name.Replace("&#39", "'"),
 			Description = $"**Released**: {UnixTimeStampToDateTime(resultItem.CsgoItem.FirstSaleDate).AddDays(1).ToString("dd/MM/yyyy")}",
 			ThumbnailUrl = $"https://community.cloudflare.steamstatic.com/economy/image/{resultItem.CsgoItem.IconUrl}",
 		};
