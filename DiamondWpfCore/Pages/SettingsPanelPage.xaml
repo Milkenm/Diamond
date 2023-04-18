@@ -20,5 +20,6 @@
 		<Label Style="{StaticResource LabelStyle}" HorizontalAlignment="Left" Margin="619,170,0,0" Content="Debug Channel ID" VerticalAlignment="Top"/>
 		<TextBox Style="{StaticResource TextBoxStyle}" x:Name="textBox_debugChannelId" Margin="619,198,10,0" VerticalAlignment="Top"/>
 		<Button Style="{StaticResource ButtonStyle}" Content="Save" Margin="0,0,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="71" Click="ButtonSave_Click"/>
+		<CheckBox Style="{StaticResource CheckBoxStyle}" x:Name="checkBox_ignoreDebugChannel" Content="Ignore Debug Channel" HorizontalAlignment="Left" Margin="619,278,0,0" VerticalAlignment="Top"/>
 	</Grid>
 </Page>

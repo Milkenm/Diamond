@@ -1,0 +1,40 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Style x:Key="CheckBoxStyle" TargetType="{x:Type CheckBox}">
+		<Setter Property="Foreground" Value="{StaticResource FontBrush}"/>
+		<Setter Property="FontFamily" Value="{StaticResource AppFontFamily}"/>
+		<Setter Property="FontSize" Value="{StaticResource AppFontSize}"/>
+		<Setter Property="Effect" Value="{StaticResource ControlShadowEffect}"/>
+		<Setter Property="BorderThickness" Value="{StaticResource InteractablesBorderThickness}"/>
+		<Setter Property="Background" Value="{StaticResource InteractablesBackgroundBrush}"/>
+		<Setter Property="BorderBrush" Value="{StaticResource InteractablesBorderBrush}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type CheckBox}">
+					<Grid x:Name="_TemplateRoot" Background="Transparent" SnapsToDevicePixels="True">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="*"/>
+						</Grid.ColumnDefinitions>
+						<Border x:Name="_CheckBoxBorder" Width="{StaticResource InteractablesHeight}" Height="{StaticResource InteractablesHeight}" CornerRadius="{StaticResource InteractablesCornerRadius}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="1" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+							<Grid x:Name="_MarkGrid">
+								<Path x:Name="_OptionMark" Data="F1 M 9.97498,1.22334L 4.6983,9.09834L 4.52164,9.09834L 0,5.19331L 1.27664,3.52165L 4.255,6.08833L 8.33331,1.52588e-005L 9.97498,1.22334 Z " Fill="{StaticResource FontBrush}" Margin="5" Opacity="0" Stretch="Fill"/>
+							</Grid>
+						</Border>
+						<ContentPresenter x:Name="_ContentPresenter" Grid.Column="1" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="10,-3,0,0" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="true">
+							<Setter Property="BorderBrush" TargetName="_CheckBoxBorder" Value="{StaticResource InteractablesFocusedBorderBrush}"/>
+						</Trigger>
+						<Trigger Property="IsChecked" Value="true">
+							<Setter Property="Opacity" TargetName="_OptionMark" Value="1"/>
+						</Trigger>
+						<Trigger Property="IsChecked" Value="{x:Null}">
+							<Setter Property="Opacity" TargetName="_OptionMark" Value="0"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>
