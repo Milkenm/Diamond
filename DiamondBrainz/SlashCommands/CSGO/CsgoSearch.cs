@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 using Diamond.API.Schems;
 using Diamond.API.Stuff;
@@ -13,16 +14,9 @@ using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.CSGO;
 
-public partial class CsgoSearch : InteractionModuleBase<SocketInteractionContext>
+public partial class Csgo
 {
-	private readonly CsgoBackpack _csgoBackpack;
-
 	private static readonly Dictionary<string, Bitmap> _raritiesCacheMap = new Dictionary<string, Bitmap>();
-
-	public CsgoSearch(CsgoBackpack csgoBackpack)
-	{
-		this._csgoBackpack = csgoBackpack;
-	}
 
 	[SlashCommand("item", "Search for a CS:GO item.")]
 	public async Task CsgoSearchCommandAsync(
@@ -39,15 +33,16 @@ public partial class CsgoSearch : InteractionModuleBase<SocketInteractionContext
 		DefaultEmbed embed = new DefaultEmbed("CS:GO Item Search", "🔫", Context.Interaction)
 		{
 			Title = resultItem.CsgoItem.Name.Replace("&#39", "'"),
-			Description = $"**Released**: {UnixTimeStampToDateTime(resultItem.CsgoItem.FirstSaleDate).AddDays(1).ToString("dd/MM/yyyy")}",
+			Description = $"⭐ **Released**: {UnixTimeStampToDateTime(resultItem.CsgoItem.FirstSaleDate).AddDays(1).ToString("dd/MM/yyyy")}",
 			ThumbnailUrl = $"https://community.cloudflare.steamstatic.com/economy/image/{resultItem.CsgoItem.IconUrl}",
 		};
 		ComponentBuilder builder = new ComponentBuilder()
-			.WithButton(new ButtonBuilder("View on market", style: ButtonStyle.Link, url: $"https://steamcommunity.com/market/listings/730/{resultItem.CsgoItem.Name}".Replace(" ", "%20").Replace("|", "%7C"), emote: Emoji.Parse("🏪")));
+			.WithButton(new ButtonBuilder("View on Steam market", style: ButtonStyle.Link, url: $"https://steamcommunity.com/market/listings/730/{resultItem.CsgoItem.Name}".Replace(" ", "%20").Replace("|", "%7C"), emote: Emoji.Parse("🏪")))
+			.WithButton(new ButtonBuilder("Buy on DMarket", style: ButtonStyle.Link, url: $"https://dmarket.com/ingame-items/item-list/csgo-skins?title={HttpUtility.UrlEncode(resultItem.CsgoItem.Name)}&ref=3Ge3jlBrCg", emote: Emoji.Parse("🛒")));
 
 		foreach (KeyValuePair<string, CsgoItemPriceInfo> priceKeyPair in resultItem.CsgoItem.Price)
 		{
-			embed.AddField(Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(priceKeyPair.Key.ToString().ToLower().Replace("_", " ")), $"__{priceKeyPair.Value.Average}__{CsgoBackpack.CurrencySymbols[currency]} *({priceKeyPair.Value.Sold} sold)*", true);
+			embed.AddField($"🗓️ {Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(priceKeyPair.Key.ToString().ToLower().Replace("_", " "))}", $"**{CsgoBackpack.CurrencySymbols[currency]}{string.Format("{0:N}", priceKeyPair.Value.Average)}**\n*{string.Format("{0:N0}", Convert.ToInt32(priceKeyPair.Value.Sold))} sold*", true);
 		}
 
 		string hexColor = resultItem.CsgoItem.RarityHexColor;
