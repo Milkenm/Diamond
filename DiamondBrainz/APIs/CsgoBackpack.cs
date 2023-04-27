@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.Data;
-using Diamond.API.Schems;
+using Diamond.API.Schems.CsgoBackpack;
 
 using Newtonsoft.Json;
 
@@ -26,7 +26,7 @@ namespace Diamond.API.Stuff
 
 		private DiamondDatabase _diamondDb;
 
-		private readonly Dictionary<Currency, CsgoItemsList> _itemsMap = new Dictionary<Currency, CsgoItemsList>();
+		private readonly Dictionary<Currency, CsgoBackpackItemsList> _itemsMap = new Dictionary<Currency, CsgoBackpackItemsList>();
 		private readonly Dictionary<string, CsgoItemMatchInfo> _searchCacheMap = new Dictionary<string, CsgoItemMatchInfo>();
 
 		public CsgoBackpack(DiamondDatabase diamondDb)
@@ -70,7 +70,7 @@ namespace Diamond.API.Stuff
 					}
 					_diamondDb.SaveChanges();
 				}
-				CsgoItemsList itemsList = JsonConvert.DeserializeObject<CsgoItemsList>(itemsListJson);
+				CsgoBackpackItemsList itemsList = JsonConvert.DeserializeObject<CsgoBackpackItemsList>(itemsListJson);
 				if (!itemsList.Success)
 				{
 					Debug.WriteLine($"Failed to load items for currency '{currency.ToString().ToUpper()}'.");

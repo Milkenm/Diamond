@@ -2,6 +2,7 @@
 using System.Windows;
 
 using Diamond.API;
+using Diamond.API.APIs;
 using Diamond.API.Bot;
 using Diamond.API.Data;
 using Diamond.API.Stuff;
@@ -34,6 +35,7 @@ namespace Diamond.GUI
 				.AddSingleton<SettingsPanelPage>()
 				.AddSingleton<DiamondDatabase>()
 				.AddSingleton<CsgoBackpack>()
+				.AddSingleton<OpenMeteoGeocoding>()
 				.BuildServiceProvider();
 		}
 

@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 
 using Diamond.API.Schems;
+using Diamond.API.Schems.SteamInventory;
 using Diamond.API.Stuff;
 
 using Discord;
@@ -34,6 +35,8 @@ public partial class Csgo
 		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
 	)
 	{
+		await DeferAsync(!showEveryone);
+
 		// Create embed
 		DefaultEmbed embed = new DefaultEmbed("CS:GO Inventory value", "💸", Context.Interaction);
 
@@ -41,7 +44,7 @@ public partial class Csgo
 		bool fromCache = false;
 
 		SteamUserInfo userInfo = null;
-		CsgoInventory inventory = null;
+		SteamInventory inventory = null;
 		double totalValue = 0D;
 		int uniqueItems = 0;
 		int totalItems = 0;
@@ -95,7 +98,7 @@ public partial class Csgo
 			try
 			{
 				string inventoryResponse = RequestUtils.Get(string.Format(ID_URL, userInfo.SteamID));
-				inventory = JsonConvert.DeserializeObject<CsgoInventory>(inventoryResponse);
+				inventory = JsonConvert.DeserializeObject<SteamInventory>(inventoryResponse);
 			}
 			catch (WebException ex)
 			{
@@ -120,7 +123,7 @@ public partial class Csgo
 			}
 
 			// Calculate inventory value
-			foreach (CsgoInventoryItemEntryDescription description in inventory.Descriptions)
+			foreach (AssetDescription description in inventory.Descriptions)
 			{
 				CsgoItemMatchInfo csgoItem = _csgoBackpack.SearchItem(description.MarketName, currency);
 				if (csgoItem.CsgoItem.Price == null)
@@ -188,7 +191,7 @@ public partial class Csgo
 		public List<string> Searches { get; set; }
 		public Currency Currency { get; set; }
 		public SteamUserInfo UserInfo { get; set; }
-		public CsgoInventory Inventory { get; set; }
+		public SteamInventory Inventory { get; set; }
 		public double InventoryValue { get; set; }
 		public int UniqueItems { get; set; }
 		public int TotalItems { get; set; }

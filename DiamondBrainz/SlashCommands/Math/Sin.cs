@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Discord.Interactions;
 
@@ -12,18 +8,21 @@ public partial class Math
 	[SlashCommand("sin", "Calculate the sine of the given angle.")]
 	public async Task MathSinCommandAsync(
 		[Summary("number", "The number to calculate the sine of.")] double angle,
+		[Summary("angle-type", "If the angle you provide is in degrees or radians.")] AngleType angleType = AngleType.Degrees,
 		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
 	)
 	{
 		await DeferAsync(!showEveryone);
 
-		double sin = System.Math.Sin(angle);
+		(double Radians, double Degrees) angles = ConvertAngle(angle, angleType);
+		double sin = System.Math.Sin(angles.Radians);
 
-		DefaultEmbed embed = new DefaultEmbed("Math Sine", "📐", Context.Interaction)
+		DefaultEmbed embed = new DefaultEmbed("Math Sine", "🧮", Context.Interaction)
 		{
-			Description = $"**Result**: {string.Format("{0:N}", sin)}"
+			Description = $"**Sin({angle}{AngleSymbols[angleType]}) =** {string.Format("{0:N12}", sin)}"
 		};
-		embed.AddField("#️ Angle", angle);
+		embed.AddField("📐 Degrees", $"{string.Format("{0:N}", angles.Degrees)}º", true);
+		embed.AddField("📐 Radians", $"{string.Format("{0:N}", angles.Radians)}rad", true);
 
 		await embed.SendAsync();
 	}

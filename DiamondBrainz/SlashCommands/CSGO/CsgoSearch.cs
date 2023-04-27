@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 
 using Diamond.API.Schems;
+using Diamond.API.Schems.CsgoBackpack;
 using Diamond.API.Stuff;
 
 using Discord;

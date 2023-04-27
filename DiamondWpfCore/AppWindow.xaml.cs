@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -15,7 +16,6 @@ using Discord;
 using Discord.Interactions;
 
 using Microsoft.Extensions.DependencyInjection;
-
 
 namespace Diamond.GUI
 {
@@ -40,6 +40,7 @@ namespace Diamond.GUI
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			MainPanelPage mainPanel = _serviceProvider.GetRequiredService<MainPanelPage>();
+			LogsPanelPage logsPanel = _serviceProvider.GetRequiredService<LogsPanelPage>();
 
 			// Load csgo items
 			mainPanel.LogAsync("Loading CS:GO items...").GetAwaiter();
@@ -68,9 +69,15 @@ namespace Diamond.GUI
 					{
 						DefaultEmbed errorEmbed = new DefaultEmbed("Error", "🔥", context.Interaction)
 						{
-							Description = "Something bad happened... :(",
+							Title = "Something bad happened... :(",
+							Description = "This error was reported to the devs, hope to get it fixed tho..."
 						};
-						errorEmbed.AddField("Cause", result.ErrorReason);
+
+						string contextProperties = GetObjectProperties(context);
+						string interactionProperties = GetObjectProperties(context.Interaction);
+						string slashCommandDataProperties = GetObjectProperties(context.Interaction.Data);
+
+						await logsPanel.Log($"[{DateTimeOffset.UtcNow}] Error running command '{command.Name}' (user: {context.User.Username}#{context.User.Discriminator}):\n{result.ErrorReason}\nCommand: {command}\n{contextProperties}\n{interactionProperties}\n{slashCommandDataProperties}");
 
 						await context.Interaction.ModifyOriginalResponseAsync((og) =>
 						{
@@ -140,6 +147,23 @@ namespace Diamond.GUI
 			{
 				image.Source = ((FormatConvertedBitmap)image.Source).Source;
 			}
+		}
+
+		private static string GetObjectProperties(object obj)
+		{
+			StringBuilder sb = new StringBuilder();
+			foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(obj))
+			{
+				if (sb.Length > 0)
+				{
+					sb.Append('\n');
+				}
+				string name = descriptor.Name;
+				object value = descriptor.GetValue(obj);
+				value ??= "<null>";
+				sb.Append($"\t{name}={value}");
+			}
+			return $"{obj.GetType()}:\n{sb}";
 		}
 	}
 }

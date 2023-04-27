@@ -2,9 +2,9 @@
 
 using Newtonsoft.Json;
 
-namespace Diamond.API.Schems
+namespace Diamond.API.Schems.CsgoBackpack
 {
-	public class CsgoItemsList
+	public class CsgoBackpackItemsList
 	{
 		[JsonProperty("success")] public bool Success { get; set; }
 		[JsonProperty("currency")] public string Currency { get; set; }
