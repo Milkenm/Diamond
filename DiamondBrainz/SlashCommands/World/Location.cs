@@ -28,9 +28,11 @@ public partial class World
 		}
 
 		string country = "";
+		string zoom = "5.5";
 		if (geocoding.Results[0].Name != geocoding.Results[0].Country)
 		{
 			country = $" ({geocoding.Results[0].Country})";
+			zoom = "10";
 		}
 		embed.WithThumbnailUrl($"https://flagsapi.com/{geocoding.Results[0].CountryCode.ToUpper()}/shiny/64.png");
 		embed.WithTitle($"{geocoding.Results[0].Name}{country}");
@@ -40,7 +42,7 @@ public partial class World
 		embed.AddField("↕️ **Longitue**", geocoding.Results[0].Longitude, true);
 
 		ComponentBuilder component = new ComponentBuilder()
-			.WithButton("View on Google Maps", style: ButtonStyle.Link, emote: Emoji.Parse("🗺️"), url: $"https://www.google.com/maps/@{geocoding.Results[0].Latitude},{geocoding.Results[0].Longitude},5.5z");
+			.WithButton("View on Google Maps", style: ButtonStyle.Link, emote: Emoji.Parse("🗺️"), url: $"https://www.google.com/maps/@{geocoding.Results[0].Latitude.ToString().Replace(",", ".")},{geocoding.Results[0].Longitude.ToString().Replace(",", ".")},{zoom}z");
 
 		await embed.SendAsync(component.Build());
 	}

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
-using Diamond.API.Schems;
 using Diamond.API.Schems.SteamInventory;
 using Diamond.API.Stuff;
 
@@ -100,7 +98,7 @@ public partial class Csgo
 				string inventoryResponse = RequestUtils.Get(string.Format(ID_URL, userInfo.SteamID));
 				inventory = JsonConvert.DeserializeObject<SteamInventory>(inventoryResponse);
 			}
-			catch (WebException ex)
+			catch
 			{
 				embed.WithDescription($"**There was an error downloading the inventory.**");
 
