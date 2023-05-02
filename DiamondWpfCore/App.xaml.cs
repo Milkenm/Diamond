@@ -36,6 +36,7 @@ namespace Diamond.GUI
 				.AddSingleton<DiamondDatabase>()
 				.AddSingleton<CsgoBackpack>()
 				.AddSingleton<OpenMeteoGeocoding>()
+				.AddSingleton<OpenMeteoWeather>()
 				.BuildServiceProvider();
 		}
 

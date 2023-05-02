@@ -154,6 +154,7 @@ public partial class Csgo
 				Currency = currency,
 				UserInfo = userInfo,
 				Inventory = inventory,
+				InventoryValue = totalValue,
 				UniqueItems = uniqueItems,
 				TotalItems = totalItems,
 				IgnoredItems = ignoredItems,
@@ -165,7 +166,7 @@ public partial class Csgo
 
 		// Send embed
 		embed.WithThumbnailUrl(userInfo.AvatarUrl);
-		embed.WithDescription($"User: {userInfo.Username}");
+		embed.WithTitle(userInfo.Username);
 		embed.AddField("Value", $"{string.Format("{0:0.00}", totalValue)}{CsgoBackpack.CurrencySymbols[currency]}");
 		embed.AddField("Most valuable item", $"{mostValuableItemName} ({string.Format("{0:0.00}", mostValuableItemValue)}{CsgoBackpack.CurrencySymbols[currency]})");
 		embed.AddField("Unique items", uniqueItems, true);
@@ -223,7 +224,7 @@ public partial class Csgo
 			}
 			else if (trimmedLine.StartsWith("<meta name=\"twitter:image\" content=\"https://avatars.akamai.steamstatic.com/"))
 			{
-				avatarUrl = trimmedLine.Replace(" ", "").Replace("<metaname=\"twitter:image\"content=\"", "").Replace("/>", "");
+				avatarUrl = trimmedLine.Replace(" ", "").Replace("<metaname=\"twitter:image\"content=\"", "").Replace("\"/>", "");
 			}
 		}
 		if (userInfo != null)

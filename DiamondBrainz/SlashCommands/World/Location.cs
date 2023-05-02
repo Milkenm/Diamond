@@ -29,20 +29,20 @@ public partial class World
 
 		string country = "";
 		string zoom = "5.5";
-		if (geocoding.Results[0].Name != geocoding.Results[0].Country)
+		if (geocoding.Geolocations[0].Name != geocoding.Geolocations[0].Country)
 		{
-			country = $" ({geocoding.Results[0].Country})";
+			country = $" ({geocoding.Geolocations[0].Country})";
 			zoom = "10";
 		}
-		embed.WithThumbnailUrl($"https://flagsapi.com/{geocoding.Results[0].CountryCode.ToUpper()}/shiny/64.png");
-		embed.WithTitle($"{geocoding.Results[0].Name}{country}");
-		embed.AddField("🏳️ **Country Code**", geocoding.Results[0].CountryCode);
-		embed.AddField("👥 **Population**", string.Format("{0:N0}", geocoding.Results[0].Population));
-		embed.AddField("↔️ **Latitude**", geocoding.Results[0].Latitude, true);
-		embed.AddField("↕️ **Longitue**", geocoding.Results[0].Longitude, true);
+		embed.WithThumbnailUrl($"https://flagsapi.com/{geocoding.Geolocations[0].CountryCode.ToUpper()}/shiny/64.png");
+		embed.WithTitle($"{geocoding.Geolocations[0].Name}{country}");
+		embed.AddField("🏳️ **Country Code**", geocoding.Geolocations[0].CountryCode);
+		embed.AddField("👥 **Population**", string.Format("{0:N0}", geocoding.Geolocations[0].Population));
+		embed.AddField("↔️ **Latitude**", geocoding.Geolocations[0].Latitude, true);
+		embed.AddField("↕️ **Longitue**", geocoding.Geolocations[0].Longitude, true);
 
 		ComponentBuilder component = new ComponentBuilder()
-			.WithButton("View on Google Maps", style: ButtonStyle.Link, emote: Emoji.Parse("🗺️"), url: $"https://www.google.com/maps/@{geocoding.Results[0].Latitude.ToString().Replace(",", ".")},{geocoding.Results[0].Longitude.ToString().Replace(",", ".")},{zoom}z");
+			.WithButton("View on Google Maps", style: ButtonStyle.Link, emote: Emoji.Parse("🗺️"), url: $"https://www.google.com/maps/@{geocoding.Geolocations[0].Latitude.ToString().Replace(",", ".")},{geocoding.Geolocations[0].Longitude.ToString().Replace(",", ".")},{zoom}z");
 
 		await embed.SendAsync(component.Build());
 	}

@@ -6,11 +6,11 @@ namespace Diamond.API.Schems.OpenMeteoGeocoding
 {
 	public class Geocoding
 	{
-		[JsonProperty("results")] public List<Result> Results { get; set; }
+		[JsonProperty("results")] public List<Geolocation> Geolocations { get; set; }
 		[JsonProperty("generationtime_ms")] public double GenerationTimeMs { get; set; }
 	}
 
-	public class Result
+	public class Geolocation
 	{
 		[JsonProperty("id")] public int Id { get; set; }
 		[JsonProperty("name")] public string Name { get; set; }

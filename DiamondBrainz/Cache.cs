@@ -4,11 +4,11 @@ using System.Collections.Generic;
 namespace Diamond.API;
 public class Cache<T>
 {
-	private Dictionary<string, CacheRecord2> _cache = new Dictionary<string, CacheRecord2>();
+	private Dictionary<string, CacheRecord> _cache = new Dictionary<string, CacheRecord>();
 
 	public void CacheValue(string key, T value, long keepForSeconds)
 	{
-		CacheRecord2 cacheRecord = new CacheRecord2(value, keepForSeconds);
+		CacheRecord cacheRecord = new CacheRecord(value, keepForSeconds);
 		_cache.Remove(key);
 		_cache.Add(key, cacheRecord);
 	}
@@ -17,21 +17,25 @@ public class Cache<T>
 	{
 		if (_cache.ContainsKey(key))
 		{
-			CacheRecord2 cachedRecord = _cache[key];
+			CacheRecord cachedRecord = _cache[key];
 			if (cachedRecord.IsValid())
 			{
 				return cachedRecord.Value;
+			}
+			else
+			{
+				_cache.Remove(key);
 			}
 		}
 		return default;
 	}
 
-	public class CacheRecord2
+	public class CacheRecord
 	{
 		private long _keepFor;
 		private long _cachedAt;
 
-		public CacheRecord2(T value, long cacheKeepSeconds)
+		public CacheRecord(T value, long cacheKeepSeconds)
 		{
 			_keepFor = cacheKeepSeconds;
 			_cachedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
