@@ -70,15 +70,19 @@ namespace Diamond.GUI
 						DefaultEmbed errorEmbed = new DefaultEmbed("Error", "🔥", context.Interaction)
 						{
 							Title = "Something bad happened... :(",
-							Description = "This error was reported to the devs, hope to get it fixed tho..."
+							Description = "This error was reported to the devs, hope to get it fixed soon..."
 						};
 
 						string contextProperties = GetObjectProperties(context);
 						string interactionProperties = GetObjectProperties(context.Interaction);
 						string slashCommandDataProperties = GetObjectProperties(context.Interaction.Data);
 
-						await logsPanel.Log($"[{DateTimeOffset.UtcNow}] Error running command '{command.Name}' (user: {context.User.Username}#{context.User.Discriminator}):\n{result.ErrorReason}\nCommand: {command}\n{contextProperties}\n{interactionProperties}\n{slashCommandDataProperties}");
+						await logsPanel.Log($"[{DateTimeOffset.Now}] Error running command '{command.Name}' (user: {context.User.Username}#{context.User.Discriminator}):\n{result.ErrorReason} ({result.Error.GetType()})\nCommand: {command}\n{contextProperties}\n{interactionProperties}\n{slashCommandDataProperties}");
 
+						if (!context.Interaction.HasResponded)
+						{
+							await context.Interaction.DeferAsync(true);
+						}
 						await context.Interaction.ModifyOriginalResponseAsync((og) =>
 						{
 							og.Embed = errorEmbed.Build();
