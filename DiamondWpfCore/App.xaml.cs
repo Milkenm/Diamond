@@ -28,7 +28,6 @@ namespace Diamond.GUI
 				.AddSingleton<DiamondBot>()
 				.AddSingleton<AppWindow>()
 				.AddSingleton<OpenAIAPI>()
-				.AddSingleton<DiscordSocketClient>()
 				.AddSingleton<MainPanelPage>()
 				.AddSingleton<LogsPanelPage>()
 				.AddSingleton<RemotePanelPage>()
@@ -37,7 +36,7 @@ namespace Diamond.GUI
 				.AddSingleton<CsgoBackpack>()
 				.AddSingleton<OpenMeteoGeocoding>()
 				.AddSingleton<OpenMeteoWeather>()
-				.AddSingleton<Lavanode>()
+				.AddSingleton<Lava>()
 				.BuildServiceProvider();
 		}
 

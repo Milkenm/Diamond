@@ -54,6 +54,7 @@ namespace Diamond.GUI
 			InteractionService interactionService = new InteractionService(_bot.Client.Rest);
 			_bot.Client.Ready += new Func<Task>(async () =>
 			{
+				await _serviceProvider.GetRequiredService<Lava>().GetNode().ConnectAsync();
 				await interactionService.AddModulesAsync(ScriptsLibV2.Util.Utils.GetAssemblyByName("DiamondAPI"), _serviceProvider);
 				if (ScriptsLibV2.Util.Utils.IsDebugEnabled() && Utils.GetSetting(_database, "DebugGuildId") != null)
 				{

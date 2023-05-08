@@ -9,6 +9,7 @@ using Discord.WebSocket;
 namespace Diamond.API.EmbedUtils;
 public class DefaultModal : ModalBuilder
 {
+	// Not D.I.
 	private readonly DiscordSocketClient _client;
 
 	public DefaultModal(string title, ulong messageId, DiscordSocketClient client)

@@ -4,10 +4,10 @@ namespace Diamond.API.SlashCommands.Music;
 [Group("music", "Music related commands.")]
 public partial class Music : InteractionModuleBase<SocketInteractionContext>
 {
-	private readonly Lavanode _lavanode;
+	private readonly Lava _lava;
 
-	public Music(Lavanode lavanode)
+	public Music(Lava lava)
 	{
-		this._lavanode = lavanode;
+		this._lava = lava;
 	}
 }

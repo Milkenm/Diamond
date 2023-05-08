@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Threading.Tasks;
 
-using Discord.WebSocket;
+using Diamond.API.Bot;
 
 using Microsoft.Extensions.Logging;
 
@@ -10,22 +10,22 @@ using Victoria.Node.EventArgs;
 using Victoria.Player;
 
 namespace Diamond.API;
-public class Lavanode
+public class Lava
 {
-	private readonly DiscordSocketClient _client;
+	private readonly DiamondBot _bot;
 
 	private readonly LavaNode _lavanode;
 	private readonly ILogger<LavaNode> _logger;
 
-	public Lavanode(DiscordSocketClient client)
+	public Lava(DiamondBot bot)
 	{
-		_client = client;
+		_bot = bot;
 
 		NodeConfiguration config = new NodeConfiguration();
 
 		_logger = new Loggerr();
-		_lavanode = new LavaNode(_client, config, _logger);
-		
+		_lavanode = new LavaNode(_bot.Client, config, _logger);
+
 		_lavanode.OnTrackEnd += OnTrackEndAsync;
 		_lavanode.OnTrackStart += OnTrackStartAsync;
 		_lavanode.OnStatsReceived += OnStatsReceivedAsync;
@@ -66,8 +66,7 @@ public class Lavanode
 
 	private static Task OnUpdateReceivedAsync(UpdateEventArg<LavaPlayer<LavaTrack>, LavaTrack> arg)
 	{
-		return arg.Player.TextChannel.SendMessageAsync(
-			$"Player update received: {arg.Position}/{arg.Track?.Duration}");
+		return arg.Player.TextChannel.SendMessageAsync($"Player update received: {arg.Position}/{arg.Track?.Duration}");
 	}
 
 	private static Task OnTrackStartAsync(TrackStartEventArg<LavaPlayer<LavaTrack>, LavaTrack> arg)

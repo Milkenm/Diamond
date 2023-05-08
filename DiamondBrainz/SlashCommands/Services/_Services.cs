@@ -1,14 +1,15 @@
-﻿using Discord.Interactions;
-using Discord.WebSocket;
+﻿using Diamond.API.Bot;
+
+using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.Services;
 [Group("service", "Service commands, like APIs and webhooks.")]
 public partial class Services : InteractionModuleBase<SocketInteractionContext>
 {
-	private readonly DiscordSocketClient _client;
+	private readonly DiamondBot _bot;
 
-	public Services(DiscordSocketClient client)
+	public Services(DiamondBot bot)
 	{
-		_client = client;
+		_bot = bot;
 	}
 }
