@@ -1,6 +1,7 @@
 ﻿using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.Music;
+
 [Group("music", "Music related commands.")]
 public partial class Music : InteractionModuleBase<SocketInteractionContext>
 {

@@ -15,70 +15,85 @@ public partial class Music
 	[SlashCommand("play", "Add an audio to the queue.")]
 	public async Task PlayCommandAsync(
 		[Summary("url", "The URL to play sound from.")] string url,
-		[Summary("voice-channel", "The voice channel to join.")] IVoiceChannel voiceChannel
+		[Summary("voice-channel", "The voice channel to play at.")] IVoiceChannel voiceChannel = null
 	)
 	{
-		await DeferAsync();
+		await this.DeferAsync();
+		DefaultEmbed embed = new DefaultEmbed("Music", "🎶", this.Context.Interaction);
 
-		LavaNode node = _lava.GetNode();
+		LavaNode node = this._lava.GetNode();
 
-		if (string.IsNullOrWhiteSpace(url))
+		// Get voice channel
+		if (voiceChannel == null)
 		{
-			await ReplyAsync("Please provide search terms.");
-			return;
-		}
+			IVoiceState voiceState = this.Context.User as IVoiceState;
 
-		if (!node.TryGetPlayer(Context.Guild, out var player))
-		{
-			if (voiceChannel == null)
+			// No voice channel
+			if (voiceState.VoiceChannel == null)
 			{
-				await ReplyAsync("You must be connected to a voice channel!");
+				embed.Title = "No voice channel.";
+				embed.Description = "You need to provide or be on a voice channel to play at.";
+				await embed.SendAsync();
 				return;
 			}
 
-			try
-			{
-				player = await node.JoinAsync(voiceChannel, Context.Channel as ITextChannel);
-				await ReplyAsync($"Joined {voiceChannel.Name}!");
-			}
-			catch (Exception exception)
-			{
-				await ReplyAsync(exception.Message);
-			}
+			voiceChannel = voiceState.VoiceChannel;
 		}
 
-		var searchResponse = await node.SearchAsync(Uri.IsWellFormedUriString(url, UriKind.Absolute) ? SearchType.Direct : SearchType.YouTube, url);
-		if (searchResponse.Status is SearchStatus.LoadFailed or SearchStatus.NoMatches)
+		// No search
+		if (string.IsNullOrWhiteSpace(url))
 		{
-			await ReplyAsync($"I wasn't able to find anything for `{url}`.");
+			embed.Title = "No search term.";
+			embed.Description = "Type a URL or the name of a music to search for.";
+			await embed.SendAsync();
 			return;
 		}
 
+		// Join voice channel if not already in one
+		if (!node.TryGetPlayer(this.Context.Guild, out LavaPlayer<LavaTrack> player))
+		{
+			player = await node.JoinAsync(voiceChannel, this.Context.Channel as ITextChannel);
+		}
+		// Search for a song
+		SearchResponse searchResponse = await node.SearchAsync(Uri.IsWellFormedUriString(url, UriKind.Absolute) ? SearchType.Direct : SearchType.YouTube, url);
+		// No results
+		if (searchResponse.Status is SearchStatus.LoadFailed or SearchStatus.NoMatches)
+		{
+			embed.Title = "Nothing found.";
+			embed.Description = $"'**{url}**' wield no results.";
+			await embed.SendAsync();
+			return;
+		}
+		// Queue playlist
 		if (!string.IsNullOrWhiteSpace(searchResponse.Playlist.Name))
 		{
 			player.Vueue.Enqueue(searchResponse.Tracks);
-			await ReplyAsync($"Enqueued {searchResponse.Tracks.Count} songs.");
+
+			embed.Title = "Added to queue";
+			embed.Description = $"Added **{searchResponse.Tracks.Count}** to the queue.";
+			await embed.SendAsync();
 		}
+		// Queue track
 		else
 		{
-			var track = searchResponse.Tracks.FirstOrDefault();
+			LavaTrack track = searchResponse.Tracks.FirstOrDefault();
 			player.Vueue.Enqueue(track);
 
-			await ReplyAsync($"Enqueued {track?.Title}");
+			embed.Title = "Added to queue";
+			embed.Description = $"Added **{track.Title}** to the queue.";
+			await embed.SendAsync();
 		}
-
+		// Start playing
 		if (player.PlayerState is PlayerState.Playing or PlayerState.Paused)
 		{
 			return;
 		}
 
-		player.Vueue.TryDequeue(out var lavaTrack);
+		player.Vueue.TryDequeue(out LavaTrack lavaTrack);
 		await player.PlayAsync(lavaTrack);
 
-		/*DefaultEmbed embed = new DefaultEmbed("Music Play", "🎵", Context.Interaction)
-		{
-			Description = "Command is **WIP** *(Work In Progress)*."
-		};
-		await embed.SendAsync();*/
+		embed.Title = "Playing";
+		embed.Description = $"Playing '**{lavaTrack.Title}**'";
+		await embed.SendAsync();
 	}
 }
