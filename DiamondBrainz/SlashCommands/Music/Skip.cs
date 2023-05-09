@@ -3,7 +3,6 @@
 using Discord.Interactions;
 
 using Victoria.Node;
-
 using Victoria.Player;
 
 namespace Diamond.API.SlashCommands.Music;
@@ -14,8 +13,7 @@ public partial class Music
 	{
 		await this.DeferAsync();
 		DefaultEmbed embed = new DefaultEmbed("Music", "🎶", this.Context.Interaction);
-
-		LavaNode node = this._lava.GetNode();
+		LavaNode node = await _lava.GetNodeAsync();
 
 		if (!node.TryGetPlayer(this.Context.Guild, out LavaPlayer<LavaTrack> player))
 		{
@@ -46,7 +44,7 @@ public partial class Music
 		}
 
 		// Skip and play next track
-		(LavaTrack skipped, LavaTrack currenTrack) = await player.SkipAsync();
+		(LavaTrack skipped, LavaTrack next) = await player.SkipAsync();
 
 		embed.Title = "Skipped";
 		embed.Description = $"Skipped '**{skipped.Title}**'.";
@@ -56,7 +54,7 @@ public partial class Music
 		DefaultEmbed playingEmbed = new DefaultEmbed("Music", "🎶", this.Context.Interaction)
 		{
 			Title = "Now playing",
-			Description = $"Now playing: '**{currenTrack.Title}**'.",
+			Description = $"Now playing: '**{next.Title}**'.",
 		};
 		await playingEmbed.SendAsync(false, true);
 	}

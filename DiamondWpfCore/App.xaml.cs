@@ -32,6 +32,7 @@ namespace Diamond.GUI
 				.AddSingleton<LogsPanelPage>()
 				.AddSingleton<RemotePanelPage>()
 				.AddSingleton<SettingsPanelPage>()
+				.AddSingleton<LavalinkPanelPage>()
 				.AddSingleton<DiamondDatabase>()
 				.AddSingleton<CsgoBackpack>()
 				.AddSingleton<OpenMeteoGeocoding>()

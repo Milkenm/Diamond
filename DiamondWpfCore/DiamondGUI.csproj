@@ -9,12 +9,17 @@
     <StartupObject>Diamond.GUI.App</StartupObject>
     <ApplicationIcon>Diamond Icon 2 (round).ico</ApplicationIcon>
     <UseWindowsForms>True</UseWindowsForms>
+    <SignAssembly>False</SignAssembly>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="bin\**" />
     <Compile Remove="obj\**" />
+    <EmbeddedResource Remove="bin\**" />
     <EmbeddedResource Remove="obj\**" />
+    <None Remove="bin\**" />
     <None Remove="obj\**" />
+    <Page Remove="bin\**" />
     <Page Remove="obj\**" />
   </ItemGroup>
 
@@ -24,6 +29,7 @@
     <None Remove="Resources\Emojis\Robot.png" />
     <None Remove="Resources\Emojis\Satellite.png" />
     <None Remove="Resources\Emojis\Scroll.png" />
+    <None Remove="Resources\Emojis\Volcano.png" />
     <None Remove="Resources\Icon_%28round%29.png" />
   </ItemGroup>
 
@@ -36,6 +42,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Emojis\Volcano.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\Icon.png" />
     <Resource Include="Resources\Emojis\Gear.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -51,5 +60,13 @@
     </Resource>
     <Resource Include="Resources\Icon_(round).png" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="XCOPY &quot;$(SolutionDir)Lavalink&quot; &quot;$(TargetDir)\Lavalink\&quot; /S /Y" />
+  </Target>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="XCOPY &quot;$(SolutionDir)Lavalink&quot; &quot;$(TargetDir)\Lavalink\&quot; /S /Y" />
+  </Target>
 
 </Project>

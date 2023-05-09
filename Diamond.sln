@@ -9,6 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiamondAPI", "DiamondBrainz
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScriptsLibV2", "..\ScriptsLib\ScriptsLibV2\ScriptsLibV2.csproj", "{B9D38E54-747E-4D2C-A2B2-85158E9CC07B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lavalink", "Lavalink", "{52AC0583-4684-4A29-AD11-F917E57EDF48}"
+	ProjectSection(SolutionItems) = preProject
+		Lavalink\application.yml = Lavalink\application.yml
+		Lavalink\Lavalink.jar = Lavalink\Lavalink.jar
+		Lavalink\run.bat = Lavalink\run.bat
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

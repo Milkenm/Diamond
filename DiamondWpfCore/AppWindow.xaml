@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Style="{StaticResource WindowStyle}" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+        Style="{StaticResource WindowStyle}" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="Window_Closing">
 
 	<Grid Width="1000" Height="400">
 		<TabControl x:Name="tabControl_main" Style="{StaticResource TabControlStyle}">
@@ -22,6 +22,14 @@
 				</TabItem.Header>
 				<Grid>
 					<Frame x:Name="frame_logs" Style="{StaticResource FrameStyle}"/>
+				</Grid>
+			</TabItem>
+			<TabItem x:Name="tabItem_lavalink" Style="{StaticResource TabItemStyle}">
+				<TabItem.Header>
+					<Image x:Name="image_lavalink" Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Volcano.png" />
+				</TabItem.Header>
+				<Grid>
+					<Frame x:Name="frame_lavalink" Style="{StaticResource FrameStyle}"/>
 				</Grid>
 			</TabItem>
 			<TabItem x:Name="tabItem_rcon" Style="{StaticResource TabItemStyle}" Height="65" Width="85">

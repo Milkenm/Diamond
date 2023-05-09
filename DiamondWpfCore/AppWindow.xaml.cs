@@ -52,9 +52,9 @@ namespace Diamond.GUI
 			// Initialize bot
 			_bot.Initialize();
 			InteractionService interactionService = new InteractionService(_bot.Client.Rest);
+			Lava lava = _serviceProvider.GetRequiredService<Lava>();
 			_bot.Client.Ready += new Func<Task>(async () =>
 			{
-				await _serviceProvider.GetRequiredService<Lava>().GetNode().ConnectAsync();
 				await interactionService.AddModulesAsync(ScriptsLibV2.Util.Utils.GetAssemblyByName("DiamondAPI"), _serviceProvider);
 				if (ScriptsLibV2.Util.Utils.IsDebugEnabled() && Utils.GetSetting(_database, "DebugGuildId") != null)
 				{
@@ -71,7 +71,7 @@ namespace Diamond.GUI
 						DefaultEmbed errorEmbed = new DefaultEmbed("Error", "🔥", context.Interaction)
 						{
 							Title = "Something bad happened... :(",
-							Description = "This error was reported to the devs, hope to get it fixed soon..."
+							Description = "This error was reported to the dev, hope to get it fixed soon..."
 						};
 
 						string contextProperties = GetObjectProperties(context);
@@ -91,6 +91,11 @@ namespace Diamond.GUI
 					}
 				};
 			});
+			// Disconnect from LavaLink when the bot logs out
+			_bot.Client.LoggedOut += async () =>
+			{
+				await lava.StopNodeAsync();
+			};
 			_bot.Client.SlashCommandExecuted += async (socketInteraction) =>
 			{
 				// Ignore debug channel if debug is disabled and ignore normal channels if debug is enabled
@@ -112,12 +117,13 @@ namespace Diamond.GUI
 			frame_logs.Navigate(_serviceProvider.GetRequiredService<LogsPanelPage>());
 			frame_remote.Navigate(_serviceProvider.GetRequiredService<RemotePanelPage>());
 			frame_settings.Navigate(_serviceProvider.GetRequiredService<SettingsPanelPage>());
+			frame_lavalink.Navigate(_serviceProvider.GetRequiredService<LavalinkPanelPage>());
 
 			// Check if settings are valid
 			if (!Utils.AreSettingsValid(_serviceProvider.GetRequiredService<DiamondDatabase>()))
 			{
 				ToggleUI(false);
-				tabControl_main.SelectedIndex = 3;
+				tabControl_main.SelectedIndex = tabControl_main.Items.Count - 1;
 			}
 		}
 
@@ -125,14 +131,18 @@ namespace Diamond.GUI
 		{
 			if (tabItem_main.IsEnabled == enabled) return;
 
+			// Main
 			DisableImage(image_main, !enabled);
 			tabItem_main.IsEnabled = enabled;
-
+			// Logs
 			DisableImage(image_logs, !enabled);
 			tabItem_logs.IsEnabled = enabled;
-
+			// RCON
 			DisableImage(image_rcon, !enabled);
 			tabItem_rcon.IsEnabled = enabled;
+			// Lavalink
+			DisableImage(image_lavalink, !enabled);
+			tabItem_lavalink.IsEnabled = enabled;
 		}
 
 		private static void DisableImage(System.Windows.Controls.Image image, bool grayout)
@@ -144,7 +154,7 @@ namespace Diamond.GUI
 				{
 					ImageBrush OpacityMask = new ImageBrush(bitmapImage);
 					image.Source = new FormatConvertedBitmap(bitmapImage, PixelFormats.Gray8, null, 0);
-					// reuse the opacity mask from the original image as FormatConvertedBitmap does not keep transparency info
+					// Reuse the opacity mask from the original image as FormatConvertedBitmap does not keep transparency info
 					image.OpacityMask = OpacityMask;
 				}
 			}
@@ -169,6 +179,11 @@ namespace Diamond.GUI
 				sb.Append($"\t{name}={value}");
 			}
 			return $"{obj.GetType()}:\n{sb}";
+		}
+
+		private void Window_Closing(object sender, CancelEventArgs e)
+		{
+			_serviceProvider.GetRequiredService<Lava>().Dispose();
 		}
 	}
 }

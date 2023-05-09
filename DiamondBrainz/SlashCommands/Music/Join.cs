@@ -15,8 +15,7 @@ public partial class Music
 	{
 		await this.DeferAsync();
 		DefaultEmbed embed = new DefaultEmbed("Music", "🎶", this.Context.Interaction);
-
-		LavaNode node = this._lava.GetNode();
+		LavaNode node = await _lava.GetNodeAsync();
 
 		// Get voice channel
 		if (voiceChannel == null)

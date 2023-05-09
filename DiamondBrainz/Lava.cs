@@ -1,4 +1,7 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using Diamond.API.Bot;
@@ -9,35 +12,97 @@ using Victoria.Node;
 using Victoria.Node.EventArgs;
 using Victoria.Player;
 
+using SUtils = ScriptsLibV2.Util.Utils;
+
 namespace Diamond.API;
-public class Lava
+public class Lava : IDisposable
 {
 	private readonly DiamondBot _bot;
 
-	private readonly LavaNode _lavanode;
 	private readonly ILogger<LavaNode> _logger;
+
+	private LavaNode _node;
+	private readonly Process _lavalinkProcess;
 
 	public Lava(DiamondBot bot)
 	{
 		_bot = bot;
-
-		NodeConfiguration config = new NodeConfiguration();
-
 		_logger = new Loggerr();
-		_lavanode = new LavaNode(_bot.Client, config, _logger);
 
-		_lavanode.OnTrackEnd += OnTrackEndAsync;
-		_lavanode.OnTrackStart += OnTrackStartAsync;
-		_lavanode.OnStatsReceived += OnStatsReceivedAsync;
-		_lavanode.OnUpdateReceived += OnUpdateReceivedAsync;
-		_lavanode.OnWebSocketClosed += OnWebSocketClosedAsync;
-		_lavanode.OnTrackStuck += OnTrackStuckAsync;
-		_lavanode.OnTrackException += OnTrackExceptionAsync;
+		_lavalinkProcess = Process.Start(new ProcessStartInfo()
+		{
+			FileName = $"java",
+			Arguments = $"-jar \"{Path.Join(SUtils.GetInstallationFolder(), @"\Lavalink\Lavalink.jar")}\"",
+			UseShellExecute = false,
+			RedirectStandardOutput = true,
+			RedirectStandardError = true,
+			CreateNoWindow = true,
+		});
+		_lavalinkProcess.BeginOutputReadLine();
+		_lavalinkProcess.BeginErrorReadLine();
 	}
 
-	public LavaNode GetNode()
+	public void Dispose()
 	{
-		return this._lavanode;
+		// Stop LavaNode
+		this.StopNodeAsync().Wait();
+		// Stop Lavalink process
+		this._lavalinkProcess.CloseMainWindow();
+		this._lavalinkProcess.Close();
+		this._lavalinkProcess.WaitForExit();
+		this._lavalinkProcess.Dispose();
+	}
+
+	public Process GetLavalinkProcess()
+	{
+		return _lavalinkProcess;
+	}
+
+	public async Task<LavaNode> GetNodeAsync()
+	{
+		if (this._node == null)
+		{
+			_node = new LavaNode(_bot.Client, new NodeConfiguration(), _logger);
+
+			_node.OnTrackEnd += OnTrackEndAsync;
+			_node.OnTrackStart += OnTrackStartAsync;
+			_node.OnStatsReceived += OnStatsReceivedAsync;
+			_node.OnUpdateReceived += OnUpdateReceivedAsync;
+			_node.OnWebSocketClosed += OnWebSocketClosedAsync;
+			_node.OnTrackStuck += OnTrackStuckAsync;
+			_node.OnTrackException += OnTrackExceptionAsync;
+		}
+
+		if (!this._node.IsConnected)
+		{
+			Debug.WriteLine("Connecting to node...");
+			try
+			{
+				await this._node.ConnectAsync();
+				if (this._node.IsConnected)
+				{
+					Debug.WriteLine("Connected to node!");
+				}
+			}
+			catch
+			{
+				Debug.WriteLine("An error ocurred while connecting to the node.");
+			}
+		}
+
+		return this._node;
+	}
+
+	public async Task StopNodeAsync()
+	{
+		if (this._node == null) return;
+
+		if (this._node.IsConnected)
+		{
+			await this._node.DisconnectAsync();
+		}
+		await this._node.DisposeAsync();
+		this._node = null;
 	}
 
 	private static Task OnTrackExceptionAsync(TrackExceptionEventArg<LavaPlayer<LavaTrack>, LavaTrack> arg)
