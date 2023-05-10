@@ -42,6 +42,12 @@ namespace Diamond.GUI
 			MainPanelPage mainPanel = _serviceProvider.GetRequiredService<MainPanelPage>();
 			LogsPanelPage logsPanel = _serviceProvider.GetRequiredService<LogsPanelPage>();
 
+			// Global exception handler
+			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler((s, e) =>
+			{
+				logsPanel.LogAsync(e.ExceptionObject);
+			});
+
 			// Load csgo items
 			mainPanel.LogAsync("Loading CS:GO items...").GetAwaiter();
 			_serviceProvider.GetRequiredService<CsgoBackpack>().LoadItems().GetAwaiter().OnCompleted(async () =>
@@ -51,7 +57,7 @@ namespace Diamond.GUI
 
 			// Initialize bot
 			_bot.Initialize();
-			InteractionService interactionService = new InteractionService(_bot.Client.Rest);
+			InteractionService interactionService = _serviceProvider.GetService<InteractionService>();
 			Lava lava = _serviceProvider.GetRequiredService<Lava>();
 			_bot.Client.Ready += new Func<Task>(async () =>
 			{
@@ -89,7 +95,7 @@ namespace Diamond.GUI
 					string interactionProperties = GetObjectProperties(context.Interaction);
 					string slashCommandDataProperties = GetObjectProperties(context.Interaction.Data);
 
-					await logsPanel.Log($"[{DateTimeOffset.Now}] Error running '{command.Name}' (user: {context.User.Username}#{context.User.Discriminator}):\n{result.ErrorReason} ({result.Error.GetType()})\nInteraction: {command}\n{contextProperties}\n{interactionProperties}\n{slashCommandDataProperties}");
+					await logsPanel.LogAsync($"[{DateTimeOffset.Now}] Error running '{command.Name}' (user: {context.User.Username}#{context.User.Discriminator}):\n{result.ErrorReason} ({result.Error.GetType()})\nInteraction: {command}\n{contextProperties}\n{interactionProperties}\n{slashCommandDataProperties}");
 
 					if (!context.Interaction.HasResponded)
 					{
@@ -117,9 +123,9 @@ namespace Diamond.GUI
 			// Set frames
 			frame_main.Navigate(mainPanel);
 			frame_logs.Navigate(_serviceProvider.GetRequiredService<LogsPanelPage>());
+			frame_lavalink.Navigate(_serviceProvider.GetRequiredService<LavalinkPanelPage>());
 			frame_remote.Navigate(_serviceProvider.GetRequiredService<RemotePanelPage>());
 			frame_settings.Navigate(_serviceProvider.GetRequiredService<SettingsPanelPage>());
-			frame_lavalink.Navigate(_serviceProvider.GetRequiredService<LavalinkPanelPage>());
 
 			// Check if settings are valid
 			if (!Utils.AreSettingsValid(_serviceProvider.GetRequiredService<DiamondDatabase>()))
@@ -139,12 +145,12 @@ namespace Diamond.GUI
 			// Logs
 			DisableImage(image_logs, !enabled);
 			tabItem_logs.IsEnabled = enabled;
-			// RCON
-			DisableImage(image_rcon, !enabled);
-			tabItem_rcon.IsEnabled = enabled;
 			// Lavalink
 			DisableImage(image_lavalink, !enabled);
 			tabItem_lavalink.IsEnabled = enabled;
+			// RCON
+			DisableImage(image_rcon, !enabled);
+			tabItem_rcon.IsEnabled = enabled;
 		}
 
 		private static void DisableImage(System.Windows.Controls.Image image, bool grayout)

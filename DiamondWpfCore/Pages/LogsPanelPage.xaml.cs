@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using System.Windows.Controls;
-
-using Diamond.API.Bot;
+﻿using System.Windows.Controls;
 
 using Discord;
 
@@ -11,21 +8,12 @@ namespace Diamond.GUI.Pages;
 /// </summary>
 public partial class LogsPanelPage : Page
 {
-	private readonly DiamondBot _bot;
-
-	public LogsPanelPage(DiamondBot bot)
+	public LogsPanelPage()
 	{
 		InitializeComponent();
-
-		_bot = bot;
 	}
 
-	private void Page_Loaded(object sender, System.Windows.RoutedEventArgs e)
-	{
-
-	}
-
-	public async Task Log(string msg)
+	public void Log(string msg)
 	{
 		Dispatcher.Invoke(() =>
 		{
@@ -33,8 +21,13 @@ public partial class LogsPanelPage : Page
 		});
 	}
 
-	public async Task Log(LogMessage msg)
+	public void Log(LogMessage msg)
 	{
-		await Log(msg.Message);
+		Log(msg.Message);
+	}
+
+	public void Log(object msg)
+	{
+		Log(msg.ToString());
 	}
 }

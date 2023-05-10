@@ -8,7 +8,7 @@ using Diamond.API.Data;
 using Diamond.API.Stuff;
 using Diamond.GUI.Pages;
 
-using Discord.WebSocket;
+using Discord.Interactions;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,20 +23,28 @@ namespace Diamond.GUI
 
 		public App()
 		{
+			DiamondDatabase database = new DiamondDatabase();
+			DiamondBot bot = new DiamondBot(database);
+
 			_serviceProvider = new ServiceCollection()
+				// Bot stuff
 				.AddSingleton(this)
-				.AddSingleton<DiamondBot>()
+				.AddSingleton(bot)
+				.AddSingleton(new InteractionService(bot.Client.Rest))
+				.AddSingleton(database)
+				// Tabs (Windows)
 				.AddSingleton<AppWindow>()
-				.AddSingleton<OpenAIAPI>()
 				.AddSingleton<MainPanelPage>()
 				.AddSingleton<LogsPanelPage>()
 				.AddSingleton<RemotePanelPage>()
 				.AddSingleton<SettingsPanelPage>()
 				.AddSingleton<LavalinkPanelPage>()
-				.AddSingleton<DiamondDatabase>()
+				// APIs
+				.AddSingleton<OpenAIAPI>()
 				.AddSingleton<CsgoBackpack>()
 				.AddSingleton<OpenMeteoGeocoding>()
 				.AddSingleton<OpenMeteoWeather>()
+				// Lavalink
 				.AddSingleton<Lava>()
 				.BuildServiceProvider();
 		}
