@@ -45,7 +45,7 @@ namespace Diamond.GUI
 			// Global exception handler
 			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler((s, e) =>
 			{
-				logsPanel.LogAsync(e.ExceptionObject);
+				logsPanel.Log(e.ExceptionObject);
 			});
 
 			// Load csgo items
@@ -95,7 +95,7 @@ namespace Diamond.GUI
 					string interactionProperties = GetObjectProperties(context.Interaction);
 					string slashCommandDataProperties = GetObjectProperties(context.Interaction.Data);
 
-					await logsPanel.LogAsync($"[{DateTimeOffset.Now}] Error running '{command.Name}' (user: {context.User.Username}#{context.User.Discriminator}):\n{result.ErrorReason} ({result.Error.GetType()})\nInteraction: {command}\n{contextProperties}\n{interactionProperties}\n{slashCommandDataProperties}");
+					logsPanel.Log($"[{DateTimeOffset.Now}] Error running '{command.Name}' (user: {context.User.Username}#{context.User.Discriminator}):\n{result.ErrorReason} ({result.Error.GetType()})\nInteraction: {command}\n{contextProperties}\n{interactionProperties}\n{slashCommandDataProperties}");
 
 					if (!context.Interaction.HasResponded)
 					{
