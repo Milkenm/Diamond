@@ -123,7 +123,7 @@ public partial class Csgo
 			// Calculate inventory value
 			foreach (AssetDescription description in inventory.Descriptions)
 			{
-				CsgoItemMatchInfo csgoItem = _csgoBackpack.SearchItem(description.MarketName, currency);
+				CsgoItemMatchInfo csgoItem = _csgoBackpack.SearchItems(description.MarketName, currency)[0];
 				if (csgoItem.CsgoItem.Price == null)
 				{
 					ignoredItems++;

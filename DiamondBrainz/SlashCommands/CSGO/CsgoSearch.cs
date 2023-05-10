@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 
-using Diamond.API.Schems;
 using Diamond.API.Schems.CsgoBackpack;
 using Diamond.API.Stuff;
 
 using Discord;
 using Discord.Interactions;
+using Discord.WebSocket;
+
+using ScriptsLibV2.Extensions;
 
 namespace Diamond.API.SlashCommands.CSGO;
 
@@ -21,7 +24,7 @@ public partial class Csgo
 
 	[SlashCommand("item", "Search for a CS:GO item.")]
 	public async Task CsgoSearchCommandAsync(
-		[Summary("search", "The name of the item to search for.")] string search,
+		[Summary("search", "The name of the item to search for."), Autocomplete] string search,
 		[Summary("currency", "The currency to return the price in.")] Currency currency = Currency.EUR,
 		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
 	)
@@ -29,11 +32,11 @@ public partial class Csgo
 		await DeferAsync(!showEveryone);
 
 		_csgoBackpack.ClearCache();
-		CsgoItemMatchInfo resultItem = _csgoBackpack.SearchItem(search, currency);
+		CsgoItemMatchInfo resultItem = _csgoBackpack.SearchItems(search, currency)[0];
 
 		DefaultEmbed embed = new DefaultEmbed("CS:GO Item Search", "🔫", Context.Interaction)
 		{
-			Title = resultItem.CsgoItem.Name.Replace("&#39", "'"),
+			Title = resultItem.CsgoItem.Name,
 			Description = $"⭐ **Released**: {UnixTimeStampToDateTime(resultItem.CsgoItem.FirstSaleDate).AddDays(1).ToString("dd/MM/yyyy")}",
 			ThumbnailUrl = $"https://community.cloudflare.steamstatic.com/economy/image/{resultItem.CsgoItem.IconUrl}",
 		};
@@ -55,7 +58,7 @@ public partial class Csgo
 		}
 		else
 		{
-			bmp = Draw(hexColor);
+			bmp = DrawLine(hexColor);
 			_raritiesCacheMap.Add(hexColor, bmp);
 		}
 
@@ -69,7 +72,31 @@ public partial class Csgo
 		}
 	}
 
-	public static Bitmap Draw(string hexColor)
+	[AutocompleteCommand("search", "item")]
+	public async Task Autocomplete()
+	{
+		SocketAutocompleteInteraction interaction = Context.Interaction as SocketAutocompleteInteraction;
+		string userInput = (Context.Interaction as SocketAutocompleteInteraction).Data.Current.Value.ToString();
+
+		if (userInput.IsEmpty())
+		{
+			await interaction.RespondAsync(null);
+			return;
+		}
+
+		List<CsgoItemMatchInfo> matches = _csgoBackpack.SearchItems(userInput, Currency.EUR);
+
+		List<AutocompleteResult> autocomplete = new List<AutocompleteResult>();
+		foreach (CsgoItemMatchInfo match in matches)
+		{
+			string itemName = match.CsgoItem.Name;
+			autocomplete.Add(new AutocompleteResult(itemName, itemName));
+		}
+
+		await interaction.RespondAsync(autocomplete.Take(25));
+	}
+
+	public static Bitmap DrawLine(string hexColor)
 	{
 		var bitmap = new Bitmap(500, 5);
 

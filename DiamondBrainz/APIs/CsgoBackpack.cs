@@ -27,7 +27,7 @@ namespace Diamond.API.Stuff
 		private DiamondDatabase _diamondDb;
 
 		private readonly Dictionary<Currency, CsgoBackpackItemsList> _itemsMap = new Dictionary<Currency, CsgoBackpackItemsList>();
-		private readonly Dictionary<string, CsgoItemMatchInfo> _searchCacheMap = new Dictionary<string, CsgoItemMatchInfo>();
+		private readonly Dictionary<string, List<CsgoItemMatchInfo>> _searchCacheMap = new Dictionary<string, List<CsgoItemMatchInfo>>();
 
 		public CsgoBackpack(DiamondDatabase diamondDb)
 		{
@@ -76,24 +76,33 @@ namespace Diamond.API.Stuff
 					Debug.WriteLine($"Failed to load items for currency '{currency.ToString().ToUpper()}'.");
 					continue;
 				}
+				foreach (KeyValuePair<string, CsgoItemInfo> a in itemsList.ItemsList)
+				{
+					CsgoItemInfo item = a.Value;
+					if (item.Name.Contains("&#") || item.Name.Contains('%'))
+					{
+						item.Name = item.Name.Replace("&#39", "'").Replace("%27", "'");
+						itemsList.ItemsList[a.Key] = a.Value;
+					}
+				}
 				_itemsMap.Add(currency, itemsList);
 			}
 		}
 
-		public CsgoItemMatchInfo? SearchItem(string searchItemName, Currency currency)
+		public List<CsgoItemMatchInfo> SearchItems(string searchItemName, Currency currency)
 		{
 			if (!_itemsMap.ContainsKey(currency)) return null;
 
-			CsgoItemMatchInfo? bestMatch = null;
+			List<CsgoItemMatchInfo> bestMatches = new List<CsgoItemMatchInfo>();
 			if (_searchCacheMap.ContainsKey(searchItemName))
 			{
-				bestMatch = _searchCacheMap[searchItemName];
+				bestMatches = _searchCacheMap[searchItemName];
 			}
 			else
 			{
 				foreach (CsgoItemInfo item in _itemsMap[currency].ItemsList.Values)
 				{
-					string itemName = item.Name.Replace("&#39", "'").ToLower().Trim();
+					string itemName = item.Name.ToLower().Trim();
 
 					double matches = 0;
 					foreach (string word in searchItemName.Split(" "))
@@ -104,19 +113,24 @@ namespace Diamond.API.Stuff
 						}
 					}
 					matches *= ScriptsLibV2.Util.Utils.CalculateLevenshteinSimilarity(itemName, searchItemName);
-					if (bestMatch == null || bestMatch.Match < matches)
+					if (matches == 0) continue;
+					if (bestMatches.Count > 0 && matches > bestMatches[0].Match + 0.3D)
 					{
-						bestMatch = new CsgoItemMatchInfo(item, matches);
+						bestMatches.Clear();
+					}
+					if (bestMatches.Count == 0 || (matches >= bestMatches[0].Match - 0.3D && matches <= bestMatches[0].Match + 0.3D))
+					{
+						bestMatches.Add(new CsgoItemMatchInfo(item, matches));
 					}
 				}
 			}
-			if (bestMatch != null)
+			if (bestMatches.Count > 0)
 			{
 				if (!_searchCacheMap.ContainsKey(searchItemName))
 				{
-					_searchCacheMap.Add(searchItemName, bestMatch);
+					_searchCacheMap.Add(searchItemName, bestMatches);
 				}
-				return bestMatch;
+				return bestMatches;
 			}
 
 			return null;
