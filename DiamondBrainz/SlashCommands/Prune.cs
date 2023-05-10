@@ -60,7 +60,17 @@ namespace Diamond.API.SlashCommands
 				embed.WithDescription("No messages to delete.");
 			}
 
-			await embed.SendAsync();
+			ComponentBuilder component = new ComponentBuilder()
+				.WithButton("Delete", "delete_prune", ButtonStyle.Danger, Emoji.Parse("🗑️"));
+
+			await embed.SendAsync(component.Build());
+		}
+
+		[ComponentInteraction("delete_prune")]
+		public async Task PruneButtonAsync()
+		{
+			await DeferAsync();
+			await (await Context.Interaction.GetOriginalResponseAsync()).DeleteAsync();
 		}
 	}
 }
