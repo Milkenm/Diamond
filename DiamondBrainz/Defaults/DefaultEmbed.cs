@@ -13,7 +13,7 @@ namespace Diamond.API
 
 		private readonly IDiscordInteraction _interaction = null;
 
-		public DefaultEmbed(string title, string emoji, IDiscordInteraction interaction)
+		public DefaultEmbed(string title, string emoji, IDiscordInteraction interaction, string? link = null)
 		{
 			_interaction = interaction;
 
@@ -23,10 +23,11 @@ namespace Diamond.API
 			{
 				Name = title,
 				IconUrl = TwemojiUtils.GetUrlFromEmoji(Emoji.Parse(emoji).ToString()),
+				Url = link,
 			};
 			Footer = new EmbedFooterBuilder()
 			{
-				Text = guildUser.Nickname,
+				Text = guildUser.DisplayName,
 				IconUrl = guildUser.GetAvatarUrl(),
 			};
 			WithCurrentTimestamp();

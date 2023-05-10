@@ -14,8 +14,6 @@ using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 
-using ScriptsLibV2.Extensions;
-
 namespace Diamond.API.SlashCommands.CSGO;
 
 public partial class Csgo
@@ -36,7 +34,7 @@ public partial class Csgo
 
 		DefaultEmbed embed = new DefaultEmbed("CS:GO Item Search", "🔫", Context.Interaction)
 		{
-			Title = resultItem.CsgoItem.Name,
+			Title = resultItem.CsgoItem.Name.Replace("&#39", "'"),
 			Description = $"⭐ **Released**: {UnixTimeStampToDateTime(resultItem.CsgoItem.FirstSaleDate).AddDays(1).ToString("dd/MM/yyyy")}",
 			ThumbnailUrl = $"https://community.cloudflare.steamstatic.com/economy/image/{resultItem.CsgoItem.IconUrl}",
 		};
@@ -75,25 +73,18 @@ public partial class Csgo
 	[AutocompleteCommand("search", "item")]
 	public async Task Autocomplete()
 	{
-		SocketAutocompleteInteraction interaction = Context.Interaction as SocketAutocompleteInteraction;
 		string userInput = (Context.Interaction as SocketAutocompleteInteraction).Data.Current.Value.ToString();
-
-		if (userInput.IsEmpty())
-		{
-			await interaction.RespondAsync(null);
-			return;
-		}
 
 		List<CsgoItemMatchInfo> matches = _csgoBackpack.SearchItems(userInput, Currency.EUR);
 
 		List<AutocompleteResult> autocomplete = new List<AutocompleteResult>();
 		foreach (CsgoItemMatchInfo match in matches)
 		{
-			string itemName = match.CsgoItem.Name;
+			string itemName = match.CsgoItem.Name.Replace("&#39", "'").Replace("&#27", "'");
 			autocomplete.Add(new AutocompleteResult(itemName, itemName));
 		}
 
-		await interaction.RespondAsync(autocomplete.Take(25));
+		await (Context.Interaction as SocketAutocompleteInteraction).RespondAsync(autocomplete.Take(25));
 	}
 
 	public static Bitmap DrawLine(string hexColor)

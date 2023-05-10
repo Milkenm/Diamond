@@ -65,8 +65,17 @@ namespace Diamond.GUI
 					await interactionService.RegisterCommandsGloballyAsync();
 				}
 			});
-			// Listen for slash commands
-			interactionService.SlashCommandExecuted += async (command, context, result) =>
+			// Run interactions (slash commands/modals/buttons/...)
+			_bot.Client.InteractionCreated += async (socketInteraction) =>
+			{
+				// Ignore debug channel if debug is disabled and ignore normal channels if debug is enabled
+				if ((socketInteraction.ChannelId == Convert.ToUInt64(Utils.GetSetting(_database, "DebugChannelId")) && !ScriptsLibV2.Util.Utils.IsDebugEnabled()) || (socketInteraction.ChannelId != Convert.ToUInt64(Utils.GetSetting(_database, "DebugChannelId")) && ScriptsLibV2.Util.Utils.IsDebugEnabled())) return;
+
+				SocketInteractionContext context = new SocketInteractionContext(_bot.Client, socketInteraction);
+				await interactionService.ExecuteCommandAsync(context, _serviceProvider);
+			};
+			// Handle interaction exceptions
+			interactionService.InteractionExecuted += async (command, context, result) =>
 			{
 				if (!result.IsSuccess)
 				{
@@ -80,7 +89,7 @@ namespace Diamond.GUI
 					string interactionProperties = GetObjectProperties(context.Interaction);
 					string slashCommandDataProperties = GetObjectProperties(context.Interaction.Data);
 
-					await logsPanel.Log($"[{DateTimeOffset.Now}] Error running command '{command.Name}' (user: {context.User.Username}#{context.User.Discriminator}):\n{result.ErrorReason} ({result.Error.GetType()})\nCommand: {command}\n{contextProperties}\n{interactionProperties}\n{slashCommandDataProperties}");
+					await logsPanel.Log($"[{DateTimeOffset.Now}] Error running '{command.Name}' (user: {context.User.Username}#{context.User.Discriminator}):\n{result.ErrorReason} ({result.Error.GetType()})\nInteraction: {command}\n{contextProperties}\n{interactionProperties}\n{slashCommandDataProperties}");
 
 					if (!context.Interaction.HasResponded)
 					{
@@ -92,29 +101,10 @@ namespace Diamond.GUI
 					});
 				}
 			};
-			// Listen for modals/buttons/...
-			_bot.Client.InteractionCreated += async (interaction) =>
-			{
-				// Ignore slash commands
-				if (interaction.Type == InteractionType.ApplicationCommand) return;
-
-				SocketInteractionContext context = new SocketInteractionContext(_bot.Client, interaction);
-
-				// Execute the incoming command.
-				await interactionService.ExecuteCommandAsync(context, _serviceProvider);
-			};
 			// Disconnect from LavaLink when the bot logs out
 			_bot.Client.LoggedOut += async () =>
 			{
 				await lava.StopNodeAsync();
-			};
-			_bot.Client.SlashCommandExecuted += async (socketInteraction) =>
-			{
-				// Ignore debug channel if debug is disabled and ignore normal channels if debug is enabled
-				if ((socketInteraction.ChannelId == Convert.ToUInt64(Utils.GetSetting(_database, "DebugChannelId")) && !ScriptsLibV2.Util.Utils.IsDebugEnabled()) || (socketInteraction.ChannelId != Convert.ToUInt64(Utils.GetSetting(_database, "DebugChannelId")) && ScriptsLibV2.Util.Utils.IsDebugEnabled())) return;
-
-				SocketInteractionContext context = new SocketInteractionContext(_bot.Client, socketInteraction);
-				await interactionService.ExecuteCommandAsync(context, _serviceProvider);
 			};
 			_bot.Client.Log += new Func<LogMessage, Task>((logMessage) => _serviceProvider.GetRequiredService<MainPanelPage>().LogAsync(logMessage.Message));
 
