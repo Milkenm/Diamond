@@ -36,7 +36,7 @@ public partial class Owner
 		}
 		if (expression.EndsWith("`"))
 		{
-			expression = expression.Remove(expression.Length - 2, 1);
+			expression = expression.Remove(expression.Length - 1, 1);
 		}
 
 		object? result = null;
