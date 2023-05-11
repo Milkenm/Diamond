@@ -17,7 +17,8 @@ public partial class LogsPanelPage : Page
 	{
 		Dispatcher.Invoke(() =>
 		{
-			listBox_log.Items.Add(msg);
+			richTextBox_log.AppendText(msg, printDate: true);
+			richTextBox_log.ScrollToEnd();
 		});
 	}
 

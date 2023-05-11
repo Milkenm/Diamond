@@ -22,7 +22,11 @@ public partial class LavalinkPanelPage : Page
 
 			try
 			{
-				Dispatcher.Invoke(() => listBox_lavalink.Items.Add(d.Data));
+				Dispatcher.Invoke(() =>
+				{
+					richTextBox_lavalink.AppendText(d.Data, printDate: true);
+					richTextBox_lavalink.ScrollToEnd();
+				});
 			}
 			catch { }
 		});

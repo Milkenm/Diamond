@@ -6,7 +6,7 @@
 		<Setter Property="Foreground" Value="{StaticResource FontBrush}"/>
 		<Style.Resources>
 			<Style TargetType="{x:Type Border}">
-				<Setter Property="CornerRadius" Value="{StaticResource ControlsCornerRadius}"></Setter>
+				<Setter Property="CornerRadius" Value="{StaticResource ControlsCornerRadius}"/>
 			</Style>
 		</Style.Resources>
 	</Style>

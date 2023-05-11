@@ -98,17 +98,33 @@ namespace Diamond.GUI
 			{
 				if (!result.IsSuccess)
 				{
-					DefaultEmbed errorEmbed = new DefaultEmbed("Error", "🔥", context.Interaction)
-					{
-						Title = "Something bad happened... :(",
-						Description = "This error was reported to the dev, hope to get it fixed soon..."
-					};
-
 					string contextProperties = GetObjectProperties(context);
 					string interactionProperties = GetObjectProperties(context.Interaction);
 					string slashCommandDataProperties = GetObjectProperties(context.Interaction.Data);
 
-					logsPanel.Log($"[{DateTimeOffset.Now}] Error running '{command.Name}' (user: {context.User.Username}#{context.User.Discriminator}):\n{result.ErrorReason} ({result.Error.GetType()})\nInteraction: {command}\n{contextProperties}\n{interactionProperties}\n{slashCommandDataProperties}");
+					DefaultEmbed errorEmbed;
+					switch (result.Error)
+					{
+						case InteractionCommandError.UnmetPrecondition:
+							{
+								errorEmbed = new DefaultEmbed("Error", "🛑", context.Interaction)
+								{
+									Title = "No permission",
+									Description = result.ErrorReason,
+								};
+							}
+							break;
+						default:
+							{
+								errorEmbed = new DefaultEmbed("Error", "🔥", context.Interaction)
+								{
+									Title = "Something bad happened... :(",
+									Description = "This error was reported to the dev, hope to get it fixed soon...",
+								};
+								logsPanel.Log($"Error running '{command.Name}' (user: {context.User.Username}#{context.User.Discriminator}):\n{result.ErrorReason} ({result.Error.GetType()})\nInteraction: {command}\n{contextProperties}\n{interactionProperties}\n{slashCommandDataProperties}");
+							}
+							break;
+					}
 
 					if (!context.Interaction.HasResponded)
 					{
@@ -205,6 +221,12 @@ namespace Diamond.GUI
 			return $"{obj.GetType()}:\n{sb}";
 		}
 
-		private void Window_Closing(object sender, CancelEventArgs e) => this._serviceProvider.GetRequiredService<Lava>().Dispose();
+		private async void Window_Closing(object sender, CancelEventArgs e)
+		{
+			// Logout
+			await this._client.TakeLifeAsync();
+			// Stop Lavalink
+			this._serviceProvider.GetRequiredService<Lava>().Dispose();
+		}
 	}
 }

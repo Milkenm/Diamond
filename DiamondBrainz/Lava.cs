@@ -47,7 +47,7 @@ public class Lava : IDisposable
 		// Stop LavaNode
 		this.StopNodeAsync().Wait();
 		// Stop Lavalink process
-		this._lavalinkProcess.CloseMainWindow();
+		this._lavalinkProcess.Kill(true);
 		this._lavalinkProcess.Close();
 		this._lavalinkProcess.Dispose();
 	}

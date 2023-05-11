@@ -9,6 +9,6 @@
       Title="Lavalink">
 
 	<Grid>
-		<ListBox x:Name="listBox_lavalink" Style="{StaticResource ListBoxStyle}" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="10,10,10,10"/>
+		<RichTextBox x:Name="richTextBox_lavalink" Style="{StaticResource RichTextBoxStyle}" Margin="10,10,10,10"/>
 	</Grid>
 </Page>

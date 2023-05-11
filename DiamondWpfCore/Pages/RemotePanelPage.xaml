@@ -9,9 +9,9 @@
       Title="Remote">
 
 	<Grid >
-		<ListBox Style="{StaticResource ListBoxStyle}" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="470,193,10,10"/>
+		<RichTextBox Style="{StaticResource RichTextBoxStyle}" Margin="470,193,10,10"/>
 		<Label Content="Connected RCON Clients" Style="{StaticResource LabelStyle}" HorizontalAlignment="Left" Margin="470,165,0,0" VerticalAlignment="Top"/>
-		<ListBox Style="{StaticResource ListBoxStyle}" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="10,10,464,10"/>
+		<RichTextBox Style="{StaticResource RichTextBoxStyle}" Margin="10,10,464,10"/>
 		<Label Content="RCON Server Port" Style="{StaticResource LabelStyle}" HorizontalAlignment="Left" Margin="470,10,0,0" VerticalAlignment="Top"/>
 		<TextBox Style="{StaticResource TextBoxStyle}" HorizontalAlignment="Left" Margin="470,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="175"/>
 	</Grid>

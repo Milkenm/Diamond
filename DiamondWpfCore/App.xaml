@@ -6,11 +6,13 @@
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
+				<!-- Resources -->
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Resources/Style_Colors.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Resources/Style_Brushes.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Resources/Style_Effects.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Resources/Style_Fonts.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Resources/Style_Sizes.xaml"/>
+				<!-- Styles -->
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_Button.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_CheckBox.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_Grid.xaml"/>
@@ -19,11 +21,15 @@
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_Label.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_ListBox.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_PasswordBox.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_RichTextBox.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_TabControl.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_TabItem.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_TextBlock.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_TextBox.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_Window.xaml"/>
+				<!-- Overrides -->
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Overrides/MainPanel_Button.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Overrides/MainPanel_TextBox.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Application.Resources>

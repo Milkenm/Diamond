@@ -22,7 +22,7 @@ public class XMention : InteractionModuleBase<SocketInteractionContext>
 		DefaultEmbed embed = new DefaultEmbed("X-Mention", "🔗", this.Context.Interaction, message.GetJumpUrl())
 		{
 			Title = guildAuthor.DisplayName,
-			Description = this.GetMessageContent(message),
+			Description = Utils.GetMessageContent(message),
 		};
 
 		List<SelectMenuOptionBuilder> textChannels = new List<SelectMenuOptionBuilder>();
@@ -52,25 +52,10 @@ public class XMention : InteractionModuleBase<SocketInteractionContext>
 		DefaultEmbed embed = new DefaultEmbed("X-Mention", "🔗", this.Context.Interaction, message.GetJumpUrl())
 		{
 			Title = (message.Author as IGuildUser).DisplayName,
-			Description = this.GetMessageContent(message),
+			Description = Utils.GetMessageContent(message),
 		};
 
 		SocketGuildChannel channel = this.Context.Guild.GetChannel(Convert.ToUInt64(selectedChannelId));
 		await (channel as SocketTextChannel).SendMessageAsync(embed: embed.Build());
-	}
-
-	private string? GetMessageContent(IMessage message)
-	{
-		if (message.Content.IsEmpty())
-		{
-			// Get content from embed
-			if (message.Embeds.Count == 0)
-			{
-				return null;
-			}
-
-			return message.Embeds.ElementAt(0).Description;
-		}
-		return message.Content;
 	}
 }

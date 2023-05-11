@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 using Diamond.API.Data;
 
@@ -30,7 +29,7 @@ public partial class MainPanelPage : Page
 	private async void ButtonStart_Click(object sender, RoutedEventArgs e)
 	{
 		// Start
-		if (this._client.LoginState != LoginState.LoggedIn || this._client.LoginState != LoginState.LoggingIn)
+		if (this._client.LoginState is not LoginState.LoggedIn and not LoginState.LoggingIn)
 		{
 			string token = this._database.GetSetting(DiamondDatabase.ConfigSetting.Token);
 			if (token.IsEmpty())
@@ -38,15 +37,13 @@ public partial class MainPanelPage : Page
 				MessageBox.Show("Bot token is not set.");
 				return;
 			}
-			await this._client.LoginAsync(TokenType.Bot, token);
-			await this._client.StartAsync();
+			await this._client.BringToLifeAsync(token);
 			this.button_start.Content = "Stop";
 		}
 		// Stop
 		else
 		{
-			await this._client.LogoutAsync();
-			await this._client.StopAsync();
+			await this._client.TakeLifeAsync();
 			this.button_start.Content = "Start";
 		}
 	}
@@ -60,18 +57,8 @@ public partial class MainPanelPage : Page
 
 		this.Dispatcher.Invoke(() =>
 		{
-			this.listBox_output.Items.Add(message.ToString());
-			this.ScrollToEnd(this.listBox_output);
+			richTextBox_output.AppendText(message.ToString(), printDate: true);
+			richTextBox_output.ScrollToEnd();
 		});
-	}
-
-	private void ScrollToEnd(ListBox listBox)
-	{
-		if (VisualTreeHelper.GetChildrenCount(listBox) > 0)
-		{
-			Border border = (Border)VisualTreeHelper.GetChild(listBox, 0);
-			ScrollViewer scrollViewer = (ScrollViewer)VisualTreeHelper.GetChild(border, 0);
-			scrollViewer.ScrollToBottom();
-		}
 	}
 }
