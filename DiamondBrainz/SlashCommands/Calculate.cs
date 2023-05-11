@@ -8,7 +8,7 @@ namespace Diamond.API.SlashCommands
 {
 	public class Calculate : InteractionModuleBase<SocketInteractionContext>
 	{
-		[SlashCommand("calculate", "[Hidden] Calculate the value of the math expression.")]
+		[SlashCommand("calculate", "Calculate the value of the math expression.")]
 		public async Task CalculateCommandAsync(
 			[Summary("expression", "The math expression to calculate.")] string expressionString,
 			[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false

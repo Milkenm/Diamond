@@ -14,7 +14,7 @@ using ScriptsLibV2.Util;
 
 using SUtils = ScriptsLibV2.Util.Utils;
 
-namespace Diamond.API.Stuff
+namespace Diamond.API.APIs
 {
 	public class CsgoBackpack
 	{
@@ -26,14 +26,14 @@ namespace Diamond.API.Stuff
 			{ Currency.JPY, "¥" },
 		};
 
-		private DiamondDatabase _diamondDb;
+		private readonly DiamondDatabase _diamondDb;
 
 		private readonly Dictionary<Currency, CsgoBackpackItemsList> _itemsMap = new Dictionary<Currency, CsgoBackpackItemsList>();
 		private readonly Dictionary<string, List<CsgoItemMatchInfo>> _searchCacheMap = new Dictionary<string, List<CsgoItemMatchInfo>>();
 
 		public CsgoBackpack(DiamondDatabase diamondDb)
 		{
-			_diamondDb = diamondDb;
+			this._diamondDb = diamondDb;
 		}
 
 		public async Task LoadItems()
@@ -43,7 +43,7 @@ namespace Diamond.API.Stuff
 			{
 				// Attempt to load from database
 				string key = $"CSGO_ItemsList_{currency.ToString().ToUpper()}";
-				CacheRecord cacheRecord = _diamondDb.Cache.Where(cr => cr.Key == key).FirstOrDefault();
+				CacheRecord cacheRecord = this._diamondDb.Cache.Where(cr => cr.Key == key).FirstOrDefault();
 				string? itemsListJson = null;
 				if (cacheRecord != null)
 				{
@@ -63,14 +63,14 @@ namespace Diamond.API.Stuff
 					}
 					else
 					{
-						_diamondDb.Cache.Add(new CacheRecord()
+						this._diamondDb.Cache.Add(new CacheRecord()
 						{
 							Key = key,
 							Value = itemsListJson.ToByteArray(),
 							UpdatedAt = currentUnix,
 						});
 					}
-					_diamondDb.SaveChanges();
+					this._diamondDb.SaveChanges();
 				}
 				CsgoBackpackItemsList itemsList = JsonConvert.DeserializeObject<CsgoBackpackItemsList>(itemsListJson);
 				if (!itemsList.Success)
@@ -78,24 +78,35 @@ namespace Diamond.API.Stuff
 					Debug.WriteLine($"Failed to load items for currency '{currency.ToString().ToUpper()}'.");
 					continue;
 				}
-				_itemsMap.Add(currency, itemsList);
+				foreach (KeyValuePair<string, CsgoItemInfo> item in itemsList.ItemsList)
+				{
+					if (item.Value.Name.Contains("&#39") || item.Value.Name.Contains("%27"))
+					{
+						item.Value.Name = item.Value.Name.Replace("&#39", "'").Replace("%27", "'");
+						itemsList.ItemsList[item.Key] = item.Value;
+					}
+				}
+				this._itemsMap.Add(currency, itemsList);
 			}
 		}
 
 		public List<CsgoItemMatchInfo> SearchItems(string searchItemName, Currency currency)
 		{
-			if (!_itemsMap.ContainsKey(currency)) return null;
+			if (!this._itemsMap.ContainsKey(currency))
+			{
+				return null;
+			}
 
 			List<CsgoItemMatchInfo> bestMatches = new List<CsgoItemMatchInfo>();
-			if (_searchCacheMap.ContainsKey(searchItemName))
+			if (this._searchCacheMap.ContainsKey(searchItemName))
 			{
-				bestMatches = _searchCacheMap[searchItemName];
+				bestMatches = this._searchCacheMap[searchItemName];
 			}
 			else
 			{
-				foreach (CsgoItemInfo item in _itemsMap[currency].ItemsList.Values)
+				foreach (CsgoItemInfo item in this._itemsMap[currency].ItemsList.Values)
 				{
-					string itemName = item.Name.Replace("&#39", "'").ToLower().Trim();
+					string itemName = item.Name.ToLower().Trim();
 
 					double matches = 0;
 					foreach (string word in searchItemName.Split(" "))
@@ -106,8 +117,12 @@ namespace Diamond.API.Stuff
 						}
 					}
 					matches *= SUtils.CalculateLevenshteinSimilarity(itemName, searchItemName);
-					if (matches == 0) continue;
-					CsgoItemMatchInfo bestMatch = GetBestMatch(bestMatches);
+					if (matches == 0)
+					{
+						continue;
+					}
+
+					CsgoItemMatchInfo bestMatch = this.GetBestMatch(bestMatches);
 					if (bestMatches.Count > 0 && matches > bestMatch.Match + 0.35D)
 					{
 						foreach (CsgoItemMatchInfo matchInfo in bestMatches)
@@ -127,9 +142,9 @@ namespace Diamond.API.Stuff
 			}
 			if (bestMatches.Count > 0)
 			{
-				if (!_searchCacheMap.ContainsKey(searchItemName))
+				if (!this._searchCacheMap.ContainsKey(searchItemName))
 				{
-					_searchCacheMap.Add(searchItemName, bestMatches);
+					this._searchCacheMap.Add(searchItemName, bestMatches);
 				}
 				return bestMatches;
 			}
@@ -137,10 +152,7 @@ namespace Diamond.API.Stuff
 			return null;
 		}
 
-		public void ClearCache()
-		{
-			_searchCacheMap.Clear();
-		}
+		public void ClearCache() => this._searchCacheMap.Clear();
 
 		private CsgoItemMatchInfo GetBestMatch(List<CsgoItemMatchInfo> matches)
 		{
@@ -171,8 +183,8 @@ namespace Diamond.API.Stuff
 
 		public CsgoItemMatchInfo(CsgoItemInfo csgoItem, double match)
 		{
-			CsgoItem = csgoItem;
-			Match = match;
+			this.CsgoItem = csgoItem;
+			this.Match = match;
 		}
 	}
 }

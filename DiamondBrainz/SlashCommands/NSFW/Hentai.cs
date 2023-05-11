@@ -17,7 +17,7 @@ public class Hentai : InteractionModuleBase<SocketInteractionContext>
 
 	public Hentai(DiamondDatabase database)
 	{
-		_database = database;
+		this._database = database;
 	}
 
 	[RequireNsfw]
@@ -27,7 +27,7 @@ public class Hentai : InteractionModuleBase<SocketInteractionContext>
 		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
 	)
 	{
-		await DeferAsync(!showEveryone);
+		await this.DeferAsync(!showEveryone);
 
 		// Type
 		string hentaiType = type.ToString().ToLower();
@@ -43,13 +43,13 @@ public class Hentai : InteractionModuleBase<SocketInteractionContext>
 		// Request
 		WebHeaderCollection headers = new WebHeaderCollection
 		{
-			{ "authorization",(string) Utils.GetSetting(_database ,"NightapiApiKey")}
+			{ "authorization", this._database.GetSetting("NightapiApiKey")}
 		};
 		string response = RequestUtils.Get($"https://api.night-api.com/images/nsfw/{hentaiType}", headers);
 		NightApiResponse resp = JsonConvert.DeserializeObject<NightApiResponse>(response);
 
 		// Create the embed
-		DefaultEmbed embed = new DefaultEmbed("Hentai", "💮", Context.Interaction);
+		DefaultEmbed embed = new DefaultEmbed("Hentai", "💮", this.Context.Interaction);
 		embed.WithImageUrl(resp.Content.Url);
 
 		// Reply

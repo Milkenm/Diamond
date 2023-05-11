@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-using Diamond.API;
-using Diamond.API.Bot;
 using Diamond.API.Data;
+
+using static Diamond.API.Data.DiamondDatabase;
 
 namespace Diamond.GUI.Pages;
 /// <summary>
@@ -12,37 +12,33 @@ namespace Diamond.GUI.Pages;
 public partial class SettingsPanelPage : Page
 {
 	private readonly DiamondDatabase _database;
-	private readonly DiamondBot _bot;
 	private readonly AppWindow _appWindow;
 
-	public SettingsPanelPage(DiamondDatabase database, DiamondBot bot, AppWindow appWindow)
+	public SettingsPanelPage(DiamondDatabase database, AppWindow appWindow)
 	{
-		InitializeComponent();
+		this.InitializeComponent();
 
-		_database = database;
-		_bot = bot;
-		_appWindow = appWindow;
+		this._database = database;
+		this._appWindow = appWindow;
 	}
 
 	private void Page_Loaded(object sender, RoutedEventArgs e)
 	{
-		passwordBox_token.Password = Utils.GetSetting(_database, Utils.GetSettingString(Utils.Setting.Token));
-		passwordBox_openaiApiKey.Password = Utils.GetSetting(_database, Utils.GetSettingString(Utils.Setting.OpenAI_API_Key));
-		passwordBox_nightapiApiKey.Password = Utils.GetSetting(_database, Utils.GetSettingString(Utils.Setting.NightAPI_API_Key));
-		textBox_debugGuildId.Text = Utils.GetSetting(_database, Utils.GetSettingString(Utils.Setting.DebugGuildID));
-		textBox_debugChannelId.Text = Utils.GetSetting(_database, Utils.GetSettingString(Utils.Setting.DebugChannelID));
+		this.passwordBox_token.Password = this._database.GetSetting(ConfigSetting.Token);
+		this.passwordBox_openaiApiKey.Password = this._database.GetSetting(ConfigSetting.OpenAI_API_Key);
+		this.passwordBox_nightapiApiKey.Password = this._database.GetSetting(ConfigSetting.NightAPI_API_Key);
+		this.textBox_debugGuildId.Text = this._database.GetSetting(ConfigSetting.DebugGuildID);
+		this.textBox_debugChannelId.Text = this._database.GetSetting(ConfigSetting.DebugChannelID);
 	}
 
 	private void ButtonSave_Click(object sender, RoutedEventArgs e)
 	{
-		Utils.SetSetting(_database, Utils.GetSettingString(Utils.Setting.Token), passwordBox_token.Password);
-		Utils.SetSetting(_database, Utils.GetSettingString(Utils.Setting.OpenAI_API_Key), passwordBox_openaiApiKey.Password);
-		Utils.SetSetting(_database, Utils.GetSettingString(Utils.Setting.NightAPI_API_Key), passwordBox_nightapiApiKey.Password);
-		Utils.SetSetting(_database, Utils.GetSettingString(Utils.Setting.DebugGuildID), textBox_debugGuildId.Text);
-		Utils.SetSetting(_database, Utils.GetSettingString(Utils.Setting.DebugChannelID), textBox_debugChannelId.Text);
+		this._database.SetSetting(ConfigSetting.Token, this.passwordBox_token.Password);
+		this._database.SetSetting(ConfigSetting.OpenAI_API_Key, this.passwordBox_openaiApiKey.Password);
+		this._database.SetSetting(ConfigSetting.NightAPI_API_Key, this.passwordBox_nightapiApiKey.Password);
+		this._database.SetSetting(ConfigSetting.DebugGuildID, this.textBox_debugGuildId.Text);
+		this._database.SetSetting(ConfigSetting.DebugChannelID, this.textBox_debugChannelId.Text);
 
-		_bot.RefreshSettings().Wait();
-
-		_appWindow.ToggleUI(Utils.AreSettingsValid(_database));
+		this._appWindow.ToggleUI(this._database.AreSettingsValid());
 	}
 }

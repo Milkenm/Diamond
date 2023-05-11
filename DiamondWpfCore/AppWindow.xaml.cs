@@ -7,15 +7,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using Diamond.API;
-using Diamond.API.Bot;
+using Diamond.API.APIs;
 using Diamond.API.Data;
-using Diamond.API.Stuff;
 using Diamond.GUI.Pages;
 
 using Discord;
 using Discord.Interactions;
+using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
+
+using SUtils = ScriptsLibV2.Util.Utils;
 
 namespace Diamond.GUI
 {
@@ -24,23 +26,25 @@ namespace Diamond.GUI
 	/// </summary>
 	public partial class AppWindow : Window
 	{
-		private readonly DiamondBot _bot;
+		private static bool _botReady = false;
+
+		private readonly DiscordSocketClient _client;
 		private readonly DiamondDatabase _database;
 		private readonly IServiceProvider _serviceProvider;
 
-		public AppWindow(DiamondBot bot, DiamondDatabase database, IServiceProvider serviceProvier)
+		public AppWindow(DiscordSocketClient client, DiamondDatabase database, IServiceProvider serviceProvier)
 		{
-			InitializeComponent();
+			this.InitializeComponent();
 
-			_bot = bot;
-			_database = database;
-			_serviceProvider = serviceProvier;
+			this._client = client;
+			this._database = database;
+			this._serviceProvider = serviceProvier;
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			MainPanelPage mainPanel = _serviceProvider.GetRequiredService<MainPanelPage>();
-			LogsPanelPage logsPanel = _serviceProvider.GetRequiredService<LogsPanelPage>();
+			MainPanelPage mainPanel = this._serviceProvider.GetRequiredService<MainPanelPage>();
+			LogsPanelPage logsPanel = this._serviceProvider.GetRequiredService<LogsPanelPage>();
 
 			// Global exception handler
 			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler((s, e) =>
@@ -50,21 +54,27 @@ namespace Diamond.GUI
 
 			// Load csgo items
 			mainPanel.LogAsync("Loading CS:GO items...").GetAwaiter();
-			_serviceProvider.GetRequiredService<CsgoBackpack>().LoadItems().GetAwaiter().OnCompleted(async () =>
+			this._serviceProvider.GetRequiredService<CsgoBackpack>().LoadItems().GetAwaiter().OnCompleted(async () =>
 			{
 				await mainPanel.LogAsync("CS:GO items loaded!");
 			});
 
 			// Initialize bot
-			_bot.Initialize();
-			InteractionService interactionService = _serviceProvider.GetService<InteractionService>();
-			Lava lava = _serviceProvider.GetRequiredService<Lava>();
-			_bot.Client.Ready += new Func<Task>(async () =>
+			InteractionService interactionService = this._serviceProvider.GetRequiredService<InteractionService>();
+			Lava lava = this._serviceProvider.GetRequiredService<Lava>();
+			this._client.Ready += new Func<Task>(async () =>
 			{
-				await interactionService.AddModulesAsync(ScriptsLibV2.Util.Utils.GetAssemblyByName("DiamondAPI"), _serviceProvider);
-				if (ScriptsLibV2.Util.Utils.IsDebugEnabled() && Utils.GetSetting(_database, "DebugGuildId") != null)
+				if (_botReady)
 				{
-					await interactionService.RegisterCommandsToGuildAsync(Convert.ToUInt64(Utils.GetSetting(_database, "DebugGuildId")));
+					return;
+				}
+
+				_botReady = true;
+
+				await interactionService.AddModulesAsync(SUtils.GetAssemblyByName("DiamondAPI"), this._serviceProvider);
+				if (SUtils.IsDebugEnabled() && this._database.GetSetting("DebugGuildId") != null)
+				{
+					await interactionService.RegisterCommandsToGuildAsync(Convert.ToUInt64(this._database.GetSetting("DebugGuildId")));
 				}
 				else
 				{
@@ -72,13 +82,16 @@ namespace Diamond.GUI
 				}
 			});
 			// Run interactions (slash commands/modals/buttons/...)
-			_bot.Client.InteractionCreated += async (socketInteraction) =>
+			this._client.InteractionCreated += async (socketInteraction) =>
 			{
 				// Ignore debug channel if debug is disabled and ignore normal channels if debug is enabled
-				if ((socketInteraction.ChannelId == Convert.ToUInt64(Utils.GetSetting(_database, "DebugChannelId")) && !ScriptsLibV2.Util.Utils.IsDebugEnabled()) || (socketInteraction.ChannelId != Convert.ToUInt64(Utils.GetSetting(_database, "DebugChannelId")) && ScriptsLibV2.Util.Utils.IsDebugEnabled())) return;
+				if ((socketInteraction.ChannelId == Convert.ToUInt64(this._database.GetSetting("DebugChannelId")) && !SUtils.IsDebugEnabled()) || (socketInteraction.ChannelId != Convert.ToUInt64(this._database.GetSetting("DebugChannelId")) && SUtils.IsDebugEnabled()))
+				{
+					return;
+				}
 
-				SocketInteractionContext context = new SocketInteractionContext(_bot.Client, socketInteraction);
-				await interactionService.ExecuteCommandAsync(context, _serviceProvider);
+				SocketInteractionContext context = new SocketInteractionContext(this._client, socketInteraction);
+				await interactionService.ExecuteCommandAsync(context, this._serviceProvider);
 			};
 			// Handle interaction exceptions
 			interactionService.InteractionExecuted += async (command, context, result) =>
@@ -108,49 +121,52 @@ namespace Diamond.GUI
 				}
 			};
 			// Disconnect from LavaLink when the bot logs out
-			_bot.Client.LoggedOut += async () =>
+			this._client.LoggedOut += async () =>
 			{
 				await lava.StopNodeAsync();
 			};
-			_bot.Client.Log += new Func<LogMessage, Task>((logMessage) => _serviceProvider.GetRequiredService<MainPanelPage>().LogAsync(logMessage.Message));
+			this._client.Log += new Func<LogMessage, Task>((logMessage) => this._serviceProvider.GetRequiredService<MainPanelPage>().LogAsync(logMessage.Message));
 
 			// Windows events
 			Closing += new CancelEventHandler((se, ev) =>
 			{
-				_bot.StopAsync().GetAwaiter();
+				this._client.StopAsync().GetAwaiter();
 			});
 
 			// Set frames
-			frame_main.Navigate(mainPanel);
-			frame_logs.Navigate(_serviceProvider.GetRequiredService<LogsPanelPage>());
-			frame_lavalink.Navigate(_serviceProvider.GetRequiredService<LavalinkPanelPage>());
-			frame_remote.Navigate(_serviceProvider.GetRequiredService<RemotePanelPage>());
-			frame_settings.Navigate(_serviceProvider.GetRequiredService<SettingsPanelPage>());
+			this.frame_main.Navigate(mainPanel);
+			this.frame_logs.Navigate(this._serviceProvider.GetRequiredService<LogsPanelPage>());
+			this.frame_lavalink.Navigate(this._serviceProvider.GetRequiredService<LavalinkPanelPage>());
+			this.frame_remote.Navigate(this._serviceProvider.GetRequiredService<RemotePanelPage>());
+			this.frame_settings.Navigate(this._serviceProvider.GetRequiredService<SettingsPanelPage>());
 
 			// Check if settings are valid
-			if (!Utils.AreSettingsValid(_serviceProvider.GetRequiredService<DiamondDatabase>()))
+			if (!this._serviceProvider.GetRequiredService<DiamondDatabase>().AreSettingsValid())
 			{
-				ToggleUI(false);
-				tabControl_main.SelectedIndex = tabControl_main.Items.Count - 1;
+				this.ToggleUI(false);
+				this.tabControl_main.SelectedIndex = this.tabControl_main.Items.Count - 1;
 			}
 		}
 
 		public void ToggleUI(bool enabled)
 		{
-			if (tabItem_main.IsEnabled == enabled) return;
+			if (this.tabItem_main.IsEnabled == enabled)
+			{
+				return;
+			}
 
 			// Main
-			DisableImage(image_main, !enabled);
-			tabItem_main.IsEnabled = enabled;
+			DisableImage(this.image_main, !enabled);
+			this.tabItem_main.IsEnabled = enabled;
 			// Logs
-			DisableImage(image_logs, !enabled);
-			tabItem_logs.IsEnabled = enabled;
+			DisableImage(this.image_logs, !enabled);
+			this.tabItem_logs.IsEnabled = enabled;
 			// Lavalink
-			DisableImage(image_lavalink, !enabled);
-			tabItem_lavalink.IsEnabled = enabled;
+			DisableImage(this.image_lavalink, !enabled);
+			this.tabItem_lavalink.IsEnabled = enabled;
 			// RCON
-			DisableImage(image_rcon, !enabled);
-			tabItem_rcon.IsEnabled = enabled;
+			DisableImage(this.image_rcon, !enabled);
+			this.tabItem_rcon.IsEnabled = enabled;
 		}
 
 		private static void DisableImage(System.Windows.Controls.Image image, bool grayout)
@@ -189,9 +205,6 @@ namespace Diamond.GUI
 			return $"{obj.GetType()}:\n{sb}";
 		}
 
-		private void Window_Closing(object sender, CancelEventArgs e)
-		{
-			_serviceProvider.GetRequiredService<Lava>().Dispose();
-		}
+		private void Window_Closing(object sender, CancelEventArgs e) => this._serviceProvider.GetRequiredService<Lava>().Dispose();
 	}
 }

@@ -9,7 +9,7 @@ namespace Diamond.API.SlashCommands
 {
     public class Twemoji : InteractionModuleBase<SocketInteractionContext>
     {
-        [SlashCommand("twemoji", "[Hidden] Gets the provided twemoji.")]
+        [SlashCommand("twemoji", "Gets the provided twemoji.")]
         public async Task TwemojiCommandAsync(
             [Summary("twemoji", "The twemoji to get.")] string twemoji,
             [Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false

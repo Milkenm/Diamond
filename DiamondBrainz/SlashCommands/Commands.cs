@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 using Discord.Interactions;
@@ -18,19 +20,19 @@ public class Commands : InteractionModuleBase<SocketInteractionContext>
 		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
 	)
 	{
-		await DeferAsync(!showEveryone);
+		await this.DeferAsync(!showEveryone);
 
 		StringBuilder sb = new StringBuilder();
-		foreach (SlashCommandInfo slashCommand in _interactionService.SlashCommands)
+		foreach (SlashCommandInfo slashCommand in this._interactionService.SlashCommands.OrderBy(s => s.Name).Take(new Range(0, 6)))
 		{
 			if (sb.Length > 0)
 			{
-				sb.Append("\n");
+				sb.Append("\n\n");
 			}
-			sb.Append($"🔷 {slashCommand.Name}\n🔹 {slashCommand.Description}");
+			sb.Append($"🔷 **__{slashCommand.Name}__**\n🔹 {slashCommand.Description}");
 		}
 
-		DefaultEmbed embed = new DefaultEmbed("Commands", "🤖", Context.Interaction)
+		DefaultEmbed embed = new DefaultEmbed("Commands", "🤖", this.Context.Interaction)
 		{
 			Description = sb.ToString(),
 		};

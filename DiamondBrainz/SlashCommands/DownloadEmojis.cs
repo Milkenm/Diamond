@@ -5,31 +5,31 @@ using System.IO.Compression;
 using System.Net;
 using System.Threading.Tasks;
 
-using Diamond.API.Bot;
-
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
+
+using ScriptsLibV2;
 
 namespace Diamond.API.SlashCommands
 {
 	public class DownloadEmojis : InteractionModuleBase<SocketInteractionContext>
 	{
-		private readonly DiamondBot _bot;
+		private readonly DiscordSocketClient _client;
 
-		public DownloadEmojis(DiamondBot bot)
+		public DownloadEmojis(DiscordSocketClient client)
 		{
-			_bot = bot;
+			_client = client;
 		}
 
-		[SlashCommand("downloademojis", "[Hidden] Downloads the custom emojis from a server.")]
+		[SlashCommand("download-emojis", "Downloads the custom emojis from a server.")]
 		public async Task DownloadEmojisCommandAsync(
 			[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
 		)
 		{
 			await DeferAsync(!showEveryone);
 
-			SocketGuild guild = _bot.Client.GetGuild(Context.Guild.Id);
+			SocketGuild guild = _client.GetGuild(Context.Guild.Id);
 			IReadOnlyCollection<GuildEmote> guildEmotes = guild.Emotes;
 
 			DefaultEmbed embed = new DefaultEmbed("Download Emojis", "😀", Context.Interaction);

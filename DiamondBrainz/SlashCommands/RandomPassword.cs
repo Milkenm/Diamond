@@ -10,7 +10,7 @@ namespace Diamond.API.SlashCommands
 {
     public class RandomPassword : InteractionModuleBase<SocketInteractionContext>
     {
-        [SlashCommand("randompassword", "[Hidden] Generates a random password.")]
+        [SlashCommand("randompassword", "Generates a random password.")]
         public async Task RandomPasswordCommandAsync(
             [Summary("size", "The amount of characters to generate for the password.")][MinValue(1)][MaxValue(32)] int passwordSize = 16,
             [Summary("use-letters", "Include lower and uppercase letters from 'a' to 'z' (ignored if 'allowedcharacters' is set).")] bool useLetters = true,

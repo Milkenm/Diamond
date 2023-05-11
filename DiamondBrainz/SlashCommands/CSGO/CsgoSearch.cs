@@ -7,12 +7,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 
+using Diamond.API.APIs;
 using Diamond.API.Schems.CsgoBackpack;
-using Diamond.API.Stuff;
 
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
+
+using ScriptsLibV2.Extensions;
 
 namespace Diamond.API.SlashCommands.CSGO;
 
@@ -27,14 +29,14 @@ public partial class Csgo
 		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
 	)
 	{
-		await DeferAsync(!showEveryone);
+		await this.DeferAsync(!showEveryone);
 
-		_csgoBackpack.ClearCache();
-		CsgoItemMatchInfo resultItem = _csgoBackpack.SearchItems(search, currency)[0];
+		this._csgoBackpack.ClearCache();
+		CsgoItemMatchInfo resultItem = this._csgoBackpack.SearchItems(search, currency).First();
 
-		DefaultEmbed embed = new DefaultEmbed("CS:GO Item Search", "🔫", Context.Interaction)
+		DefaultEmbed embed = new DefaultEmbed("CS:GO Item Search", "🔫", this.Context.Interaction)
 		{
-			Title = resultItem.CsgoItem.Name.Replace("&#39", "'"),
+			Title = resultItem.CsgoItem.Name,
 			Description = $"⭐ **Released**: {UnixTimeStampToDateTime(resultItem.CsgoItem.FirstSaleDate).AddDays(1).ToString("dd/MM/yyyy")}",
 			ThumbnailUrl = $"https://community.cloudflare.steamstatic.com/economy/image/{resultItem.CsgoItem.IconUrl}",
 		};
@@ -73,27 +75,34 @@ public partial class Csgo
 	[AutocompleteCommand("search", "item")]
 	public async Task Autocomplete()
 	{
-		string userInput = (Context.Interaction as SocketAutocompleteInteraction).Data.Current.Value.ToString();
+		SocketAutocompleteInteraction interaction = this.Context.Interaction as SocketAutocompleteInteraction;
 
-		List<CsgoItemMatchInfo> matches = _csgoBackpack.SearchItems(userInput, Currency.EUR);
+		string userInput = interaction.Data.Current.Value.ToString();
+		if (userInput.IsEmpty())
+		{
+			await interaction.RespondAsync(null);
+			return;
+		}
+
+		List<CsgoItemMatchInfo> matches = this._csgoBackpack.SearchItems(userInput, Currency.EUR);
 
 		List<AutocompleteResult> autocomplete = new List<AutocompleteResult>();
 		foreach (CsgoItemMatchInfo match in matches)
 		{
-			string itemName = match.CsgoItem.Name.Replace("&#39", "'").Replace("&#27", "'");
+			string itemName = match.CsgoItem.Name;
 			autocomplete.Add(new AutocompleteResult(itemName, itemName));
 		}
 
-		await (Context.Interaction as SocketAutocompleteInteraction).RespondAsync(autocomplete.Take(25));
+		await interaction.RespondAsync(autocomplete.Take(25));
 	}
 
 	public static Bitmap DrawLine(string hexColor)
 	{
-		var bitmap = new Bitmap(500, 5);
+		Bitmap bitmap = new Bitmap(500, 5);
 
-		for (var x = 0; x < bitmap.Width; x++)
+		for (int x = 0; x < bitmap.Width; x++)
 		{
-			for (var y = 0; y < bitmap.Height; y++)
+			for (int y = 0; y < bitmap.Height; y++)
 			{
 				bitmap.SetPixel(x, y, ColorTranslator.FromHtml($"#{hexColor}"));
 			}

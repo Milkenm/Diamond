@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-
+using Diamond.API.APIs;
 using Discord.Interactions;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +20,7 @@ namespace Diamond.API.SlashCommands
             _serviceProvider = serviceProvider;
         }
 
-        [SlashCommand("gpt", "[Hidden] Ask something to ChatGPT-3.")]
+        [SlashCommand("gpt", "Ask something to ChatGPT-3.")]
         public async Task GptCommandAsync(
             [Summary("prompt", "Your question.")] string prompt,
             [Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false

@@ -10,7 +10,7 @@ namespace Diamond.API.SlashCommands.ServerInfo;
 [Group("server", "Info about the server or server members.")]
 public partial class ServerInfo : InteractionModuleBase<SocketInteractionContext>
 {
-	[SlashCommand("info", "[Hidden] Show info about the server.")]
+	[SlashCommand("info", "Show info about the server.")]
 	public async Task ServerInfoCommandAsync(
 			[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
 	)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-using Diamond.API.Bot;
 using Diamond.API.Data;
 using Diamond.API.SlashCommands.Vote.Embeds;
 
@@ -12,28 +11,28 @@ namespace Diamond.API.SlashCommands.Vote;
 
 public class Vote : InteractionModuleBase<SocketInteractionContext>
 {
-	private readonly DiamondBot _bot;
+	private readonly DiscordSocketClient _client;
 	private readonly DiamondDatabase _database;
 
 	private static bool _initializedEvents = false;
 
-	public Vote(DiamondBot bot, DiamondDatabase database)
+	public Vote(DiscordSocketClient client, DiamondDatabase database)
 	{
-		_bot = bot;
-		_database = database;
+		this._client = client;
+		this._database = database;
 
 		if (!_initializedEvents)
 		{
-			_bot.Client.SelectMenuExecuted += new Func<SocketMessageComponent, Task>(async (menu) =>
+			this._client.SelectMenuExecuted += new Func<SocketMessageComponent, Task>(async (menu) =>
 			{
-				EditorVoteEmbed.SelectMenuHandlerAsync(menu, _database, _bot.Client).GetAwaiter();
-				VoteEmbed.SelectMenuHandlerAsync(menu, _database, _bot.Client).GetAwaiter();
+				EditorVoteEmbed.SelectMenuHandlerAsync(menu, this._database, this._client).GetAwaiter();
+				VoteEmbed.SelectMenuHandlerAsync(menu, this._database, this._client).GetAwaiter();
 			});
-			_bot.Client.ButtonExecuted += new Func<SocketMessageComponent, Task>((button) =>
+			this._client.ButtonExecuted += new Func<SocketMessageComponent, Task>((button) =>
 			{
-				EditorVoteEmbed.ButtonHandlerAsync(button, _bot.Client, _database).GetAwaiter();
-				PublishedVoteEmbed.ButtonHandlerAsync(button, _database).GetAwaiter();
-				VoteEmbed.ButtonHandlerAsync(button, _database, _bot.Client).GetAwaiter();
+				EditorVoteEmbed.ButtonHandlerAsync(button, this._client, this._database).GetAwaiter();
+				PublishedVoteEmbed.ButtonHandlerAsync(button, this._database).GetAwaiter();
+				VoteEmbed.ButtonHandlerAsync(button, this._database, this._client).GetAwaiter();
 
 				return Task.CompletedTask;
 			});
@@ -49,21 +48,21 @@ public class Vote : InteractionModuleBase<SocketInteractionContext>
 		[Summary("thumbnail-url", "The URL for the thumbnail (top-right) image.")] string thumbnailUrl = null
 	)
 	{
-		await DeferAsync(true);
+		await this.DeferAsync(true);
 
-		Poll poll = await CreatePollAsync(title, description,imageUrl, thumbnailUrl);
+		Poll poll = await this.CreatePollAsync(title, description, imageUrl, thumbnailUrl);
 
-		ulong deferId = (await GetOriginalResponseAsync()).Id;
+		ulong deferId = (await this.GetOriginalResponseAsync()).Id;
 
-		await new EditorVoteEmbed(Context.Interaction, _database, poll, deferId).SendAsync(true);
+		await new EditorVoteEmbed(this.Context.Interaction, this._database, poll, deferId).SendAsync(true);
 	}
 
 	private async Task<Poll> CreatePollAsync(string pollTitle, string pollDescription, string pollImageUrl, string pollThumbnailUrl)
 	{
 		Poll newPoll = new Poll()
 		{
-			DiscordMessageId = (await Context.Interaction.GetOriginalResponseAsync()).Id,
-			DiscordUserId = Context.Interaction.User.Id,
+			DiscordMessageId = (await this.Context.Interaction.GetOriginalResponseAsync()).Id,
+			DiscordUserId = this.Context.Interaction.User.Id,
 			Title = pollTitle,
 			Description = pollDescription,
 			ImageUrl = pollImageUrl,
@@ -72,8 +71,8 @@ public class Vote : InteractionModuleBase<SocketInteractionContext>
 			UpdatedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
 		};
 
-		_database.Add(newPoll);
-		await _database.SaveChangesAsync();
+		this._database.Add(newPoll);
+		await this._database.SaveChangesAsync();
 
 		return newPoll;
 	}

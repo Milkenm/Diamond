@@ -3,12 +3,12 @@ using System.Windows;
 
 using Diamond.API;
 using Diamond.API.APIs;
-using Diamond.API.Bot;
 using Diamond.API.Data;
-using Diamond.API.Stuff;
 using Diamond.GUI.Pages;
 
+using Discord;
 using Discord.Interactions;
+using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,15 +23,17 @@ namespace Diamond.GUI
 
 		public App()
 		{
-			DiamondDatabase database = new DiamondDatabase();
-			DiamondBot bot = new DiamondBot(database);
+			DiscordSocketClient client = new DiscordSocketClient(new DiscordSocketConfig()
+			{
+				LogLevel = LogSeverity.Info,
+			});
 
-			_serviceProvider = new ServiceCollection()
+			this._serviceProvider = new ServiceCollection()
 				// Bot stuff
 				.AddSingleton(this)
-				.AddSingleton(bot)
-				.AddSingleton(new InteractionService(bot.Client.Rest))
-				.AddSingleton(database)
+				.AddSingleton(client)
+				.AddSingleton<DiamondDatabase>()
+				.AddSingleton<InteractionService>()
 				// Tabs (Windows)
 				.AddSingleton<AppWindow>()
 				.AddSingleton<MainPanelPage>()
@@ -51,7 +53,7 @@ namespace Diamond.GUI
 
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
-			AppWindow app = _serviceProvider.GetRequiredService<AppWindow>();
+			AppWindow app = this._serviceProvider.GetRequiredService<AppWindow>();
 			app.Show();
 		}
 	}

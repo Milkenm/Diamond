@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace Diamond.API.Data;
-public partial class DiamondDatabase : IDatabaseContext
+public partial class DiamondDatabase
 {
 	public DbSet<Poll> Polls { get; set; }
 	public DbSet<PollOption> PollOptions { get; set; }

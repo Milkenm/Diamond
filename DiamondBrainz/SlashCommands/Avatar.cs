@@ -7,7 +7,7 @@ namespace Diamond.API.SlashCommands
 {
 	public class Avatar : InteractionModuleBase<SocketInteractionContext>
 	{
-		[SlashCommand("avatar", "[Hidden] Gets the avatar image of the selected user.")]
+		[SlashCommand("avatar", "Gets the avatar image of the selected user.")]
 		public async Task AvatarCommandAsync(
 			[Summary("user", "The users whos roles you want to be listed")] IUser user,
 			[Summary("size", "The size of the avatar image")] AvatarSize avatarSize = AvatarSize.x4096,

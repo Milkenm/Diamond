@@ -1,12 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-using Diamond.API.Bot;
+using Diamond.API.Data;
 
 using Discord;
+using Discord.WebSocket;
 
 using ScriptsLibV2.Extensions;
 
@@ -16,44 +16,52 @@ namespace Diamond.GUI.Pages;
 /// </summary>
 public partial class MainPanelPage : Page
 {
-	private readonly DiamondBot _bot;
+	private readonly DiscordSocketClient _client;
+	private readonly DiamondDatabase _database;
 
-	public MainPanelPage(DiamondBot bot)
+	public MainPanelPage(DiscordSocketClient client, DiamondDatabase database)
 	{
-		InitializeComponent();
+		this.InitializeComponent();
 
-		_bot = bot;
+		this._client = client;
+		this._database = database;
 	}
 
-	private void ButtonStart_Click(object sender, RoutedEventArgs e)
+	private async void ButtonStart_Click(object sender, RoutedEventArgs e)
 	{
 		// Start
-		if (!_bot.IsRunning)
+		if (this._client.LoginState != LoginState.LoggedIn || this._client.LoginState != LoginState.LoggingIn)
 		{
-			if (_bot.Token.IsEmpty())
+			string token = this._database.GetSetting(DiamondDatabase.ConfigSetting.Token);
+			if (token.IsEmpty())
 			{
 				MessageBox.Show("Bot token is not set.");
 				return;
 			}
-			_bot.StartAsync().GetAwaiter();
-			button_start.Content = "Stop";
+			await this._client.LoginAsync(TokenType.Bot, token);
+			await this._client.StartAsync();
+			this.button_start.Content = "Stop";
 		}
 		// Stop
 		else
 		{
-			_bot.StopAsync().GetAwaiter();
-			button_start.Content = "Start";
+			await this._client.LogoutAsync();
+			await this._client.StopAsync();
+			this.button_start.Content = "Start";
 		}
 	}
 
 	public async Task LogAsync(object message)
 	{
-		if (message == null) return;
-
-		Dispatcher.Invoke(() =>
+		if (message == null)
 		{
-			listBox_output.Items.Add(message.ToString());
-			ScrollToEnd(listBox_output);
+			return;
+		}
+
+		this.Dispatcher.Invoke(() =>
+		{
+			this.listBox_output.Items.Add(message.ToString());
+			this.ScrollToEnd(this.listBox_output);
 		});
 	}
 

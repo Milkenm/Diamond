@@ -1,4 +1,4 @@
-﻿using Diamond.API.Stuff;
+﻿using Diamond.API.APIs;
 
 using Discord.Interactions;
 
