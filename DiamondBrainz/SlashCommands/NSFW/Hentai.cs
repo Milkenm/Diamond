@@ -1,8 +1,6 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 
-using Diamond.API.Data;
-
 using Discord.Interactions;
 
 using Newtonsoft.Json;
@@ -11,16 +9,8 @@ using ScriptsLibV2.Util;
 
 namespace Diamond.API.SlashCommands.NSFW;
 
-public class Hentai : InteractionModuleBase<SocketInteractionContext>
+public partial class NSFW
 {
-	private readonly DiamondDatabase _database;
-
-	public Hentai(DiamondDatabase database)
-	{
-		this._database = database;
-	}
-
-	[RequireNsfw]
 	[SlashCommand("hentai", "Gives you a sus image in 2D.")]
 	public async Task HentaiCommandAsync(
 		[Summary("type", "The sus type.")] HentaiType type = HentaiType.Classic,

@@ -11,6 +11,8 @@ using ScriptsLibV2.Extensions;
 namespace Diamond.API.SlashCommands.Moderation;
 public partial class Moderation
 {
+	[RequireBotPermission(GuildPermission.BanMembers)]
+	[DefaultMemberPermissions(GuildPermission.BanMembers)]
 	[SlashCommand("bulk-ban", "Bans all users that meet a criteria.")]
 	public async Task BulkBanCommandAsync(
 		[Summary("criteria-class", "The criteria \"class\" to apply.")] BanCriteria criteria,

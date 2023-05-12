@@ -10,13 +10,13 @@ using Microsoft.CodeAnalysis.CSharp.Scripting;
 namespace Diamond.API.SlashCommands.Owner;
 public partial class Owner
 {
-	[SlashCommand("eval", "Evaluate a C# expression.")]
+	[SlashCommand("eval", "Evaluate a C# expression.", true)]
 	public async Task EvalCommandAsync(
 		[Summary("expression", "The expression to evaluate.")] string expression,
 		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
 	)
 	{
-		await DeferAsync(!showEveryone);
+		await this.DeferAsync(!showEveryone);
 
 		if (expression.StartsWith("```cs"))
 		{
@@ -54,7 +54,7 @@ public partial class Owner
 			error = ex.Message;
 		}
 
-		DefaultEmbed embed = new DefaultEmbed("Evaluate", "💻", Context.Interaction)
+		DefaultEmbed embed = new DefaultEmbed("Evaluate", "💻", this.Context.Interaction)
 		{
 			Title = error != null ? "Error!" : (result == null ? "No output" : result.ToString()),
 			Description = error != null ? error : $"```cs\n{expression}```\n**Execution time:** {executionTime}",
@@ -68,7 +68,7 @@ public partial class Owner
 		string content = Utils.GetMessageContent(message);
 		if (content == null)
 		{
-			DefaultEmbed embed = new DefaultEmbed("Evaluate", "💻", Context.Interaction)
+			DefaultEmbed embed = new DefaultEmbed("Evaluate", "💻", this.Context.Interaction)
 			{
 				Title = "Error",
 				Description = "No content was found on the selected message.",

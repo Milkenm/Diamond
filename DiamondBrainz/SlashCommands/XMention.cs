@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
-
-using ScriptsLibV2.Extensions;
 
 namespace Diamond.API.SlashCommands;
 public class XMention : InteractionModuleBase<SocketInteractionContext>

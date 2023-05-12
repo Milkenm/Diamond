@@ -7,8 +7,8 @@ using Discord.Interactions;
 namespace Diamond.API.SlashCommands.Moderation;
 public partial class Moderation
 {
-	[DefaultMemberPermissions(GuildPermission.ManageMessages)]
 	[RequireBotPermission(GuildPermission.ManageMessages)]
+	[DefaultMemberPermissions(GuildPermission.ManageMessages)]
 	[SlashCommand("prune", "Delete messages from a channel.")]
 	public async Task PruneCommandAsync(
 		[Summary("amount", "The amount of messages to delete.")] int amount,
