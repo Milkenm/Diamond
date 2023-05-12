@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Diamond.API.ConsoleCommands.Attributes;
 
 namespace Diamond.API.ConsoleCommands;
 public partial class ConsoleCommandsManager

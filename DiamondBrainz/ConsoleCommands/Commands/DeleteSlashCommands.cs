@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Diamond.API.ConsoleCommands.Attributes;
+
 using Discord.Rest;
 using Discord.WebSocket;
 
