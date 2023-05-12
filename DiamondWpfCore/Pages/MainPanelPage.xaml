@@ -11,7 +11,7 @@
 	<Grid>
 		<RichTextBox x:Name="richTextBox_output" Style="{StaticResource RichTextBoxStyle}" Margin="10,10,10,59"/>
 		<Button x:Name="button_start" Style="{StaticResource ButtonStyle}" Content="Start" HorizontalAlignment="Left" Margin="758,356,0,0" VerticalAlignment="Top" Width="141" Click="ButtonStart_Click"/>
-		<Button Style="{StaticResource MainButtonStyle}" Content="Run" HorizontalAlignment="Left" Margin="546,356,0,0" VerticalAlignment="Top" Width="44"/>
-		<TextBox Style="{StaticResource MainTextBoxStyle}" HorizontalAlignment="Left" Margin="10,356,0,0" VerticalAlignment="Top" Width="536"/>
+		<Button Style="{StaticResource MainButtonStyle}" Content="Run" HorizontalAlignment="Left" Margin="546,356,0,0" VerticalAlignment="Top" Width="44" Click="Button_Click"/>
+		<TextBox x:Name="textBox_command" KeyDown="textBox_command_KeyDown" Style="{StaticResource MainTextBoxStyle}" HorizontalAlignment="Left" Margin="10,356,0,0" VerticalAlignment="Top" Width="536"/>
 	</Grid>
 </Page>

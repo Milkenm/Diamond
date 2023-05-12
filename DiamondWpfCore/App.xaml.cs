@@ -3,6 +3,7 @@ using System.Windows;
 
 using Diamond.API;
 using Diamond.API.APIs;
+using Diamond.API.ConsoleCommands;
 using Diamond.API.Data;
 using Diamond.GUI.Pages;
 
@@ -48,6 +49,8 @@ namespace Diamond.GUI
 				.AddSingleton<OpenMeteoWeather>()
 				// Lavalink
 				.AddSingleton<Lava>()
+				// Console commands
+				.AddSingleton<ConsoleCommandsManager>()
 				.BuildServiceProvider();
 		}
 

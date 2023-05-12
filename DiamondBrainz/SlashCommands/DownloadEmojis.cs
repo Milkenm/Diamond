@@ -9,8 +9,6 @@ using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 
-using ScriptsLibV2;
-
 namespace Diamond.API.SlashCommands
 {
 	public class DownloadEmojis : InteractionModuleBase<SocketInteractionContext>
@@ -19,7 +17,7 @@ namespace Diamond.API.SlashCommands
 
 		public DownloadEmojis(DiscordSocketClient client)
 		{
-			_client = client;
+			this._client = client;
 		}
 
 		[SlashCommand("download-emojis", "Downloads the custom emojis from a server.")]
@@ -27,12 +25,12 @@ namespace Diamond.API.SlashCommands
 			[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
 		)
 		{
-			await DeferAsync(!showEveryone);
+			await this.DeferAsync(!showEveryone);
 
-			SocketGuild guild = _client.GetGuild(Context.Guild.Id);
+			SocketGuild guild = this._client.GetGuild(this.Context.Guild.Id);
 			IReadOnlyCollection<GuildEmote> guildEmotes = guild.Emotes;
 
-			DefaultEmbed embed = new DefaultEmbed("Download Emojis", "😀", Context.Interaction);
+			DefaultEmbed embed = new DefaultEmbed("Download Emojis", "😀", this.Context.Interaction);
 
 			if (guildEmotes.Count == 0)
 			{
@@ -85,7 +83,7 @@ namespace Diamond.API.SlashCommands
 			embed.AddField("📁 Size", ScriptsLibV2.Util.Utils.ByteSizeToString(compressedFileStream.Length), true);
 			await embed.SendAsync();
 
-			await Context.Interaction.FollowupWithFileAsync(new FileAttachment(compressedFileStream, $"{guild.Name.Replace(' ', '_')}_Emotes.zip"));
+			await this.Context.Interaction.FollowupWithFileAsync(new FileAttachment(compressedFileStream, $"{guild.Name.Replace(' ', '_')}_Emotes.zip"));
 			compressedFileStream.Close();
 		}
 	}

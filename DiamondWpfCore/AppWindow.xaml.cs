@@ -114,6 +114,15 @@ namespace Diamond.GUI
 								};
 							}
 							break;
+						case InteractionCommandError.UnknownCommand:
+							{
+								errorEmbed = new DefaultEmbed("Error", "❓", context.Interaction)
+								{
+									Title = "Unknown command",
+									Description = $"That command was not found.",
+								};
+							}
+							break;
 						default:
 							{
 								errorEmbed = new DefaultEmbed("Error", "🔥", context.Interaction)
@@ -121,7 +130,7 @@ namespace Diamond.GUI
 									Title = "Something bad happened... :(",
 									Description = "This error was reported to the dev, hope to get it fixed soon...",
 								};
-								logsPanel.Log($"Error running '{command.Name}' (user: {context.User.Username}#{context.User.Discriminator}):\n{result.ErrorReason} ({result.Error.GetType()})\nInteraction: {command}\n{contextProperties}\n{interactionProperties}\n{slashCommandDataProperties}");
+								logsPanel.Log($"Error running '{(command != null ? command.Name : "unknown")}' (user: {context.User.Username}#{context.User.Discriminator}):\n{result.ErrorReason} ({result.Error.GetType()})\nInteraction: {command}\n{contextProperties}\n{interactionProperties}\n{slashCommandDataProperties}");
 							}
 							break;
 					}
