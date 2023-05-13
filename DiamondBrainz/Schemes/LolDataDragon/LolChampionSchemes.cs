@@ -29,7 +29,7 @@ namespace Diamond.API.Schemes.LolDataDragon
 		[JsonProperty("info")] public LolChampionStatsResume ChampionStatsResume { get; set; }
 		[JsonProperty("stats")] public LolChampionStats Stats { get; set; }
 		[JsonProperty("spells")] public List<LolChampionAbility> AbilitiesList { get; set; }
-		[JsonProperty("passive")] public List<LolChampionPassive> Passive { get; set; }
+		[JsonProperty("passive")] public LolChampionPassive Passive { get; set; }
 		[JsonProperty("version")] public string Version { get; set; }
 	}
 
@@ -92,9 +92,9 @@ namespace Diamond.API.Schemes.LolDataDragon
 		[JsonProperty("tooltip")] public string Tooltip { get; set; }
 		[JsonProperty("leveltip")] public LolChampionAbilityLevelTip LevelTipsList { get; set; }
 		[JsonProperty("maxrank")] public int MaxLevel { get; set; }
-		[JsonProperty("cooldown")] public double CooldownsPerLevelList { get; set; }
+		[JsonProperty("cooldown")] public List<double> CooldownsPerLevelList { get; set; }
 		[JsonProperty("cooldownBurn")] public string CooldownBurn { get; set; }
-		[JsonProperty("cost")] public double ResourceCost { get; set; }
+		[JsonProperty("cost")] public List<double> ResourceCostPerLevel { get; set; }
 		[JsonProperty("costBurn")] public string CostBurn { get; set; }
 		// TODO: [JsonProperty("datavalues")] 
 		[JsonProperty("costType")] public string CostType { get; set; }

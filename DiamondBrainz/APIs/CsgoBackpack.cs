@@ -12,6 +12,8 @@ using Newtonsoft.Json;
 using ScriptsLibV2.Extensions;
 using ScriptsLibV2.Util;
 
+using static Diamond.API.Utils;
+
 using SUtils = ScriptsLibV2.Util.Utils;
 
 namespace Diamond.API.APIs
@@ -89,6 +91,8 @@ namespace Diamond.API.APIs
 				this._itemsMap.Add(currency, itemsList);
 			}
 		}
+
+		public async Task<List<SearchMatchInfo<CsgoItemInfo>>> Search(string search, Currency currency) => await Utils.Search(this._itemsMap[currency].ItemsList, search);
 
 		public List<CsgoItemMatchInfo> SearchItems(string searchItemName, Currency currency)
 		{
