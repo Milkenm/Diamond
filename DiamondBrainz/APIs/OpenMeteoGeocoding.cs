@@ -1,4 +1,4 @@
-﻿using Diamond.API.Schems.OpenMeteoGeocoding;
+﻿using Diamond.API.Schemes.OpenMeteoGeocoding;
 
 using Newtonsoft.Json;
 

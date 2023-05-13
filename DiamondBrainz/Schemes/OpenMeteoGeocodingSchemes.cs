@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace Diamond.API.Schems.OpenMeteoGeocoding
+namespace Diamond.API.Schemes.OpenMeteoGeocoding
 {
 	public class Geocoding
 	{

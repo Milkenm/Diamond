@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
-using Diamond.API.Schems.LolDataDragon;
+using Diamond.API.Schemes.LolDataDragon;
 
 using Discord;
 using Discord.Interactions;

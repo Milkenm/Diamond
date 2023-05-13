@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 
-using Diamond.API.Schems.OpenMeteoGeocoding;
-using Diamond.API.Schems.OpenMeteoWeather;
+using Diamond.API.Schemes.OpenMeteoGeocoding;
+using Diamond.API.Schemes.OpenMeteoWeather;
 
 using Newtonsoft.Json;
 

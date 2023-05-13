@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace Diamond.API.Schems.CsgoBackpack
+namespace Diamond.API.Schemes.CsgoBackpack
 {
 	public class CsgoBackpackItemsList
 	{

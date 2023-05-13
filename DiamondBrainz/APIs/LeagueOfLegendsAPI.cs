@@ -1,4 +1,4 @@
-﻿using Diamond.API.Schems.LolDataDragon;
+﻿using Diamond.API.Schemes.LolDataDragon;
 
 using ScriptsLibV2.Util;
 

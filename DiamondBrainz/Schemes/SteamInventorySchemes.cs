@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace Diamond.API.Schems.SteamInventory
+namespace Diamond.API.Schemes.SteamInventory
 {
 	public class SteamInventory
 	{

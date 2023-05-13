@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.APIs;
-using Diamond.API.Schems.SteamInventory;
+using Diamond.API.Schemes.SteamInventory;
 
 using Discord;
 using Discord.Interactions;

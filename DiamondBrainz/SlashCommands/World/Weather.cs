@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Diamond.API.Schems.OpenMeteoGeocoding;
-using Diamond.API.Schems.OpenMeteoWeather;
+using Diamond.API.Schemes.OpenMeteoGeocoding;
+using Diamond.API.Schemes.OpenMeteoWeather;
 
 using Discord;
 using Discord.Interactions;

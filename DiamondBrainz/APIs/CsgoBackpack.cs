@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.Data;
-using Diamond.API.Schems.CsgoBackpack;
+using Diamond.API.Schemes.CsgoBackpack;
 
 using Newtonsoft.Json;
 

@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace Diamond.API.Schems.OpenMeteoWeather
+namespace Diamond.API.Schemes.OpenMeteoWeather
 {
 	public class DailyWeather
 	{

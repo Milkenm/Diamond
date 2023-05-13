@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace Diamond.API.Schems.LolDataDragon
+namespace Diamond.API.Schemes.LolDataDragon
 {
 	public class LolChampionData
 	{
