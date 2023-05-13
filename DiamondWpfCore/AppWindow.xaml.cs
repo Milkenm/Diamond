@@ -116,7 +116,7 @@ namespace Diamond.GUI
 							break;
 						case InteractionCommandError.UnknownCommand:
 							{
-								errorEmbed = new DefaultEmbed("Error", "❓", context.Interaction)
+								errorEmbed = new DefaultEmbed("Error", "🤔", context.Interaction)
 								{
 									Title = "Unknown command",
 									Description = $"That command was not found.",

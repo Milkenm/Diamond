@@ -39,7 +39,7 @@ public class XMention : InteractionModuleBase<SocketInteractionContext>
 	}
 
 	[ComponentInteraction("xmention_channel_selector:*")]
-	public async Task XChannelSelection(ulong messageId, string selectedChannelId)
+	public async Task XChannelSelectionAsync(ulong messageId, string selectedChannelId)
 	{
 		await this.DeferAsync();
 		await (await this.Context.Interaction.GetOriginalResponseAsync()).DeleteAsync();
