@@ -30,7 +30,7 @@ public partial class LeagueOfLegends
 
 		// Main embed info
 		embed.Title = champion.ChampionName;
-		embed.Description = champion.Lore;
+		embed.Description = champion.ShortLore;
 		embed.ThumbnailUrl = this._leagueOfLegendsApi.GetChampionSquareImageUrl(champion);
 		embed.ImageUrl = this._leagueOfLegendsApi.GetChampionSplashImageUrl(champion);
 		// First row

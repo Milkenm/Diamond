@@ -8,7 +8,7 @@ public class LeagueOfLegendsAPI
 	private const string DDRAGON_HOST_URL = "https://ddragon.leagueoflegends.com";
 	private const string DDRAGON_VERSION_URL = DDRAGON_HOST_URL + "/realms/euw.json";
 	// {0}: DDragon version
-	private const string DDRAGON_CHAMPIONS_URL = DDRAGON_HOST_URL + "/cdn/{0}/data/en_US/champion.json";
+	private const string DDRAGON_CHAMPIONS_URL = DDRAGON_HOST_URL + "/cdn/{0}/data/en_US/championFull.json";
 	// {0}: Champion full image name
 	private const string DDRAGON_CHAMPION_IMAGE_SPLASH_URL = DDRAGON_HOST_URL + "/cdn/img/champion/splash/{0}";
 	// {0}: Champion full image name
