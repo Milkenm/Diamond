@@ -44,7 +44,7 @@ public static class Utils
 
 	public static void PrintDate(this RichTextBox richTextBox)
 	{
-		richTextBox.AppendText($"[{DateTimeOffset.Now:H:mm:ss}] ", new SolidColorBrush(System.Windows.Media.Color.FromRgb(100, 100, 100)), printDate: null);
+		richTextBox.AppendText($"[{DateTimeOffset.Now:HH:mm:ss}] ", new SolidColorBrush(System.Windows.Media.Color.FromRgb(100, 100, 100)), printDate: null);
 	}
 	#endregion
 
