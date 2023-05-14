@@ -25,8 +25,15 @@ public class XMention : InteractionModuleBase<SocketInteractionContext>
 		List<SelectMenuOptionBuilder> textChannels = new List<SelectMenuOptionBuilder>();
 		foreach (SocketTextChannel textChannel in this.Context.Guild.TextChannels)
 		{
-			ChannelPermissions permissions = (this.Context.User as SocketGuildUser).GetPermissions(textChannel);
-			if (permissions.ViewChannel && permissions.SendMessages)
+			// Ignore current channel
+			if (textChannel == this.Context.Channel)
+			{
+				continue;
+			}
+			// Check permissions
+			ChannelPermissions userPermissions = (this.Context.User as SocketGuildUser).GetPermissions(textChannel);
+			ChannelPermissions botPermissions = this.Context.Guild.CurrentUser.GetPermissions(textChannel);
+			if (userPermissions.ViewChannel && userPermissions.SendMessages && botPermissions.ViewChannel && botPermissions.SendMessages)
 			{
 				textChannels.Add(new SelectMenuOptionBuilder(textChannel.Name, textChannel.Id.ToString()));
 			}
