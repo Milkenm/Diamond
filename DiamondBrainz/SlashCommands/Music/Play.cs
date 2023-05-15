@@ -53,6 +53,7 @@ public partial class Music
 		{
 			player = await node.JoinAsync(voiceChannel, this.Context.Channel as ITextChannel);
 		}
+
 		// Search for a song
 		SearchResponse searchResponse = await node.SearchAsync(Uri.IsWellFormedUriString(url, UriKind.Absolute) ? SearchType.Direct : SearchType.YouTube, url);
 		// No results
@@ -63,7 +64,7 @@ public partial class Music
 			await embed.SendAsync();
 			return;
 		}
-		// Queue playlist
+		// Add a playlist to the queue
 		if (!string.IsNullOrWhiteSpace(searchResponse.Playlist.Name))
 		{
 			player.Vueue.Enqueue(searchResponse.Tracks);
@@ -72,7 +73,7 @@ public partial class Music
 			embed.Description = $"Added **{searchResponse.Tracks.Count}** to the queue.";
 			await embed.SendAsync();
 		}
-		// Queue track
+		// Add a track to the queue
 		else
 		{
 			LavaTrack track = searchResponse.Tracks.FirstOrDefault();
