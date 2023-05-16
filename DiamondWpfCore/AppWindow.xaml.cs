@@ -17,6 +17,8 @@ using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using static Diamond.API.Data.DiamondDatabase;
+
 using SUtils = ScriptsLibV2.Util.Utils;
 
 namespace Diamond.GUI
@@ -34,11 +36,11 @@ namespace Diamond.GUI
 
 		public AppWindow(DiscordSocketClient client, DiamondDatabase database, IServiceProvider serviceProvier)
 		{
-			this.InitializeComponent();
-
 			this._client = client;
 			this._database = database;
 			this._serviceProvider = serviceProvier;
+
+			this.InitializeComponent();
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -72,9 +74,9 @@ namespace Diamond.GUI
 				_botReady = true;
 
 				await interactionService.AddModulesAsync(SUtils.GetAssemblyByName("DiamondAPI"), this._serviceProvider);
-				if (SUtils.IsDebugEnabled() && this._database.GetSetting("DebugGuildId") != null)
+				if (SUtils.IsDebugEnabled() && this._database.GetSetting(ConfigSetting.DebugGuildID) != null)
 				{
-					await interactionService.RegisterCommandsToGuildAsync(Convert.ToUInt64(this._database.GetSetting("DebugGuildId")));
+					await interactionService.RegisterCommandsToGuildAsync(Convert.ToUInt64(this._database.GetSetting(ConfigSetting.DebugGuildID)));
 				}
 				else
 				{
@@ -85,7 +87,8 @@ namespace Diamond.GUI
 			this._client.InteractionCreated += async (socketInteraction) =>
 			{
 				// Ignore debug channel if debug is disabled and ignore normal channels if debug is enabled
-				if ((socketInteraction.ChannelId == Convert.ToUInt64(this._database.GetSetting("DebugChannelId")) && !SUtils.IsDebugEnabled()) || (socketInteraction.ChannelId != Convert.ToUInt64(this._database.GetSetting("DebugChannelId")) && SUtils.IsDebugEnabled()))
+				bool isDebugChannel = Utils.IsDebugChannel(_database.GetSetting(DiamondDatabase.ConfigSetting.DebugChannelsID), socketInteraction.ChannelId);
+				if ((isDebugChannel && !SUtils.IsDebugEnabled()) || (!isDebugChannel && SUtils.IsDebugEnabled()))
 				{
 					return;
 				}

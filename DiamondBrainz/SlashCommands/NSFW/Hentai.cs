@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 
 using ScriptsLibV2.Util;
 
+using static Diamond.API.Data.DiamondDatabase;
+
 namespace Diamond.API.SlashCommands.NSFW;
 
 public partial class NSFW
@@ -33,7 +35,7 @@ public partial class NSFW
 		// Request
 		WebHeaderCollection headers = new WebHeaderCollection
 		{
-			{ "authorization", this._database.GetSetting("NightapiApiKey")}
+			{ "authorization", this._database.GetSetting(ConfigSetting.NightAPI_API_Key)}
 		};
 		string response = RequestUtils.Get($"https://api.night-api.com/images/nsfw/{hentaiType}", headers);
 		NightApiResponse resp = JsonConvert.DeserializeObject<NightApiResponse>(response);

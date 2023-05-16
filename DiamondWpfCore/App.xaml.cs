@@ -47,6 +47,7 @@ namespace Diamond.GUI
 				.AddSingleton<CsgoBackpack>()
 				.AddSingleton<OpenMeteoGeocoding>()
 				.AddSingleton<OpenMeteoWeather>()
+				.AddSingleton<LeagueOfLegendsDataDragonAPI>()
 				.AddSingleton<LeagueOfLegendsAPI>()
 				// Lavalink
 				.AddSingleton<Lava>()

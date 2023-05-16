@@ -7,7 +7,7 @@ using Diamond.API.Schemes.LolDataDragon;
 
 using Discord.Interactions;
 
-using static Diamond.API.APIs.LeagueOfLegendsAPI;
+using static Diamond.API.APIs.LeagueOfLegendsDataDragonAPI;
 
 namespace Diamond.API.SlashCommands.LeagueOfLegends;
 public partial class LeagueOfLegends
@@ -20,7 +20,7 @@ public partial class LeagueOfLegends
 	{
 		await this.DeferAsync(!showEveryone);
 
-		List<LolChampion> validChampions = this._leagueOfLegendsApi.DdragonChampionData.ChampionsList.Values.ToList();
+		List<LolChampion> validChampions = this._dataDragonApi.DdragonChampionData.ChampionsList.Values.ToList();
 		if (championClass != null)
 		{
 			validChampions.RemoveAll(champ => champ.Tags[0] != championClass.ToString());
@@ -32,7 +32,7 @@ public partial class LeagueOfLegends
 		DefaultEmbed embed = new DefaultEmbed("LoL Random Pick", "🎲", this.Context.Interaction)
 		{
 			Title = randomChampion.ChampionName,
-			ImageUrl = this._leagueOfLegendsApi.GetChampionSplashImageUrl(randomChampion),
+			ImageUrl = this._dataDragonApi.GetChampionSplashImageUrl(randomChampion),
 		};
 
 		await embed.SendAsync();

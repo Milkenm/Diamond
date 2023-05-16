@@ -22,6 +22,9 @@
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_ListBox.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_PasswordBox.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_RichTextBox.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_ScrollBar.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_ScrollViewer.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_Separator.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_TabControl.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_TabItem.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_TextBlock.xaml"/>

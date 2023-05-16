@@ -5,18 +5,22 @@ using System.Linq;
 
 using ScriptsLibV2.Extensions;
 
+using SUtils = ScriptsLibV2.Util.Utils;
+
 namespace Diamond.API.Data;
 public partial class DiamondDatabase : IDatabaseContext
 {
-	public DiamondDatabase() : base(Path.Join(ScriptsLibV2.Util.Utils.GetInstallationFolder(), @"\Data\DiamondDB.db")) { }
+	public DiamondDatabase() : base(Path.Join(SUtils.GetInstallationFolder(), @"\Data\DiamondDB.db")) { }
 
 	public enum ConfigSetting
 	{
 		Token,
 		OpenAI_API_Key,
 		NightAPI_API_Key,
+		RiotAPI_Key,
 		DebugGuildID,
-		DebugChannelID,
+		DebugChannelsID,
+		IgnoreDebugChannels,
 	}
 
 	private static readonly Dictionary<ConfigSetting, string> _settingsList = new Dictionary<ConfigSetting, string>()
@@ -24,16 +28,20 @@ public partial class DiamondDatabase : IDatabaseContext
 		{ ConfigSetting.Token, "Token" },
 		{ ConfigSetting.OpenAI_API_Key, "OpenaiApiKey" },
 		{ ConfigSetting.NightAPI_API_Key, "NightapiApiKey" },
+		{ ConfigSetting.RiotAPI_Key, "RiotApiKey" },
 		{ ConfigSetting.DebugGuildID, "DebugGuildId" },
-		{ ConfigSetting.DebugChannelID, "DebugChannelId" },
+		{ ConfigSetting.DebugChannelsID, "DebugChannelId" },
+		{ ConfigSetting.IgnoreDebugChannels, "IgnoreDebugChannels" },
 	};
 
 	public static string GetSettingString(ConfigSetting setting) => _settingsList[setting];
 
 	public bool AreSettingsValid()
 	{
-		foreach (string setting in _settingsList.Values)
+		foreach (ConfigSetting setting in _settingsList.Keys)
 		{
+			if (SUtils.IsDebugEnabled() && setting == ConfigSetting.IgnoreDebugChannels) continue;
+
 			if (this.GetSetting(setting).IsEmpty())
 			{
 				return false;
@@ -42,33 +50,40 @@ public partial class DiamondDatabase : IDatabaseContext
 		return true;
 	}
 
-	public string? GetSetting(string settingName, bool exceptionIfNull = false)
+	public string? GetSetting(ConfigSetting setting, bool exceptionIfNull = false)
 	{
-		Setting setting = this.Settings.Where(s => s.Name == settingName).FirstOrDefault();
-		if (setting == null)
+		Setting dbSetting = this.Settings.Where(s => s.Name == GetSettingString(setting)).FirstOrDefault();
+		// Setting not set
+		if (dbSetting == null)
 		{
 			if (exceptionIfNull)
 			{
-				throw new Exception($"Setting '{settingName}' is not set.");
+				throw new Exception($"Setting '{dbSetting}' is not set.");
 			}
-			return string.Empty;
+			return null;
 		}
-		return setting.Value;
+		// Valid
+		return dbSetting.Value;
 	}
 
-	public string? GetSetting(ConfigSetting setting, bool exceptionIfNull = false) => this.GetSetting(GetSettingString(setting), exceptionIfNull);
-
-	public void SetSetting(string settingName, string value)
+	public string GetSetting(ConfigSetting setting, string defaultValue)
 	{
+		return this.GetSetting(setting) ?? defaultValue;
+	}
+
+	public void SetSetting(ConfigSetting setting, string value)
+	{
+		string settingName = GetSettingString(setting);
+
 		if (value.IsEmpty())
 		{
 			return;
 		}
 
-		Setting setting = this.Settings.Where(s => s.Name == settingName).FirstOrDefault();
-		if (setting != null)
+		Setting dbSetting = this.Settings.Where(s => s.Name == settingName).FirstOrDefault();
+		if (dbSetting != null)
 		{
-			setting.Value = value;
+			dbSetting.Value = value;
 		}
 		else
 		{
@@ -80,6 +95,4 @@ public partial class DiamondDatabase : IDatabaseContext
 		}
 		this.SaveChanges();
 	}
-
-	public void SetSetting(ConfigSetting setting, string value) => this.SetSetting(GetSettingString(setting), value);
 }

@@ -5,21 +5,38 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Diamond.GUI.Pages"
       mc:Ignorable="d" 
-      Width="909" Height="396"
-      Title="Settings" Loaded="Page_Loaded">
+      Width="909" Height="396" d:Height="800"
+      Title="Settings" Initialized="Page_Initialized">
 
 	<Grid>
-		<Label Style="{StaticResource LabelStyle}" HorizontalAlignment="Left" Margin="10,10,0,0" Content="Bot Token" VerticalAlignment="Top"/>
-		<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_token" Margin="10,38,10,0" VerticalAlignment="Top" />
-		<Label Style="{StaticResource LabelStyle}" HorizontalAlignment="Left" Margin="10,90,0,0" Content="OpenAI API Key" VerticalAlignment="Top"/>
-		<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_openaiApiKey" Margin="10,118,334,0" VerticalAlignment="Top" />
-		<Label Style="{StaticResource LabelStyle}" HorizontalAlignment="Left" Margin="619,90,0,0" Content="Debug Guild ID" VerticalAlignment="Top"/>
-		<TextBox Style="{StaticResource TextBoxStyle}" x:Name="textBox_debugGuildId" Margin="619,118,10,0" VerticalAlignment="Top"/>
-		<Label Style="{StaticResource LabelStyle}" HorizontalAlignment="Left" Margin="10,170,0,0" Content="NightAPI API Key" VerticalAlignment="Top"/>
-		<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_nightapiApiKey" Margin="10,198,334,0" VerticalAlignment="Top" />
-		<Label Style="{StaticResource LabelStyle}" HorizontalAlignment="Left" Margin="619,170,0,0" Content="Debug Channel ID" VerticalAlignment="Top"/>
-		<TextBox Style="{StaticResource TextBoxStyle}" x:Name="textBox_debugChannelId" Margin="619,198,10,0" VerticalAlignment="Top"/>
-		<Button Style="{StaticResource ButtonStyle}" Content="Save" Margin="0,0,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="71" Click="ButtonSave_Click"/>
-		<CheckBox Style="{StaticResource CheckBoxStyle}" x:Name="checkBox_ignoreDebugChannel" Content="Ignore Debug Channel" HorizontalAlignment="Left" Margin="619,278,0,0" VerticalAlignment="Top"/>
+		<ScrollViewer Style="{StaticResource ScrollViewerStyle}" Margin="0,0,0,50" >
+			<StackPanel>
+				<Grid>
+					<Label Style="{StaticResource LabelStyle}" HorizontalAlignment="Left" Margin="10,10,0,0" Content="Bot Token" VerticalAlignment="Top"/>
+					<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_token" Margin="10,38,10,0" VerticalAlignment="Top" />
+				</Grid>
+				<Separator Style="{StaticResource SeparatorStyle}"/>
+				<Grid>
+					<Label Style="{StaticResource LabelStyle}" Content="OpenAI API Key" Margin="10,10,0,0"/>
+					<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_openaiApiKey" Margin="10,38,257,0" />
+					<Label Style="{StaticResource LabelStyle}" Content="NightAPI API Key" Margin="10,90,0,0"/>
+					<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_nightapiApiKey" Margin="10,118,257,0"/>
+					<Label Style="{StaticResource LabelStyle}" Content="Riot API Key" Margin="10,170,0,0"/>
+					<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_riotApiKey" Margin="10,198,257,0"/>
+				</Grid>
+				<Separator Style="{StaticResource SeparatorStyle}"/>
+				<Grid>
+					<Label Style="{StaticResource LabelStyle}" Content="Debug Guild ID" Margin="10,10,0,0"/>
+					<TextBox Style="{StaticResource TextBoxStyle}" x:Name="textBox_debugGuildId" Margin="10,38,0,0" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Width="400"/>
+					<Label Style="{StaticResource LabelStyle}" Content="Debug Channels ID" Margin="10,90,0,0"/>
+					<TextBox Style="{StaticResource MainTextBoxStyle}" x:Name="textBox_debugChannelId" VerticalAlignment="Top" Margin="10,225,0,0" HorizontalAlignment="Left" Width="270"/>
+					<CheckBox Style="{StaticResource CheckBoxStyle}" x:Name="checkBox_ignoreDebugChannel" Content="Ignore Debug Channels" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="446,37,0,0"/>
+					<ListBox x:Name="listBox_debugChannels" Style="{StaticResource ListBoxStyle}" d:ItemsSource="{d:SampleData ItemCount=5}" Height="102" VerticalAlignment="Top" HorizontalAlignment="Left" Width="400" Margin="10,118,0,0"/>
+					<Button x:Name="button_addDebugChannel" Style="{StaticResource MainButtonStyle}" Content="Add" HorizontalAlignment="Left" Margin="280,225,0,0" VerticalAlignment="Top" Width="40" Click="button_addDebugChannel_Click"/>
+					<Button x:Name="button_removeDebugChannel" Style="{StaticResource ButtonStyle}" Content="Remove" Margin="325,225,482,0" Click="button_removeDebugChannel_Click"/>
+				</Grid>
+			</StackPanel>
+		</ScrollViewer>
+		<Button Style="{StaticResource ButtonStyle}" Content="Save" Margin="0,0,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="114" Click="ButtonSave_Click"/>
 	</Grid>
 </Page>

@@ -21,7 +21,7 @@ public partial class LeagueOfLegends
 		DefaultEmbed embed = new DefaultEmbed("LoL Champion", "🧙", this.Context.Interaction);
 
 		// Search champ
-		List<SearchMatchInfo<LolChampion>> search = await Utils.Search(this._leagueOfLegendsApi.DdragonChampionData.ChampionsList, championName);
+		List<SearchMatchInfo<LolChampion>> search = await Utils.Search(this._dataDragonApi.DdragonChampionData.ChampionsList, championName);
 		if (search.Count == 0)
 		{
 			embed.Title = "Champion not found";
@@ -44,8 +44,8 @@ public partial class LeagueOfLegends
 		// Main embed info
 		embed.Title = champ.ChampionName;
 		embed.Description = champ.Lore;
-		embed.ThumbnailUrl = this._leagueOfLegendsApi.GetChampionSquareImageUrl(champ);
-		embed.ImageUrl = this._leagueOfLegendsApi.GetChampionSplashImageUrl(champ);
+		embed.ThumbnailUrl = this._dataDragonApi.GetChampionSquareImageUrl(champ);
+		embed.ImageUrl = this._dataDragonApi.GetChampionSplashImageUrl(champ);
 		// First row
 		embed.AddField("<:lol_health_icon:1106763686368006164> __Health__", $"{champ.Stats.Health} - {maxHealth}\n*+{champ.Stats.HealthPerLevel} / level*", true);
 		embed.AddField("<:lol_mana_icon:1106763684275048528> __Mana__", $"{champ.Stats.Mana} - {maxMana}\n*+{champ.Stats.ManaPerLevel} / level*", true);
@@ -69,7 +69,7 @@ public partial class LeagueOfLegends
 		}
 		// Fandom button
 		ComponentBuilder component = new ComponentBuilder()
-			.WithButton("View on Fandom", style: ButtonStyle.Link, emote: Emoji.Parse("📖"), url: this._leagueOfLegendsApi.GetChampionFandomWikiPageUrl(champ).Replace(" ", "_"));
+			.WithButton("View on Fandom", style: ButtonStyle.Link, emote: Emoji.Parse("📖"), url: this._dataDragonApi.GetChampionFandomWikiPageUrl(champ).Replace(" ", "_"));
 
 		await embed.SendAsync(component: component.Build());
 	}

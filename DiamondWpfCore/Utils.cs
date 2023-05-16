@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -70,6 +71,15 @@ public static class Utils
 			await client.StopAsync();
 			await client.LogoutAsync();
 		}
+	}
+	#endregion
+
+	#region Debug
+	public static bool IsDebugChannel(string debugChannels, ulong? channelId)
+	{
+		if (channelId == null) return false;
+
+		return debugChannels.Split(',').Any(cId => cId == channelId.ToString());
 	}
 	#endregion
 }

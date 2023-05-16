@@ -28,14 +28,14 @@ namespace Diamond.API.APIs
 			{ Currency.JPY, "¥" },
 		};
 
-		private readonly DiamondDatabase _diamondDb;
+		private readonly DiamondDatabase _database;
 
 		private readonly Dictionary<Currency, CsgoBackpackItemsList> _itemsMap = new Dictionary<Currency, CsgoBackpackItemsList>();
 		private readonly Dictionary<string, List<CsgoItemMatchInfo>> _searchCacheMap = new Dictionary<string, List<CsgoItemMatchInfo>>();
 
-		public CsgoBackpack(DiamondDatabase diamondDb)
+		public CsgoBackpack(DiamondDatabase database)
 		{
-			this._diamondDb = diamondDb;
+			this._database = database;
 		}
 
 		public async Task LoadItems()
@@ -45,7 +45,7 @@ namespace Diamond.API.APIs
 			{
 				// Attempt to load from database
 				string key = $"CSGO_ItemsList_{currency.ToString().ToUpper()}";
-				CacheRecord cacheRecord = this._diamondDb.Cache.Where(cr => cr.Key == key).FirstOrDefault();
+				CacheRecord cacheRecord = this._database.Cache.Where(cr => cr.Key == key).FirstOrDefault();
 				string? itemsListJson = null;
 				if (cacheRecord != null)
 				{
@@ -65,14 +65,14 @@ namespace Diamond.API.APIs
 					}
 					else
 					{
-						this._diamondDb.Cache.Add(new CacheRecord()
+						this._database.Cache.Add(new CacheRecord()
 						{
 							Key = key,
 							Value = itemsListJson.ToByteArray(),
 							UpdatedAt = currentUnix,
 						});
 					}
-					this._diamondDb.SaveChanges();
+					this._database.SaveChanges();
 				}
 				CsgoBackpackItemsList itemsList = JsonConvert.DeserializeObject<CsgoBackpackItemsList>(itemsListJson);
 				if (!itemsList.Success)
@@ -87,6 +87,12 @@ namespace Diamond.API.APIs
 						item.Value.Name = item.Value.Name.Replace("&#39", "'").Replace("%27", "'");
 						itemsList.ItemsList[item.Key] = item.Value;
 					}
+				}
+				// Store the items in the database
+				foreach (var item in itemsList.ItemsList)
+				{
+					_database.CsgoItemPrices.crea;
+					_database.CsgoItems.
 				}
 				this._itemsMap.Add(currency, itemsList);
 			}

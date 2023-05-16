@@ -7,10 +7,10 @@ namespace Diamond.API.SlashCommands.LeagueOfLegends;
 [Group("lol", "League of Legends related commands.")]
 public partial class LeagueOfLegends : InteractionModuleBase<SocketInteractionContext>
 {
-	private readonly LeagueOfLegendsAPI _leagueOfLegendsApi;
+	private readonly LeagueOfLegendsDataDragonAPI _dataDragonApi;
 
-	public LeagueOfLegends(LeagueOfLegendsAPI leagueOfLegendsAPI)
+	public LeagueOfLegends(LeagueOfLegendsDataDragonAPI leagueOfLegendsAPI)
 	{
-		this._leagueOfLegendsApi = leagueOfLegendsAPI;
+		this._dataDragonApi = leagueOfLegendsAPI;
 	}
 }

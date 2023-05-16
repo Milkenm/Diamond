@@ -6,5 +6,7 @@
 		<Setter Property="Padding" Value="0"/>
 		<Setter Property="Effect" Value="{StaticResource ControlShadowEffect}"/>
 		<Setter Property="Padding" Value="{StaticResource ControlBottomPadding}"/>
+		<Setter Property="HorizontalAlignment" Value="Left"/>
+		<Setter Property="VerticalAlignment" Value="Top"/>
 	</Style>
 </ResourceDictionary>
