@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity;
 
 using Diamond.API.APIs;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace Diamond.API.Data;
 public partial class DiamondDatabase
@@ -20,10 +21,10 @@ public class DbCsgoItem
 	public string RarityHexColor { get; set; }
 	public long FirstSaleDateUnix { get; set; }
 	public Currency Currency { get; set; }
-	public DbCsgoItemPrice Price24HoursId { get; set; }
-	public DbCsgoItemPrice Price7DaysId { get; set; }
-	public DbCsgoItemPrice Price30DaysId { get; set; }
-	public DbCsgoItemPrice PriceAllTimeId { get; set; }
+	public DbCsgoItemPrice Price24Hours { get; set; }
+	public DbCsgoItemPrice Price7Days { get; set; }
+	public DbCsgoItemPrice Price30Days { get; set; }
+	public DbCsgoItemPrice PriceAllTime { get; set; }
 
 }
 

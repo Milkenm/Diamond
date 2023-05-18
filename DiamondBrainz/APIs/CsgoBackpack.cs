@@ -101,48 +101,48 @@ namespace Diamond.API.APIs
 						RarityHexColor = item.Value.RarityHexColor,
 					};
 
-					foreach (KeyValuePair<string, CsgoItemPriceInfo> priceInfo in item.Value.Price)
+					if (item.Value.Price != null)
 					{
-						DbCsgoItemPrice newPrice = new DbCsgoItemPrice()
+						foreach (KeyValuePair<string, CsgoItemPriceInfo> priceInfo in item.Value.Price)
 						{
-							Average = priceInfo.Value.Average,
-							HighestPrice = priceInfo.Value.HighestPrice,
-							LowestPrice = priceInfo.Value.LowestPrice,
-							Median = priceInfo.Value.Median,
-							Sold = Convert.ToInt64(priceInfo.Value.Sold),
-							StandardDeviation = float.Parse(priceInfo.Value.StandardDeviation.Replace('.', ',')),
-						};
+							DbCsgoItemPrice newPrice = new DbCsgoItemPrice()
+							{
+								Average = priceInfo.Value.Average,
+								HighestPrice = priceInfo.Value.HighestPrice,
+								LowestPrice = priceInfo.Value.LowestPrice,
+								Median = priceInfo.Value.Median,
+								Sold = Convert.ToInt64(priceInfo.Value.Sold.IsEmpty() ? 0 : priceInfo.Value.Sold),
+								StandardDeviation = float.Parse(priceInfo.Value.StandardDeviation.Replace('.', ',')),
+							};
 
-						switch (priceInfo.Key)
-						{
-							case "24_hours":
-								{
-									newItem.Price24HoursId = newPrice;
-								}
-								break;
-							case "7_days":
-								{
-									newItem.Price7DaysId = newPrice;
-								}
-								break;
-							case "30_days":
-								{
-									newItem.Price30DaysId = newPrice;
-								}
-								break;
-							case "all_time":
-								{
-									newItem.PriceAllTimeId = newPrice;
-								}
-								break;
+							switch (priceInfo.Key)
+							{
+								case "24_hours":
+									{
+										newItem.Price24Hours = newPrice;
+									}
+									break;
+								case "7_days":
+									{
+										newItem.Price7Days = newPrice;
+									}
+									break;
+								case "30_days":
+									{
+										newItem.Price30Days = newPrice;
+									}
+									break;
+								case "all_time":
+									{
+										newItem.PriceAllTime = newPrice;
+									}
+									break;
+							}
 						}
 					}
-
 					this._database.Add(newItem);
-					this._database.SaveChanges();
-
 				}
-				this._itemsMap.Add(currency, itemsList);
+				this._database.SaveChanges();
 			}
 		}
 

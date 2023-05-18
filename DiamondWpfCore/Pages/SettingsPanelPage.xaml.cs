@@ -75,9 +75,9 @@ public partial class SettingsPanelPage : Page
 		string text = textBox_debugChannelId.Text;
 		if (text.IsEmpty()) return;
 
-		if (ulong.TryParse(textBox_debugChannelId.Text, out ulong channelId))
+		if (ulong.TryParse(text, out ulong channelId))
 		{
-			this.listBox_debugChannels.Items.Add(channelId);
+			this.listBox_debugChannels.Items.Add(text);
 			textBox_debugChannelId.Clear();
 		}
 	}
