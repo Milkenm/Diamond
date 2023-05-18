@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
 
 using Diamond.API.APIs;
 
@@ -9,6 +10,7 @@ public partial class DiamondDatabase
 	public DbSet<DbCsgoItemPrice> CsgoItemPrices { get; set; }
 }
 
+[Table("CsgoItems")]
 public class DbCsgoItem
 {
 	public long Id { get; set; }
@@ -25,6 +27,7 @@ public class DbCsgoItem
 
 }
 
+[Table("CsgoItemPrices")]
 public class DbCsgoItemPrice
 {
 	public long Id { get; set; }

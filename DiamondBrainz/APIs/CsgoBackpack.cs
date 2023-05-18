@@ -89,10 +89,58 @@ namespace Diamond.API.APIs
 					}
 				}
 				// Store the items in the database
-				foreach (var item in itemsList.ItemsList)
+				foreach (KeyValuePair<string, CsgoItemInfo> item in itemsList.ItemsList)
 				{
-					_database.CsgoItemPrices.crea;
-					_database.CsgoItems.
+					DbCsgoItem newItem = new DbCsgoItem()
+					{
+						ClassId = Convert.ToInt64(item.Value.ClassID),
+						Currency = currency,
+						FirstSaleDateUnix = item.Value.FirstSaleDate,
+						IconUrl = item.Value.IconUrl,
+						Name = item.Value.Name,
+						RarityHexColor = item.Value.RarityHexColor,
+					};
+
+					foreach (KeyValuePair<string, CsgoItemPriceInfo> priceInfo in item.Value.Price)
+					{
+						DbCsgoItemPrice newPrice = new DbCsgoItemPrice()
+						{
+							Average = priceInfo.Value.Average,
+							HighestPrice = priceInfo.Value.HighestPrice,
+							LowestPrice = priceInfo.Value.LowestPrice,
+							Median = priceInfo.Value.Median,
+							Sold = Convert.ToInt64(priceInfo.Value.Sold),
+							StandardDeviation = float.Parse(priceInfo.Value.StandardDeviation.Replace('.', ',')),
+						};
+
+						switch (priceInfo.Key)
+						{
+							case "24_hours":
+								{
+									newItem.Price24HoursId = newPrice;
+								}
+								break;
+							case "7_days":
+								{
+									newItem.Price7DaysId = newPrice;
+								}
+								break;
+							case "30_days":
+								{
+									newItem.Price30DaysId = newPrice;
+								}
+								break;
+							case "all_time":
+								{
+									newItem.PriceAllTimeId = newPrice;
+								}
+								break;
+						}
+					}
+
+					this._database.Add(newItem);
+					this._database.SaveChanges();
+
 				}
 				this._itemsMap.Add(currency, itemsList);
 			}
