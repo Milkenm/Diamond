@@ -20,11 +20,6 @@ public class DbCsgoItem
 	public string IconUrl { get; set; }
 	public string RarityHexColor { get; set; }
 	public long FirstSaleDateUnix { get; set; }
-	public Currency Currency { get; set; }
-	public DbCsgoItemPrice Price24Hours { get; set; }
-	public DbCsgoItemPrice Price7Days { get; set; }
-	public DbCsgoItemPrice Price30Days { get; set; }
-	public DbCsgoItemPrice PriceAllTime { get; set; }
 
 }
 
@@ -32,6 +27,9 @@ public class DbCsgoItem
 public class DbCsgoItemPrice
 {
 	public long Id { get; set; }
+	public DbCsgoItem Item { get; set; }
+	public Currency Currency { get; set; }
+	public string Epoch { get; set; }
 	public double Average { get; set; }
 	public double Median { get; set; }
 	public long Sold { get; set; }

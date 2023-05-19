@@ -14,12 +14,12 @@ using ScriptsLibV2.Util;
 
 using static Diamond.API.Utils;
 
-using SUtils = ScriptsLibV2.Util.Utils;
-
 namespace Diamond.API.APIs
 {
 	public class CsgoBackpack
 	{
+		private const long KEEP_RESULTS_FOR_MINUTES = 60;
+
 		public static readonly Dictionary<Currency, string> CurrencySymbols = new Dictionary<Currency, string>()
 		{
 			{ Currency.BRL, "R$"},
@@ -30,8 +30,7 @@ namespace Diamond.API.APIs
 
 		private readonly DiamondDatabase _database;
 
-		private readonly Dictionary<Currency, CsgoBackpackItemsList> _itemsMap = new Dictionary<Currency, CsgoBackpackItemsList>();
-		private readonly Dictionary<string, List<CsgoItemMatchInfo>> _searchCacheMap = new Dictionary<string, List<CsgoItemMatchInfo>>();
+		private readonly Dictionary<string, List<SearchMatchInfo<DbCsgoItem>>> _searchCacheMap = new Dictionary<string, List<SearchMatchInfo<DbCsgoItem>>>();
 
 		public CsgoBackpack(DiamondDatabase database)
 		{
@@ -40,7 +39,21 @@ namespace Diamond.API.APIs
 
 		public async Task LoadItems()
 		{
+			// Check if items need to be refreshed
 			long currentUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+			long lastUpdate = Convert.ToInt64(_database.GetSetting(DiamondDatabase.ConfigSetting.CsgoItemsLoadUnix));
+			if (lastUpdate + (KEEP_RESULTS_FOR_MINUTES * 60) >= currentUnix)
+			{
+				return;
+			}
+
+			// Clear database and items map
+			_database.ClearTable("CsgoItemPrices");
+			_database.ClearTable("CsgoItems");
+			_csgoItemsMap.Clear();
+
+			Dictionary<string, DbCsgoItem> createdItems = new Dictionary<string, DbCsgoItem>();
+
 			foreach (Currency currency in Enum.GetValues(typeof(Currency)))
 			{
 				// Attempt to load from database
@@ -91,15 +104,25 @@ namespace Diamond.API.APIs
 				// Store the items in the database
 				foreach (KeyValuePair<string, CsgoItemInfo> item in itemsList.ItemsList)
 				{
-					DbCsgoItem newItem = new DbCsgoItem()
+					DbCsgoItem csgoItem;
+					if (!createdItems.ContainsKey(item.Value.Name))
 					{
-						ClassId = Convert.ToInt64(item.Value.ClassID),
-						Currency = currency,
-						FirstSaleDateUnix = item.Value.FirstSaleDate,
-						IconUrl = item.Value.IconUrl,
-						Name = item.Value.Name,
-						RarityHexColor = item.Value.RarityHexColor,
-					};
+						DbCsgoItem newItem = new DbCsgoItem()
+						{
+							ClassId = Convert.ToInt64(item.Value.ClassID),
+							FirstSaleDateUnix = item.Value.FirstSaleDate,
+							IconUrl = item.Value.IconUrl,
+							Name = item.Value.Name,
+							RarityHexColor = item.Value.RarityHexColor,
+						};
+						this._database.Add(newItem);
+						createdItems.Add(item.Value.Name, newItem);
+						csgoItem = newItem;
+					}
+					else
+					{
+						csgoItem = createdItems[item.Value.Name];
+					}
 
 					if (item.Value.Price != null)
 					{
@@ -107,6 +130,9 @@ namespace Diamond.API.APIs
 						{
 							DbCsgoItemPrice newPrice = new DbCsgoItemPrice()
 							{
+								Item = csgoItem,
+								Epoch = priceInfo.Key,
+								Currency = currency,
 								Average = priceInfo.Value.Average,
 								HighestPrice = priceInfo.Value.HighestPrice,
 								LowestPrice = priceInfo.Value.LowestPrice,
@@ -114,116 +140,44 @@ namespace Diamond.API.APIs
 								Sold = Convert.ToInt64(priceInfo.Value.Sold.IsEmpty() ? 0 : priceInfo.Value.Sold),
 								StandardDeviation = float.Parse(priceInfo.Value.StandardDeviation.Replace('.', ',')),
 							};
-
-							switch (priceInfo.Key)
-							{
-								case "24_hours":
-									{
-										newItem.Price24Hours = newPrice;
-									}
-									break;
-								case "7_days":
-									{
-										newItem.Price7Days = newPrice;
-									}
-									break;
-								case "30_days":
-									{
-										newItem.Price30Days = newPrice;
-									}
-									break;
-								case "all_time":
-									{
-										newItem.PriceAllTime = newPrice;
-									}
-									break;
-							}
+							this._database.Add(newPrice);
 						}
 					}
-					this._database.Add(newItem);
 				}
 				this._database.SaveChanges();
 			}
+			this._database.SetSetting(DiamondDatabase.ConfigSetting.CsgoItemsLoadUnix, currentUnix);
 		}
 
-		public async Task<List<SearchMatchInfo<CsgoItemInfo>>> Search(string search, Currency currency) => await Utils.Search(this._itemsMap[currency].ItemsList, search);
-
-		public List<CsgoItemMatchInfo> SearchItems(string searchItemName, Currency currency)
+		public List<DbCsgoItemPrice> GetItemPrices(DbCsgoItem csgoItem, Currency currency)
 		{
-			if (!this._itemsMap.ContainsKey(currency))
-			{
-				return null;
-			}
+			return _database.CsgoItemPrices.Where(itemPrice => itemPrice.Currency == currency && itemPrice.Item == csgoItem).ToList();
+		}
 
-			List<CsgoItemMatchInfo> bestMatches = new List<CsgoItemMatchInfo>();
-			if (this._searchCacheMap.ContainsKey(searchItemName))
+		private Dictionary<string, DbCsgoItem> _csgoItemsMap;
+
+		public async Task<List<SearchMatchInfo<DbCsgoItem>>> SearchItemAsync(string search)
+		{
+			// Generate items map
+			if (_csgoItemsMap == null)
 			{
-				bestMatches = this._searchCacheMap[searchItemName];
-			}
-			else
-			{
-				foreach (CsgoItemInfo item in this._itemsMap[currency].ItemsList.Values)
+				Debug.WriteLine("Generating items map...");
+				_csgoItemsMap = new Dictionary<string, DbCsgoItem>();
+				foreach (DbCsgoItem item in _database.CsgoItems)
 				{
-					string itemName = item.Name.ToLower().Trim();
-
-					double matches = 0;
-					foreach (string word in searchItemName.Split(" "))
-					{
-						if (itemName.Replace(" ", "").Contains(word))
-						{
-							matches++;
-						}
-					}
-					matches *= SUtils.CalculateLevenshteinSimilarity(itemName, searchItemName);
-					if (matches == 0)
-					{
-						continue;
-					}
-
-					CsgoItemMatchInfo bestMatch = this.GetBestMatch(bestMatches);
-					if (bestMatches.Count > 0 && matches > bestMatch.Match + 0.35D)
-					{
-						foreach (CsgoItemMatchInfo matchInfo in bestMatches)
-						{
-							if (matchInfo.Match < bestMatch.Match - 0.35D)
-							{
-								bestMatches.Remove(matchInfo);
-							}
-						}
-						bestMatches.Clear();
-					}
-					if (bestMatches.Count == 0 || (matches >= bestMatch.Match - 0.35D && matches <= bestMatch.Match + 0.35D))
-					{
-						bestMatches.Add(new CsgoItemMatchInfo(item, matches));
-					}
+					_csgoItemsMap.Add(item.Name, item);
 				}
-			}
-			if (bestMatches.Count > 0)
-			{
-				if (!this._searchCacheMap.ContainsKey(searchItemName))
-				{
-					this._searchCacheMap.Add(searchItemName, bestMatches);
-				}
-				return bestMatches;
+				Debug.WriteLine("Generation finished.");
 			}
 
-			return null;
+			Debug.WriteLine("Searching...");
+			List<SearchMatchInfo<DbCsgoItem>> searchResults = await Utils.Search(_csgoItemsMap, search);
+			Debug.WriteLine("Search finished.");
+
+			return searchResults;
 		}
 
 		public void ClearCache() => this._searchCacheMap.Clear();
-
-		private CsgoItemMatchInfo GetBestMatch(List<CsgoItemMatchInfo> matches)
-		{
-			CsgoItemMatchInfo bestMatch = null;
-			foreach (CsgoItemMatchInfo matchInfo in matches)
-			{
-				if (bestMatch == null || bestMatch.Match < matchInfo.Match)
-				{
-					bestMatch = matchInfo;
-				}
-			}
-			return bestMatch;
-		}
 	}
 
 	public enum Currency
@@ -232,17 +186,5 @@ namespace Diamond.API.APIs
 		EUR,
 		USD,
 		JPY,
-	}
-
-	public class CsgoItemMatchInfo
-	{
-		public CsgoItemInfo CsgoItem { get; set; }
-		public double Match { get; set; }
-
-		public CsgoItemMatchInfo(CsgoItemInfo csgoItem, double match)
-		{
-			this.CsgoItem = csgoItem;
-			this.Match = match;
-		}
 	}
 }

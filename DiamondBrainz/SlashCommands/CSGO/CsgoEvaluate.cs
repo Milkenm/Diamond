@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.APIs;
+using Diamond.API.Data;
 using Diamond.API.Schemes.SteamInventory;
 
 using Discord;
@@ -123,16 +124,17 @@ public partial class Csgo
 			// Calculate inventory value
 			foreach (AssetDescription description in inventory.Descriptions)
 			{
-				CsgoItemMatchInfo csgoItem = _csgoBackpack.SearchItems(description.MarketName, currency)[0];
-				if (csgoItem.CsgoItem.Price == null)
+				DbCsgoItem csgoItem = (await _csgoBackpack.SearchItemAsync(description.MarketName))[0].Item;
+				var itemPrices = _csgoBackpack.GetItemPrices(csgoItem, currency);
+				if (itemPrices.Count == 0)
 				{
 					ignoredItems++;
 					continue;
 				}
-				double itemPrice = csgoItem.CsgoItem.Price.Values.First().Average * keyValuePairs[description.ClassID];
+				double itemPrice = itemPrices[0].Average * keyValuePairs[description.ClassID];
 				if (itemPrice > mostValuableItemValue)
 				{
-					mostValuableItemName = csgoItem.CsgoItem.Name;
+					mostValuableItemName = csgoItem.Name;
 					mostValuableItemValue = itemPrice;
 				}
 				totalValue += itemPrice;

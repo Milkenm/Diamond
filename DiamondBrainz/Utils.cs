@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,6 +27,7 @@ public static class Utils
 		return message.Content;
 	}
 
+	#region Search
 	public static async Task<List<SearchMatchInfo<T>>> Search<T>(Dictionary<string, T> searchList, string searchCriteria)
 	{
 		List<SearchMatchInfo<T>> bestMatches = new List<SearchMatchInfo<T>>();
@@ -50,7 +52,7 @@ public static class Utils
 		}
 		if (bestMatches.Count > 0)
 		{
-			bestMatches =  bestMatches.OrderBy(bm => bm.Match).Reverse().ToList();
+			bestMatches = bestMatches.OrderBy(bm => bm.Match).Reverse().ToList();
 			return bestMatches;
 		}
 
@@ -80,5 +82,13 @@ public static class Utils
 			this.Item = item;
 			this.Match = match;
 		}
+	}
+	#endregion
+
+	public static DateTime UnixTimeStampToDateTime(long unixTimeStamp)
+	{
+		DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+		dtDateTime = dtDateTime.AddSeconds(unixTimeStamp);
+		return dtDateTime;
 	}
 }

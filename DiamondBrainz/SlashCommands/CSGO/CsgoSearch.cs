@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -8,11 +9,10 @@ using System.Threading.Tasks;
 using System.Web;
 
 using Diamond.API.APIs;
-using Diamond.API.Schemes.CsgoBackpack;
+using Diamond.API.Data;
 
 using Discord;
 using Discord.Interactions;
-using Discord.WebSocket;
 
 using ScriptsLibV2.Extensions;
 
@@ -28,7 +28,7 @@ public partial class Csgo
 
 	[SlashCommand("item", "Search for a CS:GO item.")]
 	public async Task CsgoSearchCommandAsync(
-		[Summary("search", "The name of the item to search for."), Autocomplete] string search,
+		[Summary("search", "The name of the item to search for."), Autocomplete(typeof(ExampleAutocompleteHandler))] string search,
 		[Summary("currency", "The currency to return the price in.")] Currency currency = Currency.EUR,
 		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
 	)
@@ -44,7 +44,7 @@ public partial class Csgo
 		}
 
 		// Get best maching item
-		List<SearchMatchInfo<CsgoItemInfo>> searchResult = await this._csgoBackpack.Search(search, currency);
+		List<SearchMatchInfo<DbCsgoItem>> searchResult = await this._csgoBackpack.SearchItemAsync(search);
 		if (searchResult.Count == 0)
 		{
 			embed.Title = "Item not found";
@@ -52,18 +52,19 @@ public partial class Csgo
 			await embed.SendAsync();
 			return;
 		}
-		CsgoItemInfo searchItem = searchResult[0].Item;
+		DbCsgoItem searchItem = searchResult[0].Item;
+		List<DbCsgoItemPrice> searchItemPrices = _csgoBackpack.GetItemPrices(searchItem, currency);
 
 		embed.Title = searchItem.Name;
-		embed.Description = $"⭐ **Released**: {UnixTimeStampToDateTime(searchItem.FirstSaleDate).AddDays(1).ToString("dd/MM/yyyy")}";
+		embed.Description = $"⭐ **Released**: {UnixTimeStampToDateTime(searchItem.FirstSaleDateUnix).AddDays(1).ToString("dd/MM/yyyy")}";
 		embed.ThumbnailUrl = $"https://community.cloudflare.steamstatic.com/economy/image/{searchItem.IconUrl}";
 		ComponentBuilder builder = new ComponentBuilder()
 			.WithButton(new ButtonBuilder("View on Steam market", style: ButtonStyle.Link, url: $"https://steamcommunity.com/market/listings/730/{searchItem.Name}".Replace(" ", "%20").Replace("|", "%7C"), emote: Emoji.Parse("🏪")))
 			.WithButton(new ButtonBuilder("Buy on DMarket", style: ButtonStyle.Link, url: $"https://dmarket.com/ingame-items/item-list/csgo-skins?title={HttpUtility.UrlEncode(searchItem.Name)}&ref=3Ge3jlBrCg", emote: Emoji.Parse("🛒")));
 
-		foreach (KeyValuePair<string, CsgoItemPriceInfo> priceKeyPair in searchItem.Price)
+		foreach (DbCsgoItemPrice priceInfo in searchItemPrices)
 		{
-			embed.AddField($"🗓️ {Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(priceKeyPair.Key.ToString().ToLower().Replace("_", " "))}", $"**{CsgoBackpack.CurrencySymbols[currency]}{string.Format("{0:N}", priceKeyPair.Value.Average)}**\n*{string.Format("{0:N0}", Convert.ToInt32(priceKeyPair.Value.Sold))} sold*", true);
+			embed.AddField($"🗓️ {Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(priceInfo.Epoch.ToLower().Replace("_", " "))}", $"**{CsgoBackpack.CurrencySymbols[currency]}{string.Format("{0:N}", priceInfo.Average)}**\n*{string.Format("{0:N0}", Convert.ToInt32(priceInfo.Sold))} sold*", true);
 		}
 
 		string hexColor = searchItem.RarityHexColor;
@@ -89,7 +90,7 @@ public partial class Csgo
 		}
 	}
 
-	[AutocompleteCommand("search", "item")]
+	/*[AutocompleteCommand("search", "item")]
 	public async Task Autocomplete()
 	{
 		SocketAutocompleteInteraction interaction = this.Context.Interaction as SocketAutocompleteInteraction;
@@ -101,7 +102,7 @@ public partial class Csgo
 			return;
 		}
 		// Get best maching item
-		List<SearchMatchInfo<CsgoItemInfo>> searchResult = await this._csgoBackpack.Search(userInput, Currency.EUR);
+		List<SearchMatchInfo<DbCsgoItem>> searchResult = await this._csgoBackpack.SearchItemAsync(userInput);
 		if (searchResult.Count == 0)
 		{
 			await interaction.RespondAsync(null);
@@ -109,13 +110,57 @@ public partial class Csgo
 		}
 
 		List<AutocompleteResult> autocomplete = new List<AutocompleteResult>();
-		foreach (SearchMatchInfo<CsgoItemInfo> result in searchResult)
+		foreach (SearchMatchInfo<DbCsgoItem> result in searchResult)
 		{
 			string itemName = result.Item.Name;
 			autocomplete.Add(new AutocompleteResult(itemName, itemName));
 		}
 
-		await interaction.RespondAsync(autocomplete.Take(25));
+		try
+		{
+			await interaction.RespondAsync(autocomplete.Take(25));
+		}
+		catch { }
+	}*/
+
+	public class ExampleAutocompleteHandler : AutocompleteHandler
+	{
+		private readonly CsgoBackpack _csgoBackpack;
+
+		public ExampleAutocompleteHandler(CsgoBackpack csgoBackpack)
+		{
+			_csgoBackpack = csgoBackpack;
+		}
+
+		public override async Task<AutocompletionResult> GenerateSuggestionsAsync(IInteractionContext context, IAutocompleteInteraction autocompleteInteraction, IParameterInfo parameter, IServiceProvider services)
+		{
+			Stopwatch sw = new Stopwatch();
+			sw.Start();
+			string userInput = autocompleteInteraction.Data.Current.Value.ToString();
+			if (userInput.IsEmpty())
+			{
+				return AutocompletionResult.FromSuccess(null);
+			}
+			// Get best maching item
+			List<SearchMatchInfo<DbCsgoItem>> searchResult = await this._csgoBackpack.SearchItemAsync(userInput);
+			if (searchResult.Count == 0)
+			{
+				return AutocompletionResult.FromSuccess(null);
+			}
+
+			List<AutocompleteResult> autocomplete = new List<AutocompleteResult>();
+			foreach (SearchMatchInfo<DbCsgoItem> result in searchResult)
+			{
+				string itemName = result.Item.Name;
+				autocomplete.Add(new AutocompleteResult(itemName, itemName));
+			}
+
+			IEnumerable<AutocompleteResult> sendResults = autocomplete.Take(10);
+
+			sw.Stop();
+			Debug.WriteLine($"Sending autocomplete (took: {sw.ElapsedMilliseconds}ms, results: {autocomplete.Count}).");
+			return AutocompletionResult.FromSuccess(sendResults);
+		}
 	}
 
 	public static Bitmap DrawLine(string hexColor)
@@ -131,12 +176,5 @@ public partial class Csgo
 		}
 
 		return bitmap;
-	}
-
-	public static DateTime UnixTimeStampToDateTime(long unixTimeStamp)
-	{
-		DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-		dtDateTime = dtDateTime.AddSeconds(unixTimeStamp);
-		return dtDateTime;
 	}
 }

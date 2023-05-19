@@ -45,6 +45,7 @@ public partial class SettingsPanelPage : Page
 		this.textBox_debugGuildId.Text = this._database.GetSetting(ConfigSetting.DebugGuildID);
 		foreach (string debugChannelId in this._database.GetSetting(ConfigSetting.DebugChannelsID, string.Empty).Split(','))
 		{
+			if (debugChannelId.IsEmpty()) continue;
 			this.listBox_debugChannels.Items.Add(debugChannelId);
 		}
 	}
@@ -64,7 +65,7 @@ public partial class SettingsPanelPage : Page
 		this._database.SetSetting(ConfigSetting.DebugChannelsID, string.Join(",", debugChannelIds));
 		if (!SUtils.IsDebugEnabled())
 		{
-			this._database.SetSetting(ConfigSetting.IgnoreDebugChannels, checkBox_ignoreDebugChannel.IsChecked.ToString());
+			this._database.SetSetting(ConfigSetting.IgnoreDebugChannels, checkBox_ignoreDebugChannel.IsChecked);
 		}
 
 		this._appWindow.ToggleUI(this._database.AreSettingsValid());

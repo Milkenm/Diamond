@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using Microsoft.EntityFrameworkCore;
+
 using ScriptsLibV2.Extensions;
 
 using SUtils = ScriptsLibV2.Util.Utils;
@@ -14,6 +16,7 @@ public partial class DiamondDatabase : IDatabaseContext
 
 	public enum ConfigSetting
 	{
+		// Settings
 		Token,
 		OpenAI_API_Key,
 		NightAPI_API_Key,
@@ -21,6 +24,8 @@ public partial class DiamondDatabase : IDatabaseContext
 		DebugGuildID,
 		DebugChannelsID,
 		IgnoreDebugChannels,
+		// Random Stuff
+		CsgoItemsLoadUnix,
 	}
 
 	private static readonly Dictionary<ConfigSetting, string> _settingsList = new Dictionary<ConfigSetting, string>()
@@ -32,6 +37,7 @@ public partial class DiamondDatabase : IDatabaseContext
 		{ ConfigSetting.DebugGuildID, "DebugGuildId" },
 		{ ConfigSetting.DebugChannelsID, "DebugChannelId" },
 		{ ConfigSetting.IgnoreDebugChannels, "IgnoreDebugChannels" },
+		{ ConfigSetting.CsgoItemsLoadUnix, "CsgoItemsLoadUnix" },
 	};
 
 	public static string GetSettingString(ConfigSetting setting) => _settingsList[setting];
@@ -71,11 +77,12 @@ public partial class DiamondDatabase : IDatabaseContext
 		return this.GetSetting(setting) ?? defaultValue;
 	}
 
-	public void SetSetting(ConfigSetting setting, string value)
+	public void SetSetting(ConfigSetting setting, object value)
 	{
 		string settingName = GetSettingString(setting);
 
-		if (value.IsEmpty())
+		string stringValue = value != null ? value.ToString() : string.Empty;
+		if (stringValue.IsEmpty())
 		{
 			return;
 		}
@@ -83,16 +90,21 @@ public partial class DiamondDatabase : IDatabaseContext
 		Setting dbSetting = this.Settings.Where(s => s.Name == settingName).FirstOrDefault();
 		if (dbSetting != null)
 		{
-			dbSetting.Value = value;
+			dbSetting.Value = stringValue;
 		}
 		else
 		{
 			this.Settings.Add(new Setting()
 			{
 				Name = settingName,
-				Value = value,
+				Value = stringValue,
 			});
 		}
 		this.SaveChanges();
+	}
+
+	public void ClearTable(string tableName)
+	{
+		this.Database.ExecuteSqlRaw($"DELETE FROM [{tableName}]");
 	}
 }
