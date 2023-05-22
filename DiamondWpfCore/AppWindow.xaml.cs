@@ -58,7 +58,7 @@ namespace Diamond.GUI
 
 			// Load csgo items
 			mainPanel.LogAsync("Loading CS:GO items...").GetAwaiter();
-			this._serviceProvider.GetRequiredService<CsgoBackpack>().LoadItems().GetAwaiter().OnCompleted(async () =>
+			this._serviceProvider.GetRequiredService<CsgoBackpack>().LoadItemsAsync().GetAwaiter().OnCompleted(async () =>
 			{
 				await mainPanel.LogAsync("CS:GO items loaded!");
 			});

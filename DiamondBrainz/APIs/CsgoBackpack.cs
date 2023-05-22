@@ -37,7 +37,7 @@ namespace Diamond.API.APIs
 			this._database = database;
 		}
 
-		public async Task LoadItems()
+		public async Task LoadItemsAsync()
 		{
 			// Check if items need to be refreshed
 			long currentUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
