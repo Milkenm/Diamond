@@ -39,10 +39,10 @@ public partial class SettingsPanelPage : Page
 #else
 		this.checkBox_ignoreDebugChannel.IsChecked = Convert.ToBoolean(_database.GetSetting(ConfigSetting.IgnoreDebugChannels, false.ToString()));
 #endif
-
 		this.passwordBox_token.Password = this._database.GetSetting(ConfigSetting.Token);
 		this.passwordBox_openaiApiKey.Password = this._database.GetSetting(ConfigSetting.OpenAI_API_Key);
 		this.passwordBox_nightapiApiKey.Password = this._database.GetSetting(ConfigSetting.NightAPI_API_Key);
+		this.passwordBox_riotApiKey.Password = this._database.GetSetting(ConfigSetting.RiotAPI_Key);
 		this.textBox_debugGuildId.Text = this._database.GetSetting(ConfigSetting.DebugGuildID);
 		foreach (string debugChannelId in this._database.GetSetting(ConfigSetting.DebugChannelsID, string.Empty).Split(','))
 		{
