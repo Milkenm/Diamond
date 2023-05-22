@@ -1,15 +1,17 @@
 ﻿using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
+
 using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.Math;
 public partial class Math
 {
-	[SlashCommand("sum", "Sum multiple numbers.")]
+	[DSlashCommand("sum", "Sum multiple numbers.")]
 	public async Task MathSumCommandAsync(
 		[Summary("first-number", "The first (left) number.")] double firstNumber,
 		[Summary("second-number", "The second (right) number.")] double secondNumber,
-		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+		[ShowEveryone] bool showEveryone = false
 	)
 	{
 		await DeferAsync(!showEveryone);

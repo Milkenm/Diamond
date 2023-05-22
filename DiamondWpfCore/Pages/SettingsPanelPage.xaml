@@ -37,6 +37,8 @@
 				</Grid>
 			</StackPanel>
 		</ScrollViewer>
-		<Button Style="{StaticResource ButtonStyle}" Content="Save" Margin="0,0,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="114" Click="ButtonSave_Click"/>
+		<Button x:Name="button_save" Style="{StaticResource ButtonStyle}" Content="Save" Margin="0,0,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="114" Click="ButtonSave_Click"/>
+		<Button x:Name="button_loadJson" Style="{StaticResource ButtonStyle}" Content="Load JSON" Margin="0,0,758,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="141" Click="ButtonLoadJson_Click"/>
+		<Button x:Name="button_exportJson" Style="{StaticResource ButtonStyle}" Content="Export as JSON" Margin="0,0,612,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="141" Click="ButtonExportJson_Click"/>
 	</Grid>
 </Page>

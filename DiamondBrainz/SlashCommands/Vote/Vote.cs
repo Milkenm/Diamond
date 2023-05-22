@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
 using Diamond.API.Data;
 using Diamond.API.SlashCommands.Vote.Embeds;
 
@@ -40,7 +41,7 @@ public class Vote : InteractionModuleBase<SocketInteractionContext>
 		}
 	}
 
-	[SlashCommand("poll", "Create a vote poll.")]
+	[DSlashCommand("poll", "Create a vote poll.")]
 	public async Task VoteCommandAsync(
 		[Summary("title", "The title of the poll.")][MinLength(1)][MaxLength(250)] string title,
 		[Summary("description", "The description of the poll.")][MaxLength(4000)] string description,
@@ -72,7 +73,7 @@ public class Vote : InteractionModuleBase<SocketInteractionContext>
 		};
 
 		this._database.Add(newPoll);
-		await this._database.SaveChangesAsync();
+		await this._database.SaveAsync();
 
 		return newPoll;
 	}

@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
+
 using Discord;
 using Discord.Interactions;
 
@@ -8,7 +10,7 @@ using Victoria.Node;
 namespace Diamond.API.SlashCommands.Music;
 public partial class Music
 {
-	[SlashCommand("join", "Join your voice channel or the voice channel you provide.")]
+	[DSlashCommand("join", "Join your voice channel or the voice channel you provide.")]
 	public async Task JoinCommandAsync(
 		[Summary("voice-channel", "The voice channel to join.")] IVoiceChannel voiceChannel
 	)

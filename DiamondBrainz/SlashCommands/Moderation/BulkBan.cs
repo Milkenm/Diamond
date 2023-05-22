@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
+
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
@@ -13,7 +15,7 @@ public partial class Moderation
 {
 	[RequireBotPermission(GuildPermission.BanMembers)]
 	[DefaultMemberPermissions(GuildPermission.BanMembers)]
-	[SlashCommand("bulk-ban", "Bans all users that meet a criteria.")]
+	[DSlashCommand("bulk-ban", "Bans all users that meet a criteria.")]
 	public async Task BulkBanCommandAsync(
 		[Summary("criteria-class", "The criteria \"class\" to apply.")] BanCriteria criteria,
 		[Summary("search", "The text to apply with the criteia.")] string search,

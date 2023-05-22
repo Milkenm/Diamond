@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
+
 using Discord;
 using Discord.Interactions;
 
@@ -12,7 +14,7 @@ using Victoria.Responses.Search;
 namespace Diamond.API.SlashCommands.Music;
 public partial class Music
 {
-	[SlashCommand("play", "Add an audio to the queue.")]
+	[DSlashCommand("play", "Add an audio to the queue.")]
 	public async Task PlayCommandAsync(
 		[Summary("url", "The URL to play sound from.")] string url,
 		[Summary("voice-channel", "The voice channel to play at.")] IVoiceChannel voiceChannel = null

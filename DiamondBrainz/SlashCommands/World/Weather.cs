@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
 using Diamond.API.Schemes.OpenMeteoGeocoding;
 using Diamond.API.Schemes.OpenMeteoWeather;
 
@@ -13,38 +14,11 @@ using static Diamond.API.APIs.OpenMeteoWeather;
 namespace Diamond.API.SlashCommands.World;
 public partial class World
 {
-	private readonly Dictionary<WeatherEmoji, Emoji> _weatherEmojis = new Dictionary<WeatherEmoji, Emoji>()
-	{
-		{ WeatherEmoji.Sunny, Emoji.Parse("☀️") },
-		{ WeatherEmoji.SmallClouds, Emoji.Parse("🌤️") },
-		{ WeatherEmoji.LargeClouds, Emoji.Parse("⛅") },
-		{ WeatherEmoji.Cloudy, Emoji.Parse("☁️") },
-		{ WeatherEmoji.SunnyRain, Emoji.Parse("🌦️") },
-		{ WeatherEmoji.Rain, Emoji.Parse("🌧️") },
-		{ WeatherEmoji.WetThunder, Emoji.Parse("⛈️") },
-		{ WeatherEmoji.DryThunder, Emoji.Parse("🌩️") },
-		{ WeatherEmoji.Snow, Emoji.Parse("🌨️") },
-	};
-
-	private enum WeatherEmoji
-	{
-		Sunny,
-		SmallClouds,
-		LargeClouds,
-		Cloudy,
-		SunnyRain,
-		Rain,
-		WetThunder,
-		DryThunder,
-		Snow,
-	}
-
-
 	[RequireBotPermission(GuildPermission.Administrator)]
-	[SlashCommand("weather", "View the weather for a certain region.")]
+	[DSlashCommand("weather", "View the weather for a certain region.")]
 	public async Task WeatherCommandAsync(
 		[Summary("location", "The country or city to get information of.")] string location,
-		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+		[ShowEveryone] bool showEveryone = false
 	)
 	{
 		await DeferAsync(!showEveryone);
@@ -127,5 +101,31 @@ public partial class World
 			8 or 9 or 10 => "Very High",
 			_ => "Extreme"
 		};
+	}
+
+	private readonly Dictionary<WeatherEmoji, Emoji> _weatherEmojis = new Dictionary<WeatherEmoji, Emoji>()
+	{
+		{ WeatherEmoji.Sunny, Emoji.Parse("☀️") },
+		{ WeatherEmoji.SmallClouds, Emoji.Parse("🌤️") },
+		{ WeatherEmoji.LargeClouds, Emoji.Parse("⛅") },
+		{ WeatherEmoji.Cloudy, Emoji.Parse("☁️") },
+		{ WeatherEmoji.SunnyRain, Emoji.Parse("🌦️") },
+		{ WeatherEmoji.Rain, Emoji.Parse("🌧️") },
+		{ WeatherEmoji.WetThunder, Emoji.Parse("⛈️") },
+		{ WeatherEmoji.DryThunder, Emoji.Parse("🌩️") },
+		{ WeatherEmoji.Snow, Emoji.Parse("🌨️") },
+	};
+
+	private enum WeatherEmoji
+	{
+		Sunny,
+		SmallClouds,
+		LargeClouds,
+		Cloudy,
+		SunnyRain,
+		Rain,
+		WetThunder,
+		DryThunder,
+		Snow,
 	}
 }

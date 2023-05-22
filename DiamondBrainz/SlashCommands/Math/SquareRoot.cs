@@ -1,14 +1,16 @@
 ﻿using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
+
 using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.Math;
 public partial class Math
 {
-	[SlashCommand("square-root", "Calculate the square root of the given number.")]
+	[DSlashCommand("square-root", "Calculate the square root of the given number.")]
 	public async Task MathSquareRootCommandAsync(
 		[Summary("number", "The number to calculate the square root of.")] double number,
-		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+		[ShowEveryone] bool showEveryone = false
 	)
 	{
 		await DeferAsync(!showEveryone);

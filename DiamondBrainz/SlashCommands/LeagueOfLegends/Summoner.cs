@@ -1,15 +1,17 @@
 ﻿using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
+
 using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.LeagueOfLegends;
 public partial class LeagueOfLegends
 {
-	[SlashCommand("summoner", "View a summoner's profile.")]
+	[DSlashCommand("summoner", "View a summoner's profile.")]
 	public async Task SummonerCommandAsync(
 		[Summary("summoner-name", "The name of the summoner to search for.")] string summonerName,
 		[Summary("region", "The region the summoner is playing at.")] Region region,
-		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+		[ShowEveryone] bool showEveryone = false
 	)
 	{
 

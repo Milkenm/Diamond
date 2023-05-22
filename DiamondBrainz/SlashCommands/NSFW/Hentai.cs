@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
+
 using Discord.Interactions;
 
 using Newtonsoft.Json;
@@ -13,10 +15,10 @@ namespace Diamond.API.SlashCommands.NSFW;
 
 public partial class NSFW
 {
-	[SlashCommand("hentai", "Gives you a sus image in 2D.")]
+	[DSlashCommand("hentai", "Gives you a sus image in 2D.")]
 	public async Task HentaiCommandAsync(
 		[Summary("type", "The sus type.")] HentaiType type = HentaiType.Classic,
-		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+		[ShowEveryone] bool showEveryone = false
 	)
 	{
 		await this.DeferAsync(!showEveryone);

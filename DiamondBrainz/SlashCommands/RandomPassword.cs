@@ -1,6 +1,8 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
+
 using Discord.Interactions;
 
 using ScriptsLibV2.Extensions;
@@ -10,14 +12,14 @@ namespace Diamond.API.SlashCommands
 {
     public class RandomPassword : InteractionModuleBase<SocketInteractionContext>
     {
-        [SlashCommand("randompassword", "Generates a random password.")]
+        [DSlashCommand("randompassword", "Generates a random password.")]
         public async Task RandomPasswordCommandAsync(
             [Summary("size", "The amount of characters to generate for the password.")][MinValue(1)][MaxValue(32)] int passwordSize = 16,
             [Summary("use-letters", "Include lower and uppercase letters from 'a' to 'z' (ignored if 'allowedcharacters' is set).")] bool useLetters = true,
             [Summary("use-numbers", "Include numbers from 0 to 9 (ignored if 'allowedcharacters' is set).")] bool useNumbers = true,
             [Summary("use-special-characters", "Inlcude special characters like '#', '!', '\"' and others (ignored if 'allowedcharacters' is set).")] bool useSpecialCharacters = true,
             [Summary("allowed-characters", "Indicate which characters to use to generate the password.")] string allowedCharacters = "",
-            [Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+            [ShowEveryone] bool showEveryone = false
         )
         {
             await DeferAsync(!showEveryone);

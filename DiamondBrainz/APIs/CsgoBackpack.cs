@@ -50,7 +50,7 @@ namespace Diamond.API.APIs
 			// Clear database and items map
 			_database.ClearTable("CsgoItemPrices");
 			_database.ClearTable("CsgoItems");
-			_csgoItemsMap.Clear();
+			_csgoItemsMap?.Clear();
 
 			Dictionary<string, DbCsgoItem> createdItems = new Dictionary<string, DbCsgoItem>();
 
@@ -85,7 +85,7 @@ namespace Diamond.API.APIs
 							UpdatedAt = currentUnix,
 						});
 					}
-					this._database.SaveChanges();
+					await this._database.SaveAsync();
 				}
 				CsgoBackpackItemsList itemsList = JsonConvert.DeserializeObject<CsgoBackpackItemsList>(itemsListJson);
 				if (!itemsList.Success)
@@ -144,9 +144,9 @@ namespace Diamond.API.APIs
 						}
 					}
 				}
-				this._database.SaveChanges();
+				await this._database.SaveAsync();
 			}
-			this._database.SetSetting(DiamondDatabase.ConfigSetting.CsgoItemsLoadUnix, currentUnix);
+			await this._database.SetSetting(DiamondDatabase.ConfigSetting.CsgoItemsLoadUnix, currentUnix);
 		}
 
 		public List<DbCsgoItemPrice> GetItemPrices(DbCsgoItem csgoItem, Currency currency)

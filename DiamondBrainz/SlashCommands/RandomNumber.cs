@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
+
 using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands
 {
     public class RandomNumber : InteractionModuleBase<SocketInteractionContext>
     {
-        [SlashCommand("randomnumber", "[Public] Generates a random number between \"min\" and \"max\".")]
+        [DSlashCommand("randomnumber", "[Public] Generates a random number between \"min\" and \"max\".")]
         public async Task RandomNumberCommandAsync(
             [Summary("min", "The minimum range.")][MinValue(int.MinValue + 1)][MaxValue(int.MaxValue - 1)] int min = 1,
             [Summary("max", "The maximum range.")][MinValue(int.MinValue + 1)][MaxValue(int.MaxValue - 1)] int max = 6,
-            [Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = true
+            [ShowEveryone] bool showEveryone = true
         )
         {
             await DeferAsync(!showEveryone);

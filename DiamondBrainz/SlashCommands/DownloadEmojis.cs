@@ -5,6 +5,8 @@ using System.IO.Compression;
 using System.Net;
 using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
+
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
@@ -20,9 +22,9 @@ namespace Diamond.API.SlashCommands
 			this._client = client;
 		}
 
-		[SlashCommand("download-emojis", "Downloads the custom emojis from a server.")]
+		[DSlashCommand("download-emojis", "Downloads the custom emojis from a server.")]
 		public async Task DownloadEmojisCommandAsync(
-			[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+			[ShowEveryone] bool showEveryone = false
 		)
 		{
 			await this.DeferAsync(!showEveryone);

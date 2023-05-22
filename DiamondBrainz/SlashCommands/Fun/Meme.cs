@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using Diamond.API.APIs;
+using Diamond.API.Attributes;
 
 using Discord;
 using Discord.Interactions;
@@ -12,9 +13,9 @@ using static Diamond.API.APIs.MemeAPI;
 namespace Diamond.API.SlashCommands.Fun;
 public partial class Fun
 {
-	[SlashCommand("meme", "Get a random meme from Reddit.")]
+	[DSlashCommand("meme", "Get a random meme from Reddit.")]
 	public async Task MemeCommandAsync(
-		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+		[ShowEveryone] bool showEveryone = false
 	)
 	{
 		await this.DeferAsync(!showEveryone);

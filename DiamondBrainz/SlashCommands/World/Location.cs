@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
 using Diamond.API.Schemes.OpenMeteoGeocoding;
 
 using Discord;
@@ -8,10 +9,10 @@ using Discord.Interactions;
 namespace Diamond.API.SlashCommands.World;
 public partial class World
 {
-	[SlashCommand("location", "View some information about a country/city.")]
+	[DSlashCommand("location", "View some information about a country/city.")]
 	public async Task PopulationCommandAsync(
 		[Summary("location", "The country or city to get information of.")] string location,
-		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+		[ShowEveryone] bool showEveryone = false
 	)
 	{
 		await DeferAsync(!showEveryone);

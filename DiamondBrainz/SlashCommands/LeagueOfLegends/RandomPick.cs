@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
 using Diamond.API.Schemes.LolDataDragon;
 
 using Discord.Interactions;
@@ -12,10 +13,10 @@ using static Diamond.API.APIs.LeagueOfLegendsDataDragonAPI;
 namespace Diamond.API.SlashCommands.LeagueOfLegends;
 public partial class LeagueOfLegends
 {
-	[SlashCommand("random-pick", "Pick a random champ and/or role.")]
+	[DSlashCommand("random-pick", "Pick a random champ and/or role.")]
 	public async Task RandomizeCommandAsync(
 		[Summary("champion-class", "Selects a champion based on the selected class.")] ChampionClass? championClass = null,
-		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+		[ShowEveryone] bool showEveryone = false
 	)
 	{
 		await this.DeferAsync(!showEveryone);

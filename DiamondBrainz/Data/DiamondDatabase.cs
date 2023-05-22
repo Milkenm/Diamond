@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -40,13 +41,20 @@ public partial class DiamondDatabase : IDatabaseContext
 		{ ConfigSetting.CsgoItemsLoadUnix, "CsgoItemsLoadUnix" },
 	};
 
+	public async Task SaveAsync()
+	{
+		await base.SaveChangesAsync();
+	}
+
 	public static string GetSettingString(ConfigSetting setting) => _settingsList[setting];
 
 	public bool AreSettingsValid()
 	{
 		foreach (ConfigSetting setting in _settingsList.Keys)
 		{
-			if (SUtils.IsDebugEnabled() && setting == ConfigSetting.IgnoreDebugChannels) continue;
+#if DEBUG
+			if (setting == ConfigSetting.IgnoreDebugChannels) continue;
+#endif
 
 			if (this.GetSetting(setting).IsEmpty())
 			{
@@ -77,7 +85,7 @@ public partial class DiamondDatabase : IDatabaseContext
 		return this.GetSetting(setting) ?? defaultValue;
 	}
 
-	public void SetSetting(ConfigSetting setting, object value)
+	public async Task SetSetting(ConfigSetting setting, object value)
 	{
 		string settingName = GetSettingString(setting);
 
@@ -100,7 +108,7 @@ public partial class DiamondDatabase : IDatabaseContext
 				Value = stringValue,
 			});
 		}
-		this.SaveChanges();
+		await this.SaveAsync();
 	}
 
 	public void ClearTable(string tableName)

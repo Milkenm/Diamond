@@ -1,11 +1,35 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
+
 using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands;
 public class StyledFont : InteractionModuleBase<SocketInteractionContext>
 {
+	[DSlashCommand("styled-font", "Convert normal text to styled text.")]
+	public async Task IgfontCommandAsync(
+		[Summary("text", "The text to style.")] string text,
+		[Summary("font-style", "The font style to apply to the text.")] FontStyle fontStyle,
+		[ShowEveryone] bool showEveryone = false
+	)
+	{
+		await DeferAsync(!showEveryone);
+
+		foreach (string letter in _fontMap.Keys)
+		{
+			text = text.Replace(letter, _fontMap[letter][(int)fontStyle]);
+		}
+
+		DefaultEmbed embed = new DefaultEmbed("Styled Font", "🔤", Context.Interaction)
+		{
+			Description = text,
+		};
+
+		await embed.SendAsync();
+	}
+
 	private readonly Dictionary<string, string[]> _fontMap = new Dictionary<string, string[]>()
 	{
 		// Lower-case
@@ -69,27 +93,5 @@ public class StyledFont : InteractionModuleBase<SocketInteractionContext>
 		[ChoiceDisplay("🇪🇲🇴🇯🇮")] Emoji,
 		[ChoiceDisplay("𝐁𝐨𝐥𝐝")] Bold,
 		[ChoiceDisplay("𝘐𝘵𝘢𝘭𝘪𝘤")] Italic,
-	}
-
-	[SlashCommand("styled-font", "Convert normal text to styled text.")]
-	public async Task IgfontCommandAsync(
-		[Summary("text", "The text to style.")] string text,
-		[Summary("font-style", "The font style to apply to the text.")] FontStyle fontStyle,
-		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
-	)
-	{
-		await DeferAsync(!showEveryone);
-
-		foreach (string letter in _fontMap.Keys)
-		{
-			text = text.Replace(letter, _fontMap[letter][(int)fontStyle]);
-		}
-
-		DefaultEmbed embed = new DefaultEmbed("Styled Font", "🔤", Context.Interaction)
-		{
-			Description = text,
-		};
-
-		await embed.SendAsync();
 	}
 }

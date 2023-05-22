@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
+
 using Discord.Interactions;
 
 using ScriptsLibV2.Util;
@@ -9,10 +11,10 @@ namespace Diamond.API.SlashCommands
 {
     public class Twemoji : InteractionModuleBase<SocketInteractionContext>
     {
-        [SlashCommand("twemoji", "Gets the provided twemoji.")]
+        [DSlashCommand("twemoji", "Gets the provided twemoji.")]
         public async Task TwemojiCommandAsync(
             [Summary("twemoji", "The twemoji to get.")] string twemoji,
-            [Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+            [ShowEveryone] bool showEveryone = false
         )
         {
             await DeferAsync(!showEveryone);

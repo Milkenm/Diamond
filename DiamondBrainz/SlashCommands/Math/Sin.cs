@@ -1,15 +1,17 @@
 ﻿using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
+
 using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.Math;
 public partial class Math
 {
-	[SlashCommand("sin", "Calculate the sine of the given angle.")]
+	[DSlashCommand("sin", "Calculate the sine of the given angle.")]
 	public async Task MathSinCommandAsync(
 		[Summary("number", "The number to calculate the sine of.")] double angle,
 		[Summary("angle-type", "If the angle you provide is in degrees or radians.")] AngleType angleType = AngleType.Degrees,
-		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+		[ShowEveryone] bool showEveryone = false
 	)
 	{
 		await DeferAsync(!showEveryone);

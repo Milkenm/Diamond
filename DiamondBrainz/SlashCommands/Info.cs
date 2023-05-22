@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
+
 using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands;
 public class Info : InteractionModuleBase<SocketInteractionContext>
 {
-	[SlashCommand("info", "Shows info about the bot.")]
+	[DSlashCommand("info", "Shows info about the bot.")]
 	public async Task InfoCommandAsync(
-			[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+			[ShowEveryone] bool showEveryone = false
 	)
 	{
 		await this.DeferAsync(!showEveryone);

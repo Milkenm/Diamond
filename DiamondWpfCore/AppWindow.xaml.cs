@@ -17,6 +17,8 @@ using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using ScriptsLibV2.Extensions;
+
 using static Diamond.API.Data.DiamondDatabase;
 
 using SUtils = ScriptsLibV2.Util.Utils;
@@ -66,32 +68,38 @@ namespace Diamond.GUI
 			Lava lava = this._serviceProvider.GetRequiredService<Lava>();
 			this._client.Ready += new Func<Task>(async () =>
 			{
+				// Only run this code block once
 				if (_botReady)
 				{
 					return;
 				}
-
 				_botReady = true;
 
 				await interactionService.AddModulesAsync(SUtils.GetAssemblyByName("DiamondAPI"), this._serviceProvider);
-				if (SUtils.IsDebugEnabled() && this._database.GetSetting(ConfigSetting.DebugGuildID) != null)
+				string? debugGuildIdString = this._database.GetSetting(ConfigSetting.DebugGuildID);
+				ulong? debugGuildId = !debugGuildIdString.IsEmpty() ? Convert.ToUInt64(debugGuildIdString) : null;
+
+#if DEBUG
+				if (debugGuildId.HasValue)
 				{
-					await interactionService.RegisterCommandsToGuildAsync(Convert.ToUInt64(this._database.GetSetting(ConfigSetting.DebugGuildID)));
+					await interactionService.RegisterCommandsToGuildAsync((ulong)debugGuildId);
+					await mainPanel.LogAsync($"Registered {interactionService.SlashCommands.Count} commands to dev guild.");
 				}
-				else
-				{
-					await interactionService.RegisterCommandsGloballyAsync();
-				}
+#elif RELEASE
+				await interactionService.RegisterCommandsGloballyAsync(true);
+				await mainPanel.LogAsync($"Registered {interactionService.SlashCommands.Count} commands to {_client.Guilds.Count} guilds.");
+#endif
 			});
 			// Run interactions (slash commands/modals/buttons/...)
 			this._client.InteractionCreated += async (socketInteraction) =>
 			{
 				// Ignore debug channel if debug is disabled and ignore normal channels if debug is enabled
-				bool isDebugChannel = Utils.IsDebugChannel(_database.GetSetting(DiamondDatabase.ConfigSetting.DebugChannelsID), socketInteraction.ChannelId);
-				if ((isDebugChannel && !SUtils.IsDebugEnabled()) || (!isDebugChannel && SUtils.IsDebugEnabled()))
-				{
-					return;
-				}
+				bool isDebugChannel = Utils.IsDebugChannel(_database.GetSetting(ConfigSetting.DebugChannelsID), socketInteraction.ChannelId);
+#if DEBUG
+				if (!isDebugChannel) return;
+#elif RELEASE
+				if (isDebugChannel) return;
+#endif
 
 				SocketInteractionContext context = new SocketInteractionContext(this._client, socketInteraction);
 				await interactionService.ExecuteCommandAsync(context, this._serviceProvider);
@@ -148,15 +156,10 @@ namespace Diamond.GUI
 					});
 				}
 			};
-			// Disconnect from LavaLink when the bot logs out
-			this._client.LoggedOut += async () =>
-			{
-				await lava.StopNodeAsync();
-			};
 			this._client.Log += new Func<LogMessage, Task>((logMessage) => this._serviceProvider.GetRequiredService<MainPanelPage>().LogAsync(logMessage.Message));
 
-			// Windows events
-			Closing += new CancelEventHandler((se, ev) =>
+			// App events
+			this.Closing += new CancelEventHandler((se, ev) =>
 			{
 				this._client.StopAsync().GetAwaiter();
 			});

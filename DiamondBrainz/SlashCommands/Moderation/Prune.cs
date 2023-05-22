@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
+
 using Discord;
 using Discord.Interactions;
 
@@ -9,11 +11,11 @@ public partial class Moderation
 {
 	[RequireBotPermission(GuildPermission.ManageMessages)]
 	[DefaultMemberPermissions(GuildPermission.ManageMessages)]
-	[SlashCommand("prune", "Delete messages from a channel.")]
+	[DSlashCommand("prune", "Delete messages from a channel.")]
 	public async Task PruneCommandAsync(
 		[Summary("amount", "The amount of messages to delete.")] int amount,
 		[Summary("only-delete-bot-messages", "Only delete messages from bots in the last \"amount\" messages.")] bool onlyDeleteBotMessages = false,
-		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = true
+		[ShowEveryone] bool showEveryone = true
 	)
 	{
 		await this.DeferAsync(!showEveryone);

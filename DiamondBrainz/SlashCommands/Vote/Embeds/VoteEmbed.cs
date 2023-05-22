@@ -85,7 +85,7 @@ public class VoteEmbed : BaseVoteEmbed
 					break;
 				}
 		}
-		database.SaveChanges();
+		await database.SaveAsync();
 	}
 
 	public static async Task ButtonHandlerAsync(SocketMessageComponent messageComponent, DiamondDatabase database, DiscordSocketClient client)
@@ -143,7 +143,7 @@ public class VoteEmbed : BaseVoteEmbed
 							database.PollVotes.Remove(existingVote);
 						}
 					}
-					database.SaveChanges();
+					await database.SaveAsync();
 
 					await VoteUtils.UpdatePublishEmbed(messageComponent, database, client, messageId, poll);
 

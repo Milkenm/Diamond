@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 using Discord.Interactions;
 
-namespace Diamond.API.SlashCommands.ServerInfo;
-public partial class ServerInfo
+namespace Diamond.API.SlashCommands.Server;
+public partial class Server
 {
-	/*[SlashCommand("user", "Show info about a server user.")]
+	/*[DSlashCommand("user", "Show info about a server user.")]
 	public async Task ServerUserCommandAsync(
-			[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+			[ShowEveryone] bool showEveryone = false
 	)
 	{
 		await DeferAsync(!showEveryone);

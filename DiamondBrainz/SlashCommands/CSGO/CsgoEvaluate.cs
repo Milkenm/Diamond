@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.APIs;
+using Diamond.API.Attributes;
 using Diamond.API.Data;
 using Diamond.API.Schemes.SteamInventory;
 
@@ -26,12 +27,12 @@ public partial class Csgo
 	private const string ID_URL = "https://steamcommunity.com/inventory/{0}/730/2?l=english&count=5000";
 	private const string VANITY_URL = "https://steamcommunity.com/id/{0}";
 
-	[SlashCommand("evaluate", "Estimates the value of a CS:GO inventory.")]
+	[DSlashCommand("evaluate", "Estimates the value of a CS:GO inventory.")]
 	public async Task CsgoEvaluateCommandAsync(
 		[Summary("search", "The user's username/steamid to evaluate.")] string user,
 		[Summary("currency", "The currency to return the price in.")] Currency currency = Currency.EUR,
 		[Summary("force-refresh", "Force the refresh of the inventory.")] bool forceRefresh = false,
-		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+		[ShowEveryone] bool showEveryone = false
 	)
 	{
 		await DeferAsync(!showEveryone);
@@ -125,7 +126,7 @@ public partial class Csgo
 			foreach (AssetDescription description in inventory.Descriptions)
 			{
 				DbCsgoItem csgoItem = (await _csgoBackpack.SearchItemAsync(description.MarketName))[0].Item;
-				var itemPrices = _csgoBackpack.GetItemPrices(csgoItem, currency);
+				List<DbCsgoItemPrice> itemPrices = _csgoBackpack.GetItemPrices(csgoItem, currency);
 				if (itemPrices.Count == 0)
 				{
 					ignoredItems++;

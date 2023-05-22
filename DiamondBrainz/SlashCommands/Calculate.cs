@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
+
 using Discord.Interactions;
 
 using NCalc;
@@ -8,10 +10,10 @@ namespace Diamond.API.SlashCommands
 {
 	public class Calculate : InteractionModuleBase<SocketInteractionContext>
 	{
-		[SlashCommand("calculate", "Calculate the value of the math expression.")]
+		[DSlashCommand("calculate", "Calculate the value of the math expression.")]
 		public async Task CalculateCommandAsync(
 			[Summary("expression", "The math expression to calculate.")] string expressionString,
-			[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+			[ShowEveryone] bool showEveryone = false
 		)
 		{
 			await DeferAsync(!showEveryone);

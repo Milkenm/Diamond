@@ -1,15 +1,17 @@
 ﻿using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
+
 using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.Math;
 public partial class Math
 {
-	[SlashCommand("power", "Calculate the power of a given number.")]
+	[DSlashCommand("power", "Calculate the power of a given number.")]
 	public async Task MathPowerCommandAsync(
 		[Summary("base", "The base number.")] int @base,
 		[Summary("power", "The power number")] int power,
-		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+		[ShowEveryone] bool showEveryone = false
 	)
 	{
 		await DeferAsync(!showEveryone);

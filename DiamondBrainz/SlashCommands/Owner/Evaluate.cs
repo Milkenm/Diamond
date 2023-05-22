@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
+
 using Discord;
 using Discord.Interactions;
 
@@ -10,12 +12,15 @@ using Microsoft.CodeAnalysis.CSharp.Scripting;
 namespace Diamond.API.SlashCommands.Owner;
 public partial class Owner
 {
-	[SlashCommand("eval", "Evaluate a C# expression.", true)]
+	[DSlashCommand("eval", "Evaluate a C# expression.", true)]
 	public async Task EvalCommandAsync(
 		[Summary("expression", "The expression to evaluate.")] string expression,
-		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+		[ShowEveryone] bool showEveryone = false
 	)
 	{
+		// Just in case
+		if (Context.User.Id != 222114807887691777L) return;
+
 		await this.DeferAsync(!showEveryone);
 
 		if (expression.StartsWith("```cs"))

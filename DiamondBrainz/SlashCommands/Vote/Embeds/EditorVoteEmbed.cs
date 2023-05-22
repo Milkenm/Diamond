@@ -61,7 +61,7 @@ public class EditorVoteEmbed : BaseVoteEmbed
 					Poll poll = VoteUtils.GetPollByMessageId(database, messageId);
 
 					database.PollOptions.Remove(selectedOption);
-					database.SaveChanges();
+					await database.SaveAsync();
 
 					await VoteUtils.UpdateEditorEmbed(messageComponent, database, poll, messageId);
 					break;
@@ -106,7 +106,7 @@ public class EditorVoteEmbed : BaseVoteEmbed
 						poll.ImageUrl = fieldsMap["field_imageurl"];
 						poll.ThumbnailUrl = fieldsMap["field_thumbnailurl"];
 						poll.UpdatedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-						diamondDatabase.SaveChanges();
+						await diamondDatabase.SaveAsync();
 
 						await VoteUtils.UpdateEditorEmbed(modal, diamondDatabase, poll, messageId);
 					});
@@ -130,7 +130,7 @@ public class EditorVoteEmbed : BaseVoteEmbed
 						}
 
 						diamondDatabase.Add(newOption);
-						diamondDatabase.SaveChanges();
+						await diamondDatabase.SaveAsync();
 
 						await VoteUtils.UpdateEditorEmbed(modal, diamondDatabase, poll, messageId);
 					});
@@ -149,7 +149,7 @@ public class EditorVoteEmbed : BaseVoteEmbed
 
 					poll.IsPublished = true;
 					poll.DiscordMessageId = responseId;
-					diamondDatabase.SaveChanges();
+					await diamondDatabase.SaveAsync();
 
 					break;
 				}

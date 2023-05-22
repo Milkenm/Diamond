@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+#if DEBUG
 using System.Diagnostics;
+#endif
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -9,16 +11,16 @@ using System.Threading.Tasks;
 using System.Web;
 
 using Diamond.API.APIs;
+using Diamond.API.Attributes;
 using Diamond.API.Data;
 
 using Discord;
 using Discord.Interactions;
+using Discord.WebSocket;
 
 using ScriptsLibV2.Extensions;
 
 using static Diamond.API.Utils;
-
-using SUtils = ScriptsLibV2.Util.Utils;
 
 namespace Diamond.API.SlashCommands.CSGO;
 
@@ -26,22 +28,21 @@ public partial class Csgo
 {
 	private static readonly Dictionary<string, Bitmap> _raritiesCacheMap = new Dictionary<string, Bitmap>();
 
-	[SlashCommand("item", "Search for a CS:GO item.")]
+	[DSlashCommand("item", "Search for a CS:GO item.")]
 	public async Task CsgoSearchCommandAsync(
-		[Summary("search", "The name of the item to search for."), Autocomplete(typeof(ExampleAutocompleteHandler))] string search,
+		[Summary("search", "The name of the item to search for."), Autocomplete] string search,
 		[Summary("currency", "The currency to return the price in.")] Currency currency = Currency.EUR,
-		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+		[ShowEveryone] bool showEveryone = false
 	)
 	{
 		await this.DeferAsync(!showEveryone);
 
 		DefaultEmbed embed = new DefaultEmbed("CS:GO Item Search", "🔫", this.Context.Interaction);
 
+#if DEBUG
 		// Clear cache if debug is enabled
-		if (SUtils.IsDebugEnabled())
-		{
-			this._csgoBackpack.ClearCache();
-		}
+		this._csgoBackpack.ClearCache();
+#endif
 
 		// Get best maching item
 		List<SearchMatchInfo<DbCsgoItem>> searchResult = await this._csgoBackpack.SearchItemAsync(search);
@@ -90,22 +91,26 @@ public partial class Csgo
 		}
 	}
 
-	/*[AutocompleteCommand("search", "item")]
+	[AutocompleteCommand("search", "item")]
 	public async Task Autocomplete()
 	{
-		SocketAutocompleteInteraction interaction = this.Context.Interaction as SocketAutocompleteInteraction;
+#if DEBUG
+		Stopwatch sw = new Stopwatch();
+		sw.Start();
+#endif
 
-		string userInput = interaction.Data.Current.Value.ToString();
+		SocketAutocompleteInteraction autocompleteInteraction = this.Context.Interaction as SocketAutocompleteInteraction;
+		string userInput = autocompleteInteraction.Data.Current.Value.ToString();
 		if (userInput.IsEmpty())
 		{
-			await interaction.RespondAsync(null);
+			await autocompleteInteraction.RespondAsync(null);
 			return;
 		}
 		// Get best maching item
 		List<SearchMatchInfo<DbCsgoItem>> searchResult = await this._csgoBackpack.SearchItemAsync(userInput);
 		if (searchResult.Count == 0)
 		{
-			await interaction.RespondAsync(null);
+			await autocompleteInteraction.RespondAsync(null);
 			return;
 		}
 
@@ -115,52 +120,14 @@ public partial class Csgo
 			string itemName = result.Item.Name;
 			autocomplete.Add(new AutocompleteResult(itemName, itemName));
 		}
+		IEnumerable<AutocompleteResult> sendResults = autocomplete.Take(5);
 
-		try
-		{
-			await interaction.RespondAsync(autocomplete.Take(25));
-		}
-		catch { }
-	}*/
+#if DEBUG
+		sw.Stop();
+		Debug.WriteLine($"Sending autocomplete (took: {sw.ElapsedMilliseconds}ms, results: {autocomplete.Count}).");
+#endif
 
-	public class ExampleAutocompleteHandler : AutocompleteHandler
-	{
-		private readonly CsgoBackpack _csgoBackpack;
-
-		public ExampleAutocompleteHandler(CsgoBackpack csgoBackpack)
-		{
-			_csgoBackpack = csgoBackpack;
-		}
-
-		public override async Task<AutocompletionResult> GenerateSuggestionsAsync(IInteractionContext context, IAutocompleteInteraction autocompleteInteraction, IParameterInfo parameter, IServiceProvider services)
-		{
-			Stopwatch sw = new Stopwatch();
-			sw.Start();
-			string userInput = autocompleteInteraction.Data.Current.Value.ToString();
-			if (userInput.IsEmpty())
-			{
-				return AutocompletionResult.FromSuccess(null);
-			}
-			// Get best maching item
-			List<SearchMatchInfo<DbCsgoItem>> searchResult = await this._csgoBackpack.SearchItemAsync(userInput);
-			if (searchResult.Count == 0)
-			{
-				return AutocompletionResult.FromSuccess(null);
-			}
-
-			List<AutocompleteResult> autocomplete = new List<AutocompleteResult>();
-			foreach (SearchMatchInfo<DbCsgoItem> result in searchResult)
-			{
-				string itemName = result.Item.Name;
-				autocomplete.Add(new AutocompleteResult(itemName, itemName));
-			}
-
-			IEnumerable<AutocompleteResult> sendResults = autocomplete.Take(10);
-
-			sw.Stop();
-			Debug.WriteLine($"Sending autocomplete (took: {sw.ElapsedMilliseconds}ms, results: {autocomplete.Count}).");
-			return AutocompletionResult.FromSuccess(sendResults);
-		}
+		await autocompleteInteraction.RespondAsync(sendResults);
 	}
 
 	public static Bitmap DrawLine(string hexColor)

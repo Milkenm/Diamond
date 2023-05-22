@@ -3,6 +3,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
+
 using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands;
@@ -15,9 +17,9 @@ public class Commands : InteractionModuleBase<SocketInteractionContext>
 		this._interactionService = interactionService;
 	}
 
-	[SlashCommand("commands", "View all commands the bot has.")]
+	[DSlashCommand("commands", "View all commands the bot has.")]
 	public async Task CommandsCommandAsync(
-		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+		[ShowEveryone] bool showEveryone = false
 	)
 	{
 		await this.DeferAsync(!showEveryone);

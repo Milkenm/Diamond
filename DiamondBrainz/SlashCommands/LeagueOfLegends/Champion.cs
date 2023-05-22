@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
 using Diamond.API.Schemes.LolDataDragon;
 
 using Discord;
@@ -11,10 +12,10 @@ using static Diamond.API.Utils;
 namespace Diamond.API.SlashCommands.LeagueOfLegends;
 public partial class LeagueOfLegends
 {
-	[SlashCommand("champion", "View info about a champion.")]
+	[DSlashCommand("champion", "View info about a champion.")]
 	public async Task ChampionCommandAsync(
 		[Summary("champion-name", "The name of the champion to view.")] string championName,
-		[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+		[ShowEveryone] bool showEveryone = false
 	)
 	{
 		await this.DeferAsync(!showEveryone);

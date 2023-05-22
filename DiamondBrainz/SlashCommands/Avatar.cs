@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 
+using Diamond.API.Attributes;
+
 using Discord;
 using Discord.Interactions;
 
@@ -7,11 +9,11 @@ namespace Diamond.API.SlashCommands
 {
 	public class Avatar : InteractionModuleBase<SocketInteractionContext>
 	{
-		[SlashCommand("avatar", "Gets the avatar image of the selected user.")]
+		[DSlashCommand("avatar", "Gets the avatar image of the selected user.")]
 		public async Task AvatarCommandAsync(
 			[Summary("user", "The users whos roles you want to be listed")] IUser user,
 			[Summary("size", "The size of the avatar image")] AvatarSize avatarSize = AvatarSize.x4096,
-			[Summary("show-everyone", "Show the command output to everyone.")] bool showEveryone = false
+			[ShowEveryone] bool showEveryone = false
 		)
 		{
 			await DeferAsync(!showEveryone);
