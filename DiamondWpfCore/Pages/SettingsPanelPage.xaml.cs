@@ -88,12 +88,12 @@ public partial class SettingsPanelPage : Page
 				SettingsJSON settingsObject = JsonConvert.DeserializeObject<SettingsJSON>(json);
 
 				// Load settings
-				settingsObject.Token = this.passwordBox_token.Password;
-				settingsObject.OpenaiApiKey = this.passwordBox_openaiApiKey.Password;
-				settingsObject.NightapiApiKey = this.passwordBox_nightapiApiKey.Password;
-				settingsObject.RiotApiKey = this.passwordBox_riotApiKey.Password;
-				settingsObject.DebugGuildId = this.textBox_debugGuildId.Text;
-				settingsObject.IgnoreDebugChannels = (bool)this.checkBox_ignoreDebugChannel.IsChecked;
+				this.passwordBox_token.Password = settingsObject.Token;
+				this.passwordBox_openaiApiKey.Password = settingsObject.OpenaiApiKey;
+				this.passwordBox_nightapiApiKey.Password = settingsObject.NightapiApiKey;
+				this.passwordBox_riotApiKey.Password = settingsObject.RiotApiKey;
+				this.textBox_debugGuildId.Text = settingsObject.DebugGuildId;
+				this.checkBox_ignoreDebugChannel.IsChecked = settingsObject.IgnoreDebugChannels;
 				listBox_debugChannels.Items.Clear();
 				foreach (string debugChannelId in settingsObject.DebugChannelsId)
 				{
