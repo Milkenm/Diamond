@@ -24,6 +24,14 @@
 					<Frame x:Name="frame_logs" Style="{StaticResource FrameStyle}"/>
 				</Grid>
 			</TabItem>
+			<TabItem x:Name="tabItem_guilds" Style="{StaticResource TabItemStyle}">
+				<TabItem.Header>
+					<Image x:Name="image_guilds" Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/City.png" />
+				</TabItem.Header>
+				<Grid>
+					<Frame x:Name="frame_guilds" Style="{StaticResource FrameStyle}"/>
+				</Grid>
+			</TabItem>
 			<TabItem x:Name="tabItem_lavalink" Style="{StaticResource TabItemStyle}">
 				<TabItem.Header>
 					<Image x:Name="image_lavalink" Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Volcano.png" />

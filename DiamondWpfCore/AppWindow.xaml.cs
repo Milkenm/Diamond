@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -49,6 +50,9 @@ namespace Diamond.GUI
 		{
 			MainPanelPage mainPanel = this._serviceProvider.GetRequiredService<MainPanelPage>();
 			LogsPanelPage logsPanel = this._serviceProvider.GetRequiredService<LogsPanelPage>();
+
+			// Disable guilds tab
+			ToggleUIElement(this.image_guilds, this.tabItem_guilds, false);
 
 			// Global exception handler
 			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler((s, e) =>
@@ -156,6 +160,33 @@ namespace Diamond.GUI
 					});
 				}
 			};
+			// Bot connect
+			_client.Connected += new Func<Task>(() =>
+			{
+				// Enable guilds tab
+				Dispatcher.Invoke(() =>
+				{
+					ToggleUIElement(this.image_guilds, this.tabItem_guilds, true);
+
+					// Refesh guilds tab
+					GuildsPanelPage guildsPanel = _serviceProvider.GetRequiredService<GuildsPanelPage>();
+					guildsPanel.LoadGuildsAsync().GetAwaiter();
+				});
+
+				return Task.CompletedTask;
+			});
+			// Bot disconnect
+			_client.Disconnected += new Func<Exception, Task>((_) =>
+			{
+				// Disable guilds tab
+				Dispatcher.Invoke(() =>
+				{
+					ToggleUIElement(this.image_guilds, this.tabItem_guilds, false);
+				});
+
+				return Task.CompletedTask;
+			});
+			// Bot log
 			this._client.Log += new Func<LogMessage, Task>((logMessage) => this._serviceProvider.GetRequiredService<MainPanelPage>().LogAsync(logMessage.Message));
 
 			// App events
@@ -167,6 +198,7 @@ namespace Diamond.GUI
 			// Set frames
 			this.frame_main.Navigate(mainPanel);
 			this.frame_logs.Navigate(this._serviceProvider.GetRequiredService<LogsPanelPage>());
+			this.frame_guilds.Navigate(this._serviceProvider.GetRequiredService<GuildsPanelPage>());
 			this.frame_lavalink.Navigate(this._serviceProvider.GetRequiredService<LavalinkPanelPage>());
 			this.frame_remote.Navigate(this._serviceProvider.GetRequiredService<RemotePanelPage>());
 			this.frame_settings.Navigate(this._serviceProvider.GetRequiredService<SettingsPanelPage>());
@@ -187,17 +219,19 @@ namespace Diamond.GUI
 			}
 
 			// Main
-			DisableImage(this.image_main, !enabled);
-			this.tabItem_main.IsEnabled = enabled;
+			ToggleUIElement(this.image_main, this.tabItem_main, enabled);
 			// Logs
-			DisableImage(this.image_logs, !enabled);
-			this.tabItem_logs.IsEnabled = enabled;
+			ToggleUIElement(this.image_logs, this.tabItem_logs, enabled);
 			// Lavalink
-			DisableImage(this.image_lavalink, !enabled);
-			this.tabItem_lavalink.IsEnabled = enabled;
+			ToggleUIElement(this.image_lavalink, this.tabItem_lavalink, enabled);
 			// RCON
-			DisableImage(this.image_rcon, !enabled);
-			this.tabItem_rcon.IsEnabled = enabled;
+			ToggleUIElement(this.image_rcon, this.tabItem_rcon, enabled);
+		}
+
+		private void ToggleUIElement(System.Windows.Controls.Image image, TabItem tab, bool isEnabled)
+		{
+			DisableImage(image, !isEnabled);
+			tab.IsEnabled = isEnabled;
 		}
 
 		private static void DisableImage(System.Windows.Controls.Image image, bool grayout)

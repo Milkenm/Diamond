@@ -27,6 +27,7 @@ namespace Diamond.GUI
 			DiscordSocketClient client = new DiscordSocketClient(new DiscordSocketConfig()
 			{
 				LogLevel = LogSeverity.Info,
+				GatewayIntents = GatewayIntents.All,
 			});
 
 			this._serviceProvider = new ServiceCollection()
@@ -42,6 +43,7 @@ namespace Diamond.GUI
 				.AddSingleton<RemotePanelPage>()
 				.AddSingleton<SettingsPanelPage>()
 				.AddSingleton<LavalinkPanelPage>()
+				.AddSingleton<GuildsPanelPage>()
 				// APIs
 				.AddSingleton<OpenAIAPI>()
 				.AddSingleton<CsgoBackpack>()
