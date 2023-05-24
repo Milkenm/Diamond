@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Data;
 
 using Discord.Interactions;
 
@@ -35,10 +36,14 @@ public partial class NSFW
 		}
 
 		// Request
-		WebHeaderCollection headers = new WebHeaderCollection
+		WebHeaderCollection headers;
+		using (DiamondDatabase db = new DiamondDatabase())
 		{
-			{ "authorization", this._database.GetSetting(ConfigSetting.NightAPI_API_Key)}
-		};
+			headers = new WebHeaderCollection
+			{
+				{ "authorization", db.GetSetting(ConfigSetting.NightAPI_API_Key)}
+			};
+		}
 		string response = RequestUtils.Get($"https://api.night-api.com/images/nsfw/{hentaiType}", headers);
 		NightApiResponse resp = JsonConvert.DeserializeObject<NightApiResponse>(response);
 

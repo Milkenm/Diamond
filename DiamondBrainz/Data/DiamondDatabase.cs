@@ -53,7 +53,7 @@ public partial class DiamondDatabase : IDatabaseContext
 		foreach (ConfigSetting setting in _settingsList.Keys)
 		{
 #if DEBUG
-			if (setting == ConfigSetting.IgnoreDebugChannels) continue;
+			if (setting == ConfigSetting.IgnoreDebugChannels || setting == ConfigSetting.CsgoItemsLoadUnix) continue;
 #endif
 
 			if (this.GetSetting(setting).IsEmpty())

@@ -6,6 +6,6 @@ namespace Diamond.API.APIs
 {
     public class OpenAIAPI : OpenAI_API.OpenAIAPI
     {
-        public OpenAIAPI(DiamondDatabase database) : base(database.GetSetting(ConfigSetting.OpenAI_API_Key)) { }
+        public OpenAIAPI() : base(new DiamondDatabase().GetSetting(ConfigSetting.OpenAI_API_Key)) { }
     }
 }

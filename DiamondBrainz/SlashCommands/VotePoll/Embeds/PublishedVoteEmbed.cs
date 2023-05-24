@@ -7,21 +7,21 @@ using Diamond.API.Data;
 using Discord;
 using Discord.WebSocket;
 
-namespace Diamond.API.SlashCommands.Vote.Embeds;
+namespace Diamond.API.SlashCommands.VotePoll.Embeds;
 public class PublishedVoteEmbed : BaseVoteEmbed
 {
 	private readonly IDiscordInteraction _interaction;
 	private readonly DiscordSocketClient _client;
 	private readonly ulong? _messageId;
 
-	public PublishedVoteEmbed(IDiscordInteraction interaction, DiscordSocketClient client, DiamondDatabase diamondDatabase, Poll poll, ulong? messageId) : base(interaction, poll)
+	public PublishedVoteEmbed(IDiscordInteraction interaction, DiscordSocketClient client, Poll poll, ulong? messageId) : base(interaction, poll)
 	{
 		_interaction = interaction;
 		_client = client;
 		_messageId = messageId;
 
-		List<PollVote> pollVotes = VoteUtils.GetPollVotes(diamondDatabase, poll);
-		List<PollOption> pollOptions = VoteUtils.GetPollOptions(diamondDatabase, poll);
+		List<PollVote> pollVotes = VoteUtils.GetPollVotes(poll);
+		List<PollOption> pollOptions = VoteUtils.GetPollOptions(poll);
 
 		foreach (PollOption pollOption in pollOptions)
 		{
@@ -66,14 +66,14 @@ public class PublishedVoteEmbed : BaseVoteEmbed
 		}
 	}
 
-	public static async Task ButtonHandlerAsync(SocketMessageComponent messageComponent, DiamondDatabase database)
+	public static async Task ButtonHandlerAsync(SocketMessageComponent messageComponent)
 	{
 		string[] buttonData = messageComponent.Data.CustomId.Split("-");
 		string buttonName = buttonData[0];
 
 		ulong messageId = messageComponent.Message.Id;
 
-		Poll poll = VoteUtils.GetPollByMessageId(database, messageId);
+		Poll poll = VoteUtils.GetPollByMessageId(messageId);
 		if (poll == null)
 		{
 			return;
@@ -85,7 +85,7 @@ public class PublishedVoteEmbed : BaseVoteEmbed
 				{
 					await messageComponent.DeferLoadingAsync(true);
 
-					VoteEmbed voteEmbed = new VoteEmbed(messageComponent, database, poll, messageId, null);
+					VoteEmbed voteEmbed = new VoteEmbed(messageComponent, poll, messageId, null);
 
 					await voteEmbed.SendAsync(true, true);
 					break;

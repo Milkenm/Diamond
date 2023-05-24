@@ -22,6 +22,7 @@ using ScriptsLibV2.Extensions;
 
 using static Diamond.API.Data.DiamondDatabase;
 
+using Image = System.Windows.Controls.Image;
 using SUtils = ScriptsLibV2.Util.Utils;
 
 namespace Diamond.GUI
@@ -34,19 +35,17 @@ namespace Diamond.GUI
 		private static bool _botReady = false;
 
 		private readonly DiscordSocketClient _client;
-		private readonly DiamondDatabase _database;
 		private readonly IServiceProvider _serviceProvider;
 
-		public AppWindow(DiscordSocketClient client, DiamondDatabase database, IServiceProvider serviceProvier)
+		public AppWindow(DiscordSocketClient client, IServiceProvider serviceProvier)
 		{
 			this._client = client;
-			this._database = database;
 			this._serviceProvider = serviceProvier;
 
 			this.InitializeComponent();
 		}
 
-		private void Window_Loaded(object sender, RoutedEventArgs e)
+		private async void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			MainPanelPage mainPanel = this._serviceProvider.GetRequiredService<MainPanelPage>();
 			LogsPanelPage logsPanel = this._serviceProvider.GetRequiredService<LogsPanelPage>();
@@ -61,7 +60,7 @@ namespace Diamond.GUI
 			});
 
 			// Load csgo items
-			mainPanel.LogAsync("Loading CS:GO items...").GetAwaiter();
+			await mainPanel.LogAsync("Loading CS:GO items...");
 			this._serviceProvider.GetRequiredService<CsgoBackpack>().LoadItemsAsync().GetAwaiter().OnCompleted(async () =>
 			{
 				await mainPanel.LogAsync("CS:GO items loaded!");
@@ -80,7 +79,11 @@ namespace Diamond.GUI
 				_botReady = true;
 
 				await interactionService.AddModulesAsync(SUtils.GetAssemblyByName("DiamondAPI"), this._serviceProvider);
-				string? debugGuildIdString = this._database.GetSetting(ConfigSetting.DebugGuildID);
+				string? debugGuildIdString;
+				using (DiamondDatabase db = new DiamondDatabase())
+				{
+					debugGuildIdString = db.GetSetting(ConfigSetting.DebugGuildID);
+				}
 				ulong? debugGuildId = !debugGuildIdString.IsEmpty() ? Convert.ToUInt64(debugGuildIdString) : null;
 
 #if DEBUG
@@ -98,7 +101,11 @@ namespace Diamond.GUI
 			this._client.InteractionCreated += async (socketInteraction) =>
 			{
 				// Ignore debug channel if debug is disabled and ignore normal channels if debug is enabled
-				bool isDebugChannel = Utils.IsDebugChannel(_database.GetSetting(ConfigSetting.DebugChannelsID), socketInteraction.ChannelId);
+				bool isDebugChannel;
+				using (DiamondDatabase db = new DiamondDatabase())
+				{
+					isDebugChannel = Utils.IsDebugChannel(db.GetSetting(ConfigSetting.DebugChannelsID), socketInteraction.ChannelId);
+				}
 #if DEBUG
 				if (!isDebugChannel) return;
 #elif RELEASE
@@ -164,13 +171,13 @@ namespace Diamond.GUI
 			_client.Connected += new Func<Task>(() =>
 			{
 				// Enable guilds tab
-				Dispatcher.Invoke(() =>
+				Dispatcher.Invoke(async () =>
 				{
 					ToggleUIElement(this.image_guilds, this.tabItem_guilds, true);
 
 					// Refesh guilds tab
 					GuildsPanelPage guildsPanel = _serviceProvider.GetRequiredService<GuildsPanelPage>();
-					guildsPanel.LoadGuildsAsync().GetAwaiter();
+					await guildsPanel.LoadGuildsAsync();
 				});
 
 				return Task.CompletedTask;
@@ -190,9 +197,9 @@ namespace Diamond.GUI
 			this._client.Log += new Func<LogMessage, Task>((logMessage) => this._serviceProvider.GetRequiredService<MainPanelPage>().LogAsync(logMessage.Message));
 
 			// App events
-			this.Closing += new CancelEventHandler((se, ev) =>
+			this.Closing += new CancelEventHandler(async (se, ev) =>
 			{
-				this._client.StopAsync().GetAwaiter();
+				await this._client.StopAsync();
 			});
 
 			// Set frames
@@ -204,10 +211,13 @@ namespace Diamond.GUI
 			this.frame_settings.Navigate(this._serviceProvider.GetRequiredService<SettingsPanelPage>());
 
 			// Check if settings are valid
-			if (!this._serviceProvider.GetRequiredService<DiamondDatabase>().AreSettingsValid())
+			using (DiamondDatabase db = new DiamondDatabase())
 			{
-				this.ToggleUI(false);
-				this.tabControl_main.SelectedIndex = this.tabControl_main.Items.Count - 1;
+				if (!db.AreSettingsValid())
+				{
+					this.ToggleUI(false);
+					this.tabControl_main.SelectedIndex = this.tabControl_main.Items.Count - 1;
+				}
 			}
 		}
 
@@ -228,13 +238,13 @@ namespace Diamond.GUI
 			ToggleUIElement(this.image_rcon, this.tabItem_rcon, enabled);
 		}
 
-		private void ToggleUIElement(System.Windows.Controls.Image image, TabItem tab, bool isEnabled)
+		private void ToggleUIElement(Image image, TabItem tab, bool isEnabled)
 		{
 			DisableImage(image, !isEnabled);
 			tab.IsEnabled = isEnabled;
 		}
 
-		private static void DisableImage(System.Windows.Controls.Image image, bool grayout)
+		private static void DisableImage(Image image, bool grayout)
 		{
 			if (grayout)
 			{

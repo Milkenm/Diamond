@@ -9,15 +9,15 @@ using Discord.WebSocket;
 
 using ScriptsLibV2.Extensions;
 
-namespace Diamond.API.SlashCommands.Vote.Embeds;
+namespace Diamond.API.SlashCommands.VotePoll.Embeds;
 public class VoteEmbed : BaseVoteEmbed
 {
-	public VoteEmbed(IDiscordInteraction interaction, DiamondDatabase database, Poll poll, ulong messageId, long? optionId) : base(interaction, poll)
+	public VoteEmbed(IDiscordInteraction interaction, Poll poll, ulong messageId, long? optionId) : base(interaction, poll)
 	{
 		// Get user vote
 		if (optionId == null)
 		{
-			PollVote vote = VoteUtils.GetPollVoteByUserId(database, poll, interaction.User.Id);
+			PollVote vote = VoteUtils.GetPollVoteByUserId(poll, interaction.User.Id);
 			if (vote != null)
 			{
 				optionId = vote.PollOption.Id;
@@ -35,7 +35,7 @@ public class VoteEmbed : BaseVoteEmbed
 			selectMenu.AddOption("No vote", $"option_remove-0-{messageId}", "Don't vote for this poll.", Emoji.Parse("❌"), isDefault: optionId == 0);
 		}
 		// Add options
-		List<PollOption> pollOptions = VoteUtils.GetPollOptions(database, poll);
+		List<PollOption> pollOptions = VoteUtils.GetPollOptions(poll);
 		foreach (PollOption pollOption in pollOptions)
 		{
 			SelectMenuOptionBuilder selectMenuOption = new SelectMenuOptionBuilder(pollOption.Name, $"option-{pollOption.Id}-{messageId}", pollOption.Description);
@@ -55,7 +55,7 @@ public class VoteEmbed : BaseVoteEmbed
 		Component = builder.Build();
 	}
 
-	public static async Task SelectMenuHandlerAsync(SocketMessageComponent menu, DiamondDatabase database, DiscordSocketClient client)
+	public static async Task SelectMenuHandlerAsync(SocketMessageComponent menu, DiscordSocketClient client)
 	{
 		string[] menuData = menu.Data.CustomId.Split("-");
 		string menuName = menuData[0];
@@ -74,8 +74,8 @@ public class VoteEmbed : BaseVoteEmbed
 					}
 
 					ulong messageId = Convert.ToUInt64(menuData[1]);
-					Poll poll = VoteUtils.GetPollByMessageId(database, messageId);
-					VoteEmbed voteEmbed = new VoteEmbed(menu, database, poll, messageId, optionId);
+					Poll poll = VoteUtils.GetPollByMessageId(messageId);
+					VoteEmbed voteEmbed = new VoteEmbed(menu, poll, messageId, optionId);
 
 					await menu.UpdateAsync((msg) =>
 					{
@@ -85,10 +85,13 @@ public class VoteEmbed : BaseVoteEmbed
 					break;
 				}
 		}
-		await database.SaveAsync();
+		using (DiamondDatabase db = new DiamondDatabase())
+		{
+			await db.SaveAsync();
+		}
 	}
 
-	public static async Task ButtonHandlerAsync(SocketMessageComponent messageComponent, DiamondDatabase database, DiscordSocketClient client)
+	public static async Task ButtonHandlerAsync(SocketMessageComponent messageComponent, DiscordSocketClient client)
 	{
 		string[] buttonData = messageComponent.Data.CustomId.Split("-");
 		string buttonName = buttonData[0];
@@ -103,49 +106,52 @@ public class VoteEmbed : BaseVoteEmbed
 					ulong messageId = Convert.ToUInt64(buttonData[2]);
 					long selectedOptionId = Convert.ToInt64(buttonData[1]);
 
-					Poll poll = VoteUtils.GetPollByMessageId(database, messageId);
+					Poll poll = VoteUtils.GetPollByMessageId(messageId);
 					if (poll == null)
 					{
 						return;
 					}
 
-					PollVote existingVote = VoteUtils.GetPollVoteByUserId(database, poll, messageComponent.User.Id);
-					if (selectedOptionId == 0)
+					using (DiamondDatabase db = new DiamondDatabase())
 					{
-						if (existingVote != null)
+						PollVote existingVote = VoteUtils.GetPollVoteByUserId(poll, messageComponent.User.Id);
+						if (selectedOptionId == 0)
 						{
-							database.PollVotes.Remove(existingVote);
-						}
-					}
-					else
-					{
-						PollOption selectedOption = database.PollOptions.Find(selectedOptionId);
-						// New vote
-						if (existingVote == null)
-						{
-							database.Add(new PollVote()
+							if (existingVote != null)
 							{
-								UserId = messageComponent.User.Id,
-								Poll = poll,
-								PollOption = selectedOption,
-								VotedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-							});
+								db.PollVotes.Remove(existingVote);
+							}
 						}
-						// Update vote
-						else if (selectedOption != null)
-						{
-							existingVote.PollOption = selectedOption;
-							existingVote.VotedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-						}
-						// Remove vote
 						else
 						{
-							database.PollVotes.Remove(existingVote);
+							PollOption selectedOption = db.PollOptions.Find(selectedOptionId);
+							// New vote
+							if (existingVote == null)
+							{
+								db.Add(new PollVote()
+								{
+									UserId = messageComponent.User.Id,
+									Poll = poll,
+									PollOption = selectedOption,
+									VotedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+								});
+							}
+							// Update vote
+							else if (selectedOption != null)
+							{
+								existingVote.PollOption = selectedOption;
+								existingVote.VotedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+							}
+							// Remove vote
+							else
+							{
+								db.PollVotes.Remove(existingVote);
+							}
 						}
+						await db.SaveAsync();
 					}
-					await database.SaveAsync();
 
-					await VoteUtils.UpdatePublishEmbed(messageComponent, database, client, messageId, poll);
+					await VoteUtils.UpdatePublishEmbed(messageComponent, client, messageId, poll);
 
 					break;
 				}

@@ -34,7 +34,6 @@ namespace Diamond.GUI
 				// Bot stuff
 				.AddSingleton(this)
 				.AddSingleton(client)
-				.AddSingleton<DiamondDatabase>()
 				.AddSingleton<InteractionService>()
 				// Tabs (Windows)
 				.AddSingleton<AppWindow>()

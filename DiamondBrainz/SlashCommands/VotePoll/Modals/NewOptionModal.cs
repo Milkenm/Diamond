@@ -2,7 +2,7 @@
 
 using Discord.WebSocket;
 
-namespace Diamond.API.SlashCommands.Vote.Modals;
+namespace Diamond.API.SlashCommands.VotePoll.Modals;
 public class NewOptionModal : DefaultModal
 {
 	public NewOptionModal(ulong messageId, DiscordSocketClient client) : base("New option", messageId, client)

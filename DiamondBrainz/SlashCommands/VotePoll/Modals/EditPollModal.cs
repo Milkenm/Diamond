@@ -4,7 +4,7 @@ using Diamond.API.EmbedUtils;
 using Discord;
 using Discord.WebSocket;
 
-namespace Diamond.API.SlashCommands.Vote.Modals;
+namespace Diamond.API.SlashCommands.VotePoll.Modals;
 public class EditPollModal : DefaultModal
 {
 	public EditPollModal(ulong messageId, DiscordSocketClient client, Poll poll) : base("Edit poll", messageId, client)

@@ -14,6 +14,8 @@ using Discord.WebSocket;
 
 using ScriptsLibV2.Extensions;
 
+using Color = System.Windows.Media.Color;
+
 namespace Diamond.GUI.Pages;
 /// <summary>
 /// Interaction logic for MainPanelPage.xaml
@@ -21,15 +23,13 @@ namespace Diamond.GUI.Pages;
 public partial class MainPanelPage : Page
 {
 	private readonly DiscordSocketClient _client;
-	private readonly DiamondDatabase _database;
 	private readonly ConsoleCommandsManager _consoleCommandsManager;
 
-	public MainPanelPage(DiscordSocketClient client, DiamondDatabase database, ConsoleCommandsManager consoleCommandsManager)
+	public MainPanelPage(DiscordSocketClient client, ConsoleCommandsManager consoleCommandsManager)
 	{
 		this.InitializeComponent();
 
 		this._client = client;
-		this._database = database;
 		this._consoleCommandsManager = consoleCommandsManager;
 	}
 
@@ -38,7 +38,11 @@ public partial class MainPanelPage : Page
 		// Start
 		if (this._client.LoginState is not LoginState.LoggedIn and not LoginState.LoggingIn)
 		{
-			string token = this._database.GetSetting(DiamondDatabase.ConfigSetting.Token);
+			string token;
+			using (DiamondDatabase db = new DiamondDatabase())
+			{
+				token = db.GetSetting(DiamondDatabase.ConfigSetting.Token);
+			}
 			if (token.IsEmpty())
 			{
 				MessageBox.Show("Bot token is not set.");
@@ -83,7 +87,7 @@ public partial class MainPanelPage : Page
 		string result;
 		if (this._consoleCommandsManager.CommandExists(commandName))
 		{
-			this.richTextBox_output.AppendText($"> {command}", new SolidColorBrush(System.Windows.Media.Color.FromRgb(7, 242, 72)), true);
+			this.richTextBox_output.AppendText($"> {command}", new SolidColorBrush(Color.FromRgb(7, 242, 72)), true);
 			this.richTextBox_output.ScrollToEnd();
 
 			string[] args = splitCommand.Skip(1).ToArray();

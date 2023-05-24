@@ -21,12 +21,10 @@ namespace Diamond.GUI.Pages;
 /// </summary>
 public partial class SettingsPanelPage : Page
 {
-	private readonly DiamondDatabase _database;
 	private readonly AppWindow _appWindow;
 
-	public SettingsPanelPage(DiamondDatabase database, AppWindow appWindow)
+	public SettingsPanelPage(AppWindow appWindow)
 	{
-		this._database = database;
 		this._appWindow = appWindow;
 
 		this.InitializeComponent();
@@ -36,18 +34,22 @@ public partial class SettingsPanelPage : Page
 	{
 #if DEBUG
 		checkBox_ignoreDebugChannel.Visibility = Visibility.Collapsed;
-#else
-		this.checkBox_ignoreDebugChannel.IsChecked = Convert.ToBoolean(_database.GetSetting(ConfigSetting.IgnoreDebugChannels, false.ToString()));
 #endif
-		this.passwordBox_token.Password = this._database.GetSetting(ConfigSetting.Token);
-		this.passwordBox_openaiApiKey.Password = this._database.GetSetting(ConfigSetting.OpenAI_API_Key);
-		this.passwordBox_nightapiApiKey.Password = this._database.GetSetting(ConfigSetting.NightAPI_API_Key);
-		this.passwordBox_riotApiKey.Password = this._database.GetSetting(ConfigSetting.RiotAPI_Key);
-		this.textBox_debugGuildId.Text = this._database.GetSetting(ConfigSetting.DebugGuildID);
-		foreach (string debugChannelId in this._database.GetSetting(ConfigSetting.DebugChannelsID, string.Empty).Split(','))
+		using (DiamondDatabase db = new DiamondDatabase())
 		{
-			if (debugChannelId.IsEmpty()) continue;
-			this.listBox_debugChannels.Items.Add(debugChannelId);
+#if !DEBUG
+		this.checkBox_ignoreDebugChannel.IsChecked = Convert.ToBoolean(db.GetSetting(ConfigSetting.IgnoreDebugChannels, false.ToString()));
+#endif
+			this.passwordBox_token.Password = db.GetSetting(ConfigSetting.Token);
+			this.passwordBox_openaiApiKey.Password = db.GetSetting(ConfigSetting.OpenAI_API_Key);
+			this.passwordBox_nightapiApiKey.Password = db.GetSetting(ConfigSetting.NightAPI_API_Key);
+			this.passwordBox_riotApiKey.Password = db.GetSetting(ConfigSetting.RiotAPI_Key);
+			this.textBox_debugGuildId.Text = db.GetSetting(ConfigSetting.DebugGuildID);
+			foreach (string debugChannelId in db.GetSetting(ConfigSetting.DebugChannelsID, string.Empty).Split(','))
+			{
+				if (debugChannelId.IsEmpty()) continue;
+				this.listBox_debugChannels.Items.Add(debugChannelId);
+			}
 		}
 	}
 
@@ -55,17 +57,20 @@ public partial class SettingsPanelPage : Page
 	{
 		SettingsJSON settingsJson = GetSettingsObject();
 
-		this._database.SetSetting(ConfigSetting.Token, settingsJson.Token).Wait();
-		this._database.SetSetting(ConfigSetting.OpenAI_API_Key, settingsJson.OpenaiApiKey).Wait();
-		this._database.SetSetting(ConfigSetting.NightAPI_API_Key, settingsJson.NightapiApiKey).Wait();
-		this._database.SetSetting(ConfigSetting.RiotAPI_Key, settingsJson.RiotApiKey).Wait();
-		this._database.SetSetting(ConfigSetting.DebugGuildID, settingsJson.DebugGuildId).Wait();
+		using (DiamondDatabase db = new DiamondDatabase())
+		{
+			db.SetSetting(ConfigSetting.Token, settingsJson.Token).Wait();
+			db.SetSetting(ConfigSetting.OpenAI_API_Key, settingsJson.OpenaiApiKey).Wait();
+			db.SetSetting(ConfigSetting.NightAPI_API_Key, settingsJson.NightapiApiKey).Wait();
+			db.SetSetting(ConfigSetting.RiotAPI_Key, settingsJson.RiotApiKey).Wait();
+			db.SetSetting(ConfigSetting.DebugGuildID, settingsJson.DebugGuildId).Wait();
 #if RELEASE
-		this._database.SetSetting(ConfigSetting.IgnoreDebugChannels, settingsJson.IgnoreDebugChannels).Wait();
+			db.SetSetting(ConfigSetting.IgnoreDebugChannels, settingsJson.IgnoreDebugChannels).Wait();
 #endif
-		this._database.SetSetting(ConfigSetting.DebugChannelsID, string.Join(",", settingsJson.DebugChannelsId)).Wait();
+			db.SetSetting(ConfigSetting.DebugChannelsID, string.Join(",", settingsJson.DebugChannelsId)).Wait();
 
-		this._appWindow.ToggleUI(this._database.AreSettingsValid());
+			this._appWindow.ToggleUI(db.AreSettingsValid());
+		}
 	}
 
 	private void ButtonLoadJson_Click(object sender, RoutedEventArgs e)

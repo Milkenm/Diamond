@@ -2,7 +2,7 @@
 
 using Discord;
 
-namespace Diamond.API.SlashCommands.Vote.Embeds;
+namespace Diamond.API.SlashCommands.VotePoll.Embeds;
 public abstract class BaseVoteEmbed : DefaultEmbed
 {
 	public BaseVoteEmbed(IDiscordInteraction interaction, Poll poll) : base($"Poll", "🗳️", interaction)
