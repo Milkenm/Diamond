@@ -20,8 +20,10 @@ public class PublishedVoteEmbed : BaseVoteEmbed
 		_client = client;
 		_messageId = messageId;
 
-		List<PollVote> pollVotes = VoteUtils.GetPollVotes(poll);
-		List<PollOption> pollOptions = VoteUtils.GetPollOptions(poll);
+		using DiamondContext db = new DiamondContext();
+
+		List<PollVote> pollVotes = VoteUtils.GetPollVotes(db, poll);
+		List<PollOption> pollOptions = VoteUtils.GetPollOptions(db, poll);
 
 		foreach (PollOption pollOption in pollOptions)
 		{
@@ -66,14 +68,15 @@ public class PublishedVoteEmbed : BaseVoteEmbed
 		}
 	}
 
-	public static async Task ButtonHandlerAsync(SocketMessageComponent messageComponent)
+	/*
+	public static async Task ButtonHandlerAsync(DiamondContext db, SocketMessageComponent messageComponent)
 	{
 		string[] buttonData = messageComponent.Data.CustomId.Split("-");
 		string buttonName = buttonData[0];
 
 		ulong messageId = messageComponent.Message.Id;
 
-		Poll poll = VoteUtils.GetPollByMessageId(messageId);
+		Poll poll = VoteUtils.GetPollByMessageId(db, messageId);
 		if (poll == null)
 		{
 			return;
@@ -85,11 +88,12 @@ public class PublishedVoteEmbed : BaseVoteEmbed
 				{
 					await messageComponent.DeferLoadingAsync(true);
 
-					VoteEmbed voteEmbed = new VoteEmbed(messageComponent, poll, messageId, null);
+					VoteEmbed voteEmbed = new VoteEmbed(db, messageComponent, poll, messageId, null);
 
 					await voteEmbed.SendAsync(true, true);
 					break;
 				}
 		}
 	}
+	*/
 }

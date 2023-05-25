@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 using ScriptsLibV2.Util;
 
-using static Diamond.API.Data.DiamondDatabase;
+using static Diamond.API.Data.DiamondContext;
 
 namespace Diamond.API.SlashCommands.NSFW;
 
@@ -36,14 +36,11 @@ public partial class NSFW
 		}
 
 		// Request
-		WebHeaderCollection headers;
-		using (DiamondDatabase db = new DiamondDatabase())
+		using DiamondContext db = new DiamondContext();
+		WebHeaderCollection headers = new WebHeaderCollection
 		{
-			headers = new WebHeaderCollection
-			{
-				{ "authorization", db.GetSetting(ConfigSetting.NightAPI_API_Key)}
-			};
-		}
+			{ "authorization",db.GetSetting(ConfigSetting.NightAPI_API_Key)}
+		};
 		string response = RequestUtils.Get($"https://api.night-api.com/images/nsfw/{hentaiType}", headers);
 		NightApiResponse resp = JsonConvert.DeserializeObject<NightApiResponse>(response);
 

@@ -44,6 +44,12 @@ public partial class Csgo
 		this._csgoBackpack.ClearCache();
 #endif
 
+		// Lock thread while items are not loaded
+		while (!this._csgoBackpack.AreItemsLoaded)
+		{
+			await Task.Delay(1000);
+		}
+
 		// Get best maching item
 		List<SearchMatchInfo<DbCsgoItem>> searchResult = await this._csgoBackpack.SearchItemAsync(search);
 		if (searchResult.Count == 0)
@@ -94,12 +100,20 @@ public partial class Csgo
 	[AutocompleteCommand("search", "item")]
 	public async Task Autocomplete()
 	{
+		SocketAutocompleteInteraction autocompleteInteraction = this.Context.Interaction as SocketAutocompleteInteraction;
+
+		// Ignore autocomplete if items are not loaded
+		if (!this._csgoBackpack.AreItemsLoaded)
+		{
+			await autocompleteInteraction.RespondAsync(null);
+			return;
+		}
+
 #if DEBUG
 		Stopwatch sw = new Stopwatch();
 		sw.Start();
 #endif
 
-		SocketAutocompleteInteraction autocompleteInteraction = this.Context.Interaction as SocketAutocompleteInteraction;
 		string userInput = autocompleteInteraction.Data.Current.Value.ToString();
 		if (userInput.IsEmpty())
 		{

@@ -5,7 +5,7 @@ using Diamond.API.APIs;
 using Microsoft.EntityFrameworkCore;
 
 namespace Diamond.API.Data;
-public partial class DiamondDatabase
+public partial class DiamondContext
 {
 	public DbSet<DbCsgoItem> CsgoItems { get; set; }
 	public DbSet<DbCsgoItemPrice> CsgoItemPrices { get; set; }

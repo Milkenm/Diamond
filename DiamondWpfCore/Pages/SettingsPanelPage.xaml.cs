@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 using ScriptsLibV2.Extensions;
 
-using static Diamond.API.Data.DiamondDatabase;
+using static Diamond.API.Data.DiamondContext;
 
 using MessageBox = System.Windows.Forms.MessageBox;
 
@@ -32,45 +32,44 @@ public partial class SettingsPanelPage : Page
 
 	private void Page_Initialized(object sender, EventArgs e)
 	{
+		using DiamondContext db = new DiamondContext();
+
 #if DEBUG
 		checkBox_ignoreDebugChannel.Visibility = Visibility.Collapsed;
-#endif
-		using (DiamondDatabase db = new DiamondDatabase())
-		{
-#if !DEBUG
+#else
 		this.checkBox_ignoreDebugChannel.IsChecked = Convert.ToBoolean(db.GetSetting(ConfigSetting.IgnoreDebugChannels, false.ToString()));
 #endif
-			this.passwordBox_token.Password = db.GetSetting(ConfigSetting.Token);
-			this.passwordBox_openaiApiKey.Password = db.GetSetting(ConfigSetting.OpenAI_API_Key);
-			this.passwordBox_nightapiApiKey.Password = db.GetSetting(ConfigSetting.NightAPI_API_Key);
-			this.passwordBox_riotApiKey.Password = db.GetSetting(ConfigSetting.RiotAPI_Key);
-			this.textBox_debugGuildId.Text = db.GetSetting(ConfigSetting.DebugGuildID);
-			foreach (string debugChannelId in db.GetSetting(ConfigSetting.DebugChannelsID, string.Empty).Split(','))
-			{
-				if (debugChannelId.IsEmpty()) continue;
-				this.listBox_debugChannels.Items.Add(debugChannelId);
-			}
+		this.passwordBox_token.Password = db.GetSetting(ConfigSetting.Token);
+		this.passwordBox_openaiApiKey.Password = db.GetSetting(ConfigSetting.OpenAI_API_Key);
+		this.passwordBox_nightapiApiKey.Password = db.GetSetting(ConfigSetting.NightAPI_API_Key);
+		this.passwordBox_riotApiKey.Password = db.GetSetting(ConfigSetting.RiotAPI_Key);
+		this.textBox_debugGuildId.Text = db.GetSetting(ConfigSetting.DebugGuildID);
+		foreach (string debugChannelId in db.GetSetting(ConfigSetting.DebugChannelsID, string.Empty).Split(','))
+		{
+			if (debugChannelId.IsEmpty()) continue;
+			this.listBox_debugChannels.Items.Add(debugChannelId);
 		}
 	}
 
-	private void ButtonSave_Click(object sender, RoutedEventArgs e)
+	private async void ButtonSave_Click(object sender, RoutedEventArgs e)
 	{
+		using DiamondContext db = new DiamondContext();
+
 		SettingsJSON settingsJson = GetSettingsObject();
 
-		using (DiamondDatabase db = new DiamondDatabase())
-		{
-			db.SetSetting(ConfigSetting.Token, settingsJson.Token).Wait();
-			db.SetSetting(ConfigSetting.OpenAI_API_Key, settingsJson.OpenaiApiKey).Wait();
-			db.SetSetting(ConfigSetting.NightAPI_API_Key, settingsJson.NightapiApiKey).Wait();
-			db.SetSetting(ConfigSetting.RiotAPI_Key, settingsJson.RiotApiKey).Wait();
-			db.SetSetting(ConfigSetting.DebugGuildID, settingsJson.DebugGuildId).Wait();
+		db.SetSetting(ConfigSetting.Token, settingsJson.Token).Wait();
+		db.SetSetting(ConfigSetting.OpenAI_API_Key, settingsJson.OpenaiApiKey).Wait();
+		db.SetSetting(ConfigSetting.NightAPI_API_Key, settingsJson.NightapiApiKey).Wait();
+		db.SetSetting(ConfigSetting.RiotAPI_Key, settingsJson.RiotApiKey).Wait();
+		db.SetSetting(ConfigSetting.DebugGuildID, settingsJson.DebugGuildId).Wait();
 #if RELEASE
 			db.SetSetting(ConfigSetting.IgnoreDebugChannels, settingsJson.IgnoreDebugChannels).Wait();
 #endif
-			db.SetSetting(ConfigSetting.DebugChannelsID, string.Join(",", settingsJson.DebugChannelsId)).Wait();
+		db.SetSetting(ConfigSetting.DebugChannelsID, string.Join(",", settingsJson.DebugChannelsId)).Wait();
 
-			this._appWindow.ToggleUI(db.AreSettingsValid());
-		}
+		this._appWindow.ToggleUI(db.AreSettingsValid());
+
+		await db.SaveAsync();
 	}
 
 	private void ButtonLoadJson_Click(object sender, RoutedEventArgs e)

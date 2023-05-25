@@ -20,9 +20,11 @@ public partial class VotePoll
 	{
 		await this.DeferAsync(true);
 
+		using DiamondContext db = new DiamondContext();
+
 		ulong responseMessageId = (await this.Context.Interaction.GetOriginalResponseAsync()).Id;
 		ulong userId = this.Context.Interaction.User.Id;
-		Poll poll = await VoteUtils.CreatePollAsync(title, description, imageUrl, thumbnailUrl, responseMessageId, userId);
+		Poll poll = await VoteUtils.CreatePollAsync(db, title, description, imageUrl, thumbnailUrl, responseMessageId, userId);
 
 		ulong deferId = (await this.GetOriginalResponseAsync()).Id;
 

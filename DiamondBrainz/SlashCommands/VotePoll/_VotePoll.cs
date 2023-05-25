@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+using Diamond.API.Data;
 using Diamond.API.SlashCommands.VotePoll.Embeds;
 
 using Discord.Interactions;
@@ -20,19 +21,21 @@ namespace Diamond.API.SlashCommands.VotePoll
 
 			if (!_initializedEvents)
 			{
+				/*
 				this._client.SelectMenuExecuted += new Func<SocketMessageComponent, Task>(async (menu) =>
 				{
 					EditorVoteEmbed.SelectMenuHandlerAsync(menu, this._client).GetAwaiter();
-					VoteEmbed.SelectMenuHandlerAsync(menu, this._client).GetAwaiter();
+					VoteEmbed.SelectMenuHandlerAsync(_database, menu, this._client).GetAwaiter();
 				});
 				this._client.ButtonExecuted += new Func<SocketMessageComponent, Task>((button) =>
 				{
-					EditorVoteEmbed.ButtonHandlerAsync(button, this._client).GetAwaiter();
-					PublishedVoteEmbed.ButtonHandlerAsync(button).GetAwaiter();
-					VoteEmbed.ButtonHandlerAsync(button, this._client).GetAwaiter();
+					EditorVoteEmbed.ButtonHandlerAsync(_database, button, this._client).GetAwaiter();
+					PublishedVoteEmbed.ButtonHandlerAsync(_database, button).GetAwaiter();
+					VoteEmbed.ButtonHandlerAsync(_database, button, this._client).GetAwaiter();
 
 					return Task.CompletedTask;
 				});
+				*/
 				_initializedEvents = true;
 			}
 		}

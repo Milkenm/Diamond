@@ -56,7 +56,7 @@ public static class Utils
 			return bestMatches;
 		}
 
-		return null;
+		return new List<SearchMatchInfo<T>>();
 	}
 
 	private static SearchMatchInfo<T> GetBestMatch<T>(List<SearchMatchInfo<T>> matches)

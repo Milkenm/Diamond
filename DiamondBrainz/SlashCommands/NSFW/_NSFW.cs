@@ -1,6 +1,4 @@
-﻿using Diamond.API.Data;
-
-using Discord.Interactions;
+﻿using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.NSFW;
 

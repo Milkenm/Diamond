@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 using Diamond.API.Data;
-using Diamond.API.EmbedUtils;
-using Diamond.API.SlashCommands.VotePoll.Modals;
 
 using Discord;
-using Discord.Interactions;
-using Discord.WebSocket;
 
 namespace Diamond.API.SlashCommands.VotePoll.Embeds;
 public class EditorVoteEmbed : BaseVoteEmbed
 {
 	public EditorVoteEmbed(IDiscordInteraction interaction, Poll poll, ulong messageId) : base(interaction, poll)
 	{
-		List<PollOption> pollOptions = VoteUtils.GetPollOptions(poll);
+		using DiamondContext db = new DiamondContext();
+
+		List<PollOption> pollOptions = VoteUtils.GetPollOptions(db, poll);
 
 		ComponentBuilder builder = new ComponentBuilder()
 			.WithButton(new ButtonBuilder("Publish", "button_publish", ButtonStyle.Success, isDisabled: pollOptions.Count < 2))
@@ -43,6 +37,7 @@ public class EditorVoteEmbed : BaseVoteEmbed
 		Component = builder.Build();
 	}
 
+	/*
 	public static async Task SelectMenuHandlerAsync(SocketMessageComponent messageComponent, DiscordSocketClient client)
 	{
 		string[] menuData = messageComponent.Data.CustomId.Split("-");
@@ -57,14 +52,10 @@ public class EditorVoteEmbed : BaseVoteEmbed
 					string[] menuOptionData = string.Join("", messageComponent.Data.Values).Split("-");
 					long optionId = Convert.ToInt64(menuOptionData[1]);
 
-					Poll poll;
-					using (DiamondDatabase db = new DiamondDatabase())
-					{
-						PollOption selectedOption = db.PollOptions.Where(po => po.Id == optionId).FirstOrDefault();
-						poll = VoteUtils.GetPollByMessageId(messageId);
+					Poll poll = VoteUtils.GetPollByMessageId(messageId);
+					PollOption selectedOption = this._database.PollOptions.Where(po => po.Id == optionId).FirstOrDefault();
 
-						db.PollOptions.Remove(selectedOption);
-						await db.SaveAsync();
+						this._database.PollOptions.Remove(selectedOption);
 					}
 
 					await VoteUtils.UpdateEditorEmbed(messageComponent, poll, messageId);
@@ -72,7 +63,9 @@ public class EditorVoteEmbed : BaseVoteEmbed
 				}
 		}
 	}
+	*/
 
+	/*
 	public static async Task ButtonHandlerAsync(SocketMessageComponent messageComponent, DiscordSocketClient client)
 	{
 		string[] buttonData = messageComponent.Data.CustomId.Split("-");
@@ -91,7 +84,11 @@ public class EditorVoteEmbed : BaseVoteEmbed
 			messageId = Convert.ToUInt64(buttonData[2]);
 		}
 
-		Poll poll = VoteUtils.GetPollByMessageId(messageId);
+		Poll poll;
+		using (DiamondContext db = new DiamondContext())
+		{
+			poll = VoteUtils.GetPollByMessageId(db, messageId);
+		}
 		if (poll == null)
 		{
 			return;
@@ -110,40 +107,31 @@ public class EditorVoteEmbed : BaseVoteEmbed
 						poll.ImageUrl = fieldsMap["field_imageurl"];
 						poll.ThumbnailUrl = fieldsMap["field_thumbnailurl"];
 						poll.UpdatedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-						using (DiamondDatabase db = new DiamondDatabase())
-						{
-							await db.SaveAsync();
-						}
 
-						await VoteUtils.UpdateEditorEmbed(modal, poll, messageId);
+							await VoteUtils.UpdateEditorEmbed(db, modal, poll, messageId);
 					});
 
 					await messageComponent.RespondWithModalAsync(editModal.Build());
-					break;
 				}
+				break;
 			case "button_add":
 				{
-					
-					break;
 				}
+				break;
 			case "button_publish":
 				{
 					await messageComponent.DeferAsync();
 					await messageComponent.DeleteOriginalResponseAsync();
 
-					PublishedVoteEmbed publishedEmbed = new PublishedVoteEmbed(messageComponent, client, poll, null);
+					PublishedVoteEmbed publishedEmbed = new PublishedVoteEmbed( messageComponent, client, poll, null);
 
 					ulong responseId = await publishedEmbed.SendAsync();
 
 					poll.IsPublished = true;
 					poll.DiscordMessageId = responseId;
-					using (DiamondDatabase db = new DiamondDatabase())
-					{
-						await db.SaveAsync();
-					}
-
-					break;
 				}
+				break;
 		}
 	}
+	*/
 }

@@ -27,22 +27,20 @@ public partial class MainPanelPage : Page
 
 	public MainPanelPage(DiscordSocketClient client, ConsoleCommandsManager consoleCommandsManager)
 	{
-		this.InitializeComponent();
-
 		this._client = client;
 		this._consoleCommandsManager = consoleCommandsManager;
+
+		this.InitializeComponent();
 	}
 
 	private async void ButtonStart_Click(object sender, RoutedEventArgs e)
 	{
+		using DiamondContext db = new DiamondContext();
+
 		// Start
 		if (this._client.LoginState is not LoginState.LoggedIn and not LoginState.LoggingIn)
 		{
-			string token;
-			using (DiamondDatabase db = new DiamondDatabase())
-			{
-				token = db.GetSetting(DiamondDatabase.ConfigSetting.Token);
-			}
+			string token = db.GetSetting(DiamondContext.ConfigSetting.Token);
 			if (token.IsEmpty())
 			{
 				MessageBox.Show("Bot token is not set.");

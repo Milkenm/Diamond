@@ -20,7 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using ScriptsLibV2.Extensions;
 
-using static Diamond.API.Data.DiamondDatabase;
+using static Diamond.API.Data.DiamondContext;
 
 using Image = System.Windows.Controls.Image;
 using SUtils = ScriptsLibV2.Util.Utils;
@@ -47,6 +47,8 @@ namespace Diamond.GUI
 
 		private async void Window_Loaded(object sender, RoutedEventArgs e)
 		{
+			using DiamondContext db = new DiamondContext();
+
 			MainPanelPage mainPanel = this._serviceProvider.GetRequiredService<MainPanelPage>();
 			LogsPanelPage logsPanel = this._serviceProvider.GetRequiredService<LogsPanelPage>();
 
@@ -71,6 +73,8 @@ namespace Diamond.GUI
 			Lava lava = this._serviceProvider.GetRequiredService<Lava>();
 			this._client.Ready += new Func<Task>(async () =>
 			{
+				using DiamondContext db = new DiamondContext();
+
 				// Only run this code block once
 				if (_botReady)
 				{
@@ -79,11 +83,7 @@ namespace Diamond.GUI
 				_botReady = true;
 
 				await interactionService.AddModulesAsync(SUtils.GetAssemblyByName("DiamondAPI"), this._serviceProvider);
-				string? debugGuildIdString;
-				using (DiamondDatabase db = new DiamondDatabase())
-				{
-					debugGuildIdString = db.GetSetting(ConfigSetting.DebugGuildID);
-				}
+				string? debugGuildIdString = db.GetSetting(ConfigSetting.DebugGuildID);
 				ulong? debugGuildId = !debugGuildIdString.IsEmpty() ? Convert.ToUInt64(debugGuildIdString) : null;
 
 #if DEBUG
@@ -100,12 +100,10 @@ namespace Diamond.GUI
 			// Run interactions (slash commands/modals/buttons/...)
 			this._client.InteractionCreated += async (socketInteraction) =>
 			{
+				using DiamondContext db = new DiamondContext();
+
 				// Ignore debug channel if debug is disabled and ignore normal channels if debug is enabled
-				bool isDebugChannel;
-				using (DiamondDatabase db = new DiamondDatabase())
-				{
-					isDebugChannel = Utils.IsDebugChannel(db.GetSetting(ConfigSetting.DebugChannelsID), socketInteraction.ChannelId);
-				}
+				bool isDebugChannel = Utils.IsDebugChannel(db.GetSetting(ConfigSetting.DebugChannelsID), socketInteraction.ChannelId);
 #if DEBUG
 				if (!isDebugChannel) return;
 #elif RELEASE
@@ -211,13 +209,10 @@ namespace Diamond.GUI
 			this.frame_settings.Navigate(this._serviceProvider.GetRequiredService<SettingsPanelPage>());
 
 			// Check if settings are valid
-			using (DiamondDatabase db = new DiamondDatabase())
+			if (!db.AreSettingsValid())
 			{
-				if (!db.AreSettingsValid())
-				{
-					this.ToggleUI(false);
-					this.tabControl_main.SelectedIndex = this.tabControl_main.Items.Count - 1;
-				}
+				this.ToggleUI(false);
+				this.tabControl_main.SelectedIndex = this.tabControl_main.Items.Count - 1;
 			}
 		}
 
