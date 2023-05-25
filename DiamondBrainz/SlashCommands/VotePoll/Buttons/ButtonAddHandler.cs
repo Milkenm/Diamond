@@ -17,11 +17,11 @@ namespace Diamond.API.SlashCommands.VotePoll
 		public async Task ButtonAddClickAsync()
 		{
 			Debug.WriteLine("a");
-			await Context.Interaction.RespondWithModalAsync($"poll_editor_modal:{(Context.Interaction as SocketMessageComponent).Message.Id}", new PollEditorModal());
+			await this.Context.Interaction.RespondWithModalAsync($"poll_editor_modal:{(this.Context.Interaction as SocketMessageComponent).Message.Id}", new PollEditorModal());
 		}
 
 		[ModalInteraction("poll_editor_modal:*")]
-		public async Task FooterAutoResponderModal(ulong messageId, PollEditorModal modal)
+		public async Task PollEditorModalHandler(ulong messageId, PollEditorModal modal)
 		{
 			Poll poll = VoteUtils.GetPollByMessageId(messageId);
 			PollOption newOption = new PollOption()
@@ -36,11 +36,11 @@ namespace Diamond.API.SlashCommands.VotePoll
 
 			using (DiamondDatabase db = new DiamondDatabase())
 			{
-				db.Add(newOption);
+				db.PollOptions.Add(newOption);
 				await db.SaveAsync();
 			}
 
-			await VoteUtils.UpdateEditorEmbed(modal, poll, messageId);
+			await VoteUtils.UpdateEditorEmbed(this.Context.Interaction as SocketMessageComponent, poll, messageId);
 		}
 
 		public class PollEditorModal : IModal

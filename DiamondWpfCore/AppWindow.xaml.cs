@@ -35,11 +35,13 @@ namespace Diamond.GUI
 		private static bool _botReady = false;
 
 		private readonly DiscordSocketClient _client;
+		private readonly DiamondDatabase _database;
 		private readonly IServiceProvider _serviceProvider;
 
-		public AppWindow(DiscordSocketClient client, IServiceProvider serviceProvier)
+		public AppWindow(DiscordSocketClient client, DiamondDatabase database, IServiceProvider serviceProvier)
 		{
 			this._client = client;
+			this._database = database;
 			this._serviceProvider = serviceProvier;
 
 			this.InitializeComponent();
@@ -51,7 +53,7 @@ namespace Diamond.GUI
 			LogsPanelPage logsPanel = this._serviceProvider.GetRequiredService<LogsPanelPage>();
 
 			// Disable guilds tab
-			ToggleUIElement(this.image_guilds, this.tabItem_guilds, false);
+			this.ToggleUIElement(this.image_guilds, this.tabItem_guilds, false);
 
 			// Global exception handler
 			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler((s, e) =>
@@ -79,11 +81,7 @@ namespace Diamond.GUI
 				_botReady = true;
 
 				await interactionService.AddModulesAsync(SUtils.GetAssemblyByName("DiamondAPI"), this._serviceProvider);
-				string? debugGuildIdString;
-				using (DiamondDatabase db = new DiamondDatabase())
-				{
-					debugGuildIdString = db.GetSetting(ConfigSetting.DebugGuildID);
-				}
+				string? debugGuildIdString = this._database.GetSetting(ConfigSetting.DebugGuildID);
 				ulong? debugGuildId = !debugGuildIdString.IsEmpty() ? Convert.ToUInt64(debugGuildIdString) : null;
 
 #if DEBUG
@@ -101,13 +99,12 @@ namespace Diamond.GUI
 			this._client.InteractionCreated += async (socketInteraction) =>
 			{
 				// Ignore debug channel if debug is disabled and ignore normal channels if debug is enabled
-				bool isDebugChannel;
-				using (DiamondDatabase db = new DiamondDatabase())
-				{
-					isDebugChannel = Utils.IsDebugChannel(db.GetSetting(ConfigSetting.DebugChannelsID), socketInteraction.ChannelId);
-				}
+				bool isDebugChannel = Utils.IsDebugChannel(this._database.GetSetting(ConfigSetting.DebugChannelsID), socketInteraction.ChannelId);
 #if DEBUG
-				if (!isDebugChannel) return;
+				if (!isDebugChannel)
+				{
+					return;
+				}
 #elif RELEASE
 				if (isDebugChannel) return;
 #endif
@@ -168,27 +165,27 @@ namespace Diamond.GUI
 				}
 			};
 			// Bot connect
-			_client.Connected += new Func<Task>(() =>
+			this._client.Connected += new Func<Task>(() =>
 			{
 				// Enable guilds tab
-				Dispatcher.Invoke(async () =>
+				this.Dispatcher.Invoke(async () =>
 				{
-					ToggleUIElement(this.image_guilds, this.tabItem_guilds, true);
+					this.ToggleUIElement(this.image_guilds, this.tabItem_guilds, true);
 
 					// Refesh guilds tab
-					GuildsPanelPage guildsPanel = _serviceProvider.GetRequiredService<GuildsPanelPage>();
+					GuildsPanelPage guildsPanel = this._serviceProvider.GetRequiredService<GuildsPanelPage>();
 					await guildsPanel.LoadGuildsAsync();
 				});
 
 				return Task.CompletedTask;
 			});
 			// Bot disconnect
-			_client.Disconnected += new Func<Exception, Task>((_) =>
+			this._client.Disconnected += new Func<Exception, Task>((_) =>
 			{
 				// Disable guilds tab
-				Dispatcher.Invoke(() =>
+				this.Dispatcher.Invoke(() =>
 				{
-					ToggleUIElement(this.image_guilds, this.tabItem_guilds, false);
+					this.ToggleUIElement(this.image_guilds, this.tabItem_guilds, false);
 				});
 
 				return Task.CompletedTask;
@@ -211,13 +208,10 @@ namespace Diamond.GUI
 			this.frame_settings.Navigate(this._serviceProvider.GetRequiredService<SettingsPanelPage>());
 
 			// Check if settings are valid
-			using (DiamondDatabase db = new DiamondDatabase())
+			if (!this._database.AreSettingsValid())
 			{
-				if (!db.AreSettingsValid())
-				{
-					this.ToggleUI(false);
-					this.tabControl_main.SelectedIndex = this.tabControl_main.Items.Count - 1;
-				}
+				this.ToggleUI(false);
+				this.tabControl_main.SelectedIndex = this.tabControl_main.Items.Count - 1;
 			}
 		}
 
@@ -229,13 +223,13 @@ namespace Diamond.GUI
 			}
 
 			// Main
-			ToggleUIElement(this.image_main, this.tabItem_main, enabled);
+			this.ToggleUIElement(this.image_main, this.tabItem_main, enabled);
 			// Logs
-			ToggleUIElement(this.image_logs, this.tabItem_logs, enabled);
+			this.ToggleUIElement(this.image_logs, this.tabItem_logs, enabled);
 			// Lavalink
-			ToggleUIElement(this.image_lavalink, this.tabItem_lavalink, enabled);
+			this.ToggleUIElement(this.image_lavalink, this.tabItem_lavalink, enabled);
 			// RCON
-			ToggleUIElement(this.image_rcon, this.tabItem_rcon, enabled);
+			this.ToggleUIElement(this.image_rcon, this.tabItem_rcon, enabled);
 		}
 
 		private void ToggleUIElement(Image image, TabItem tab, bool isEnabled)

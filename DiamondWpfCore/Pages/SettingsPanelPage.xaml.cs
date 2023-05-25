@@ -22,10 +22,12 @@ namespace Diamond.GUI.Pages;
 public partial class SettingsPanelPage : Page
 {
 	private readonly AppWindow _appWindow;
+	private readonly DiamondDatabase _database;
 
-	public SettingsPanelPage(AppWindow appWindow)
+	public SettingsPanelPage(AppWindow appWindow, DiamondDatabase database)
 	{
 		this._appWindow = appWindow;
+		this._database = database;
 
 		this.InitializeComponent();
 	}
@@ -33,44 +35,41 @@ public partial class SettingsPanelPage : Page
 	private void Page_Initialized(object sender, EventArgs e)
 	{
 #if DEBUG
-		checkBox_ignoreDebugChannel.Visibility = Visibility.Collapsed;
+		this.checkBox_ignoreDebugChannel.Visibility = Visibility.Collapsed;
+#else
+		this.checkBox_ignoreDebugChannel.IsChecked = Convert.ToBoolean(_database.GetSetting(ConfigSetting.IgnoreDebugChannels, false.ToString()));
 #endif
-		using (DiamondDatabase db = new DiamondDatabase())
+		this.passwordBox_token.Password = this._database.GetSetting(ConfigSetting.Token);
+		this.passwordBox_openaiApiKey.Password = this._database.GetSetting(ConfigSetting.OpenAI_API_Key);
+		this.passwordBox_nightapiApiKey.Password = this._database.GetSetting(ConfigSetting.NightAPI_API_Key);
+		this.passwordBox_riotApiKey.Password = this._database.GetSetting(ConfigSetting.RiotAPI_Key);
+		this.textBox_debugGuildId.Text = this._database.GetSetting(ConfigSetting.DebugGuildID);
+		foreach (string debugChannelId in this._database.GetSetting(ConfigSetting.DebugChannelsID, string.Empty).Split(','))
 		{
-#if !DEBUG
-		this.checkBox_ignoreDebugChannel.IsChecked = Convert.ToBoolean(db.GetSetting(ConfigSetting.IgnoreDebugChannels, false.ToString()));
-#endif
-			this.passwordBox_token.Password = db.GetSetting(ConfigSetting.Token);
-			this.passwordBox_openaiApiKey.Password = db.GetSetting(ConfigSetting.OpenAI_API_Key);
-			this.passwordBox_nightapiApiKey.Password = db.GetSetting(ConfigSetting.NightAPI_API_Key);
-			this.passwordBox_riotApiKey.Password = db.GetSetting(ConfigSetting.RiotAPI_Key);
-			this.textBox_debugGuildId.Text = db.GetSetting(ConfigSetting.DebugGuildID);
-			foreach (string debugChannelId in db.GetSetting(ConfigSetting.DebugChannelsID, string.Empty).Split(','))
+			if (debugChannelId.IsEmpty())
 			{
-				if (debugChannelId.IsEmpty()) continue;
-				this.listBox_debugChannels.Items.Add(debugChannelId);
+				continue;
 			}
+
+			this.listBox_debugChannels.Items.Add(debugChannelId);
 		}
 	}
 
 	private void ButtonSave_Click(object sender, RoutedEventArgs e)
 	{
-		SettingsJSON settingsJson = GetSettingsObject();
+		SettingsJSON settingsJson = this.GetSettingsObject();
 
-		using (DiamondDatabase db = new DiamondDatabase())
-		{
-			db.SetSetting(ConfigSetting.Token, settingsJson.Token).Wait();
-			db.SetSetting(ConfigSetting.OpenAI_API_Key, settingsJson.OpenaiApiKey).Wait();
-			db.SetSetting(ConfigSetting.NightAPI_API_Key, settingsJson.NightapiApiKey).Wait();
-			db.SetSetting(ConfigSetting.RiotAPI_Key, settingsJson.RiotApiKey).Wait();
-			db.SetSetting(ConfigSetting.DebugGuildID, settingsJson.DebugGuildId).Wait();
+		this._database.SetSetting(ConfigSetting.Token, settingsJson.Token).Wait();
+		this._database.SetSetting(ConfigSetting.OpenAI_API_Key, settingsJson.OpenaiApiKey).Wait();
+		this._database.SetSetting(ConfigSetting.NightAPI_API_Key, settingsJson.NightapiApiKey).Wait();
+		this._database.SetSetting(ConfigSetting.RiotAPI_Key, settingsJson.RiotApiKey).Wait();
+		this._database.SetSetting(ConfigSetting.DebugGuildID, settingsJson.DebugGuildId).Wait();
 #if RELEASE
-			db.SetSetting(ConfigSetting.IgnoreDebugChannels, settingsJson.IgnoreDebugChannels).Wait();
+			_database.SetSetting(ConfigSetting.IgnoreDebugChannels, settingsJson.IgnoreDebugChannels).Wait();
 #endif
-			db.SetSetting(ConfigSetting.DebugChannelsID, string.Join(",", settingsJson.DebugChannelsId)).Wait();
+		this._database.SetSetting(ConfigSetting.DebugChannelsID, string.Join(",", settingsJson.DebugChannelsId)).Wait();
 
-			this._appWindow.ToggleUI(db.AreSettingsValid());
-		}
+		this._appWindow.ToggleUI(this._database.AreSettingsValid());
 	}
 
 	private void ButtonLoadJson_Click(object sender, RoutedEventArgs e)
@@ -99,10 +98,10 @@ public partial class SettingsPanelPage : Page
 				this.passwordBox_riotApiKey.Password = settingsObject.RiotApiKey;
 				this.textBox_debugGuildId.Text = settingsObject.DebugGuildId;
 				this.checkBox_ignoreDebugChannel.IsChecked = settingsObject.IgnoreDebugChannels;
-				listBox_debugChannels.Items.Clear();
+				this.listBox_debugChannels.Items.Clear();
 				foreach (string debugChannelId in settingsObject.DebugChannelsId)
 				{
-					listBox_debugChannels.Items.Add(debugChannelId);
+					this.listBox_debugChannels.Items.Add(debugChannelId);
 				}
 			}
 			catch (Exception ex)
@@ -126,7 +125,7 @@ public partial class SettingsPanelPage : Page
 		// Save file
 		if (saveFileDialog.ShowDialog() == DialogResult.OK)
 		{
-			SettingsJSON settingsJson = GetSettingsObject();
+			SettingsJSON settingsJson = this.GetSettingsObject();
 
 			string jsonString = JsonConvert.SerializeObject(settingsJson, Formatting.Indented);
 
@@ -136,20 +135,23 @@ public partial class SettingsPanelPage : Page
 
 	private void button_addDebugChannel_Click(object sender, RoutedEventArgs e)
 	{
-		string text = textBox_debugChannelId.Text;
-		if (text.IsEmpty()) return;
+		string text = this.textBox_debugChannelId.Text;
+		if (text.IsEmpty())
+		{
+			return;
+		}
 
 		if (ulong.TryParse(text, out ulong channelId))
 		{
 			this.listBox_debugChannels.Items.Add(text);
-			textBox_debugChannelId.Clear();
+			this.textBox_debugChannelId.Clear();
 		}
 	}
 
 	private SettingsJSON GetSettingsObject()
 	{
 		List<string> debugChannelIds = new List<string>();
-		foreach (string debugChannelId in listBox_debugChannels.Items)
+		foreach (string debugChannelId in this.listBox_debugChannels.Items)
 		{
 			debugChannelIds.Add(debugChannelId);
 		}
@@ -168,13 +170,16 @@ public partial class SettingsPanelPage : Page
 
 	private void button_removeDebugChannel_Click(object sender, RoutedEventArgs e)
 	{
-		if (listBox_debugChannels.SelectedIndex == -1) return;
+		if (this.listBox_debugChannels.SelectedIndex == -1)
+		{
+			return;
+		}
 
-		int selectedIndex = listBox_debugChannels.SelectedIndex;
-		listBox_debugChannels.Items.RemoveAt(selectedIndex);
+		int selectedIndex = this.listBox_debugChannels.SelectedIndex;
+		this.listBox_debugChannels.Items.RemoveAt(selectedIndex);
 		if (selectedIndex > 0)
 		{
-			listBox_debugChannels.SelectedIndex = selectedIndex - 1;
+			this.listBox_debugChannels.SelectedIndex = selectedIndex - 1;
 		}
 	}
 

@@ -23,13 +23,15 @@ namespace Diamond.GUI.Pages;
 public partial class MainPanelPage : Page
 {
 	private readonly DiscordSocketClient _client;
+	private readonly DiamondDatabase _database;
 	private readonly ConsoleCommandsManager _consoleCommandsManager;
 
-	public MainPanelPage(DiscordSocketClient client, ConsoleCommandsManager consoleCommandsManager)
+	public MainPanelPage(DiscordSocketClient client, DiamondDatabase database, ConsoleCommandsManager consoleCommandsManager)
 	{
 		this.InitializeComponent();
 
 		this._client = client;
+		this._database = database;
 		this._consoleCommandsManager = consoleCommandsManager;
 	}
 
@@ -38,11 +40,7 @@ public partial class MainPanelPage : Page
 		// Start
 		if (this._client.LoginState is not LoginState.LoggedIn and not LoginState.LoggingIn)
 		{
-			string token;
-			using (DiamondDatabase db = new DiamondDatabase())
-			{
-				token = db.GetSetting(DiamondDatabase.ConfigSetting.Token);
-			}
+			string token = this._database.GetSetting(DiamondDatabase.ConfigSetting.Token);
 			if (token.IsEmpty())
 			{
 				MessageBox.Show("Bot token is not set.");
