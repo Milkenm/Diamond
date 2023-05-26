@@ -98,20 +98,7 @@ public class EditorVoteEmbed : BaseVoteEmbed
 		{
 			case "button_edit":
 				{
-					EditPollModal editModal = new EditPollModal(messageId, client, poll);
-					editModal.OnModalSubmit += new DefaultModal.ModalSubmitEvent(async (modal, fieldsMap, messageId) =>
-					{
-						// Get the values of components.
-						poll.Title = fieldsMap["field_title"];
-						poll.Description = fieldsMap["field_description"];
-						poll.ImageUrl = fieldsMap["field_imageurl"];
-						poll.ThumbnailUrl = fieldsMap["field_thumbnailurl"];
-						poll.UpdatedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-							await VoteUtils.UpdateEditorEmbed(db, modal, poll, messageId);
-					});
-
-					await messageComponent.RespondWithModalAsync(editModal.Build());
 				}
 				break;
 			case "button_add":

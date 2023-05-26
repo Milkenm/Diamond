@@ -87,12 +87,14 @@ namespace Diamond.GUI
 				ulong? debugGuildId = !debugGuildIdString.IsEmpty() ? Convert.ToUInt64(debugGuildIdString) : null;
 
 #if DEBUG
+				// Register commands only to dev guild
 				if (debugGuildId.HasValue)
 				{
 					await interactionService.RegisterCommandsToGuildAsync((ulong)debugGuildId);
 					await mainPanel.LogAsync($"Registered {interactionService.SlashCommands.Count} commands to dev guild.");
 				}
-#elif RELEASE
+#else
+				// Register commands globally (to every guild)
 				await interactionService.RegisterCommandsGloballyAsync(true);
 				await mainPanel.LogAsync($"Registered {interactionService.SlashCommands.Count} commands to {_client.Guilds.Count} guilds.");
 #endif

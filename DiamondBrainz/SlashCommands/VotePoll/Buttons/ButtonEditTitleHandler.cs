@@ -14,29 +14,39 @@ namespace Diamond.API.SlashCommands.VotePoll
 		[ComponentInteraction("button_edit", true)]
 		public async Task ButtonAddClickAsync()
 		{
-			await this.Context.Interaction.RespondWithModalAsync($"poll_editor_modal:{(this.Context.Interaction as SocketMessageComponent).Message.Id}", new PollEditorModal());
+			using DiamondContext db = new DiamondContext();
+
+			ulong messageId = (this.Context.Interaction as SocketMessageComponent).Message.Id;
+
+			Poll poll = VoteUtils.GetPollByMessageId(db, messageId);
+			PollEditorModal editorModal = new PollEditorModal()
+			{
+				PollName = poll.Title,
+				PollDescription = poll.Description,
+				PollImageUrl = poll.ImageUrl,
+				PollThumbnailUrl = poll.ThumbnailUrl,
+			};
+
+			await this.Context.Interaction.RespondWithModalAsync($"poll_editor_modal:{messageId}", editorModal);
 		}
 
-		[ModalInteraction("poll_editor_modal:*")]
-		public async Task FooterAutoResponderModal(ulong messageId, PollEditorModal modal)
+		[ModalInteraction("poll_editor_modal:*", true)]
+		public async Task PollEditorModalHandlerAsync(ulong messageId, PollEditorModal modal)
 		{
+			await this.DeferAsync();
 			using DiamondContext db = new DiamondContext();
 
 			Poll poll = VoteUtils.GetPollByMessageId(db, messageId);
 
 			// Get the values of components.
-			poll.Title = modal.PollTitle;
+			poll.Title = modal.PollName;
 			poll.Description = modal.PollDescription;
 			poll.ImageUrl = poll.ImageUrl;
 			poll.ThumbnailUrl = poll.ThumbnailUrl;
 			poll.UpdatedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+			await db.SaveAsync();
 
-			await this.ModifyOriginalResponseAsync((msg) =>
-			{
-				msg.Content = "a";
-			});
-
-			await VoteUtils.UpdateEditorEmbed(this.Context.Interaction as SocketMessageComponent, poll, messageId);
+			await VoteUtils.UpdateEditorEmbed(this.Context.Interaction, poll, messageId);
 		}
 
 		public class PollEditorModal : IModal
@@ -45,8 +55,8 @@ namespace Diamond.API.SlashCommands.VotePoll
 
 			[RequiredInput]
 			[InputLabel("Name")]
-			[ModalTextInput("field_title", TextInputStyle.Short, "New option name...", maxLength: 250)]
-			public string PollTitle { get; set; }
+			[ModalTextInput("field_name", TextInputStyle.Short, "New option name...", maxLength: 250)]
+			public string PollName { get; set; }
 
 			[RequiredInput]
 			[InputLabel("Description")]

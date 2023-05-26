@@ -53,21 +53,21 @@ public partial class Moderation
 		{
 			await ((ITextChannel)this.Context.Channel).DeleteMessagesAsync(messagesToDeleteList);
 
-			embed.WithDescription("Messages deleted!");
-			embed.AddField("🗑 Amount of Messages", messagesToDeleteList.Count, true);
+			_ = embed.WithDescription("Messages deleted!");
+			_ = embed.AddField("🗑 Amount of Messages", messagesToDeleteList.Count, true);
 		}
 		else
 		{
-			embed.WithDescription("No messages to delete.");
+			_ = embed.WithDescription("No messages to delete.");
 		}
 
 		ComponentBuilder component = new ComponentBuilder()
 			.WithButton("Delete", "delete_prune", ButtonStyle.Danger, Emoji.Parse("🗑️"));
 
-		await embed.SendAsync(component.Build());
+		_ = await embed.SendAsync(component.Build());
 	}
 
-	[ComponentInteraction("delete_prune")]
+	[ComponentInteraction("delete_prune", true)]
 	public async Task PruneButtonAsync()
 	{
 		await this.DeferAsync();

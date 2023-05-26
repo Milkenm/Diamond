@@ -34,27 +34,14 @@ public static class VoteUtils
 		return db.PollVotes.Include(pv => pv.PollOption).Where(pv => pv.Poll == poll && pv.UserId == userId).FirstOrDefault();
 	}
 
-	public static async Task UpdateEditorEmbed(SocketMessageComponent messageComponent, Poll poll, ulong messageId)
+	public static async Task UpdateEditorEmbed(IDiscordInteraction interaction, Poll poll, ulong messageId)
 	{
-		await messageComponent.UpdateAsync((msg) =>
+		_ = await interaction.ModifyOriginalResponseAsync((msg) =>
 		{
-			UpdateEditorEmbed(messageComponent, poll, messageId, msg);
+			EditorVoteEmbed editorEmbed = new EditorVoteEmbed(interaction, poll, messageId);
+			msg.Embed = editorEmbed.Build();
+			msg.Components = editorEmbed.Component;
 		});
-	}
-
-	public static async Task UpdateEditorEmbed(SocketModal modal, Poll poll, ulong messageId)
-	{
-		await modal.UpdateAsync((msg) =>
-		{
-			UpdateEditorEmbed(modal, poll, messageId, msg);
-		});
-	}
-
-	private static void UpdateEditorEmbed(IDiscordInteraction interaction, Poll poll, ulong messageId, MessageProperties msg)
-	{
-		EditorVoteEmbed editorEmbed = new EditorVoteEmbed(interaction, poll, messageId);
-		msg.Embed = editorEmbed.Build();
-		msg.Components = editorEmbed.Component;
 	}
 
 	public static async Task UpdatePublishEmbed(SocketMessageComponent menu, DiscordSocketClient client, ulong messageId, Poll poll)
