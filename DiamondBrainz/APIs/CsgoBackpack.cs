@@ -38,7 +38,7 @@ namespace Diamond.API.APIs
 			{
 				using DiamondContext db = new DiamondContext();
 
-				AreItemsLoaded = false;
+				this.AreItemsLoaded = false;
 
 				Debug.WriteLine("Checking last refresh unix.");
 				// Check if items need to be refreshed
@@ -53,7 +53,7 @@ namespace Diamond.API.APIs
 				// Clear database and items map
 				db.ClearTable("CsgoItemPrices");
 				db.ClearTable("CsgoItems");
-				_csgoItemsMap?.Clear();
+				this._csgoItemsMap?.Clear();
 
 				Dictionary<string, DbCsgoItem> createdItems = new Dictionary<string, DbCsgoItem>();
 
@@ -123,7 +123,7 @@ namespace Diamond.API.APIs
 								Name = item.Value.Name,
 								RarityHexColor = item.Value.RarityHexColor,
 							};
-							db.CsgoItems.Add(newItem);
+							_ = db.CsgoItems.Add(newItem);
 							createdItems.Add(item.Value.Name, newItem);
 							csgoItem = newItem;
 						}
@@ -148,23 +148,19 @@ namespace Diamond.API.APIs
 									Sold = Convert.ToInt64(priceInfo.Value.Sold.IsEmpty() ? 0 : priceInfo.Value.Sold),
 									StandardDeviation = float.Parse(priceInfo.Value.StandardDeviation.Replace('.', ',')),
 								};
-								db.CsgoItemPrices.Add(newPrice);
+								_ = db.CsgoItemPrices.Add(newPrice);
 							}
 						}
 					}
 				}
 				Debug.WriteLine("Saving to database");
-				await db.SaveChangesAsync();
+				_ = await db.SaveChangesAsync();
 				Debug.WriteLine("Saved");
 				await db.SetSetting(DiamondContext.ConfigSetting.CsgoItemsLoadUnix, currentUnix);
 
-				OnItemsLoad?.Invoke();
-				AreItemsLoaded = true;
+				this.AreItemsLoaded = true;
 			});
 		}
-
-		public delegate void CsgoItemStateEvent();
-		public event CsgoItemStateEvent OnItemsLoad;
 
 		public List<DbCsgoItemPrice> GetItemPrices(DbCsgoItem csgoItem, Currency currency)
 		{
@@ -180,19 +176,19 @@ namespace Diamond.API.APIs
 			using DiamondContext db = new DiamondContext();
 
 			// Generate items map
-			if (_csgoItemsMap == null || _csgoItemsMap.Count == 0)
+			if (this._csgoItemsMap == null || this._csgoItemsMap.Count == 0)
 			{
 				Debug.WriteLine("Generating items map...");
-				_csgoItemsMap = new Dictionary<string, DbCsgoItem>();
+				this._csgoItemsMap = new Dictionary<string, DbCsgoItem>();
 				foreach (DbCsgoItem item in db.CsgoItems)
 				{
-					_csgoItemsMap.Add(item.Name, item);
+					this._csgoItemsMap.Add(item.Name, item);
 				}
 				Debug.WriteLine("Generation finished.");
 			}
 
 			Debug.WriteLine("Searching...");
-			List<SearchMatchInfo<DbCsgoItem>> searchResults = await Utils.Search(_csgoItemsMap, search);
+			List<SearchMatchInfo<DbCsgoItem>> searchResults = await Utils.Search(this._csgoItemsMap, search);
 			Debug.WriteLine("Search finished.");
 
 			return searchResults;

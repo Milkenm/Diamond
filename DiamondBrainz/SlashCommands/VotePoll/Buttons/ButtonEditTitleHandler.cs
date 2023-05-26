@@ -31,6 +31,11 @@ namespace Diamond.API.SlashCommands.VotePoll
 			poll.ThumbnailUrl = poll.ThumbnailUrl;
 			poll.UpdatedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
+			await this.ModifyOriginalResponseAsync((msg) =>
+			{
+				msg.Content = "a";
+			});
+
 			await VoteUtils.UpdateEditorEmbed(this.Context.Interaction as SocketMessageComponent, poll, messageId);
 		}
 
