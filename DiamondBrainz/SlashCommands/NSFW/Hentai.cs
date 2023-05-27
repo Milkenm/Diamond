@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
 using Diamond.API.Data;
+using Diamond.API.Util;
 
 using Discord.Interactions;
 
@@ -45,7 +46,7 @@ public partial class NSFW
 		NightApiResponse resp = JsonConvert.DeserializeObject<NightApiResponse>(response);
 
 		// Create the embed
-		DefaultEmbed embed = new DefaultEmbed("Hentai", "💮", this.Context.Interaction);
+		DefaultEmbed embed = new DefaultEmbed("Hentai", "💮", this.Context);
 		embed.WithImageUrl(resp.Content.Url);
 
 		// Reply

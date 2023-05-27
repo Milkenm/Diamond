@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord.Interactions;
 
@@ -20,7 +21,7 @@ public partial class Math
 		(double Sin, double Cos) result = System.Math.SinCos(angles.Radians);
 
 		string angleDescription = $"{angle}{AngleSymbols[angleType]}";
-		DefaultEmbed embed = new DefaultEmbed("Math Cosine", "🧮", Context.Interaction)
+		DefaultEmbed embed = new DefaultEmbed("Math Cosine", "🧮", Context)
 		{
 			Description = $"**Sin({angleDescription}) =** {string.Format("{0:N12}", result.Sin)}\n**Cos({angleDescription}) =** {string.Format("{0:N12}", result.Cos)}"
 		};

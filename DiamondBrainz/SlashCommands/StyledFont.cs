@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord.Interactions;
 
@@ -22,7 +23,7 @@ public class StyledFont : InteractionModuleBase<SocketInteractionContext>
 			text = text.Replace(letter, _fontMap[letter][(int)fontStyle]);
 		}
 
-		DefaultEmbed embed = new DefaultEmbed("Styled Font", "🔤", Context.Interaction)
+		DefaultEmbed embed = new DefaultEmbed("Styled Font", "🔤", Context)
 		{
 			Description = text,
 		};

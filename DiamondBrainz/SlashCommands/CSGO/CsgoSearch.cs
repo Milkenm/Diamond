@@ -13,14 +13,13 @@ using System.Web;
 using Diamond.API.APIs;
 using Diamond.API.Attributes;
 using Diamond.API.Data;
+using Diamond.API.Util;
 
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 
 using ScriptsLibV2.Extensions;
-
-using static Diamond.API.Utils;
 
 namespace Diamond.API.SlashCommands.CSGO;
 
@@ -37,7 +36,7 @@ public partial class Csgo
 	{
 		await this.DeferAsync(!showEveryone);
 
-		DefaultEmbed embed = new DefaultEmbed("CS:GO Item Search", "🔫", this.Context.Interaction);
+		DefaultEmbed embed = new DefaultEmbed("CS:GO Item Search", "🔫", this.Context);
 
 #if DEBUG
 		// Clear cache if debug is enabled
@@ -51,7 +50,7 @@ public partial class Csgo
 		}
 
 		// Get best maching item
-		List<SearchMatchInfo<DbCsgoItem>> searchResult = await this._csgoBackpack.SearchItemAsync(search);
+		List<SearchMatchInfo<DbCsgoItem>> searchResult = this._csgoBackpack.SearchItem(search);
 		if (searchResult.Count == 0)
 		{
 			embed.Title = "Item not found";
@@ -60,10 +59,10 @@ public partial class Csgo
 			return;
 		}
 		DbCsgoItem searchItem = searchResult[0].Item;
-		List<DbCsgoItemPrice> searchItemPrices = _csgoBackpack.GetItemPrices(searchItem, currency);
+		List<DbCsgoItemPrice> searchItemPrices = this._csgoBackpack.GetItemPrices(searchItem, currency);
 
 		embed.Title = searchItem.Name;
-		embed.Description = $"⭐ **Released**: {UnixTimeStampToDateTime(searchItem.FirstSaleDateUnix).AddDays(1).ToString("dd/MM/yyyy")}";
+		embed.Description = $"⭐ **Released**: {Utils.UnixTimeStampToDateTime(searchItem.FirstSaleDateUnix).AddDays(1):dd/MM/yyyy}";
 		embed.ThumbnailUrl = $"https://community.cloudflare.steamstatic.com/economy/image/{searchItem.IconUrl}";
 		ComponentBuilder builder = new ComponentBuilder()
 			.WithButton(new ButtonBuilder("View on Steam market", style: ButtonStyle.Link, url: $"https://steamcommunity.com/market/listings/730/{searchItem.Name}".Replace(" ", "%20").Replace("|", "%7C"), emote: Emoji.Parse("🏪")))
@@ -121,7 +120,7 @@ public partial class Csgo
 			return;
 		}
 		// Get best maching item
-		List<SearchMatchInfo<DbCsgoItem>> searchResult = await this._csgoBackpack.SearchItemAsync(userInput);
+		List<SearchMatchInfo<DbCsgoItem>> searchResult = this._csgoBackpack.SearchItem(userInput);
 		if (searchResult.Count == 0)
 		{
 			await autocompleteInteraction.RespondAsync(null);

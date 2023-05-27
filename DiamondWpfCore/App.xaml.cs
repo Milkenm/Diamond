@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Windows;
-
-using Diamond.API;
 using Diamond.API.APIs;
 using Diamond.API.ConsoleCommands;
 using Diamond.API.Data;
+using Diamond.API.Util;
 using Diamond.GUI.Pages;
 
 using Discord;
@@ -15,10 +14,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Diamond.GUI
 {
-	/// <summary>
-	/// Interaction logic for App.xaml
-	/// </summary>
-	public partial class App : Application
+    /// <summary>
+    /// Interaction logic for App.xaml
+    /// </summary>
+    public partial class App : Application
 	{
 		private readonly IServiceProvider _serviceProvider;
 

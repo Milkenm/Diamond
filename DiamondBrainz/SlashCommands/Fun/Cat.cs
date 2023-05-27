@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord.Interactions;
 
@@ -22,7 +23,7 @@ namespace Diamond.API.SlashCommands.Fun
 			using (Stream stream = client.OpenRead("https://cataas.com/cat"))
 			{
 				long id = new Random().NextInt64();
-				DefaultEmbed embed = new DefaultEmbed("Cat", "🐱", this.Context.Interaction)
+				DefaultEmbed embed = new DefaultEmbed("Cat", "🐱", this.Context)
 				{
 					ImageUrl = $"attachment://cat_{id}.png",
 				};

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord;
 using Discord.Interactions;
@@ -19,7 +20,7 @@ public partial class Moderation
 	)
 	{
 		await this.DeferAsync(!showEveryone);
-		DefaultEmbed embed = new DefaultEmbed("Prune", "🔥", this.Context.Interaction);
+		DefaultEmbed embed = new DefaultEmbed("Prune", "🔥", this.Context);
 
 		amount++;
 
@@ -71,6 +72,6 @@ public partial class Moderation
 	public async Task PruneButtonAsync()
 	{
 		await this.DeferAsync();
-		await (await this.Context.Interaction.GetOriginalResponseAsync()).DeleteAsync();
+		await Utils.DeleteResponseAsync(this.Context);
 	}
 }

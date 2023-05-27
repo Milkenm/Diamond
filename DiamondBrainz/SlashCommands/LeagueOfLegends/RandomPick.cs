@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 using Diamond.API.Schemes.LolDataDragon;
 
 using Discord.Interactions;
@@ -30,7 +31,7 @@ public partial class LeagueOfLegends
 		int randomChampionIndex = new Random().Next(0, validChampions.Count);
 		LolChampion randomChampion = validChampions.ElementAt(randomChampionIndex);
 
-		DefaultEmbed embed = new DefaultEmbed("LoL Random Pick", "🎲", this.Context.Interaction)
+		DefaultEmbed embed = new DefaultEmbed("LoL Random Pick", "🎲", this.Context)
 		{
 			Title = randomChampion.ChampionName,
 			ImageUrl = this._dataDragonApi.GetChampionSplashImageUrl(randomChampion),

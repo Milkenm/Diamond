@@ -7,9 +7,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-using Diamond.API;
 using Diamond.API.APIs;
 using Diamond.API.Data;
+using Diamond.API.Util;
 using Diamond.GUI.Pages;
 
 using Discord;
@@ -45,7 +45,7 @@ namespace Diamond.GUI
 			this.InitializeComponent();
 		}
 
-		private async void Window_Loaded(object sender, RoutedEventArgs e)
+		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			using DiamondContext db = new DiamondContext();
 
@@ -53,7 +53,7 @@ namespace Diamond.GUI
 			LogsPanelPage logsPanel = this._serviceProvider.GetRequiredService<LogsPanelPage>();
 
 			// Disable guilds tab
-			ToggleUIElement(this.image_guilds, this.tabItem_guilds, false);
+			this.ToggleUIElement(this.image_guilds, this.tabItem_guilds, false);
 
 			// Global exception handler
 			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler((s, e) =>
@@ -61,12 +61,13 @@ namespace Diamond.GUI
 				logsPanel.Log(e.ExceptionObject);
 			});
 
-			// Load csgo items
-			await mainPanel.LogAsync("Loading CS:GO items...");
-			this._serviceProvider.GetRequiredService<CsgoBackpack>().LoadItemsAsync().GetAwaiter().OnCompleted(async () =>
-			{
-				await mainPanel.LogAsync("CS:GO items loaded!");
-			});
+			// Load CS:GO items
+			CsgoBackpack csgoBackpack = this._serviceProvider.GetRequiredService<CsgoBackpack>();
+			csgoBackpack.OnCheckingForUpdate += new CsgoItemsStateChanged(async () => await mainPanel.LogAsync("Checking for CS:GO items update..."));
+			csgoBackpack.OnUpdateCancelled += new CsgoItemsStateChanged(async () => await mainPanel.LogAsync("No update needed for CS:GO items!"));
+			csgoBackpack.OnUpdateStart += new CsgoItemsStateChanged(async () => await mainPanel.LogAsync("Downloading CS:GO items..."));
+			csgoBackpack.OnUpdateEnd += new CsgoItemsStateChanged(async () => await mainPanel.LogAsync("CS:GO items loaded!"));
+			csgoBackpack.LoadItems();
 
 			// Initialize bot
 			InteractionService interactionService = this._serviceProvider.GetRequiredService<InteractionService>();
@@ -129,7 +130,7 @@ namespace Diamond.GUI
 					{
 						case InteractionCommandError.UnmetPrecondition:
 							{
-								errorEmbed = new DefaultEmbed("Error", "🛑", context.Interaction)
+								errorEmbed = new DefaultEmbed("Error", "🛑", context)
 								{
 									Title = "No permission",
 									Description = result.ErrorReason,
@@ -138,7 +139,7 @@ namespace Diamond.GUI
 							break;
 						case InteractionCommandError.UnknownCommand:
 							{
-								errorEmbed = new DefaultEmbed("Error", "🤔", context.Interaction)
+								errorEmbed = new DefaultEmbed("Error", "🤔", context)
 								{
 									Title = "Unknown command",
 									Description = $"That command was not found.",
@@ -147,7 +148,7 @@ namespace Diamond.GUI
 							break;
 						default:
 							{
-								errorEmbed = new DefaultEmbed("Error", "🔥", context.Interaction)
+								errorEmbed = new DefaultEmbed("Error", "🔥", context)
 								{
 									Title = "Something bad happened... :(",
 									Description = "This error was reported to the dev, hope to get it fixed soon...",
@@ -168,27 +169,27 @@ namespace Diamond.GUI
 				}
 			};
 			// Bot connect
-			_client.Connected += new Func<Task>(() =>
+			this._client.Connected += new Func<Task>(() =>
 			{
 				// Enable guilds tab
-				Dispatcher.Invoke(async () =>
+				this.Dispatcher.Invoke(async () =>
 				{
-					ToggleUIElement(this.image_guilds, this.tabItem_guilds, true);
+					this.ToggleUIElement(this.image_guilds, this.tabItem_guilds, true);
 
 					// Refesh guilds tab
-					GuildsPanelPage guildsPanel = _serviceProvider.GetRequiredService<GuildsPanelPage>();
+					GuildsPanelPage guildsPanel = this._serviceProvider.GetRequiredService<GuildsPanelPage>();
 					await guildsPanel.LoadGuildsAsync();
 				});
 
 				return Task.CompletedTask;
 			});
 			// Bot disconnect
-			_client.Disconnected += new Func<Exception, Task>((_) =>
+			this._client.Disconnected += new Func<Exception, Task>((_) =>
 			{
 				// Disable guilds tab
-				Dispatcher.Invoke(() =>
+				this.Dispatcher.Invoke(() =>
 				{
-					ToggleUIElement(this.image_guilds, this.tabItem_guilds, false);
+					this.ToggleUIElement(this.image_guilds, this.tabItem_guilds, false);
 				});
 
 				return Task.CompletedTask;
@@ -226,13 +227,13 @@ namespace Diamond.GUI
 			}
 
 			// Main
-			ToggleUIElement(this.image_main, this.tabItem_main, enabled);
+			this.ToggleUIElement(this.image_main, this.tabItem_main, enabled);
 			// Logs
-			ToggleUIElement(this.image_logs, this.tabItem_logs, enabled);
+			this.ToggleUIElement(this.image_logs, this.tabItem_logs, enabled);
 			// Lavalink
-			ToggleUIElement(this.image_lavalink, this.tabItem_lavalink, enabled);
+			this.ToggleUIElement(this.image_lavalink, this.tabItem_lavalink, enabled);
 			// RCON
-			ToggleUIElement(this.image_rcon, this.tabItem_rcon, enabled);
+			this.ToggleUIElement(this.image_rcon, this.tabItem_rcon, enabled);
 		}
 
 		private void ToggleUIElement(Image image, TabItem tab, bool isEnabled)
@@ -267,12 +268,12 @@ namespace Diamond.GUI
 			{
 				if (sb.Length > 0)
 				{
-					sb.Append('\n');
+					_ = sb.Append('\n');
 				}
 				string name = descriptor.Name;
 				object value = descriptor.GetValue(obj);
 				value ??= "<null>";
-				sb.Append($"\t{name}={value}");
+				_ = sb.Append($"\t{name}={value}");
 			}
 			return $"{obj.GetType()}:\n{sb}";
 		}

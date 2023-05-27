@@ -1,4 +1,5 @@
-﻿using Discord.Interactions;
+﻿using Diamond.API.Util;
+using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.Music;
 

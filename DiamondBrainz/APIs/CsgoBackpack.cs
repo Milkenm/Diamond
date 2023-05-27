@@ -2,20 +2,24 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
 
 using Diamond.API.Data;
 using Diamond.API.Schemes.CsgoBackpack;
+using Diamond.API.Util;
 
 using Newtonsoft.Json;
 
 using ScriptsLibV2.Extensions;
 using ScriptsLibV2.Util;
 
-using static Diamond.API.Utils;
+using Utils = Diamond.API.Util.Utils;
 
 namespace Diamond.API.APIs
 {
+
+	public delegate void CsgoItemsStateChanged();
+
 	public class CsgoBackpack
 	{
 		private const long KEEP_RESULTS_FOR_MINUTES = 60;
@@ -32,23 +36,32 @@ namespace Diamond.API.APIs
 
 		public bool AreItemsLoaded { get; private set; }
 
-		public async Task LoadItemsAsync()
+		public event CsgoItemsStateChanged OnCheckingForUpdate;
+		public event CsgoItemsStateChanged OnUpdateCancelled;
+		public event CsgoItemsStateChanged OnUpdateStart;
+		public event CsgoItemsStateChanged OnUpdateEnd;
+
+		public void LoadItems()
 		{
-			await Task.Run(async () =>
+			new Thread(async () =>
 			{
+				OnCheckingForUpdate?.Invoke();
 				using DiamondContext db = new DiamondContext();
 
 				this.AreItemsLoaded = false;
 
 				Debug.WriteLine("Checking last refresh unix.");
-				// Check if items need to be refreshed
+				// Check if items need to be updated
 				long currentUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 				long lastUpdate = Convert.ToInt64(db.GetSetting(DiamondContext.ConfigSetting.CsgoItemsLoadUnix));
 				if (lastUpdate + (KEEP_RESULTS_FOR_MINUTES * 60) >= currentUnix)
 				{
+					this.AreItemsLoaded = true;
+					OnUpdateCancelled?.Invoke();
 					return;
 				}
 
+				OnUpdateStart?.Invoke();
 				Debug.WriteLine("Clearing database");
 				// Clear database and items map
 				db.ClearTable("CsgoItemPrices");
@@ -154,12 +167,13 @@ namespace Diamond.API.APIs
 					}
 				}
 				Debug.WriteLine("Saving to database");
+				await db.SetSetting(DiamondContext.ConfigSetting.CsgoItemsLoadUnix, currentUnix);
 				_ = await db.SaveChangesAsync();
 				Debug.WriteLine("Saved");
-				await db.SetSetting(DiamondContext.ConfigSetting.CsgoItemsLoadUnix, currentUnix);
 
 				this.AreItemsLoaded = true;
-			});
+				OnUpdateEnd?.Invoke();
+			}).Start();
 		}
 
 		public List<DbCsgoItemPrice> GetItemPrices(DbCsgoItem csgoItem, Currency currency)
@@ -171,7 +185,7 @@ namespace Diamond.API.APIs
 
 		private Dictionary<string, DbCsgoItem> _csgoItemsMap;
 
-		public async Task<List<SearchMatchInfo<DbCsgoItem>>> SearchItemAsync(string search)
+		public List<SearchMatchInfo<DbCsgoItem>> SearchItem(string search)
 		{
 			using DiamondContext db = new DiamondContext();
 
@@ -188,7 +202,7 @@ namespace Diamond.API.APIs
 			}
 
 			Debug.WriteLine("Searching...");
-			List<SearchMatchInfo<DbCsgoItem>> searchResults = await Utils.Search(this._csgoItemsMap, search);
+			List<SearchMatchInfo<DbCsgoItem>> searchResults = Utils.Search(this._csgoItemsMap, search);
 			Debug.WriteLine("Search finished.");
 
 			return searchResults;

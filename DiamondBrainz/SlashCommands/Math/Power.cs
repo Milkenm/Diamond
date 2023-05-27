@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord.Interactions;
 
@@ -18,7 +19,7 @@ public partial class Math
 
 		int result = (int)System.Math.Pow(@base, power);
 
-		DefaultEmbed embed = new DefaultEmbed("Math Power", "✊", Context.Interaction)
+		DefaultEmbed embed = new DefaultEmbed("Math Power", "✊", Context)
 		{
 			Description = $"**Result**: {result}"
 		};

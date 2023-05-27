@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Windows.Controls;
-
-using Diamond.API;
+using Diamond.API.Util;
 
 namespace Diamond.GUI.Pages;
 /// <summary>

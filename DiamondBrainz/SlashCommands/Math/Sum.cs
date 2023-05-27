@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord.Interactions;
 
@@ -18,7 +19,7 @@ public partial class Math
 
 		double sum = firstNumber + secondNumber;
 
-		DefaultEmbed embed = new DefaultEmbed("Math Sum", "🧮", Context.Interaction)
+		DefaultEmbed embed = new DefaultEmbed("Math Sum", "🧮", Context)
 		{
 			Description = $"**Result**: {string.Format("{0:N}", sum)}"
 		};

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord;
 using Discord.Interactions;
@@ -21,7 +22,7 @@ public partial class Music
 	)
 	{
 		await this.DeferAsync();
-		DefaultEmbed embed = new DefaultEmbed("Music", "🎶", this.Context.Interaction);
+		DefaultEmbed embed = new DefaultEmbed("Music", "🎶", this.Context);
 		LavaNode node = await _lava.GetNodeAsync();
 
 		// Get voice channel

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord;
 using Discord.Interactions;
@@ -19,7 +20,7 @@ public partial class Owner
 	)
 	{
 		// Just in case
-		if (Context.User.Id != 222114807887691777L) return;
+		if (this.Context.User.Id != 222114807887691777L) return;
 
 		await this.DeferAsync(!showEveryone);
 
@@ -59,12 +60,12 @@ public partial class Owner
 			error = ex.Message;
 		}
 
-		DefaultEmbed embed = new DefaultEmbed("Evaluate", "💻", this.Context.Interaction)
+		DefaultEmbed embed = new DefaultEmbed("Evaluate", "💻", this.Context)
 		{
 			Title = error != null ? "Error!" : (result == null ? "No output" : result.ToString()),
-			Description = error != null ? error : $"```cs\n{expression}```\n**Execution time:** {executionTime}",
+			Description = error ?? $"```cs\n{expression}```\n**Execution time:** {executionTime}",
 		};
-		await embed.SendAsync();
+		_ = await embed.SendAsync();
 	}
 
 	[MessageCommand("Evaluate")]
@@ -73,12 +74,12 @@ public partial class Owner
 		string content = Utils.GetMessageContent(message);
 		if (content == null)
 		{
-			DefaultEmbed embed = new DefaultEmbed("Evaluate", "💻", this.Context.Interaction)
+			DefaultEmbed embed = new DefaultEmbed("Evaluate", "💻", this.Context)
 			{
 				Title = "Error",
 				Description = "No content was found on the selected message.",
 			};
-			await embed.SendAsync();
+			_ = await embed.SendAsync();
 			return;
 		}
 		await this.EvalCommandAsync(message.Content);

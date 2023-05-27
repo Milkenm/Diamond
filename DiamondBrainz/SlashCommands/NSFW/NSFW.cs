@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord.Interactions;
 
@@ -35,7 +36,7 @@ public partial class NSFW
 		int imageSize = imageData.Length;
 
 		// Create the embed
-		DefaultEmbed embed = new DefaultEmbed("NSFW", "🍑", this.Context.Interaction);
+		DefaultEmbed embed = new DefaultEmbed("NSFW", "🍑", this.Context);
 		embed.AddField("🚺 Model", !string.IsNullOrEmpty(nsfw.Model) ? nsfw.Model : "Unknown model", true);
 		embed.AddField("📁 Image Size", ScriptsLibV2.Util.Utils.ByteSizeToString(imageSize), true);
 		embed.WithImageUrl(imageLink);

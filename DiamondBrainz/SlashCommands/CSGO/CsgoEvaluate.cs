@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Diamond.API.APIs;
 using Diamond.API.Attributes;
 using Diamond.API.Data;
+using Diamond.API.Util;
 using Diamond.API.Schemes.SteamInventory;
 
 using Discord;
@@ -38,7 +39,7 @@ public partial class Csgo
 		await DeferAsync(!showEveryone);
 
 		// Create embed
-		DefaultEmbed embed = new DefaultEmbed("CS:GO Inventory value", "💸", Context.Interaction);
+		DefaultEmbed embed = new DefaultEmbed("CS:GO Inventory value", "💸", Context);
 
 		// Vars
 		bool fromCache = false;
@@ -125,7 +126,7 @@ public partial class Csgo
 			// Calculate inventory value
 			foreach (AssetDescription description in inventory.Descriptions)
 			{
-				DbCsgoItem csgoItem = (await _csgoBackpack.SearchItemAsync(description.MarketName))[0].Item;
+				DbCsgoItem csgoItem = (_csgoBackpack.SearchItem(description.MarketName))[0].Item;
 				List<DbCsgoItemPrice> itemPrices = _csgoBackpack.GetItemPrices(csgoItem, currency);
 				if (itemPrices.Count == 0)
 				{

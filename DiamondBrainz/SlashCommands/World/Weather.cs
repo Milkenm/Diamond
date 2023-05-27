@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 using Diamond.API.Schemes.OpenMeteoGeocoding;
 using Diamond.API.Schemes.OpenMeteoWeather;
 
@@ -23,7 +24,7 @@ public partial class World
 	{
 		await DeferAsync(!showEveryone);
 
-		DefaultEmbed embed = new DefaultEmbed("World Weather", "🌞", Context.Interaction);
+		DefaultEmbed embed = new DefaultEmbed("World Weather", "🌞", Context);
 
 		// Get the geolocation
 		Geocoding geocoding = _openMeteoGeocoding.GeocodeSearch(location);

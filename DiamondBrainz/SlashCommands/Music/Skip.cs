@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord.Interactions;
 
@@ -14,7 +15,7 @@ public partial class Music
 	public async Task SkipCommandAsync()
 	{
 		await this.DeferAsync();
-		DefaultEmbed embed = new DefaultEmbed("Music", "🎶", this.Context.Interaction);
+		DefaultEmbed embed = new DefaultEmbed("Music", "🎶", this.Context);
 		LavaNode node = await _lava.GetNodeAsync();
 
 		if (!node.TryGetPlayer(this.Context.Guild, out LavaPlayer<LavaTrack> player))
@@ -53,7 +54,7 @@ public partial class Music
 		await embed.SendAsync();
 
 		// Play next track message
-		DefaultEmbed playingEmbed = new DefaultEmbed("Music", "🎶", this.Context.Interaction)
+		DefaultEmbed playingEmbed = new DefaultEmbed("Music", "🎶", this.Context)
 		{
 			Title = "Now playing",
 			Description = $"Now playing: '**{next.Title}**'.",

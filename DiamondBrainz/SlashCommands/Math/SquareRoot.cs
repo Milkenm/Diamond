@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord.Interactions;
 
@@ -17,7 +18,7 @@ public partial class Math
 
 		double sqrt = System.Math.Sqrt(number);
 
-		DefaultEmbed embed = new DefaultEmbed("Math Square Root", "🧮", Context.Interaction)
+		DefaultEmbed embed = new DefaultEmbed("Math Square Root", "🧮", Context)
 		{
 			Description = $"**Result**: {string.Format("{0:N}", sqrt)}"
 		};

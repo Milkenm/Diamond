@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using ScriptsLibV2.Extensions;
 
@@ -18,7 +19,7 @@ namespace Diamond.API.SlashCommands.Server
 
 			string guildIconUrl = Context.Guild.IconUrl.Contains("a_") ? Context.Guild.IconUrl.Replace(".jpg", ".gif") : Context.Guild.IconUrl;
 
-			DefaultEmbed embed = new DefaultEmbed("Server Info", "🏡", Context.Interaction);
+			DefaultEmbed embed = new DefaultEmbed("Server Info", "🏡", Context);
 			embed.AddField("👤 Owner", Context.Guild.Owner.Mention, true);
 			embed.AddField("📆 Creation date", Context.Guild.CreatedAt.ToString("dd/MM/yyyy, HH:mm:ss"), true);
 			embed.AddField("🔗 Vanity URL", Context.Guild.VanityURLCode.IsEmpty() ? "None" : Context.Guild.VanityURLCode, true);

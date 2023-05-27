@@ -5,11 +5,19 @@ using Diamond.API.Data;
 using Diamond.API.SlashCommands.VotePoll.Embeds;
 
 using Discord.Interactions;
+using Discord.WebSocket;
 
 namespace Diamond.API.SlashCommands.VotePoll;
 
-public partial class VotePoll
+public partial class VotePoll : InteractionModuleBase<SocketInteractionContext>
 {
+	private readonly DiscordSocketClient _client;
+
+	public VotePoll(DiscordSocketClient client)
+	{
+		this._client = client;
+	}
+
 	[DSlashCommand("poll", "Create a vote poll.")]
 	public async Task VoteCommandAsync(
 		[Summary("title", "The title of the poll.")][MinLength(1)][MaxLength(250)] string title,
@@ -28,6 +36,6 @@ public partial class VotePoll
 
 		ulong deferId = (await this.GetOriginalResponseAsync()).Id;
 
-		await new EditorVoteEmbed(this.Context.Interaction, poll, deferId).SendAsync(true);
+		_ = await new EditorEmbed(this.Context, poll, deferId).SendAsync(true);
 	}
 }

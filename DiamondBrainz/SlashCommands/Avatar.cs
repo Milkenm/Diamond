@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord;
 using Discord.Interactions;
@@ -23,7 +24,7 @@ namespace Diamond.API.SlashCommands
 			string avatar = user.GetAvatarUrl();
 			avatar = avatar.Replace("?size=128", "?size=" + size);
 
-			DefaultEmbed embed = new DefaultEmbed("Avatar", "📸", Context.Interaction);
+			DefaultEmbed embed = new DefaultEmbed("Avatar", "📸", Context);
 			embed.AddField("👤 User", user.Mention, true);
 			embed.AddField("📏 Size", $"{size}px²", true);
 			embed.WithImageUrl(avatar);

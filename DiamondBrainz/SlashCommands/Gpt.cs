@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+
 using Diamond.API.APIs;
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord.Interactions;
 
@@ -13,7 +15,7 @@ using ScriptsLibV2.Extensions;
 
 namespace Diamond.API.SlashCommands
 {
-    public class Gpt : InteractionModuleBase<SocketInteractionContext>
+	public class Gpt : InteractionModuleBase<SocketInteractionContext>
     {
         private readonly IServiceProvider _serviceProvider;
 
@@ -32,7 +34,7 @@ namespace Diamond.API.SlashCommands
 
             string response = await GenerateContent(prompt);
 
-            DefaultEmbed embed = new DefaultEmbed("ChatGPT", "🗨️", Context.Interaction);
+            DefaultEmbed embed = new DefaultEmbed("ChatGPT", "🗨️", Context);
             if (!response.IsEmpty())
             {
                 embed.Description = response;

@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands
 {
-    public class RandomNumber : InteractionModuleBase<SocketInteractionContext>
+	public class RandomNumber : InteractionModuleBase<SocketInteractionContext>
     {
         [DSlashCommand("randomnumber", "[Public] Generates a random number between \"min\" and \"max\".")]
         public async Task RandomNumberCommandAsync(
@@ -26,7 +27,7 @@ namespace Diamond.API.SlashCommands
                 (min, max) = (max, min);
             }
 
-            DefaultEmbed embed = new DefaultEmbed("Random Number", "🎲", Context.Interaction);
+            DefaultEmbed embed = new DefaultEmbed("Random Number", "🎲", Context);
 
             long randomNumber = new Random().Next(min, max);
             embed.AddField("🔽 Minimum", min, true);

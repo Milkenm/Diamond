@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Diamond.API.Util;
+
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
@@ -16,7 +18,7 @@ public class XMention : InteractionModuleBase<SocketInteractionContext>
 
 		IGuildUser guildAuthor = (IGuildUser)message.Author;
 
-		DefaultEmbed embed = new DefaultEmbed("X-Mention", "🔗", this.Context.Interaction, message.GetJumpUrl())
+		DefaultEmbed embed = new DefaultEmbed("X-Mention", "🔗", this.Context, message.GetJumpUrl())
 		{
 			Title = guildAuthor.DisplayName,
 			Description = Utils.GetMessageContent(message),
@@ -53,7 +55,7 @@ public class XMention : InteractionModuleBase<SocketInteractionContext>
 
 		IMessage message = await this.Context.Channel.GetMessageAsync(messageId);
 
-		DefaultEmbed embed = new DefaultEmbed("X-Mention", "🔗", this.Context.Interaction, message.GetJumpUrl())
+		DefaultEmbed embed = new DefaultEmbed("X-Mention", "🔗", this.Context, message.GetJumpUrl())
 		{
 			Title = (message.Author as IGuildUser).DisplayName,
 			Description = Utils.GetMessageContent(message),

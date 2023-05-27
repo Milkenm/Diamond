@@ -7,6 +7,7 @@ using Diamond.API.Data;
 using Diamond.API.SlashCommands.VotePoll.Embeds;
 
 using Discord;
+using Discord.Interactions;
 using Discord.WebSocket;
 
 using Microsoft.EntityFrameworkCore;
@@ -34,22 +35,23 @@ public static class VoteUtils
 		return db.PollVotes.Include(pv => pv.PollOption).Where(pv => pv.Poll == poll && pv.UserId == userId).FirstOrDefault();
 	}
 
-	public static async Task UpdateEditorEmbed(IDiscordInteraction interaction, Poll poll, ulong messageId)
+	public static async Task UpdateEditorEmbed(IInteractionContext context, Poll poll, ulong messageId)
 	{
-		_ = await interaction.ModifyOriginalResponseAsync((msg) =>
+		EditorEmbed editorEmbed = new EditorEmbed(context, poll, messageId);
+		_ = await context.Interaction.ModifyOriginalResponseAsync((msg) =>
 		{
-			EditorVoteEmbed editorEmbed = new EditorVoteEmbed(interaction, poll, messageId);
 			msg.Embed = editorEmbed.Build();
 			msg.Components = editorEmbed.Component;
 		});
 	}
 
-	public static async Task UpdatePublishEmbed(SocketMessageComponent menu, DiscordSocketClient client, ulong messageId, Poll poll)
+	public static async Task UpdatePublishedEmbed(IInteractionContext context, DiscordSocketClient client, Poll poll)
 	{
-		IMessage pollMsg = await client.GetGuild((ulong)menu.GuildId).GetTextChannel((ulong)menu.ChannelId).GetMessageAsync(poll.DiscordMessageId);
-		_ = await client.GetGuild((ulong)menu.GuildId).GetTextChannel((ulong)menu.ChannelId).ModifyMessageAsync(poll.DiscordMessageId, (msg) =>
+		// All this stuff is needed to get the original poll embed
+		IMessage pollMsg = await client.GetGuild(context.Guild.Id).GetTextChannel(context.Channel.Id).GetMessageAsync(poll.DiscordMessageId);
+		_ = await client.GetGuild(context.Guild.Id).GetTextChannel(context.Channel.Id).ModifyMessageAsync(poll.DiscordMessageId, (msg) =>
 		{
-			PublishedVoteEmbed publishEmbed = new PublishedVoteEmbed(menu, client, poll, messageId)
+			PublishedVoteEmbed publishEmbed = new PublishedVoteEmbed(context, poll)
 			{
 				Footer = new EmbedFooterBuilder()
 				{
@@ -58,7 +60,16 @@ public static class VoteUtils
 				}
 			};
 			msg.Embed = publishEmbed.Build();
-			msg.Components = publishEmbed.Component;
+		});
+	}
+
+	public static async Task UpdateVotingEmbed(IInteractionContext context, Poll poll, ulong messageId, long? selectedOptionId)
+	{
+		VotingEmbed voteEmbed = new VotingEmbed(context, poll, messageId, selectedOptionId);
+		_ = await context.Interaction.ModifyOriginalResponseAsync((msg) =>
+		{
+			msg.Embed = voteEmbed.Build();
+			msg.Components = voteEmbed.Component;
 		});
 	}
 
@@ -79,5 +90,10 @@ public static class VoteUtils
 		await db.SaveAsync();
 
 		return newPoll;
+	}
+
+	public static ulong GetButtonMessageId(SocketInteractionContext context)
+	{
+		return (context.Interaction as SocketMessageComponent).Message.Id;
 	}
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord;
 using Discord.Interactions;
@@ -75,7 +76,7 @@ public partial class Moderation
 				}
 		}
 
-		DefaultEmbed embed = new DefaultEmbed("Bulk Ban", "🔨", this.Context.Interaction)
+		DefaultEmbed embed = new DefaultEmbed("Bulk Ban", "🔨", this.Context)
 		{
 			Description = (bannedUsers == 0 && failedBans == 0) ? "No users banned." : $"Banned **{bannedUsers}** user(s).{(failedBans > 0 ? $"\nFailed to ban **{failedBans}** user(s)." : "")}",
 		};

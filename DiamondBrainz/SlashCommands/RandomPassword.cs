@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord.Interactions;
 
@@ -10,7 +11,7 @@ using ScriptsLibV2.Util;
 
 namespace Diamond.API.SlashCommands
 {
-    public class RandomPassword : InteractionModuleBase<SocketInteractionContext>
+	public class RandomPassword : InteractionModuleBase<SocketInteractionContext>
     {
         [DSlashCommand("randompassword", "Generates a random password.")]
         public async Task RandomPasswordCommandAsync(
@@ -43,7 +44,7 @@ namespace Diamond.API.SlashCommands
 
             string password = ScriptsLibV2.Util.Utils.GeneratePassword(passwordSize, passwordCharacters.ToString());
 
-            DefaultEmbed embed = new DefaultEmbed("Password Generator", "🔐", Context.Interaction);
+            DefaultEmbed embed = new DefaultEmbed("Password Generator", "🔐", Context);
             embed.AddField("🔡 Allowed Characters", passwordCharacters.ToString());
             if (allowedCharacters.IsEmpty())
             {

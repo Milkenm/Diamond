@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord.Interactions;
 
@@ -9,7 +10,7 @@ using ScriptsLibV2.Util;
 
 namespace Diamond.API.SlashCommands
 {
-    public class Twemoji : InteractionModuleBase<SocketInteractionContext>
+	public class Twemoji : InteractionModuleBase<SocketInteractionContext>
     {
         [DSlashCommand("twemoji", "Gets the provided twemoji.")]
         public async Task TwemojiCommandAsync(
@@ -19,7 +20,7 @@ namespace Diamond.API.SlashCommands
         {
             await DeferAsync(!showEveryone);
 
-            DefaultEmbed embed = new DefaultEmbed("Twemoji", "😃", Context.Interaction);
+            DefaultEmbed embed = new DefaultEmbed("Twemoji", "😃", Context);
 
             try
             {

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 using Diamond.API.APIs;
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord;
 using Discord.Interactions;
@@ -30,7 +31,7 @@ public partial class Fun
 		meme ??= MemeAPI.GetRandomMeme();
 
 		// Base embed
-		DefaultEmbed embed = new DefaultEmbed("Meme", "😂", this.Context.Interaction)
+		DefaultEmbed embed = new DefaultEmbed("Meme", "😂", this.Context)
 		{
 			Title = meme.Title,
 			ImageUrl = meme.Url,

@@ -1,21 +1,24 @@
 ﻿using Diamond.API.Data;
+using Diamond.API.Util;
 
 using Discord;
+
+using ScriptsLibV2.Extensions;
 
 namespace Diamond.API.SlashCommands.VotePoll.Embeds;
 public abstract class BaseVoteEmbed : DefaultEmbed
 {
-	public BaseVoteEmbed(IDiscordInteraction interaction, Poll poll) : base($"Poll", "🗳️", interaction)
+	public BaseVoteEmbed(IInteractionContext context, Poll poll) : base($"Poll", "🗳️", context)
 	{
-		Title = poll.Title;
-		Description = poll.Description;
-		if (poll.ImageUrl != null)
+		this.Title = poll.Title;
+		this.Description = poll.Description;
+		if (!poll.ImageUrl.IsEmpty())
 		{
-			ImageUrl = poll.ImageUrl;
+			this.ImageUrl = poll.ImageUrl;
 		}
-		if (poll.ThumbnailUrl != null)
+		if (!poll.ThumbnailUrl.IsEmpty())
 		{
-			ThumbnailUrl = poll.ThumbnailUrl;
+			this.ThumbnailUrl = poll.ThumbnailUrl;
 		}
 	}
 }

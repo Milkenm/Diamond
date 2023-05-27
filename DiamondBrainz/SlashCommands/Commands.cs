@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord.Interactions;
 
@@ -34,7 +35,7 @@ public class Commands : InteractionModuleBase<SocketInteractionContext>
 			sb.Append($"🔷 **__{slashCommand.Name}__**\n🔹 {slashCommand.Description}");
 		}
 
-		DefaultEmbed embed = new DefaultEmbed("Commands", "🤖", this.Context.Interaction)
+		DefaultEmbed embed = new DefaultEmbed("Commands", "🤖", this.Context)
 		{
 			Description = sb.ToString(),
 		};

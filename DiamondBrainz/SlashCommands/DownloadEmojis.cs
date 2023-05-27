@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord;
 using Discord.Interactions;
@@ -32,7 +33,7 @@ namespace Diamond.API.SlashCommands
 			SocketGuild guild = this._client.GetGuild(this.Context.Guild.Id);
 			IReadOnlyCollection<GuildEmote> guildEmotes = guild.Emotes;
 
-			DefaultEmbed embed = new DefaultEmbed("Download Emojis", "😀", this.Context.Interaction);
+			DefaultEmbed embed = new DefaultEmbed("Download Emojis", "😀", this.Context);
 
 			if (guildEmotes.Count == 0)
 			{

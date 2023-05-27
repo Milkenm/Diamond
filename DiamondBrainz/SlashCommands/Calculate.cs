@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Util;
 
 using Discord.Interactions;
 
@@ -20,7 +21,7 @@ namespace Diamond.API.SlashCommands
 
 			Expression expression = new Expression(expressionString);
 
-			DefaultEmbed embed = new DefaultEmbed("Calculate", "🧮", Context.Interaction)
+			DefaultEmbed embed = new DefaultEmbed("Calculate", "🧮", Context)
 			{
 				Description = $"`Result:` {expression.Evaluate()}",
 			};
