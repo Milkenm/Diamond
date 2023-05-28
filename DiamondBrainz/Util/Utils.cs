@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using Discord;
 using Discord.Interactions;
+using Discord.WebSocket;
 
 using ScriptsLibV2.Extensions;
 
@@ -73,6 +74,50 @@ namespace Diamond.API.Util
 		{
 			await (await context.Interaction.GetOriginalResponseAsync()).DeleteAsync();
 		}
+
+		public static bool ChanceOf(double chance)
+		{
+			double randomDouble = RandomGenerator.GetInstance().Random.NextDouble();
+			return (chance / 100) <= Math.Round(randomDouble * 100, 2);
+		}
+
+		public static bool IsDebugChannel(string debugChannels, ulong? channelId)
+		{
+			return channelId != null && debugChannels.Split(',').Any(cId => cId == channelId.ToString());
+		}
+
+		public static ulong GetButtonMessageId(SocketInteractionContext context)
+		{
+			return (context.Interaction as SocketMessageComponent).Message.Id;
+		}
+	}
+
+	public static class ExtensionUtils
+	{
+		#region DiamondClient
+		public static bool IsLoggedIn(this DiamondClient client)
+		{
+			return client.LoginState is LoginState.LoggedIn or LoginState.LoggingIn;
+		}
+
+		public static async Task BringToLifeAsync(this DiamondClient client, string token)
+		{
+			if (!client.IsLoggedIn())
+			{
+				await client.LoginAsync(TokenType.Bot, token);
+				await client.StartAsync();
+			}
+		}
+
+		public static async Task TakeLifeAsync(this DiamondClient client)
+		{
+			if (client.IsLoggedIn())
+			{
+				await client.StopAsync();
+				await client.LogoutAsync();
+			}
+		}
+		#endregion
 	}
 
 	public class SearchMatchInfo<T>

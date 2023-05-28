@@ -8,60 +8,62 @@ using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 
-namespace Diamond.API.SlashCommands;
-public class XMention : InteractionModuleBase<SocketInteractionContext>
+namespace Diamond.API.SlashCommands
 {
-	[MessageCommand("X-Mention")]
-	public async Task XmentionCommandAsync(IMessage message)
+	public class XMention : InteractionModuleBase<SocketInteractionContext>
 	{
-		await this.DeferAsync(true);
-
-		IGuildUser guildAuthor = (IGuildUser)message.Author;
-
-		DefaultEmbed embed = new DefaultEmbed("X-Mention", "🔗", this.Context, message.GetJumpUrl())
+		[MessageCommand("X-Mention")]
+		public async Task XmentionCommandAsync(IMessage message)
 		{
-			Title = guildAuthor.DisplayName,
-			Description = Utils.GetMessageContent(message),
-		};
+			await this.DeferAsync(true);
 
-		List<SelectMenuOptionBuilder> textChannels = new List<SelectMenuOptionBuilder>();
-		foreach (SocketTextChannel textChannel in this.Context.Guild.TextChannels)
-		{
-			// Ignore current channel
-			if (textChannel == this.Context.Channel)
+			IGuildUser guildAuthor = (IGuildUser)message.Author;
+
+			DefaultEmbed embed = new DefaultEmbed("X-Mention", "🔗", this.Context, message.GetJumpUrl())
 			{
-				continue;
-			}
-			// Check permissions
-			ChannelPermissions userPermissions = (this.Context.User as SocketGuildUser).GetPermissions(textChannel);
-			ChannelPermissions botPermissions = this.Context.Guild.CurrentUser.GetPermissions(textChannel);
-			if (userPermissions.ViewChannel && userPermissions.SendMessages && botPermissions.ViewChannel && botPermissions.SendMessages)
+				Title = guildAuthor.DisplayName,
+				Description = Utils.GetMessageContent(message),
+			};
+
+			List<SelectMenuOptionBuilder> textChannels = new List<SelectMenuOptionBuilder>();
+			foreach (SocketTextChannel textChannel in this.Context.Guild.TextChannels)
 			{
-				textChannels.Add(new SelectMenuOptionBuilder(textChannel.Name, textChannel.Id.ToString()));
+				// Ignore current channel
+				if (textChannel == this.Context.Channel)
+				{
+					continue;
+				}
+				// Check permissions
+				ChannelPermissions userPermissions = (this.Context.User as SocketGuildUser).GetPermissions(textChannel);
+				ChannelPermissions botPermissions = this.Context.Guild.CurrentUser.GetPermissions(textChannel);
+				if (userPermissions.ViewChannel && userPermissions.SendMessages && botPermissions.ViewChannel && botPermissions.SendMessages)
+				{
+					textChannels.Add(new SelectMenuOptionBuilder(textChannel.Name, textChannel.Id.ToString()));
+				}
 			}
+
+			ComponentBuilder component = new ComponentBuilder()
+				.WithSelectMenu($"xmention_channel_selector:{message.Id}", textChannels, "Select a channel");
+
+			await embed.SendAsync(component.Build());
 		}
 
-		ComponentBuilder component = new ComponentBuilder()
-			.WithSelectMenu($"xmention_channel_selector:{message.Id}", textChannels, "Select a channel");
-
-		await embed.SendAsync(component.Build());
-	}
-
-	[ComponentInteraction("xmention_channel_selector:*")]
-	public async Task XChannelSelectionAsync(ulong messageId, string selectedChannelId)
-	{
-		await this.DeferAsync();
-		await (await this.Context.Interaction.GetOriginalResponseAsync()).DeleteAsync();
-
-		IMessage message = await this.Context.Channel.GetMessageAsync(messageId);
-
-		DefaultEmbed embed = new DefaultEmbed("X-Mention", "🔗", this.Context, message.GetJumpUrl())
+		[ComponentInteraction("xmention_channel_selector:*")]
+		public async Task XChannelSelectionAsync(ulong messageId, string selectedChannelId)
 		{
-			Title = (message.Author as IGuildUser).DisplayName,
-			Description = Utils.GetMessageContent(message),
-		};
+			await this.DeferAsync();
+			await (await this.Context.Interaction.GetOriginalResponseAsync()).DeleteAsync();
 
-		SocketGuildChannel channel = this.Context.Guild.GetChannel(Convert.ToUInt64(selectedChannelId));
-		await (channel as SocketTextChannel).SendMessageAsync(embed: embed.Build());
+			IMessage message = await this.Context.Channel.GetMessageAsync(messageId);
+
+			DefaultEmbed embed = new DefaultEmbed("X-Mention", "🔗", this.Context, message.GetJumpUrl())
+			{
+				Title = (message.Author as IGuildUser).DisplayName,
+				Description = Utils.GetMessageContent(message),
+			};
+
+			SocketGuildChannel channel = this.Context.Guild.GetChannel(Convert.ToUInt64(selectedChannelId));
+			await (channel as SocketTextChannel).SendMessageAsync(embed: embed.Build());
+		}
 	}
 }

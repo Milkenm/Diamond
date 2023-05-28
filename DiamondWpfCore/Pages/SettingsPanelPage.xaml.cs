@@ -35,7 +35,7 @@ public partial class SettingsPanelPage : Page
 		using DiamondContext db = new DiamondContext();
 
 #if DEBUG
-		checkBox_ignoreDebugChannel.Visibility = Visibility.Collapsed;
+		this.checkBox_ignoreDebugChannel.Visibility = Visibility.Collapsed;
 #else
 		this.checkBox_ignoreDebugChannel.IsChecked = Convert.ToBoolean(db.GetSetting(ConfigSetting.IgnoreDebugChannels, false.ToString()));
 #endif
@@ -55,7 +55,7 @@ public partial class SettingsPanelPage : Page
 	{
 		using DiamondContext db = new DiamondContext();
 
-		SettingsJSON settingsJson = GetSettingsObject();
+		SettingsJSON settingsJson = this.GetSettingsObject();
 
 		db.SetSetting(ConfigSetting.Token, settingsJson.Token).Wait();
 		db.SetSetting(ConfigSetting.OpenAI_API_Key, settingsJson.OpenaiApiKey).Wait();
@@ -67,9 +67,9 @@ public partial class SettingsPanelPage : Page
 #endif
 		db.SetSetting(ConfigSetting.DebugChannelsID, string.Join(",", settingsJson.DebugChannelsId)).Wait();
 
-		this._appWindow.ToggleUI(db.AreSettingsValid());
-
 		await db.SaveAsync();
+
+		this._appWindow.ToggleUI(db.AreSettingsValid());
 	}
 
 	private void ButtonLoadJson_Click(object sender, RoutedEventArgs e)
@@ -98,15 +98,15 @@ public partial class SettingsPanelPage : Page
 				this.passwordBox_riotApiKey.Password = settingsObject.RiotApiKey;
 				this.textBox_debugGuildId.Text = settingsObject.DebugGuildId;
 				this.checkBox_ignoreDebugChannel.IsChecked = settingsObject.IgnoreDebugChannels;
-				listBox_debugChannels.Items.Clear();
+				this.listBox_debugChannels.Items.Clear();
 				foreach (string debugChannelId in settingsObject.DebugChannelsId)
 				{
-					listBox_debugChannels.Items.Add(debugChannelId);
+					_ = this.listBox_debugChannels.Items.Add(debugChannelId);
 				}
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show($"There was a problem loading the settings file.\nError: {ex.Message}", "Error loading settings", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				_ = MessageBox.Show($"There was a problem loading the settings file.\nError: {ex.Message}", "Error loading settings", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
 	}
@@ -125,7 +125,7 @@ public partial class SettingsPanelPage : Page
 		// Save file
 		if (saveFileDialog.ShowDialog() == DialogResult.OK)
 		{
-			SettingsJSON settingsJson = GetSettingsObject();
+			SettingsJSON settingsJson = this.GetSettingsObject();
 
 			string jsonString = JsonConvert.SerializeObject(settingsJson, Formatting.Indented);
 
@@ -135,20 +135,19 @@ public partial class SettingsPanelPage : Page
 
 	private void button_addDebugChannel_Click(object sender, RoutedEventArgs e)
 	{
-		string text = textBox_debugChannelId.Text;
+		string text = this.textBox_debugChannelId.Text;
 		if (text.IsEmpty()) return;
-
-		if (ulong.TryParse(text, out ulong channelId))
+		if (ulong.TryParse(text, out _))
 		{
-			this.listBox_debugChannels.Items.Add(text);
-			textBox_debugChannelId.Clear();
+			_ = this.listBox_debugChannels.Items.Add(text);
+			this.textBox_debugChannelId.Clear();
 		}
 	}
 
 	private SettingsJSON GetSettingsObject()
 	{
 		List<string> debugChannelIds = new List<string>();
-		foreach (string debugChannelId in listBox_debugChannels.Items)
+		foreach (string debugChannelId in this.listBox_debugChannels.Items)
 		{
 			debugChannelIds.Add(debugChannelId);
 		}
@@ -167,13 +166,13 @@ public partial class SettingsPanelPage : Page
 
 	private void button_removeDebugChannel_Click(object sender, RoutedEventArgs e)
 	{
-		if (listBox_debugChannels.SelectedIndex == -1) return;
+		if (this.listBox_debugChannels.SelectedIndex == -1) return;
 
-		int selectedIndex = listBox_debugChannels.SelectedIndex;
-		listBox_debugChannels.Items.RemoveAt(selectedIndex);
+		int selectedIndex = this.listBox_debugChannels.SelectedIndex;
+		this.listBox_debugChannels.Items.RemoveAt(selectedIndex);
 		if (selectedIndex > 0)
 		{
-			listBox_debugChannels.SelectedIndex = selectedIndex - 1;
+			this.listBox_debugChannels.SelectedIndex = selectedIndex - 1;
 		}
 	}
 

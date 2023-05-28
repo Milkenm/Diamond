@@ -22,7 +22,7 @@ namespace Diamond.API.SlashCommands.Fun
 			using (WebClient client = new WebClient())
 			using (Stream stream = client.OpenRead("https://cataas.com/cat"))
 			{
-				long id = new Random().NextInt64();
+				long id = RandomGenerator.GetInstance().Random.NextInt64();
 				DefaultEmbed embed = new DefaultEmbed("Cat", "🐱", this.Context)
 				{
 					ImageUrl = $"attachment://cat_{id}.png",

@@ -16,9 +16,9 @@ namespace Diamond.API.SlashCommands
 {
 	public class DownloadEmojis : InteractionModuleBase<SocketInteractionContext>
 	{
-		private readonly DiscordSocketClient _client;
+		private readonly DiamondClient _client;
 
-		public DownloadEmojis(DiscordSocketClient client)
+		public DownloadEmojis(DiamondClient client)
 		{
 			this._client = client;
 		}

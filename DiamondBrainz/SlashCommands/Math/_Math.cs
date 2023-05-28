@@ -2,35 +2,36 @@
 
 using Discord.Interactions;
 
-namespace Diamond.API.SlashCommands.Math;
-
-[Group("math", "Math related commands.")]
-public partial class Math : InteractionModuleBase<SocketInteractionContext>
+namespace Diamond.API.SlashCommands.Math
 {
-	public (double Radians, double Degrees) ConvertAngle(double angle, AngleType angleType)
+	[Group("math", "Math related commands.")]
+	public partial class Math : InteractionModuleBase<SocketInteractionContext>
 	{
-		double radians = angle;
-		double degrees = angle;
-		if (angleType == AngleType.Degrees)
+		public (double Radians, double Degrees) ConvertAngle(double angle, AngleType angleType)
 		{
-			radians = angle * System.Math.PI / 180D;
+			double radians = angle;
+			double degrees = angle;
+			if (angleType == AngleType.Degrees)
+			{
+				radians = angle * System.Math.PI / 180D;
+			}
+			else
+			{
+				degrees = angle * (System.Math.PI / 180D);
+			}
+			return (radians, degrees);
 		}
-		else
+
+		public enum AngleType
 		{
-			degrees = angle * (System.Math.PI / 180D);
+			Degrees,
+			Radians,
 		}
-		return (radians, degrees);
-	}
 
-	public enum AngleType
-	{
-		Degrees,
-		Radians,
-	}
-
-	public Dictionary<AngleType, string> AngleSymbols = new Dictionary<AngleType, string>()
+		public Dictionary<AngleType, string> AngleSymbols = new Dictionary<AngleType, string>()
 	{
 		{ AngleType.Radians, "rad" },
 		{ AngleType.Degrees, "º" },
 	};
+	}
 }

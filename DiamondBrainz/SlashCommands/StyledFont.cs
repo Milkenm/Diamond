@@ -6,32 +6,33 @@ using Diamond.API.Util;
 
 using Discord.Interactions;
 
-namespace Diamond.API.SlashCommands;
-public class StyledFont : InteractionModuleBase<SocketInteractionContext>
+namespace Diamond.API.SlashCommands
 {
-	[DSlashCommand("styled-font", "Convert normal text to styled text.")]
-	public async Task IgfontCommandAsync(
-		[Summary("text", "The text to style.")] string text,
-		[Summary("font-style", "The font style to apply to the text.")] FontStyle fontStyle,
-		[ShowEveryone] bool showEveryone = false
-	)
+	public class StyledFont : InteractionModuleBase<SocketInteractionContext>
 	{
-		await DeferAsync(!showEveryone);
-
-		foreach (string letter in _fontMap.Keys)
+		[DSlashCommand("styled-font", "Convert normal text to styled text.")]
+		public async Task IgfontCommandAsync(
+			[Summary("text", "The text to style.")] string text,
+			[Summary("font-style", "The font style to apply to the text.")] FontStyle fontStyle,
+			[ShowEveryone] bool showEveryone = false
+		)
 		{
-			text = text.Replace(letter, _fontMap[letter][(int)fontStyle]);
+			await DeferAsync(!showEveryone);
+
+			foreach (string letter in _fontMap.Keys)
+			{
+				text = text.Replace(letter, _fontMap[letter][(int)fontStyle]);
+			}
+
+			DefaultEmbed embed = new DefaultEmbed("Styled Font", "🔤", Context)
+			{
+				Description = text,
+			};
+
+			await embed.SendAsync();
 		}
 
-		DefaultEmbed embed = new DefaultEmbed("Styled Font", "🔤", Context)
-		{
-			Description = text,
-		};
-
-		await embed.SendAsync();
-	}
-
-	private readonly Dictionary<string, string[]> _fontMap = new Dictionary<string, string[]>()
+		private readonly Dictionary<string, string[]> _fontMap = new Dictionary<string, string[]>()
 	{
 		// Lower-case
 		{ "a", new string[] { "🇦", "𝐚", "𝘢" } },
@@ -89,10 +90,11 @@ public class StyledFont : InteractionModuleBase<SocketInteractionContext>
 		{ "Z", new string[] { "🇿", "𝐙", "𝘡" } },
 	};
 
-	public enum FontStyle
-	{
-		[ChoiceDisplay("🇪🇲🇴🇯🇮")] Emoji,
-		[ChoiceDisplay("𝐁𝐨𝐥𝐝")] Bold,
-		[ChoiceDisplay("𝘐𝘵𝘢𝘭𝘪𝘤")] Italic,
+		public enum FontStyle
+		{
+			[ChoiceDisplay("🇪🇲🇴🇯🇮")] Emoji,
+			[ChoiceDisplay("𝐁𝐨𝐥𝐝")] Bold,
+			[ChoiceDisplay("𝘐𝘵𝘢𝘭𝘪𝘤")] Italic,
+		}
 	}
 }

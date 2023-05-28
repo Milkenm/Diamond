@@ -2,17 +2,18 @@
 
 using Discord.Interactions;
 
-namespace Diamond.API.SlashCommands.World;
-
-[Group("world", "Real world related commands.")]
-public partial class World : InteractionModuleBase<SocketInteractionContext>
+namespace Diamond.API.SlashCommands.World
 {
-	private readonly OpenMeteoGeocoding _openMeteoGeocoding;
-	private readonly OpenMeteoWeather _openMeteoWeather;
-
-	public World(OpenMeteoGeocoding openMeteoGeocoding, OpenMeteoWeather openMeteoWeather)
+	[Group("world", "Real world related commands.")]
+	public partial class World : InteractionModuleBase<SocketInteractionContext>
 	{
-		this._openMeteoGeocoding = openMeteoGeocoding;
-		this._openMeteoWeather = openMeteoWeather;
+		private readonly OpenMeteoGeocoding _openMeteoGeocoding;
+		private readonly OpenMeteoWeather _openMeteoWeather;
+
+		public World(OpenMeteoGeocoding openMeteoGeocoding, OpenMeteoWeather openMeteoWeather)
+		{
+			this._openMeteoGeocoding = openMeteoGeocoding;
+			this._openMeteoWeather = openMeteoWeather;
+		}
 	}
 }

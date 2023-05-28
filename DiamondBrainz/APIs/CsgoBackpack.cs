@@ -74,36 +74,10 @@ namespace Diamond.API.APIs
 				{
 					// Attempt to load from database
 					string key = $"CSGO_ItemsList_{currency.ToString().ToUpper()}";
-					/*CacheRecord cacheRecord = db.Cache.Where(cr => cr.Key == key).FirstOrDefault();*/
 					string? itemsListJson = null;
-					/*if (cacheRecord != null)
-					{
-						if (cacheRecord.UpdatedAt >= currentUnix - 21600L) // 6 hours
-						{
-							itemsListJson = cacheRecord.Value.ToObject<string>();
-						}
-					}*/
-					/*if (itemsListJson == null)
-					{*/
 					// Download from API
 					Debug.WriteLine("Downloading JSON for currency: " + currency.ToString());
 					itemsListJson = await RequestUtils.GetAsync($"http://csgobackpack.net/api/GetItemsList/v2/?currency={currency.ToString().ToLower()}");
-					/*	if (cacheRecord != null)
-						{
-							cacheRecord.Value = itemsListJson.ToByteArray();
-							cacheRecord.UpdatedAt = currentUnix;
-						}
-						else
-						{
-							db.Cache.Add(new CacheRecord()
-							{
-								Key = key,
-								Value = itemsListJson.ToByteArray(),
-								UpdatedAt = currentUnix,
-							});
-						}
-						await db.SaveAsync();
-					}*/
 					Debug.WriteLine("Deserializing");
 					CsgoBackpackItemsList itemsList = JsonConvert.DeserializeObject<CsgoBackpackItemsList>(itemsListJson);
 					if (!itemsList.Success)

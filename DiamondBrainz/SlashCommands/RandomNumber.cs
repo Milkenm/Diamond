@@ -29,7 +29,7 @@ namespace Diamond.API.SlashCommands
 
             DefaultEmbed embed = new DefaultEmbed("Random Number", "🎲", Context);
 
-            long randomNumber = new Random().Next(min, max);
+            long randomNumber = RandomGenerator.GetInstance().Random.Next(min, max);
             embed.AddField("🔽 Minimum", min, true);
             embed.AddField("🔼 Maximum", max, true);
             embed.WithDescription($"`Generated Number:` {NumberToEmoji(randomNumber)}\n`Text:` {randomNumber}{(swapped ? "\n\n:warning: **__Note__:** 'min' and 'max' have been swapped because\nthe minimum value was larger than the maximum one." : "")}");

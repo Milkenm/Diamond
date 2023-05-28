@@ -1,10 +1,12 @@
 ﻿using System;
 
-namespace Diamond.API.ConsoleCommands;
-public partial class ConsoleCommandsManager
+namespace Diamond.API.ConsoleCommands
 {
-	public class ConsoleCommandNotFoundException : Exception
+	public partial class ConsoleCommandsManager
 	{
-		public ConsoleCommandNotFoundException(string commandName) : base($"The command '{commandName}' was not found.") { }
+		public class ConsoleCommandNotFoundException : Exception
+		{
+			public ConsoleCommandNotFoundException(string commandName) : base($"The command '{commandName}' was not found.") { }
+		}
 	}
 }

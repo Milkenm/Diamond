@@ -15,20 +15,20 @@ namespace Diamond.API.SlashCommands.Server
 				[ShowEveryone] bool showEveryone = false
 		)
 		{
-			await DeferAsync(!showEveryone);
+			await this.DeferAsync(!showEveryone);
 
-			string guildIconUrl = Context.Guild.IconUrl.Contains("a_") ? Context.Guild.IconUrl.Replace(".jpg", ".gif") : Context.Guild.IconUrl;
+			string guildIconUrl = this.Context.Guild.IconUrl.Contains("a_") ? this.Context.Guild.IconUrl.Replace(".jpg", ".gif") : this.Context.Guild.IconUrl;
 
-			DefaultEmbed embed = new DefaultEmbed("Server Info", "🏡", Context);
-			embed.AddField("👤 Owner", Context.Guild.Owner.Mention, true);
-			embed.AddField("📆 Creation date", Context.Guild.CreatedAt.ToString("dd/MM/yyyy, HH:mm:ss"), true);
-			embed.AddField("🔗 Vanity URL", Context.Guild.VanityURLCode.IsEmpty() ? "None" : Context.Guild.VanityURLCode, true);
-			embed.AddField("👥 Members", Context.Guild.MemberCount, true);
-			embed.AddField("🏷️ Roles", Context.Guild.Roles.Count, true);
-			embed.WithThumbnailUrl($"{guildIconUrl}?size=512");
-			embed.WithImageUrl(Context.Guild.DiscoverySplashUrl);
+			DefaultEmbed embed = new DefaultEmbed("Server Info", "🏡", this.Context);
+			_ = embed.AddField("👤 Owner", this.Context.Guild.Owner.Mention, true);
+			_ = embed.AddField("📆 Creation date", this.Context.Guild.CreatedAt.ToString("dd/MM/yyyy, HH:mm:ss"), true);
+			_ = embed.AddField("🔗 Vanity URL", this.Context.Guild.VanityURLCode.IsEmpty() ? "None" : this.Context.Guild.VanityURLCode, true);
+			_ = embed.AddField("👥 Members", this.Context.Guild.MemberCount, true);
+			_ = embed.AddField("🏷️ Roles", this.Context.Guild.Roles.Count, true);
+			_ = embed.WithThumbnailUrl($"{guildIconUrl}?size=512");
+			_ = embed.WithImageUrl(this.Context.Guild.DiscoverySplashUrl);
 
-			await embed.SendAsync();
+			_ = await embed.SendAsync();
 		}
 
 		private bool RemoteFileExists(string url)
@@ -43,7 +43,7 @@ namespace Diamond.API.SlashCommands.Server
 				HttpWebResponse response = request.GetResponse() as HttpWebResponse;
 				//Returns TRUE if the Status code == 200
 				response.Close();
-				return (response.StatusCode == HttpStatusCode.OK);
+				return response.StatusCode == HttpStatusCode.OK;
 			}
 			catch
 			{

@@ -5,6 +5,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
+using Diamond.API;
+
 using Discord;
 using Discord.WebSocket;
 
@@ -18,9 +20,9 @@ namespace Diamond.GUI.Pages
 	{
 		private readonly List<SocketTextChannel> _validTextChannels = new List<SocketTextChannel>();
 
-		private readonly DiscordSocketClient _client;
+		private readonly DiamondClient _client;
 
-		public GuildsPanelPage(DiscordSocketClient client)
+		public GuildsPanelPage(DiamondClient client)
 		{
 			InitializeComponent();
 

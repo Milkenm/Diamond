@@ -2,15 +2,16 @@
 
 using Discord.Interactions;
 
-namespace Diamond.API.SlashCommands.LeagueOfLegends;
-
-[Group("lol", "League of Legends related commands.")]
-public partial class LeagueOfLegends : InteractionModuleBase<SocketInteractionContext>
+namespace Diamond.API.SlashCommands.LeagueOfLegends
 {
-	private readonly LeagueOfLegendsDataDragonAPI _dataDragonApi;
-
-	public LeagueOfLegends(LeagueOfLegendsDataDragonAPI leagueOfLegendsAPI)
+	[Group("lol", "League of Legends related commands.")]
+	public partial class LeagueOfLegends : InteractionModuleBase<SocketInteractionContext>
 	{
-		this._dataDragonApi = leagueOfLegendsAPI;
+		private readonly LeagueOfLegendsDataDragonAPI _dataDragonApi;
+
+		public LeagueOfLegends(LeagueOfLegendsDataDragonAPI leagueOfLegendsAPI)
+		{
+			this._dataDragonApi = leagueOfLegendsAPI;
+		}
 	}
 }

@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Windows;
+
+using Diamond.API;
 using Diamond.API.APIs;
 using Diamond.API.ConsoleCommands;
-using Diamond.API.Data;
-using Diamond.API.Util;
 using Diamond.GUI.Pages;
-
-using Discord;
-using Discord.Interactions;
-using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,17 +19,10 @@ namespace Diamond.GUI
 
 		public App()
 		{
-			DiscordSocketClient client = new DiscordSocketClient(new DiscordSocketConfig()
-			{
-				LogLevel = LogSeverity.Info,
-				GatewayIntents = GatewayIntents.All,
-			});
-
 			this._serviceProvider = new ServiceCollection()
 				// Bot stuff
 				.AddSingleton(this)
-				.AddSingleton(client)
-				.AddSingleton<InteractionService>()
+				.AddSingleton<DiamondClient>()
 				// Tabs (Windows)
 				.AddSingleton<AppWindow>()
 				.AddSingleton<MainPanelPage>()

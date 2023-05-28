@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 
 using Diamond.API.Data;
-using Diamond.API.SlashCommands.VotePoll.Embeds;
 
 using Discord;
 using Discord.Interactions;

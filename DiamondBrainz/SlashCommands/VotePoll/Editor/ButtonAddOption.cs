@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 
 using Diamond.API.Data;
-using Diamond.API.SlashCommands.VotePoll.Embeds;
 
 using Discord;
 using Discord.Interactions;
@@ -27,34 +26,6 @@ namespace Diamond.API.SlashCommands.VotePoll
 		}
 
 		/// <summary>
-		/// Adds a <see cref="PollOption"/> to the <see cref="Poll"/> and refreshes the <see cref="EditorEmbed"/>.
-		/// <para>(Called when a user submits the <see cref="NewOptionModal"/>)</para>
-		/// </summary>
-		/// <param name="messageId">The ID of the message containing the button that called the modal.</param>
-		/// <param name="modal">The submitted modal.</param>
-		[ModalInteraction("modal_poll_add_option:*")]
-		public async Task PollAddOptionModalHandler(ulong messageId, NewOptionModal modal)
-		{
-			await this.DeferAsync();
-			using DiamondContext db = new DiamondContext();
-
-			Poll poll = VoteUtils.GetPollByMessageId(db, messageId);
-			PollOption newOption = new PollOption()
-			{
-				TargetPoll = poll,
-				Name = modal.OptionName,
-			};
-			if (!modal.OptionDescription.IsEmpty())
-			{
-				newOption.Description = modal.OptionDescription;
-			}
-			_ = db.Add(newOption);
-			_ = await db.SaveChangesAsync();
-
-			await VoteUtils.UpdateEditorEmbed(this.Context, poll, messageId);
-		}
-
-		/// <summary>
 		/// The modal used to add a new option to the poll.
 		/// </summary>
 		public class NewOptionModal : IModal
@@ -76,6 +47,34 @@ namespace Diamond.API.SlashCommands.VotePoll
 			[InputLabel("Description")]
 			[ModalTextInput("field_description", TextInputStyle.Paragraph, "New option description...")]
 			public string OptionDescription { get; set; }
+		}
+
+		/// <summary>
+		/// Adds a <see cref="PollOption"/> to the <see cref="Poll"/> and refreshes the <see cref="EditorEmbed"/>.
+		/// <para>(Called when a user submits the <see cref="NewOptionModal"/>)</para>
+		/// </summary>
+		/// <param name="messageId">The ID of the message containing the button that called the modal.</param>
+		/// <param name="modal">The submitted modal.</param>
+		[ModalInteraction("modal_poll_add_option:*")]
+		public async Task PollAddOptionModalHandler(ulong messageId, NewOptionModal modal)
+		{
+			await this.DeferAsync();
+			using DiamondContext db = new DiamondContext();
+
+			Poll poll = VoteUtils.GetPollByMessageId(db, messageId);
+			PollOption newOption = new PollOption()
+			{
+				TargetPoll = poll,
+				Name = modal.OptionName,
+			};
+			if (!modal.OptionDescription.IsEmpty())
+			{
+				newOption.Description = modal.OptionDescription;
+			}
+			_ = db.PollOptions.Add(newOption);
+			_ = await db.SaveChangesAsync();
+
+			await VoteUtils.UpdateEditorEmbed(this.Context, poll, messageId);
 		}
 	}
 }

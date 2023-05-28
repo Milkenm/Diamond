@@ -1,12 +1,14 @@
 ﻿using System;
 
-namespace Diamond.API.ConsoleCommands.Attributes;
-public class CommandInfoAttribute : Attribute
+namespace Diamond.API.ConsoleCommands
 {
-    public string CommandName { get; private set; }
+	public class CommandInfoAttribute : Attribute
+	{
+		public string CommandName { get; private set; }
 
-    public CommandInfoAttribute(string commandName)
-    {
-        CommandName = commandName;
-    }
+		public CommandInfoAttribute(string commandName)
+		{
+			this.CommandName = commandName;
+		}
+	}
 }

@@ -1,15 +1,15 @@
-﻿using Diamond.API.Util;
-using Discord.Interactions;
+﻿using Discord.Interactions;
 
-namespace Diamond.API.SlashCommands.Music;
-
-[Group("music", "Music related commands.")]
-public partial class Music : InteractionModuleBase<SocketInteractionContext>
+namespace Diamond.API.SlashCommands.Music
 {
-	private readonly Lava _lava;
-
-	public Music(Lava lava)
+    [Group("music", "Music related commands.")]
+	public partial class Music : InteractionModuleBase<SocketInteractionContext>
 	{
-		this._lava = lava;
+		private readonly Lava _lava;
+
+		public Music(Lava lava)
+		{
+			this._lava = lava;
+		}
 	}
 }

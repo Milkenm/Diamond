@@ -6,8 +6,10 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
+using Diamond.API;
 using Diamond.API.ConsoleCommands;
 using Diamond.API.Data;
+using Diamond.API.Util;
 
 using Discord;
 using Discord.WebSocket;
@@ -22,10 +24,10 @@ namespace Diamond.GUI.Pages;
 /// </summary>
 public partial class MainPanelPage : Page
 {
-	private readonly DiscordSocketClient _client;
+	private readonly DiamondClient _client;
 	private readonly ConsoleCommandsManager _consoleCommandsManager;
 
-	public MainPanelPage(DiscordSocketClient client, ConsoleCommandsManager consoleCommandsManager)
+	public MainPanelPage(DiamondClient client, ConsoleCommandsManager consoleCommandsManager)
 	{
 		this._client = client;
 		this._consoleCommandsManager = consoleCommandsManager;

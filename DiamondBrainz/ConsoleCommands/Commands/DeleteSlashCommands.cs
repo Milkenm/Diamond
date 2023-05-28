@@ -1,27 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Diamond.API.ConsoleCommands.Attributes;
-
 using Discord.Rest;
-using Discord.WebSocket;
 
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Diamond.API.ConsoleCommands.Commands
+namespace Diamond.API.ConsoleCommands
 {
 	[CommandInfo("delete-slash-commands")]
 	public class DeleteSlashCommands : IConsoleCommand
 	{
-		private readonly IServiceProvider _serviceProvider;
+		private readonly DiamondClient _client;
 
-		private readonly DiscordSocketClient _client;
-
-		public DeleteSlashCommands(IServiceProvider _serviceProvider)
+		public DeleteSlashCommands(DiamondClient client)
 		{
-			this._serviceProvider = _serviceProvider;
-
-			this._client = _serviceProvider.GetRequiredService<DiscordSocketClient>();
+			this._client = client;
 		}
 
 		public Func<string[], string> Function => new Func<string[], string>((str) =>
@@ -31,7 +22,7 @@ namespace Diamond.API.ConsoleCommands.Commands
 			int removedCommands = 0;
 			foreach (RestGlobalCommand cmd in commands)
 			{
-				cmd.DeleteAsync().GetAwaiter();
+				_ = cmd.DeleteAsync().GetAwaiter();
 				removedCommands++;
 			}
 			return $"Removed {removedCommands} commands.";

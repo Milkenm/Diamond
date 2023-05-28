@@ -1,9 +1,11 @@
 ﻿using System;
 
-namespace Diamond.API.ConsoleCommands;
-public interface IConsoleCommand
+namespace Diamond.API.ConsoleCommands
 {
-	public Func<string[], string> Function { get; }
+	public interface IConsoleCommand
+	{
+		public Func<string[], string> Function { get; }
 
-	public string RunCommand(string[] args) => this.Function.Invoke(args);
+		public string RunCommand(string[] args) => this.Function.Invoke(args);
+	}
 }

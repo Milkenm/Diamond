@@ -2,15 +2,16 @@
 
 using Discord.Interactions;
 
-namespace Diamond.API.SlashCommands.CSGO;
-
-[Group("csgo", "CS:GO related commands.")]
-public partial class Csgo : InteractionModuleBase<SocketInteractionContext>
+namespace Diamond.API.SlashCommands.CSGO
 {
-	private readonly CsgoBackpack _csgoBackpack;
-
-	public Csgo(CsgoBackpack csgoBackpack)
+	[Group("csgo", "CS:GO related commands.")]
+	public partial class Csgo : InteractionModuleBase<SocketInteractionContext>
 	{
-		this._csgoBackpack = csgoBackpack;
+		private readonly CsgoBackpack _csgoBackpack;
+
+		public Csgo(CsgoBackpack csgoBackpack)
+		{
+			this._csgoBackpack = csgoBackpack;
+		}
 	}
 }
