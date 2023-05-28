@@ -38,6 +38,7 @@ namespace Diamond.GUI
 				.AddSingleton<OpenMeteoWeather>()
 				.AddSingleton<LeagueOfLegendsDataDragonAPI>()
 				.AddSingleton<LeagueOfLegendsAPI>()
+				.AddSingleton<McsrvstatAPI>()
 				// Lavalink
 				.AddSingleton<Lava>()
 				// Console commands
