@@ -35,6 +35,7 @@ namespace Diamond.API.APIs
 		private readonly Dictionary<string, List<SearchMatchInfo<DbCsgoItem>>> _searchCacheMap = new Dictionary<string, List<SearchMatchInfo<DbCsgoItem>>>();
 
 		public bool AreItemsLoaded { get; private set; }
+		public bool IsLoadingItems { get; private set; }
 
 		public event CsgoItemsStateChanged OnCheckingForUpdate;
 		public event CsgoItemsStateChanged OnUpdateCancelled;
@@ -45,6 +46,9 @@ namespace Diamond.API.APIs
 		{
 			return Task.Run(async () =>
 			{
+				if (this.IsLoadingItems) return;
+				this.IsLoadingItems = true;
+
 				OnCheckingForUpdate?.Invoke();
 				using DiamondContext db = new DiamondContext();
 
@@ -58,6 +62,7 @@ namespace Diamond.API.APIs
 					long lastUpdate = Convert.ToInt64(db.GetSetting(DiamondContext.ConfigSetting.CsgoItemsLoadUnix));
 					if (lastUpdate + (KEEP_RESULTS_FOR_MINUTES * 60) >= currentUnix)
 					{
+						this.IsLoadingItems = false;
 						this.AreItemsLoaded = true;
 						OnUpdateCancelled?.Invoke();
 						return;
@@ -160,6 +165,7 @@ namespace Diamond.API.APIs
 				Debug.WriteLine($"Saved the remaining {remainingRecords} records.");
 				Debug.WriteLine("Done!");
 
+				this.IsLoadingItems = false;
 				this.AreItemsLoaded = true;
 				OnUpdateEnd?.Invoke();
 			});
