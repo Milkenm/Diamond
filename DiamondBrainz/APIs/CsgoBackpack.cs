@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
+using System.Threading.Tasks;
 
 using Diamond.API.Data;
 using Diamond.API.Schemes.CsgoBackpack;
@@ -41,28 +41,35 @@ namespace Diamond.API.APIs
 		public event CsgoItemsStateChanged OnUpdateStart;
 		public event CsgoItemsStateChanged OnUpdateEnd;
 
-		public void LoadItems()
+		public Task LoadItems(bool forceUpdate = false)
 		{
-			new Thread(async () =>
+			return Task.Run(async () =>
 			{
 				OnCheckingForUpdate?.Invoke();
 				using DiamondContext db = new DiamondContext();
 
 				this.AreItemsLoaded = false;
-
-				Debug.WriteLine("Checking last refresh unix.");
-				// Check if items need to be updated
 				long currentUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-				long lastUpdate = Convert.ToInt64(db.GetSetting(DiamondContext.ConfigSetting.CsgoItemsLoadUnix));
-				if (lastUpdate + (KEEP_RESULTS_FOR_MINUTES * 60) >= currentUnix)
+
+				if (!forceUpdate)
 				{
-					this.AreItemsLoaded = true;
-					OnUpdateCancelled?.Invoke();
-					return;
+					Debug.WriteLine("Checking last refresh unix...");
+					// Check if items need to be updated
+					long lastUpdate = Convert.ToInt64(db.GetSetting(DiamondContext.ConfigSetting.CsgoItemsLoadUnix));
+					if (lastUpdate + (KEEP_RESULTS_FOR_MINUTES * 60) >= currentUnix)
+					{
+						this.AreItemsLoaded = true;
+						OnUpdateCancelled?.Invoke();
+						return;
+					}
+				}
+				else
+				{
+					Debug.WriteLine("Forcing CS:GO items update...");
 				}
 
 				OnUpdateStart?.Invoke();
-				Debug.WriteLine("Clearing database");
+				Debug.WriteLine("Clearing database...");
 				// Clear database and items map
 				db.ClearTable("CsgoItemPrices");
 				db.ClearTable("CsgoItems");
@@ -77,7 +84,7 @@ namespace Diamond.API.APIs
 					string? itemsListJson = null;
 					// Download from API
 					Debug.WriteLine("Downloading JSON for currency: " + currency.ToString());
-					itemsListJson = await RequestUtils.GetAsync($"http://csgobackpack.net/api/GetItemsList/v2/?currency={currency.ToString().ToLower()}");
+					itemsListJson = RequestUtils.GetAsync($"http://csgobackpack.net/api/GetItemsList/v2/?currency={currency.ToString().ToLower()}").GetAwaiter().GetResult();
 					Debug.WriteLine("Deserializing");
 					CsgoBackpackItemsList itemsList = JsonConvert.DeserializeObject<CsgoBackpackItemsList>(itemsListJson);
 					if (!itemsList.Success)
@@ -95,6 +102,7 @@ namespace Diamond.API.APIs
 						}
 					}
 
+					int i = 0;
 					// Store the items in the database
 					Debug.WriteLine("Storing items in the database");
 					foreach (KeyValuePair<string, CsgoItemInfo> item in itemsList.ItemsList)
@@ -138,16 +146,23 @@ namespace Diamond.API.APIs
 								_ = db.CsgoItemPrices.Add(newPrice);
 							}
 						}
+						i++;
+						if (i % 3000 == 0)
+						{
+							Debug.WriteLine($"Saving to database");
+							_ = await db.SaveChangesAsync();
+							Debug.WriteLine($"Saved {i} items");
+						}
 					}
 				}
-				Debug.WriteLine("Saving to database");
-				await db.SetSetting(DiamondContext.ConfigSetting.CsgoItemsLoadUnix, currentUnix);
-				_ = await db.SaveChangesAsync();
-				Debug.WriteLine("Saved");
+				await db.SetSettingAsync(DiamondContext.ConfigSetting.CsgoItemsLoadUnix, currentUnix);
+				int remainingRecords = await db.SaveChangesAsync();
+				Debug.WriteLine($"Saved the remaining {remainingRecords} records.");
+				Debug.WriteLine("Done!");
 
 				this.AreItemsLoaded = true;
 				OnUpdateEnd?.Invoke();
-			}).Start();
+			});
 		}
 
 		public List<DbCsgoItemPrice> GetItemPrices(DbCsgoItem csgoItem, Currency currency)

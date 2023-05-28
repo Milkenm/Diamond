@@ -57,15 +57,15 @@ public partial class SettingsPanelPage : Page
 
 		SettingsJSON settingsJson = this.GetSettingsObject();
 
-		db.SetSetting(ConfigSetting.Token, settingsJson.Token).Wait();
-		db.SetSetting(ConfigSetting.OpenAI_API_Key, settingsJson.OpenaiApiKey).Wait();
-		db.SetSetting(ConfigSetting.NightAPI_API_Key, settingsJson.NightapiApiKey).Wait();
-		db.SetSetting(ConfigSetting.RiotAPI_Key, settingsJson.RiotApiKey).Wait();
-		db.SetSetting(ConfigSetting.DebugGuildID, settingsJson.DebugGuildId).Wait();
+		db.SetSettingAsync(ConfigSetting.Token, settingsJson.Token).Wait();
+		db.SetSettingAsync(ConfigSetting.OpenAI_API_Key, settingsJson.OpenaiApiKey).Wait();
+		db.SetSettingAsync(ConfigSetting.NightAPI_API_Key, settingsJson.NightapiApiKey).Wait();
+		db.SetSettingAsync(ConfigSetting.RiotAPI_Key, settingsJson.RiotApiKey).Wait();
+		db.SetSettingAsync(ConfigSetting.DebugGuildID, settingsJson.DebugGuildId).Wait();
 #if RELEASE
-			db.SetSetting(ConfigSetting.IgnoreDebugChannels, settingsJson.IgnoreDebugChannels).Wait();
+			db.SetSettingAsync(ConfigSetting.IgnoreDebugChannels, settingsJson.IgnoreDebugChannels).Wait();
 #endif
-		db.SetSetting(ConfigSetting.DebugChannelsID, string.Join(",", settingsJson.DebugChannelsId)).Wait();
+		db.SetSettingAsync(ConfigSetting.DebugChannelsID, string.Join(",", settingsJson.DebugChannelsId)).Wait();
 
 		await db.SaveAsync();
 

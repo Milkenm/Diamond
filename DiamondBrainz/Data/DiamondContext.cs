@@ -103,7 +103,7 @@ namespace Diamond.API.Data
 			return this.GetSetting(setting) ?? defaultValue;
 		}
 
-		public async Task SetSetting(ConfigSetting setting, object value)
+		public async Task SetSettingAsync(ConfigSetting setting, object value)
 		{
 			string settingName = GetSettingString(setting);
 
@@ -126,6 +126,7 @@ namespace Diamond.API.Data
 					Value = stringValue,
 				});
 			}
+			_ = await this.SaveChangesAsync();
 		}
 
 		public void ClearTable(string tableName)

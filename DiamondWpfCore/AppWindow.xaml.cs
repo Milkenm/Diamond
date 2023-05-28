@@ -15,13 +15,14 @@ using Diamond.GUI.Pages;
 using Microsoft.Extensions.DependencyInjection;
 
 using Image = System.Windows.Controls.Image;
+using SUtils = ScriptsLibV2.Util.Utils;
 
 namespace Diamond.GUI
 {
-    /// <summary>
-    /// Interaction logic for AppWindow.xaml
-    /// </summary>
-    public partial class AppWindow : Window
+	/// <summary>
+	/// Interaction logic for AppWindow.xaml
+	/// </summary>
+	public partial class AppWindow : Window
 	{
 		private readonly DiamondClient _client;
 		private readonly IServiceProvider _serviceProvider;
@@ -60,7 +61,7 @@ namespace Diamond.GUI
 			csgoBackpack.OnUpdateCancelled += new CsgoItemsStateChanged(async () => await mainPanel.LogAsync("No update needed for CS:GO items!"));
 			csgoBackpack.OnUpdateStart += new CsgoItemsStateChanged(async () => await mainPanel.LogAsync("Downloading CS:GO items..."));
 			csgoBackpack.OnUpdateEnd += new CsgoItemsStateChanged(async () => await mainPanel.LogAsync("CS:GO items loaded!"));
-			csgoBackpack.LoadItems();
+			_ = csgoBackpack.LoadItems(SUtils.IsDebugEnabled());
 
 			// Initalize bot
 			this._client.Initialize();
