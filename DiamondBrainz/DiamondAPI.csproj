@@ -4,6 +4,12 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <RootNamespace>Diamond.API</RootNamespace>
     <ApplicationIcon>Diamond Icon 2 (round).ico</ApplicationIcon>
+    <Copyright>Milkenm</Copyright>
+    <RepositoryUrl>https://github.com/Milkenm/Diamond</RepositoryUrl>
+    <AssemblyVersion>1.0</AssemblyVersion>
+    <FileVersion>${AssemblyVersion}</FileVersion>
+    <Company>Milkenm</Company>
+    <Title>Diamond API</Title>
   </PropertyGroup>
 
   <ItemGroup>

@@ -23,6 +23,7 @@ namespace Diamond.API.SlashCommands
 			this._client = client;
 		}
 
+		[EnabledInDm(false)]
 		[DSlashCommand("download-emojis", "Downloads the custom emojis from a server.")]
 		public async Task DownloadEmojisCommandAsync(
 			[ShowEveryone] bool showEveryone = false

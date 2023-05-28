@@ -2,7 +2,8 @@
 
 namespace Diamond.API.SlashCommands.Music
 {
-    [Group("music", "Music related commands.")]
+	[EnabledInDm(false)]
+	[Group("music", "Music related commands.")]
 	public partial class Music : InteractionModuleBase<SocketInteractionContext>
 	{
 		private readonly Lava _lava;

@@ -12,7 +12,7 @@ namespace Diamond.API.SlashCommands
 	{
 		[DSlashCommand("info", "Shows info about the bot.")]
 		public async Task InfoCommandAsync(
-				[ShowEveryone] bool showEveryone = false
+			[ShowEveryone] bool showEveryone = false
 		)
 		{
 			await this.DeferAsync(!showEveryone);
@@ -22,12 +22,12 @@ namespace Diamond.API.SlashCommands
 			long msDelay = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - this.Context.Interaction.CreatedAt.ToUnixTimeMilliseconds();
 
 			DefaultEmbed embed = new DefaultEmbed("Info", "ℹ️", this.Context);
-			embed.AddField("💻 Developer", "<@222114807887691777>");
-			embed.AddField("🏷️ Version", $"v1.0", true);
-			embed.AddField("⏰ Delay", $"{msDelay}ms", true);
-			embed.WithThumbnailUrl(avatar);
+			_ = embed.AddField("💻 Developer", "<@222114807887691777>");
+			_ = embed.AddField("🏷 Version", $"v" + , true);
+			_ = embed.AddField("⏰ Ping", $"{msDelay}ms", true);
+			_ = embed.WithThumbnailUrl(avatar);
 
-			await embed.SendAsync();
+			_ = await embed.SendAsync();
 		}
 	}
 }

@@ -26,6 +26,7 @@ namespace Diamond.API.SlashCommands
 			"(￢‿￢ )",
 		};
 
+		[EnabledInDm(false)]
 		[DSlashCommand("someone", "Selects a random user.")]
 		public async Task SomeoneCommandAsync(
 			[Summary("with-role", "Only select users that have a specific role.")] IRole withRole = null,

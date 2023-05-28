@@ -12,6 +12,8 @@ namespace Diamond.API.SlashCommands
 {
 	public class XMention : InteractionModuleBase<SocketInteractionContext>
 	{
+
+		[EnabledInDm(false)]
 		[MessageCommand("X-Mention")]
 		public async Task XmentionCommandAsync(IMessage message)
 		{

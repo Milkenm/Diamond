@@ -16,6 +16,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 			this._client = client;
 		}
 
+		[EnabledInDm(false)]
 		[DSlashCommand("poll", "Create a vote poll.")]
 		public async Task VoteCommandAsync(
 			[Summary("title", "The title of the poll.")][MinLength(1)][MaxLength(250)] string title,

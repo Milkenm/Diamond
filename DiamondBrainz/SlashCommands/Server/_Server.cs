@@ -8,6 +8,7 @@ using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.Server
 {
+	[EnabledInDm(false)]
 	[Group("server", "Info about the server or server members.")]
 	public partial class Server : InteractionModuleBase<SocketInteractionContext> { }
 }
