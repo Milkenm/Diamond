@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
@@ -18,12 +19,14 @@ namespace Diamond.API.SlashCommands.Server
 			await this.DeferAsync(!showEveryone);
 
 			string guildIconUrl = this.Context.Guild.IconUrl.Contains("a_") ? this.Context.Guild.IconUrl.Replace(".jpg", ".gif") : this.Context.Guild.IconUrl;
+			await this.Context.Guild.DownloadUsersAsync();
 
-			DefaultEmbed embed = new DefaultEmbed("Server Info", "🏡", this.Context);
+			DefaultEmbed embed = new DefaultEmbed("Guild Info", "🏡", this.Context);
 			_ = embed.AddField("👤 Owner", this.Context.Guild.Owner.Mention, true);
 			_ = embed.AddField("📆 Creation date", this.Context.Guild.CreatedAt.ToString("dd/MM/yyyy, HH:mm:ss"), true);
 			_ = embed.AddField("🔗 Vanity URL", this.Context.Guild.VanityURLCode.IsEmpty() ? "None" : this.Context.Guild.VanityURLCode, true);
-			_ = embed.AddField("👥 Members", this.Context.Guild.MemberCount, true);
+			_ = embed.AddField("👥 Members", this.Context.Guild.Users.Where(u => !u.IsBot).Count(), true);
+			_ = embed.AddField("🤖 Bots", this.Context.Guild.Users.Where(u => u.IsBot).Count(), true);
 			_ = embed.AddField("🏷️ Roles", this.Context.Guild.Roles.Count, true);
 			_ = embed.WithThumbnailUrl($"{guildIconUrl}?size=512");
 			_ = embed.WithImageUrl(this.Context.Guild.DiscoverySplashUrl);
