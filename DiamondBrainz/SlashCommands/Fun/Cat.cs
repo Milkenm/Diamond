@@ -12,7 +12,7 @@ namespace Diamond.API.SlashCommands.Fun
 {
 	public partial class Fun
 	{
-		[SlashCommand("cat", "Shows a random picture of a cat.")]
+		[DSlashCommand("cat", "Shows a random picture of a cat.")]
 		public async Task CatCommandAsync(
 			[ShowEveryone] bool showEveryone = false
 		)
