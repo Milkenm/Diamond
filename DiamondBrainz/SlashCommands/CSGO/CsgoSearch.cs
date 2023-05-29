@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-#if DEBUG
 using System.Diagnostics;
-#endif
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -21,6 +19,8 @@ using Discord.WebSocket;
 
 using ScriptsLibV2.Extensions;
 
+using SUtils = ScriptsLibV2.Util.Utils;
+
 namespace Diamond.API.SlashCommands.CSGO
 {
 	public partial class Csgo
@@ -38,10 +38,10 @@ namespace Diamond.API.SlashCommands.CSGO
 
 			DefaultEmbed embed = new DefaultEmbed("CS:GO Item Search", "🔫", this.Context);
 
-#if DEBUG
-			// Clear cache if debug is enabled
-			this._csgoBackpack.ClearCache();
-#endif
+			if (SUtils.IsDebugEnabled())
+			{
+				this._csgoBackpack.ClearCache();
+			}
 
 			// Lock thread while items are not loaded
 			while (!this._csgoBackpack.AreItemsLoaded)
@@ -55,7 +55,7 @@ namespace Diamond.API.SlashCommands.CSGO
 			{
 				embed.Title = "Item not found";
 				embed.Description = $"An item named '{search}' could not be found.";
-				await embed.SendAsync();
+				_ = await embed.SendAsync();
 				return;
 			}
 			DbCsgoItem searchItem = searchResult[0].Item;
@@ -70,7 +70,7 @@ namespace Diamond.API.SlashCommands.CSGO
 
 			foreach (DbCsgoItemPrice priceInfo in searchItemPrices)
 			{
-				embed.AddField($"🗓️ {Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(priceInfo.Epoch.ToLower().Replace("_", " "))}", $"**{CsgoBackpack.CurrencySymbols[currency]}{string.Format("{0:N}", priceInfo.Average)}**\n*{string.Format("{0:N0}", Convert.ToInt32(priceInfo.Sold))} sold*", true);
+				_ = embed.AddField($"🗓️ {Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(priceInfo.Epoch.ToLower().Replace("_", " "))}", $"**{CsgoBackpack.CurrencySymbols[currency]}{string.Format("{0:N}", priceInfo.Average)}**\n*{string.Format("{0:N0}", Convert.ToInt32(priceInfo.Sold))} sold*", true);
 			}
 
 			string hexColor = searchItem.RarityHexColor;
@@ -88,11 +88,11 @@ namespace Diamond.API.SlashCommands.CSGO
 
 			using (Stream stream = new MemoryStream())
 			{
-				embed.WithImageUrl($"attachment://csgo_{hexColor}.png");
+				_ = embed.WithImageUrl($"attachment://csgo_{hexColor}.png");
 				bmp.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
 
 				// Send the embed
-				await base.FollowupWithFileAsync(stream, $"csgo_{hexColor}.png", embed: embed.Build(), components: builder.Build());
+				_ = await base.FollowupWithFileAsync(stream, $"csgo_{hexColor}.png", embed: embed.Build(), components: builder.Build());
 			}
 		}
 
@@ -108,10 +108,12 @@ namespace Diamond.API.SlashCommands.CSGO
 				return;
 			}
 
-#if DEBUG
-			Stopwatch sw = new Stopwatch();
-			sw.Start();
-#endif
+			Stopwatch sw = null;
+			if (SUtils.IsDebugEnabled())
+			{
+				sw = new Stopwatch();
+				sw.Start();
+			}
 
 			string userInput = autocompleteInteraction.Data.Current.Value.ToString();
 			if (userInput.IsEmpty())
@@ -135,10 +137,11 @@ namespace Diamond.API.SlashCommands.CSGO
 			}
 			IEnumerable<AutocompleteResult> sendResults = autocomplete.Take(5);
 
-#if DEBUG
-			sw.Stop();
-			Debug.WriteLine($"Sending autocomplete (took: {sw.ElapsedMilliseconds}ms, results: {autocomplete.Count}).");
-#endif
+			if (SUtils.IsDebugEnabled())
+			{
+				sw.Stop();
+				Debug.WriteLine($"Sending autocomplete (took: {sw.ElapsedMilliseconds}ms, results: {autocomplete.Count}).");
+			}
 
 			await autocompleteInteraction.RespondAsync(sendResults);
 		}

@@ -14,6 +14,7 @@ using ScriptsLibV2.Extensions;
 using static Diamond.API.Data.DiamondContext;
 
 using MessageBox = System.Windows.Forms.MessageBox;
+using SUtils = ScriptsLibV2.Util.Utils;
 
 namespace Diamond.GUI.Pages;
 /// <summary>
@@ -34,11 +35,15 @@ public partial class SettingsPanelPage : Page
 	{
 		using DiamondContext db = new DiamondContext();
 
-#if DEBUG
-		this.checkBox_ignoreDebugChannel.Visibility = Visibility.Collapsed;
-#else
-		this.checkBox_ignoreDebugChannel.IsChecked = Convert.ToBoolean(db.GetSetting(ConfigSetting.IgnoreDebugChannels, false.ToString()));
-#endif
+		if (SUtils.IsDebugEnabled())
+		{
+			this.checkBox_ignoreDebugChannel.Visibility = Visibility.Collapsed;
+		}
+		else
+		{
+			this.checkBox_ignoreDebugChannel.IsChecked = Convert.ToBoolean(db.GetSetting(ConfigSetting.IgnoreDebugChannels, false.ToString()));
+		}
+
 		this.passwordBox_token.Password = db.GetSetting(ConfigSetting.Token);
 		this.passwordBox_openaiApiKey.Password = db.GetSetting(ConfigSetting.OpenAI_API_Key);
 		this.passwordBox_nightapiApiKey.Password = db.GetSetting(ConfigSetting.NightAPI_API_Key);
@@ -47,7 +52,7 @@ public partial class SettingsPanelPage : Page
 		foreach (string debugChannelId in db.GetSetting(ConfigSetting.DebugChannelsID, string.Empty).Split(','))
 		{
 			if (debugChannelId.IsEmpty()) continue;
-			this.listBox_debugChannels.Items.Add(debugChannelId);
+			_ = this.listBox_debugChannels.Items.Add(debugChannelId);
 		}
 	}
 
