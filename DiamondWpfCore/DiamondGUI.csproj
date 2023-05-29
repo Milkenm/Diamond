@@ -11,11 +11,12 @@
     <UseWindowsForms>True</UseWindowsForms>
     <SignAssembly>False</SignAssembly>
     <AssemblyVersion>1.0</AssemblyVersion>
-    <FileVersion>${AssemblyVersion}</FileVersion>
+    <FileVersion>v1.0</FileVersion>
     <RepositoryUrl>https://github.com/Milkenm/Diamond</RepositoryUrl>
     <Copyright>Milkenm</Copyright>
     <Company>Milkenm</Company>
     <Title>Diamond GUI</Title>
+    <Version>1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

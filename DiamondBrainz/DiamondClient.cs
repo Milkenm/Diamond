@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,6 +26,11 @@ namespace Diamond.API
 		private readonly IServiceProvider _serviceProvider;
 		private readonly InteractionService _interactionService;
 
+		public long LastLogin { get; private set; }
+		public long Uptime
+		{
+			get => DateTimeOffset.UtcNow.ToUnixTimeSeconds() - this.LastLogin;
+		}
 		public bool IsReady { get; private set; }
 
 		public event BotLogEvent OnLog;
@@ -51,6 +57,10 @@ namespace Diamond.API
 
 			// Handle interaction exceptions
 			this._interactionService.InteractionExecuted += this.InteractionService_InteractionExecuted;
+
+			// Uptime updaters
+			this.LoggedIn += this.DiamondClient_LoggedIn;
+			this.LoggedOut += this.DiamondClient_LoggedOut;
 
 			// Bot log
 			this.Log += new Func<LogMessage, Task>((logMessage) =>
@@ -116,16 +126,14 @@ namespace Diamond.API
 		{
 			using DiamondContext db = new DiamondContext();
 
-			// Ignore debug channel if debug is disabled and ignore normal channels if debug is enabled
 			bool isDebugChannel = Utils.IsDebugChannel(db.GetSetting(ConfigSetting.DebugChannelsID), socketInteraction.ChannelId);
-#if DEBUG
-			if (!isDebugChannel) return;
-#elif RELEASE
-				if (isDebugChannel) return;
-#endif
+			bool ignoreDebugChannel = Convert.ToBoolean(db.GetSetting(ConfigSetting.IgnoreDebugChannels));
+
+			// Ignore debug channel if debug is disabled and ignore normal channels if debug is enabled
+			if ((SUtils.IsDebugEnabled() && !isDebugChannel) || (!SUtils.IsDebugEnabled() && ignoreDebugChannel && isDebugChannel)) return;
 
 			SocketInteractionContext context = new SocketInteractionContext(this, socketInteraction);
-			await this._interactionService.ExecuteCommandAsync(context, this._serviceProvider);
+			_ = await this._interactionService.ExecuteCommandAsync(context, this._serviceProvider);
 		}
 
 		private async Task DiamondClient_Ready()
@@ -139,22 +147,43 @@ namespace Diamond.API
 			}
 			this.IsReady = true;
 
-			await this._interactionService.AddModulesAsync(SUtils.GetAssemblyByName("DiamondAPI"), this._serviceProvider);
+			_ = await this._interactionService.AddModulesAsync(SUtils.GetAssemblyByName("DiamondAPI"), this._serviceProvider);
 			string? debugGuildIdString = db.GetSetting(ConfigSetting.DebugGuildID);
 			ulong? debugGuildId = !debugGuildIdString.IsEmpty() ? Convert.ToUInt64(debugGuildIdString) : null;
 
-#if DEBUG
-			// Register commands only to dev guild
-			if (debugGuildId.HasValue)
+			// Release build
+			if (!SUtils.IsDebugEnabled())
 			{
-				await this._interactionService.RegisterCommandsToGuildAsync((ulong)debugGuildId);
-				OnLog?.Invoke($"Registered {this._interactionService.SlashCommands.Count} commands to dev guild.", false);
-			}
-#else
 				// Register commands globally (to every guild)
-				await _interactionService.RegisterCommandsGloballyAsync(true);
-				OnLog?.Invoke($"Registered {_interactionService.SlashCommands.Count} commands to {this.Guilds.Count} guilds.", false);
-#endif
+				_ = await this._interactionService.RegisterCommandsGloballyAsync(true);
+				OnLog?.Invoke($"Registered {this._interactionService.SlashCommands.Count} commands to {this.Guilds.Count} guilds.", false);
+			}
+			// Debug build
+			else if (debugGuildId.HasValue)
+			{
+				// Check if bot is in debug guild
+				if (!this.Guilds.Where(g => g.Id == debugGuildId).Any())
+				{
+					OnLog?.Invoke("Debug guild was not found.", false);
+				}
+				else
+				{
+					// Register commands only to dev guild
+					_ = await this._interactionService.RegisterCommandsToGuildAsync((ulong)debugGuildId);
+					OnLog?.Invoke($"Registered {this._interactionService.SlashCommands.Count} commands to dev guild.", false);
+				}
+			}
+		}
+
+		private Task DiamondClient_LoggedIn()
+		{
+			this.LastLogin = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+			return Task.CompletedTask;
+		}
+
+		private Task DiamondClient_LoggedOut()
+		{
+			return Task.CompletedTask;
 		}
 
 		private static string GetObjectProperties(object obj)

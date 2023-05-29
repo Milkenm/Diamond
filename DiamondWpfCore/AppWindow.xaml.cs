@@ -61,7 +61,7 @@ namespace Diamond.GUI
 			csgoBackpack.OnUpdateCancelled += new CsgoItemsStateChanged(async () => await mainPanel.LogAsync("No update needed for CS:GO items!"));
 			csgoBackpack.OnUpdateStart += new CsgoItemsStateChanged(async () => await mainPanel.LogAsync("Downloading CS:GO items..."));
 			csgoBackpack.OnUpdateEnd += new CsgoItemsStateChanged(async () => await mainPanel.LogAsync("CS:GO items loaded!"));
-			_ = csgoBackpack.LoadItems(SUtils.IsDebugEnabled());
+			_ = csgoBackpack.LoadItems(/*SUtils.IsDebugEnabled()*/);
 
 			// Initalize bot
 			this._client.Initialize();

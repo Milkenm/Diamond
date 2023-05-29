@@ -63,7 +63,7 @@ public partial class SettingsPanelPage : Page
 		db.SetSettingAsync(ConfigSetting.RiotAPI_Key, settingsJson.RiotApiKey).Wait();
 		db.SetSettingAsync(ConfigSetting.DebugGuildID, settingsJson.DebugGuildId).Wait();
 #if RELEASE
-			db.SetSettingAsync(ConfigSetting.IgnoreDebugChannels, settingsJson.IgnoreDebugChannels).Wait();
+		db.SetSettingAsync(ConfigSetting.IgnoreDebugChannels, settingsJson.IgnoreDebugChannels).Wait();
 #endif
 		db.SetSettingAsync(ConfigSetting.DebugChannelsID, string.Join(",", settingsJson.DebugChannelsId)).Wait();
 
@@ -120,7 +120,6 @@ public partial class SettingsPanelPage : Page
 			Filter = "JSON File (*.json)|*.json",
 			DefaultExt = "json",
 			CheckWriteAccess = true,
-			CheckFileExists = true,
 		};
 		// Save file
 		if (saveFileDialog.ShowDialog() == DialogResult.OK)

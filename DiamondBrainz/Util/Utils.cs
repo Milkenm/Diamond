@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 using Discord;
@@ -89,6 +91,24 @@ namespace Diamond.API.Util
 		public static ulong GetButtonMessageId(SocketInteractionContext context)
 		{
 			return (context.Interaction as SocketMessageComponent).Message.Id;
+		}
+
+		public static string GetAssemblyVersion()
+		{
+			Assembly assembly = Assembly.GetExecutingAssembly();
+			FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+			return fvi.FileVersion;
+		}
+
+		public static string FormatTime(DateTimeOffset dateTimeOffset)
+		{
+			return dateTimeOffset.ToString("dd/MM/yyyy, HH:mm:ss");
+		}
+
+		public static string FormatTime(long unixTimestamp)
+		{
+			DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(unixTimestamp);
+			return FormatTime(dateTimeOffset);
 		}
 	}
 

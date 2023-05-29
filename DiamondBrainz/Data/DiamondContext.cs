@@ -34,19 +34,32 @@ namespace Diamond.API.Data
 			IgnoreDebugChannels,
 			// Random Stuff
 			CsgoItemsLoadUnix,
+			TotalUptime,
 		}
 
 		private static readonly Dictionary<ConfigSetting, string> _settingsList = new Dictionary<ConfigSetting, string>()
-	{
-		{ ConfigSetting.Token, "Token" },
-		{ ConfigSetting.OpenAI_API_Key, "OpenaiApiKey" },
-		{ ConfigSetting.NightAPI_API_Key, "NightapiApiKey" },
-		{ ConfigSetting.RiotAPI_Key, "RiotApiKey" },
-		{ ConfigSetting.DebugGuildID, "DebugGuildId" },
-		{ ConfigSetting.DebugChannelsID, "DebugChannelId" },
-		{ ConfigSetting.IgnoreDebugChannels, "IgnoreDebugChannels" },
-		{ ConfigSetting.CsgoItemsLoadUnix, "CsgoItemsLoadUnix" },
-	};
+		{
+			{ ConfigSetting.Token, "Token" },
+			{ ConfigSetting.OpenAI_API_Key, "OpenaiApiKey" },
+			{ ConfigSetting.NightAPI_API_Key, "NightapiApiKey" },
+			{ ConfigSetting.RiotAPI_Key, "RiotApiKey" },
+			{ ConfigSetting.DebugGuildID, "DebugGuildId" },
+			{ ConfigSetting.DebugChannelsID, "DebugChannelId" },
+			{ ConfigSetting.IgnoreDebugChannels, "IgnoreDebugChannels" },
+			{ ConfigSetting.CsgoItemsLoadUnix, "CsgoItemsLoadUnix" },
+			{ ConfigSetting.TotalUptime, "TotalUptime" },
+		};
+		/// <summary>
+		/// Settings that are ignored when validating if all settings are set (for example: when starting the program).
+		/// </summary>
+		private static readonly List<ConfigSetting> _settingsToIgnoreInValidation = new List<ConfigSetting>()
+		{
+#if DEBUG
+			ConfigSetting.IgnoreDebugChannels,
+#endif
+			ConfigSetting.CsgoItemsLoadUnix,
+			ConfigSetting.TotalUptime,
+		};
 
 		private bool _isSaving = false;
 
@@ -74,9 +87,7 @@ namespace Diamond.API.Data
 		{
 			foreach (ConfigSetting setting in _settingsList.Keys)
 			{
-#if DEBUG
-				if (setting is ConfigSetting.IgnoreDebugChannels or ConfigSetting.CsgoItemsLoadUnix) continue;
-#endif
+				if (_settingsToIgnoreInValidation.Contains(setting)) continue;
 
 				if (this.GetSetting(setting).IsEmpty())
 				{
