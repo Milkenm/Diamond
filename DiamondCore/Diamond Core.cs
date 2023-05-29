@@ -4,9 +4,12 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
+using Newtonsoft.Json;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -14,169 +17,221 @@ namespace Diamond.Core
 {
 	public class DiamondCore
 	{
-		public DiamondCore(string token, LogSeverity logLevel, string commandsPrefix, Assembly assembly, Func<LogMessage, Task> logFunction)
+		public DiamondCore(LogSeverity logLevel, Assembly assembly, IServiceProvider serviceProvider, string configPath = @"\bot_config.json")
 		{
-			Token = token;
-			LogLevel = logLevel;
-			CommandsPrefix = commandsPrefix;
-			Assembly = assembly;
+			this.LogLevel = logLevel;
+			this.Assembly = assembly;
+			this.ServiceProvider = serviceProvider;
+			this.ConfigPath = configPath;
 
-			Initialize();
-			LoadModules(assembly);
-
-			Client.Log += logFunction;
-
-			CheckDebugMode();
+			this.Initialize();
 		}
 
-		public bool IsRunning
-		{
-			get;
-			private set;
-		}
+		public string ConfigPath { get; set; }
+		public bool AllowCommandsByPrefix { get; set; } = true;
+		public bool AllowCommandsByMention { get; set; } = true;
+		public bool DisableCommands { get; set; }
 
-		public DiamondCore(string token, LogSeverity logLevel)
-		{
-			Token = token;
-			LogLevel = logLevel;
-
-			Initialize();
-		}
-
-		public DiscordSocketClient Client;
-		public CommandService Commands;
-
-		public string CommandsPrefix;
-		public bool AllowCommandsByPrefix = true;
-		public bool AllowCommandsByMention = true;
-		public bool DisableCommands;
-		public readonly List<ulong> DebugChannels = new List<ulong>();
-
-		public Assembly Assembly { get; }
 		public LogSeverity LogLevel { get; }
-		public string Token { get; }
+		public Assembly Assembly { get; }
+		public IServiceProvider ServiceProvider { get; }
 
+		public Config Configuration { get; private set; }
+		public DiscordSocketClient Client { get; private set; }
+		public CommandService Commands { get; private set; }
 		public ActivityType ActivityType { get; private set; }
 		public string ActivityText { get; private set; }
 		public string StreamUrl { get; private set; }
 		public UserStatus UserStatus { get; private set; }
 		public bool Debugging { get; private set; }
+		public bool IsRunning { get; private set; }
 
 		private void Initialize()
 		{
-			Client = new DiscordSocketClient(new DiscordSocketConfig
+			this.CheckDebugMode();
+			this.LoadConfig(this.ReadConfigAsync());
+
+			this.Client = new DiscordSocketClient(new DiscordSocketConfig
 			{
 				LogLevel = LogLevel,
 			});
 
-			Client.MessageReceived += CommandHandler;
+			this.Client.MessageReceived += this.CommandHandlerAsync;
 
-			Commands = new CommandService(new CommandServiceConfig
+			this.Commands = new CommandService(new CommandServiceConfig
 			{
 				CaseSensitiveCommands = false,
 				DefaultRunMode = RunMode.Async,
 				LogLevel = LogLevel,
 			});
 
-			Commands.AddTypeReader(typeof(Emote), new EmoteTypeReader());
+			this.Commands.AddTypeReader(typeof(Emote), new EmoteTypeReader());
+			this.LoadModules(this.Assembly, this.ServiceProvider).GetAwaiter().GetResult();
 		}
 
-		public async void LoadModules(Assembly assembly, IServiceProvider services = null)
+		private Config ReadConfigAsync()
 		{
-			await Commands.AddModulesAsync(assembly, services).ConfigureAwait(false);
+			string configJson = File.ReadAllText(this.ConfigPath);
+			Config cfg = JsonConvert.DeserializeObject<Config>(configJson);
+
+			return cfg;
 		}
 
-		public async void SetGame(ActivityType type, string text, string streamUrl = null)
+		private bool LoadConfig(Config config)
 		{
-			ActivityType = type;
-			ActivityText = text;
+			bool tokenChanged = this.Configuration?.Token != config.Token;
+
+			this.Configuration = config;
+
+			return tokenChanged;
+		}
+
+		public async Task ReloadConfigAsync()
+		{
+			bool tokenChanged = this.LoadConfig(this.ReadConfigAsync());
+			if (tokenChanged)
+			{
+				await this.RestartAsync();
+			}
+		}
+
+		public async Task SaveConfigAsync(Config config)
+		{
+			await Task.Run(() =>
+			{
+				string jsonString = JsonConvert.SerializeObject(config);
+				File.WriteAllText(this.ConfigPath, jsonString);
+			});
+		}
+
+		public async Task UpdateConfig(Config config)
+		{
+			if (string.IsNullOrEmpty(config.Token))
+			{
+				config.Token = this.Configuration.Token;
+			}
+			if (string.IsNullOrEmpty(config.Prefix))
+			{
+				config.Prefix = this.Configuration.Prefix;
+			}
+			if (config.DebugChannels == null)
+			{
+				config.DebugChannels = this.Configuration.DebugChannels;
+			}
+
+			await this.SaveConfigAsync(config);
+			await this.ReloadConfigAsync();
+		}
+
+		public void SetupEvents(Func<Optional<CommandInfo>, ICommandContext, IResult, Task> commandExecuted, Func<SocketMessage, Task> messageReceived, Func<Cacheable<IUserMessage, ulong>, ISocketMessageChannel, SocketReaction, Task> reactionAdded, Func<Cacheable<IUserMessage, ulong>, ISocketMessageChannel, SocketReaction, Task> reactionRemoved)
+		{
+			this.Commands.CommandExecuted += commandExecuted;
+			this.Client.MessageReceived += messageReceived;
+			this.Client.ReactionAdded += reactionAdded;
+			this.Client.ReactionRemoved += reactionRemoved;
+		}
+
+		public async Task LoadModules(Assembly assembly, IServiceProvider services = null)
+		{
+			await this.Commands.AddModulesAsync(assembly, services);
+		}
+
+		public async Task SetGameAsync(ActivityType type, string text, string streamUrl = null)
+		{
+			this.ActivityType = type;
+			this.ActivityText = text;
 			if (!string.IsNullOrEmpty(streamUrl))
 			{
-				StreamUrl = streamUrl;
+				this.StreamUrl = streamUrl;
 			}
 
-			if (Client?.LoginState == LoginState.LoggedIn && !string.IsNullOrEmpty(ActivityText) && (ActivityType == ActivityType.Streaming && !string.IsNullOrEmpty(StreamUrl)))
+			if (this.Client?.LoginState == LoginState.LoggedIn && !string.IsNullOrEmpty(this.ActivityText) && (this.ActivityType == ActivityType.Streaming && !string.IsNullOrEmpty(this.StreamUrl)))
 			{
-				await Client.SetGameAsync(ActivityText, StreamUrl, ActivityType).ConfigureAwait(false);
+				await this.Client.SetGameAsync(this.ActivityText, this.StreamUrl, this.ActivityType);
 			}
 		}
 
-		public async void SetStatus(UserStatus status)
+		public async Task SetStatusAsync(UserStatus status)
 		{
-			UserStatus = status;
+			this.UserStatus = status;
 
-			if (Client?.LoginState == LoginState.LoggedIn)
+			if (this.Client?.LoginState == LoginState.LoggedIn)
 			{
-				await Client.SetStatusAsync(UserStatus).ConfigureAwait(false);
+				await this.Client.SetStatusAsync(this.UserStatus);
 			}
 		}
 
-		public async void Start()
+		public async Task StartAsync()
 		{
-			IsRunning = true;
-
-			// Status & Game
-			SetGame(ActivityType, ActivityText, StreamUrl);
-			SetStatus(UserStatus);
-
-			// Login
-			await Client.LoginAsync(TokenType.Bot, Token).ConfigureAwait(false);
-			await Client.StartAsync().ConfigureAwait(false);
-
-			// Lock Task
-			await Task.Delay(-1).ConfigureAwait(true);
-		}
-
-		public async void Stop()
-		{
-			if (IsRunning)
+			if (this.IsRunning == false)
 			{
-				IsRunning = false;
+				await this.SetGameAsync(this.ActivityType, this.ActivityText, this.StreamUrl);
+				await this.SetStatusAsync(this.UserStatus);
 
-				await Client.LogoutAsync().ConfigureAwait(false);
-				await Client.StopAsync().ConfigureAwait(false);
+				await this.Client.LoginAsync(TokenType.Bot, this.Configuration.Token);
+				await this.Client.StartAsync();
+
+				this.IsRunning = true;
 			}
 		}
 
-		public void Reload()
+		public async Task StopAsync()
 		{
-			Stop();
-			Client.Dispose();
+			if (this.IsRunning)
+			{
+				await this.Client.LogoutAsync();
+				await this.Client.StopAsync();
 
-			Start();
+				this.IsRunning = false;
+			}
 		}
 
-		private async Task CommandHandler(SocketMessage socketMsg)
+		public async Task RestartAsync()
 		{
-			if (!(socketMsg is SocketUserMessage msg) || (!Debugging && DebugChannels.Contains(msg.Channel.Id)) || (Debugging && !DebugChannels.Contains(msg.Channel.Id)))
+			if (this.IsRunning)
+			{
+				await this.StopAsync();
+				await this.StartAsync();
+			}
+		}
+
+		private async Task CommandHandlerAsync(SocketMessage socketMsg)
+		{
+			if (!(socketMsg is SocketUserMessage msg) || (!this.Debugging && this.Configuration.DebugChannels.Contains(msg.Channel.Id)) || (this.Debugging && !this.Configuration.DebugChannels.Contains(msg.Channel.Id)))
 			{
 				return;
 			}
 
 			int argPos = 0;
-
-			if (DisableCommands || !AllowCommandsByPrefix || msg.Author.IsBot || !(msg.HasStringPrefix(CommandsPrefix, ref argPos) || (msg.HasMentionPrefix(Client.CurrentUser, ref argPos) && AllowCommandsByMention)))
+			if (this.DisableCommands || !this.AllowCommandsByPrefix || msg.Author.IsBot || !(msg.HasStringPrefix(this.Configuration.Prefix, ref argPos) || (msg.HasMentionPrefix(this.Client.CurrentUser, ref argPos) && this.AllowCommandsByMention)))
 			{
 				return;
 			}
 
-			SocketCommandContext context = new SocketCommandContext(Client, msg);
+			SocketCommandContext context = new SocketCommandContext(this.Client, msg);
 
-			await Commands.ExecuteAsync(context, argPos, null).ConfigureAwait(false);
+			await this.Commands.ExecuteAsync(context, argPos, null);
 		}
 
 		public void AddDebugChannels(params ulong[] channelsIds)
 		{
 			foreach (ulong channelId in channelsIds)
 			{
-				DebugChannels.Add(channelId);
+				this.Configuration.DebugChannels.Add(channelId);
 			}
 		}
 
 		[Conditional("DEBUG")]
 		public void CheckDebugMode()
 		{
-			Debugging = true;
+			this.Debugging = true;
+		}
+
+		public class Config
+		{
+			[JsonProperty("token")] public string Token { get; set; }
+			[JsonProperty("prefix")] public string Prefix { get; set; }
+			[JsonProperty("debugChannels")] public List<ulong> DebugChannels { get; set; }
 		}
 	}
 }

@@ -1,0 +1,61 @@
+﻿<Window x:Class="Diamond.GUI.AppWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Style="{StaticResource WindowStyle}" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="Window_Closing">
+
+	<Grid Width="1000" Height="400">
+		<TabControl x:Name="tabControl_main" Style="{StaticResource TabControlStyle}">
+			<TabItem x:Name="tabItem_main" Style="{StaticResource TabItemStyle}">
+				<TabItem.Header>
+					<Image x:Name="image_main" Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Robot.png" />
+				</TabItem.Header>
+				<Grid>
+					<Frame x:Name="frame_main" Style="{StaticResource FrameStyle}"/>
+				</Grid>
+			</TabItem>
+			<TabItem x:Name="tabItem_logs" Style="{StaticResource TabItemStyle}" Height="65" Width="85">
+				<TabItem.Header>
+					<Image Name="image_logs" Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Scroll.png" />
+				</TabItem.Header>
+				<Grid>
+					<Frame x:Name="frame_logs" Style="{StaticResource FrameStyle}"/>
+				</Grid>
+			</TabItem>
+			<TabItem x:Name="tabItem_guilds" Style="{StaticResource TabItemStyle}">
+				<TabItem.Header>
+					<Image x:Name="image_guilds" Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/City.png" />
+				</TabItem.Header>
+				<Grid>
+					<Frame x:Name="frame_guilds" Style="{StaticResource FrameStyle}"/>
+				</Grid>
+			</TabItem>
+			<TabItem x:Name="tabItem_lavalink" Style="{StaticResource TabItemStyle}">
+				<TabItem.Header>
+					<Image x:Name="image_lavalink" Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Volcano.png" />
+				</TabItem.Header>
+				<Grid>
+					<Frame x:Name="frame_lavalink" Style="{StaticResource FrameStyle}"/>
+				</Grid>
+			</TabItem>
+			<TabItem x:Name="tabItem_rcon" Style="{StaticResource TabItemStyle}" Height="65" Width="85">
+				<TabItem.Header>
+					<Image x:Name="image_rcon" Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Satellite.png" />
+				</TabItem.Header>
+				<Grid>
+					<Frame x:Name="frame_remote" Style="{StaticResource FrameStyle}"/>
+				</Grid>
+			</TabItem>
+			<TabItem x:Name="tabItem_settings" Style="{StaticResource TabItemStyle}" Height="65" Width="85">
+				<TabItem.Header>
+					<Image x:Name="image_settings" Style="{StaticResource ImageStyle}" Source="/Resources/Emojis/Gear.png" />
+				</TabItem.Header>
+				<Grid>
+					<Frame x:Name="frame_settings" Style="{StaticResource FrameStyle}"/>
+				</Grid>
+			</TabItem>
+		</TabControl>
+	</Grid>
+</Window>
