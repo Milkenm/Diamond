@@ -11,7 +11,7 @@ namespace Diamond.API.SlashCommands.Moderation
 {
 	public partial class Moderation
 	{
-		[RequireBotPermission(GuildPermission.ManageChannels)]
+		[RequireBotPermission(GuildPermission.ManageMessages)]
 		[RequireUserPermission(GuildPermission.ManageMessages)]
 		[DefaultMemberPermissions(GuildPermission.ManageMessages)]
 		[DSlashCommand("prune", "Delete messages from a channel.")]
