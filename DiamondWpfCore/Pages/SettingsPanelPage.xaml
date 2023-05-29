@@ -13,12 +13,18 @@
 			<StackPanel>
 				<Grid>
 					<Label Style="{StaticResource LabelStyle}" HorizontalAlignment="Left" Margin="10,10,0,0" Content="Bot Token" VerticalAlignment="Top"/>
-					<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_token" Margin="10,38,10,0" VerticalAlignment="Top" />
+					<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_token" Margin="10,38,10,0" VerticalAlignment="Top"/>
+					<Label Style="{StaticResource LabelStyle}" Content="Activity" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top"/>
+					<ComboBox x:Name="comboBox_activityType" Style="{DynamicResource ComboBoxStyle}" HorizontalAlignment="Left" Margin="10,118,0,0" VerticalAlignment="Top" Width="175"/>
+					<Label Style="{StaticResource LabelStyle}" Content="Activity Name" Margin="200,90,0,0"/>
+					<TextBox x:Name="textBox_activityText" Style="{StaticResource TextBoxStyle}" HorizontalAlignment="Left" Margin="200,118,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="210"/>
+					<Label Style="{StaticResource LabelStyle}" Content="Stream URL" Margin="415,90,0,0"/>
+					<TextBox x:Name="textBox_activityStreamUrl" Style="{StaticResource TextBoxStyle}" HorizontalAlignment="Left" Margin="415,118,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="467"/>
 				</Grid>
 				<Separator Style="{StaticResource SeparatorStyle}"/>
 				<Grid>
 					<Label Style="{StaticResource LabelStyle}" Content="OpenAI API Key" Margin="10,10,0,0"/>
-					<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_openaiApiKey" Margin="10,38,257,0" />
+					<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_openaiApiKey" Margin="10,38,257,0"/>
 					<Label Style="{StaticResource LabelStyle}" Content="NightAPI API Key" Margin="10,90,0,0"/>
 					<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_nightapiApiKey" Margin="10,118,257,0"/>
 					<Label Style="{StaticResource LabelStyle}" Content="Riot API Key" Margin="10,170,0,0"/>

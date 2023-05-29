@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 
+using Diamond.API;
 using Diamond.API.Data;
+
+using Discord;
 
 using Newtonsoft.Json;
 
@@ -22,10 +26,12 @@ namespace Diamond.GUI.Pages;
 /// </summary>
 public partial class SettingsPanelPage : Page
 {
+	private readonly DiamondClient _client;
 	private readonly AppWindow _appWindow;
 
-	public SettingsPanelPage(AppWindow appWindow)
+	public SettingsPanelPage(DiamondClient client, AppWindow appWindow)
 	{
+		this._client = client;
 		this._appWindow = appWindow;
 
 		this.InitializeComponent();
@@ -35,25 +41,29 @@ public partial class SettingsPanelPage : Page
 	{
 		using DiamondContext db = new DiamondContext();
 
-		if (SUtils.IsDebugEnabled())
+		// Load options for activities comboBox
+		_ = this.comboBox_activityType.Items.Add("None");
+		foreach (ActivityType activity in Enum.GetValues(typeof(ActivityType)))
 		{
-			this.checkBox_ignoreDebugChannel.Visibility = Visibility.Collapsed;
-		}
-		else
-		{
-			this.checkBox_ignoreDebugChannel.IsChecked = Convert.ToBoolean(db.GetSetting(ConfigSetting.IgnoreDebugChannels, false.ToString()));
+
+			if (activity is ActivityType.CustomStatus or ActivityType.Competing) continue;
+			_ = this.comboBox_activityType.Items.Add(activity);
 		}
 
-		this.passwordBox_token.Password = db.GetSetting(ConfigSetting.Token);
-		this.passwordBox_openaiApiKey.Password = db.GetSetting(ConfigSetting.OpenAI_API_Key);
-		this.passwordBox_nightapiApiKey.Password = db.GetSetting(ConfigSetting.NightAPI_API_Key);
-		this.passwordBox_riotApiKey.Password = db.GetSetting(ConfigSetting.RiotAPI_Key);
-		this.textBox_debugGuildId.Text = db.GetSetting(ConfigSetting.DebugGuildID);
-		foreach (string debugChannelId in db.GetSetting(ConfigSetting.DebugChannelsID, string.Empty).Split(','))
+		SettingsJSON settings = new SettingsJSON()
 		{
-			if (debugChannelId.IsEmpty()) continue;
-			_ = this.listBox_debugChannels.Items.Add(debugChannelId);
-		}
+			Token = db.GetSetting(ConfigSetting.Token),
+			ActivityType = db.GetSetting(ConfigSetting.ActivityType, string.Empty),
+			ActivityText = db.GetSetting(ConfigSetting.ActivityText, string.Empty),
+			ActivityStreamURL = db.GetSetting(ConfigSetting.ActivityStreamURL, string.Empty),
+			OpenaiApiKey = db.GetSetting(ConfigSetting.OpenAI_API_Key),
+			NightapiApiKey = db.GetSetting(ConfigSetting.NightAPI_API_Key),
+			RiotApiKey = db.GetSetting(ConfigSetting.RiotAPI_Key),
+			DebugGuildId = db.GetSetting(ConfigSetting.DebugGuildID),
+			IgnoreDebugChannels = Convert.ToBoolean(db.GetSetting(ConfigSetting.IgnoreDebugChannels, false.ToString())),
+			DebugChannelsId = db.GetSetting(ConfigSetting.DebugChannelsID, string.Empty).Split(',').ToList(),
+		};
+		this.LoadSettingsObject(settings);
 	}
 
 	private async void ButtonSave_Click(object sender, RoutedEventArgs e)
@@ -62,17 +72,26 @@ public partial class SettingsPanelPage : Page
 
 		SettingsJSON settingsJson = this.GetSettingsObject();
 
-		db.SetSettingAsync(ConfigSetting.Token, settingsJson.Token).Wait();
-		db.SetSettingAsync(ConfigSetting.OpenAI_API_Key, settingsJson.OpenaiApiKey).Wait();
-		db.SetSettingAsync(ConfigSetting.NightAPI_API_Key, settingsJson.NightapiApiKey).Wait();
-		db.SetSettingAsync(ConfigSetting.RiotAPI_Key, settingsJson.RiotApiKey).Wait();
-		db.SetSettingAsync(ConfigSetting.DebugGuildID, settingsJson.DebugGuildId).Wait();
-#if RELEASE
-		db.SetSettingAsync(ConfigSetting.IgnoreDebugChannels, settingsJson.IgnoreDebugChannels).Wait();
-#endif
-		db.SetSettingAsync(ConfigSetting.DebugChannelsID, string.Join(",", settingsJson.DebugChannelsId)).Wait();
+		// Bot stuff
+		await db.SetSettingAsync(ConfigSetting.Token, settingsJson.Token);
+		await db.SetSettingAsync(ConfigSetting.ActivityType, this.comboBox_activityType.SelectedItem.ToString());
+		await db.SetSettingAsync(ConfigSetting.ActivityText, this.textBox_activityText.Text);
+		await db.SetSettingAsync(ConfigSetting.ActivityStreamURL, this.textBox_activityStreamUrl.Text);
+		// API keys
+		await db.SetSettingAsync(ConfigSetting.OpenAI_API_Key, settingsJson.OpenaiApiKey);
+		await db.SetSettingAsync(ConfigSetting.NightAPI_API_Key, settingsJson.NightapiApiKey);
+		// Debug stuff
+		await db.SetSettingAsync(ConfigSetting.RiotAPI_Key, settingsJson.RiotApiKey);
+		await db.SetSettingAsync(ConfigSetting.DebugGuildID, settingsJson.DebugGuildId);
+		if (!SUtils.IsDebugEnabled())
+		{
+			await db.SetSettingAsync(ConfigSetting.IgnoreDebugChannels, settingsJson.IgnoreDebugChannels);
+		}
+		await db.SetSettingAsync(ConfigSetting.DebugChannelsID, string.Join(",", settingsJson.DebugChannelsId));
 
 		await db.SaveAsync();
+
+		await Utils.SetClientActivityAsync(this._client);
 
 		this._appWindow.ToggleUI(db.AreSettingsValid());
 	}
@@ -97,17 +116,7 @@ public partial class SettingsPanelPage : Page
 				SettingsJSON settingsObject = JsonConvert.DeserializeObject<SettingsJSON>(json);
 
 				// Load settings
-				this.passwordBox_token.Password = settingsObject.Token;
-				this.passwordBox_openaiApiKey.Password = settingsObject.OpenaiApiKey;
-				this.passwordBox_nightapiApiKey.Password = settingsObject.NightapiApiKey;
-				this.passwordBox_riotApiKey.Password = settingsObject.RiotApiKey;
-				this.textBox_debugGuildId.Text = settingsObject.DebugGuildId;
-				this.checkBox_ignoreDebugChannel.IsChecked = settingsObject.IgnoreDebugChannels;
-				this.listBox_debugChannels.Items.Clear();
-				foreach (string debugChannelId in settingsObject.DebugChannelsId)
-				{
-					_ = this.listBox_debugChannels.Items.Add(debugChannelId);
-				}
+				this.LoadSettingsObject(settingsObject);
 			}
 			catch (Exception ex)
 			{
@@ -148,6 +157,42 @@ public partial class SettingsPanelPage : Page
 		}
 	}
 
+	private void LoadSettingsObject(SettingsJSON settingsObject)
+	{
+		// Bot stuff
+		this.passwordBox_token.Password = settingsObject.Token;
+		if (settingsObject.ActivityType.IsEmpty())
+		{
+			this.comboBox_activityType.SelectedIndex = 0;
+		}
+		else
+		{
+			this.comboBox_activityType.SelectedItem = Enum.Parse(typeof(ActivityType), settingsObject.ActivityType);
+		}
+		this.textBox_activityText.Text = settingsObject.ActivityText;
+		this.textBox_activityStreamUrl.Text = settingsObject.ActivityStreamURL;
+		// API keys
+		this.passwordBox_openaiApiKey.Password = settingsObject.OpenaiApiKey;
+		this.passwordBox_nightapiApiKey.Password = settingsObject.NightapiApiKey;
+		this.passwordBox_riotApiKey.Password = settingsObject.RiotApiKey;
+		// Debug stuff
+		this.textBox_debugGuildId.Text = settingsObject.DebugGuildId;
+		if (SUtils.IsDebugEnabled())
+		{
+			this.checkBox_ignoreDebugChannel.Visibility = Visibility.Collapsed;
+		}
+		else
+		{
+			this.checkBox_ignoreDebugChannel.IsChecked = settingsObject.IgnoreDebugChannels;
+		}
+		this.listBox_debugChannels.Items.Clear();
+		foreach (string debugChannelId in settingsObject.DebugChannelsId)
+		{
+			if (debugChannelId.IsEmpty()) continue;
+			_ = this.listBox_debugChannels.Items.Add(debugChannelId);
+		}
+	}
+
 	private SettingsJSON GetSettingsObject()
 	{
 		List<string> debugChannelIds = new List<string>();
@@ -159,6 +204,9 @@ public partial class SettingsPanelPage : Page
 		return new SettingsJSON()
 		{
 			Token = this.passwordBox_token.Password,
+			ActivityType = this.comboBox_activityType.SelectedItem.ToString(),
+			ActivityText = this.textBox_activityText.Text,
+			ActivityStreamURL = this.textBox_activityStreamUrl.Text,
 			OpenaiApiKey = this.passwordBox_openaiApiKey.Password,
 			NightapiApiKey = this.passwordBox_nightapiApiKey.Password,
 			RiotApiKey = this.passwordBox_riotApiKey.Password,
@@ -183,6 +231,9 @@ public partial class SettingsPanelPage : Page
 	public class SettingsJSON
 	{
 		[JsonProperty("token")] public string Token { get; set; }
+		[JsonProperty("activity_type")] public string ActivityType { get; set; }
+		[JsonProperty("activity_text")] public string ActivityText { get; set; }
+		[JsonProperty("activity_stream_url")] public string ActivityStreamURL { get; set; }
 		[JsonProperty("openai_api_key")] public string OpenaiApiKey { get; set; }
 		[JsonProperty("nightapi_api_key")] public string NightapiApiKey { get; set; }
 		[JsonProperty("riot_api_key")] public string RiotApiKey { get; set; }

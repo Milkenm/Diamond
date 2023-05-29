@@ -15,6 +15,7 @@
 				<!-- Styles -->
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_Button.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_CheckBox.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_ComboBox.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_Grid.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_Frame.xaml"/>
 				<ResourceDictionary Source="pack://application:,,,/Diamond.GUI;component/Style/Global_Image.xaml"/>
