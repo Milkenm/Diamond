@@ -73,6 +73,6 @@ namespace Diamond.API.APIs
 
 		public string GetChampionFandomWikiPageUrl(LolChampion champion) => string.Format(FANDOM_WIKI_URL, champion.ChampionName.Replace(" ", "_"));
 
-		public string GetChampionUniversePage(LolChampion champ) => string.Format(UNIVERSE_URL, champ.ChampionId.ToLower());
+		public string GetChampionUniversePage(LolChampion champ) => string.Format(UNIVERSE_URL, champ.InternalChampionName.ToLower());
 	}
 }
