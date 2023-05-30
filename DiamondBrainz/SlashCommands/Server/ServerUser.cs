@@ -38,7 +38,8 @@ namespace Diamond.API.SlashCommands.Server
 			foreach (SocketRole role in user.Roles)
 			{
 				// Ignore the @everyone role (it's a role apparently)
-				if (role.Id == 1102882126585679982L) continue;
+				if (role.IsEveryone) continue;
+
 				if (rolesSb.Length > 0)
 				{
 					_ = rolesSb.Append(", ");
