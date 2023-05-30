@@ -7,9 +7,9 @@ using Discord.Interactions;
 
 using NCalc;
 
-namespace Diamond.API.SlashCommands
+namespace Diamond.API.SlashCommands.Math
 {
-	public class Calculate : InteractionModuleBase<SocketInteractionContext>
+	public partial class Math
 	{
 		[DSlashCommand("calculate", "Calculate the value of the math expression.")]
 		public async Task CalculateCommandAsync(
@@ -17,11 +17,11 @@ namespace Diamond.API.SlashCommands
 			[ShowEveryone] bool showEveryone = false
 		)
 		{
-			await DeferAsync(!showEveryone);
+			await this.DeferAsync(!showEveryone);
 
 			Expression expression = new Expression(expressionString);
 
-			DefaultEmbed embed = new DefaultEmbed("Calculate", "🧮", Context)
+			DefaultEmbed embed = new DefaultEmbed("Calculate", "🧮", this.Context)
 			{
 				Description = $"`Result:` {expression.Evaluate()}",
 			};
@@ -30,15 +30,15 @@ namespace Diamond.API.SlashCommands
 			{
 				if (!expression.HasErrors())
 				{
-					embed.AddField("🟰 Expression", expression.ParsedExpression.ToString(), true);
+					_ = embed.AddField("🟰 Expression", expression.ParsedExpression.ToString(), true);
 				}
 			}
 			catch
 			{
-				embed.WithDescription("❌ **Error:** Invalid expression.");
+				_ = embed.WithDescription("❌ **Error:** Invalid expression.");
 			}
 
-			await embed.SendAsync();
+			_ = await embed.SendAsync();
 		}
 	}
 }
