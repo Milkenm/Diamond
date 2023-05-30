@@ -10,13 +10,13 @@
     <ApplicationIcon>Diamond Icon 2 (round).ico</ApplicationIcon>
     <UseWindowsForms>True</UseWindowsForms>
     <SignAssembly>False</SignAssembly>
-    <AssemblyVersion>1.0</AssemblyVersion>
-    <FileVersion>v1.0</FileVersion>
+    <AssemblyVersion>1.1</AssemblyVersion>
+    <FileVersion>1.1</FileVersion>
     <RepositoryUrl>https://github.com/Milkenm/Diamond</RepositoryUrl>
     <Copyright>Milkenm</Copyright>
     <Company>Milkenm</Company>
     <Title>Diamond GUI</Title>
-    <Version>1.0</Version>
+    <Version>1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
