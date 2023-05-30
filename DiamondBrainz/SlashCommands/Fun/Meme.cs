@@ -22,52 +22,57 @@ namespace Diamond.API.SlashCommands.Fun
 		{
 			await this.DeferAsync(!showEveryone);
 
-			(DefaultEmbed embed, MessageComponent components) = this.GetMemeEmbed(showRerollButton: !showEveryone, showShareButton: !showEveryone);
+			DefaultEmbed embed = this.GetMemeEmbed(showRerollButton: !showEveryone, showShareButton: !showEveryone);
 
-			await embed.SendAsync(component: components);
+			_ = await embed.SendAsync();
 		}
 
-		private (DefaultEmbed embed, MessageComponent components) GetMemeEmbed(MemeResponse meme = null, bool showRerollButton = false, bool showShareButton = false)
+		private DefaultEmbed GetMemeEmbed(MemeResponse meme = null, int rerollCount = 0, bool showRerollButton = false, bool showShareButton = false)
 		{
 			meme ??= MemeAPI.GetRandomMeme();
 
 			// Base embed
-			DefaultEmbed embed = new DefaultEmbed("Meme", "😂", this.Context)
+			string rerollsSuffix = $" {(rerollCount > 0 ? $" ({rerollCount} reroll{(rerollCount > 1 ? "s" : "")})" : "")}";
+			DefaultEmbed embed = new DefaultEmbed($"Meme{rerollsSuffix}", "😂", this.Context)
 			{
 				Title = meme.Title,
 				ImageUrl = meme.Url,
 			};
-			embed.AddField("**__OP__**", meme.Author, true);
-			embed.AddField("**__Subreddit__**", meme.Subreddit, true);
-			embed.AddField("**__Upvotes__**", meme.Upvotes, true);
+
+			// First row
+			_ = embed.AddField("**__OP__**", meme.Author, true);
+			_ = embed.AddField("**__Subreddit__**", meme.Subreddit, true);
+			_ = embed.AddField("**__Upvotes__**", meme.Upvotes, true);
+
 			// Buttons
 			ComponentBuilder components = new ComponentBuilder();
 			// "Reroll" button
 			if (showRerollButton)
 			{
-				components.WithButton("Reroll", "button_reroll_meme", style: ButtonStyle.Success, emote: Emoji.Parse("🔁"));
+				_ = components.WithButton("Reroll", $"button_reroll_meme:{rerollCount}", style: ButtonStyle.Success, emote: Emoji.Parse("🔁"));
 			}
 			// "View post" button
-			components.WithButton("View post", style: ButtonStyle.Link, emote: Emoji.Parse("📄"), url: meme.PostLink);
+			_ = components.WithButton("View post", style: ButtonStyle.Link, emote: Emoji.Parse("📄"), url: meme.PostLink);
 			// "Share" button
 			if (showShareButton)
 			{
-				components.WithButton("Share", $"button_share_meme:{meme.PostLink}", style: ButtonStyle.Secondary, emote: Emoji.Parse("📲"));
+				_ = components.WithButton("Share", $"button_share_meme:{meme.PostLink}", style: ButtonStyle.Secondary, emote: Emoji.Parse("📲"));
 			}
+			embed.Component = components.Build();
 
-			return (embed, components.Build());
+			return embed;
 		}
 
-		[ComponentInteraction("button_reroll_meme", true)]
-		public async Task ButtonRerollMemeAsync()
+		[ComponentInteraction("button_reroll_meme:*", true)]
+		public async Task ButtonRerollMemeAsync(int rerollCount)
 		{
 			await this.DeferAsync(true);
 
-			(DefaultEmbed embed, MessageComponent components) = this.GetMemeEmbed(showRerollButton: true, showShareButton: true);
+			DefaultEmbed embed = this.GetMemeEmbed(rerollCount: rerollCount + 1, showRerollButton: true, showShareButton: true);
 
-			await this.ModifyOriginalResponseAsync((msg) =>
+			_ = await this.ModifyOriginalResponseAsync((msg) =>
 			{
-				msg.Components = components;
+				msg.Components = embed.Component;
 				msg.Embed = embed.Build();
 			});
 		}
@@ -82,7 +87,7 @@ namespace Diamond.API.SlashCommands.Fun
 			ComponentBuilder components = new ComponentBuilder()
 				.WithButton("View post", style: ButtonStyle.Link, emote: Emoji.Parse("📄"), url: postLink);
 
-			await this.ReplyAsync(embed: embed, components: components.Build());
+			_ = await this.ReplyAsync(embed: embed, components: components.Build());
 		}
 	}
 }
