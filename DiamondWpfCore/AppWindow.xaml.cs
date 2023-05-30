@@ -15,7 +15,6 @@ using Diamond.GUI.Pages;
 using Microsoft.Extensions.DependencyInjection;
 
 using Image = System.Windows.Controls.Image;
-using SUtils = ScriptsLibV2.Util.Utils;
 
 namespace Diamond.GUI
 {
@@ -106,6 +105,11 @@ namespace Diamond.GUI
 						this._logsPanel.Log(logMessage);
 					}
 				});
+			});
+			// Bot login
+			this._client.LoggedIn += new Func<Task>(async () =>
+			{
+				await Utils.SetClientActivityAsync(_client);
 			});
 
 			// App events

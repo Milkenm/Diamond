@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
@@ -11,7 +12,7 @@ namespace Diamond.API.SlashCommands.Moderation
 {
 	public partial class Moderation
 	{
-		[RequireBotPermission(GuildPermission.ManageChannels)]
+		[RequireBotPermission(GuildPermission.ManageMessages)]
 		[RequireUserPermission(GuildPermission.ManageMessages)]
 		[DefaultMemberPermissions(GuildPermission.ManageMessages)]
 		[DSlashCommand("prune", "Delete messages from a channel.")]
@@ -33,24 +34,14 @@ namespace Diamond.API.SlashCommands.Moderation
 
 			if (!onlyDeleteBotMessages)
 			{
-				foreach (IMessage message in messages)
-				{
-					if (message.Id != responseMessage.Id)
-					{
-						messagesToDeleteList.Add(message);
-					}
-				}
+				messagesToDeleteList.AddRange(messages.Where(message => message.Id != responseMessage.Id));
 			}
 			else
 			{
-				foreach (IMessage msg in messages)
-				{
-					if (msg.Author.IsBot && msg.Id != responseMessage.Id)
-					{
-						messagesToDeleteList.Add(msg);
-					}
-				}
+				messagesToDeleteList.AddRange(messages.Where(msg => msg.Author.IsBot && msg.Id != responseMessage.Id));
 			}
+			// Ignore messages older than 14 days (Discord doesn't allow bots to delete old messages)
+			_ = messagesToDeleteList.RemoveAll(msg => msg.CreatedAt < System.DateTimeOffset.Now.AddDays(-14));
 
 			if (messagesToDeleteList.Count > 0)
 			{

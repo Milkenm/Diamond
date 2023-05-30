@@ -6,11 +6,11 @@
     <ApplicationIcon>Diamond Icon 2 (round).ico</ApplicationIcon>
     <Copyright>Milkenm</Copyright>
     <RepositoryUrl>https://github.com/Milkenm/Diamond</RepositoryUrl>
-    <AssemblyVersion>1.0</AssemblyVersion>
-    <FileVersion>1.0</FileVersion>
+    <AssemblyVersion>1.1</AssemblyVersion>
+    <FileVersion>1.1</FileVersion>
     <Company>Milkenm</Company>
     <Title>Diamond API</Title>
-    <Version>1.0</Version>
+    <Version>1.1</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 

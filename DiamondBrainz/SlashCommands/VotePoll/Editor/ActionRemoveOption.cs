@@ -14,7 +14,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 		/// <param name="messageId"></param>
 		/// <param name="selectedOptionId"></param>
 		/// <returns></returns>
-		[ComponentInteraction("sm_poll_remove_option:*")]
+		[ComponentInteraction("sm_poll_remove_option:*", true)]
 		public async Task SelectMenuRemoveOptionHandlerAsync(ulong messageId, long selectedOptionId)
 		{
 			await this.DeferAsync();

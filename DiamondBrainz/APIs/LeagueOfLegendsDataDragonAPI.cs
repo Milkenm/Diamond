@@ -1,4 +1,6 @@
-﻿using Diamond.API.Schemes.LolDataDragon;
+﻿using System.Collections.Generic;
+
+using Diamond.API.Schemes.LolDataDragon;
 
 using ScriptsLibV2.Util;
 
@@ -20,6 +22,8 @@ namespace Diamond.API.APIs
 		private const string DDRAGON_CHAMPION_IMAGE_SQUARE_URL = DDRAGON_HOST_URL + "/cdn/{0}/img/champion/{1}";
 		// {0}: Champion name
 		private const string FANDOM_WIKI_URL = "https://leagueoflegends.fandom.com/wiki/{0}/LoL";
+		// {0}: Champion name
+		private const string UNIVERSE_URL = "https://universe.leagueoflegends.com/en_GB/champion/{0}/";
 
 		public LolVersion DdragonVersion { get; private set; }
 		public LolChampionData DdragonChampionData { get; private set; }
@@ -45,6 +49,16 @@ namespace Diamond.API.APIs
 			this.UpdateDdragonChampionData();
 		}
 
+		public Dictionary<string, LolChampion> GetFixedChampionsMap()
+		{
+			Dictionary<string, LolChampion> championsMap = new Dictionary<string, LolChampion>();
+			foreach (LolChampion champ in this.DdragonChampionData.ChampionsList.Values)
+			{
+				championsMap.Add(champ.ChampionName, champ);
+			}
+			return championsMap;
+		}
+
 		private void UpdateDdragonVersion() => this.DdragonVersion = RequestUtils.Get<LolVersion>(DDRAGON_VERSION_URL);
 
 		private void UpdateDdragonChampionData() => this.DdragonChampionData = RequestUtils.Get<LolChampionData>(string.Format(DDRAGON_CHAMPIONS_URL, this.DdragonVersion.DdragonVersion));
@@ -57,6 +71,8 @@ namespace Diamond.API.APIs
 
 		public string GetChampionSquareImageUrl(LolChampion champion) => string.Format(DDRAGON_CHAMPION_IMAGE_SQUARE_URL, this.DdragonVersion.DdragonVersion, champion.ImageInfo.FullImageName);
 
-		public string GetChampionFandomWikiPageUrl(LolChampion champion) => string.Format(FANDOM_WIKI_URL, champion.ChampionName);
+		public string GetChampionFandomWikiPageUrl(LolChampion champion) => string.Format(FANDOM_WIKI_URL, champion.ChampionName.Replace(" ", "_"));
+
+		public string GetChampionUniversePage(LolChampion champ) => string.Format(UNIVERSE_URL, champ.InternalChampionName.ToLower());
 	}
 }

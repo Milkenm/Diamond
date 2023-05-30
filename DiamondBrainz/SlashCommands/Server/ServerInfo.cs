@@ -16,7 +16,7 @@ namespace Diamond.API.SlashCommands.Server
 {
 	public partial class Server
 	{
-		[DSlashCommand("info", "Show info about the server.")]
+		[DSlashCommand("info", "Show info about the guild.")]
 		public async Task ServerInfoCommandAsync(
 				[ShowEveryone] bool showEveryone = false
 		)

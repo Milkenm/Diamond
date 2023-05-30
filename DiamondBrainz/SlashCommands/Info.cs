@@ -79,12 +79,13 @@ namespace Diamond.API.SlashCommands
 
 		private (float freeRam, float usedRam, float totalRam) GetRamUsage()
 		{
-			_ = PInvoke.GetPhysicallyInstalledSystemMemory(out long totalRam);
-			totalRam = totalRam / 1024 / 1024;
-			PerformanceCounter performance = new PerformanceCounter("Memória", "MBytes disponíveis");
-			float usedRam = performance.NextValue();
+			_ = PInvoke.GetPhysicallyInstalledSystemMemory(out long totalRamMb);
+			totalRamMb /= 1024;
+			PerformanceCounter performance = new PerformanceCounter("Memory", "Available MBytes");
+			float freeRamMb = performance.NextValue();
+			Debug.WriteLine("free ram: " + freeRamMb);
 
-			return (totalRam - usedRam, usedRam, totalRam);
+			return (freeRamMb, totalRamMb - freeRamMb, totalRamMb / 1024);
 		}
 
 		private (long freeSpace, long usedSpace, long totalSpace) GetDiskUsage()

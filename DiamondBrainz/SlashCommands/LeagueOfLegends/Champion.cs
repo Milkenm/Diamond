@@ -22,7 +22,7 @@ namespace Diamond.API.SlashCommands.LeagueOfLegends
 			DefaultEmbed embed = new DefaultEmbed("LoL Champion", "🧙", this.Context);
 
 			// Search champ
-			List<SearchMatchInfo<LolChampion>> search = Utils.Search(this._dataDragonApi.DdragonChampionData.ChampionsList, championName);
+			List<SearchMatchInfo<LolChampion>> search = Utils.Search(this._dataDragonApi.GetFixedChampionsMap(), championName);
 			if (search.Count == 0)
 			{
 				embed.Title = "Champion not found";
@@ -70,7 +70,8 @@ namespace Diamond.API.SlashCommands.LeagueOfLegends
 			}
 			// Fandom button
 			ComponentBuilder component = new ComponentBuilder()
-				.WithButton("View on Fandom", style: ButtonStyle.Link, emote: Emoji.Parse("📖"), url: this._dataDragonApi.GetChampionFandomWikiPageUrl(champ).Replace(" ", "_"));
+				.WithButton("View on Fandom", style: ButtonStyle.Link, emote: Emoji.Parse("📖"), url: this._dataDragonApi.GetChampionFandomWikiPageUrl(champ))
+				.WithButton("View on Universe", style: ButtonStyle.Link, emote: Emoji.Parse("🌌"), url: this._dataDragonApi.GetChampionUniversePage(champ));
 
 			_ = await embed.SendAsync(component: component.Build());
 		}

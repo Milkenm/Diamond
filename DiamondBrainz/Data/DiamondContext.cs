@@ -35,6 +35,10 @@ namespace Diamond.API.Data
 			// Random Stuff
 			CsgoItemsLoadUnix,
 			TotalUptime,
+			// Activity
+			ActivityType,
+			ActivityText,
+			ActivityStreamURL,
 		}
 
 		private static readonly Dictionary<ConfigSetting, string> _settingsList = new Dictionary<ConfigSetting, string>()
@@ -48,17 +52,25 @@ namespace Diamond.API.Data
 			{ ConfigSetting.IgnoreDebugChannels, "IgnoreDebugChannels" },
 			{ ConfigSetting.CsgoItemsLoadUnix, "CsgoItemsLoadUnix" },
 			{ ConfigSetting.TotalUptime, "TotalUptime" },
+			{ ConfigSetting.ActivityType, "ActivityType" },
+			{ ConfigSetting.ActivityText, "ActivityText" },
+			{ ConfigSetting.ActivityStreamURL, "ActivityStreamURL" },
 		};
 		/// <summary>
 		/// Settings that are ignored when validating if all settings are set (for example: when starting the program).
 		/// </summary>
 		private static readonly List<ConfigSetting> _settingsToIgnoreInValidation = new List<ConfigSetting>()
 		{
+			// Random stuff
 #if DEBUG
 			ConfigSetting.IgnoreDebugChannels,
 #endif
 			ConfigSetting.CsgoItemsLoadUnix,
 			ConfigSetting.TotalUptime,
+			// Activity
+			ConfigSetting.ActivityType,
+			ConfigSetting.ActivityText,
+			ConfigSetting.ActivityStreamURL,
 		};
 
 		private bool _isSaving = false;

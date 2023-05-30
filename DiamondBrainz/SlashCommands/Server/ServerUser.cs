@@ -23,9 +23,9 @@ namespace Diamond.API.SlashCommands.Server
 			{ UserStatus.Offline, "<:discord_offline_icon:1112230664310378537> Offline" },
 		};
 
-		[DSlashCommand("user", "Show info about a server user.")]
+		[DSlashCommand("member", "Show info about a guild member.")]
 		public async Task ServerUserCommandAsync(
-			[Summary("user", "The user to view info about.")] SocketGuildUser user,
+			[Summary("member", "The user to view info about.")] SocketGuildUser member,
 			[ShowEveryone] bool showEveryone = false
 		)
 		{
@@ -35,10 +35,11 @@ namespace Diamond.API.SlashCommands.Server
 
 			// Get all user roles into a string
 			StringBuilder rolesSb = new StringBuilder();
-			foreach (SocketRole role in user.Roles)
+			foreach (SocketRole role in member.Roles)
 			{
 				// Ignore the @everyone role (it's a role apparently)
-				if (role.Id == 1102882126585679982L) continue;
+				if (role.IsEveryone) continue;
+
 				if (rolesSb.Length > 0)
 				{
 					_ = rolesSb.Append(", ");
@@ -47,7 +48,7 @@ namespace Diamond.API.SlashCommands.Server
 			}
 			// Get all user guild permissions into a string
 			StringBuilder permissionsSb = new StringBuilder();
-			foreach (GuildPermission permission in user.GuildPermissions.ToList())
+			foreach (GuildPermission permission in member.GuildPermissions.ToList())
 			{
 				if (permissionsSb.Length > 0)
 				{
@@ -57,7 +58,7 @@ namespace Diamond.API.SlashCommands.Server
 			}
 			// Get all user clients into a string
 			StringBuilder clientsSb = new StringBuilder();
-			foreach (ClientType client in user.ActiveClients)
+			foreach (ClientType client in member.ActiveClients)
 			{
 				if (clientsSb.Length > 0)
 				{
@@ -68,19 +69,19 @@ namespace Diamond.API.SlashCommands.Server
 
 			DefaultEmbed embed = new DefaultEmbed("Guild User", "👤", this.Context)
 			{
-				Title = user.DisplayName,
-				Description = user.Mention,
-				ThumbnailUrl = user.GetDisplayAvatarUrl(),
+				Title = member.DisplayName,
+				Description = member.Mention,
+				ThumbnailUrl = member.GetDisplayAvatarUrl(),
 			};
 
 			// First row
-			_ = embed.AddField("📛 Real name", $"{user.Username}#{user.DiscriminatorValue}", true);
-			_ = embed.AddField("🛏️ Status", _statusMap[user.Status], true);
+			_ = embed.AddField("📛 Real name", $"{member.Username}#{member.DiscriminatorValue}", true);
+			_ = embed.AddField("🛏️ Status", _statusMap[member.Status], true);
 			_ = embed.AddField("Clients", clientsSb.Length > 0 ? clientsSb.ToString() : "None", true);
 			// Second row
-			_ = embed.AddField("📆 Created at", user.CreatedAt.ToString("dd/MM/yyyy, HH:mm:ss"), true);
-			_ = embed.AddField("📆 Joined at", user.JoinedAt?.ToString("dd/MM/yyyy, HH:mm:ss"), true);
-			_ = embed.AddField("🚀 Server Boosting since", user.PremiumSince != null ? user.PremiumSince?.ToString("dd/MM/yyyy, HH:mm:ss") : "Currently not boosting", true);
+			_ = embed.AddField("📆 Created at", member.CreatedAt.ToString("dd/MM/yyyy, HH:mm:ss"), true);
+			_ = embed.AddField("📆 Joined at", member.JoinedAt?.ToString("dd/MM/yyyy, HH:mm:ss"), true);
+			_ = embed.AddField("🚀 Server Boosting since", member.PremiumSince != null ? member.PremiumSince?.ToString("dd/MM/yyyy, HH:mm:ss") : "Currently not boosting", true);
 			// Third row
 			_ = embed.AddField("🏷 Roles", rolesSb.ToString());
 			// Fourth row

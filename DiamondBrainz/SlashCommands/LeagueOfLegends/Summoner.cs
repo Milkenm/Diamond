@@ -8,7 +8,7 @@ namespace Diamond.API.SlashCommands.LeagueOfLegends
 {
 	public partial class LeagueOfLegends
 	{
-		[DSlashCommand("summoner", "View a summoner's profile.")]
+		/*[DSlashCommand("summoner", "View a summoner's profile.")]
 		public async Task SummonerCommandAsync(
 			[Summary("summoner-name", "The name of the summoner to search for.")] string summonerName,
 			[Summary("region", "The region the summoner is playing at.")] Region region,
@@ -16,7 +16,7 @@ namespace Diamond.API.SlashCommands.LeagueOfLegends
 		)
 		{
 
-		}
+		}*/
 
 		public enum Region
 		{

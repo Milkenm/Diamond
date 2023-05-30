@@ -13,7 +13,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 		/// Sends a ephemeral message to with a <see cref="VotingEmbed"/> to allow the user to vote.
 		/// <para>(Called when a user clicks the "Vote" button on the "<see cref="PublishedEmbed">Published</see>" poll embed)</para>
 		/// </summary>
-		[ComponentInteraction("button_poll_vote")]
+		[ComponentInteraction("button_poll_vote", true)]
 		public async Task ButtonVoteHandlerAsync()
 		{
 			await this.DeferAsync(true);

@@ -35,58 +35,140 @@ namespace Diamond.API.SlashCommands
 			[Summary("include-offline", "Set to true to include offline users.")] bool includeOffline = false,
 			[Summary("include-bots", "Set to true to include bots.")] bool includeBots = false,
 			[Summary("include-self", "Set to true to include yourself.")] bool includeSelf = false,
+			[Summary("print-settings", "Set to true to show additional information about the settings on the embed.")] bool printSettings = false,
 			[ShowEveryone] bool showEveryone = false
 		)
 		{
 			await this.DeferAsync(!showEveryone);
-			DefaultEmbed embed = new DefaultEmbed("Someone", "👤", this.Context);
 
+			SomeoneArgs args = new SomeoneArgs(withRole, withoutRole, onlyInThisChannel, includeOffline, includeBots, includeSelf, printSettings);
+			DefaultEmbed embed = await GetSomeoneEmbedAsync(this.Context, args, true);
+
+			_ = await embed.SendAsync();
+		}
+
+		[ComponentInteraction("button_someone_reroll:*,*,*,*,*,*,*", true)]
+		public async Task ButtonRerollHandlerAsync(ulong withRoleId, ulong withoutRoleId, bool onlyInThisChannel, bool includeOffline, bool includeBots, bool includeSelf, bool printSettings)
+		{
+			await this.DeferAsync();
+
+			IRole withRole = withRoleId != 0L ? this.Context.Guild.GetRole(withRoleId) : null;
+			IRole withoutRole = withoutRoleId != 0L ? this.Context.Guild.GetRole(withoutRoleId) : null;
+			SomeoneArgs args = new SomeoneArgs(withRole, withoutRole, onlyInThisChannel, includeOffline, includeBots, includeSelf, printSettings);
+			DefaultEmbed embed = await GetSomeoneEmbedAsync(this.Context, args, false);
+
+			_ = await this.ModifyOriginalResponseAsync((msg) =>
+			{
+				msg.Embed = embed.Build();
+			});
+		}
+
+		private static async Task<DefaultEmbed> GetSomeoneEmbedAsync(SocketInteractionContext context, SomeoneArgs args, bool addComponents)
+		{
+			DefaultEmbed embed = new DefaultEmbed("Someone", "👤", context);
+			if (addComponents)
+			{
+				embed.Component = new ComponentBuilder()
+				.WithButton("Reroll", $"button_someone_reroll:{(args.WithRole != null ? args.WithRole.Id : 0L)},{(args.WithoutRole != null ? args.WithRole.Id : 0L)},{args.OnlyInThisChannel},{args.IncludeOffline},{args.IncludeBots},{args.IncludeSelf},{args.PrintSettings}", style: ButtonStyle.Secondary, emote: Emoji.Parse("🔁"))
+				.Build();
+			}
+
+			// Add embed settings
+			if (args.PrintSettings)
+			{
+				// First row
+				_ = embed.AddField("🏷️ With role", args.WithRole != null ? args.WithRole.Mention : "Unset", true);
+				_ = embed.AddField("🏷️ Without role", args.WithoutRole != null ? args.WithoutRole.Mention : "Unset", true);
+				_ = embed.AddField("📰 Only in this channel", args.OnlyInThisChannel.ToString(), true);
+				// Second row
+				_ = embed.AddField("<:discord_offline_icon:1112230664310378537> Include offline", args.IncludeOffline.ToString(), true);
+				_ = embed.AddField("🤖 Include bots", args.IncludeBots.ToString(), true);
+				_ = embed.AddField("🫵 Inlcude self", args.IncludeSelf.ToString(), true);
+			}
+
+			SocketGuildUser? selectedUser = await GetSomeoneAsync(context, args);
+
+			// No matching users found
+			if (selectedUser == null)
+			{
+				embed.Title = "No users found";
+				return embed;
+			}
+
+			// Select a random kaomoji
+			int kaomojiIndex = RandomGenerator.GetInstance().Random.Next(0, _kaomojisList.Count);
+			string kaomoji = _kaomojisList[kaomojiIndex];
+
+			// Set embed content
+			embed.Title = kaomoji;
+			embed.Description = selectedUser.Mention;
+			embed.ThumbnailUrl = selectedUser.GetDisplayAvatarUrl();
+
+			return embed;
+		}
+
+		private static async Task<SocketGuildUser?> GetSomeoneAsync(SocketInteractionContext context, SomeoneArgs args)
+		{
 			// Refresh users
-			await this.Context.Guild.DownloadUsersAsync();
+			await context.Guild.DownloadUsersAsync();
 
 			// Filter users
-			IEnumerable<IUser> validUsers = !onlyInThisChannel ? this.Context.Guild.Users : await this.Context.Channel.GetUsersAsync().FlattenAsync();
-			if (withRole != null)
+			IEnumerable<IUser> validUsers = !args.OnlyInThisChannel ? context.Guild.Users : await context.Channel.GetUsersAsync().FlattenAsync();
+			if (args.WithRole != null)
 			{
-				validUsers = validUsers.Where(u => (u as SocketGuildUser).Roles.Contains(withRole));
+				validUsers = validUsers.Where(u => (u as SocketGuildUser).Roles.Contains(args.WithRole));
 			}
-			if (withoutRole != null)
+			if (args.WithoutRole != null)
 			{
-				validUsers = validUsers.Where(u => !(u as SocketGuildUser).Roles.Contains(withoutRole));
+				validUsers = validUsers.Where(u => !(u as SocketGuildUser).Roles.Contains(args.WithoutRole));
 			}
-			if (!includeOffline)
+			if (!args.IncludeOffline)
 			{
 				validUsers = validUsers.Where(u => u.Status != UserStatus.Offline);
 			}
-			if (!includeBots)
+			if (!args.IncludeBots)
 			{
 				validUsers = validUsers.Where(u => !u.IsBot);
 			}
-			if (!includeSelf)
+			if (!args.IncludeSelf)
 			{
-				validUsers = validUsers.Where(u => u != this.Context.User);
+				validUsers = validUsers.Where(u => u != context.User);
 			}
 
 			// No matching users found
 			if (!validUsers.Any())
 			{
-				embed.Title = "No users found";
-				_ = await embed.SendAsync();
-				return;
+				return null;
 			}
 
 			// Select a user based on a random index
 			int index = RandomGenerator.GetInstance().Random.Next(0, validUsers.Count());
 			SocketGuildUser selectedUser = validUsers.ElementAt(index) as SocketGuildUser;
 
-			// Select a random kaomoji
-			int kaomojiIndex = RandomGenerator.GetInstance().Random.Next(0, _kaomojisList.Count);
-			string kaomoji = _kaomojisList[kaomojiIndex];
+			// Return the selected user
+			return selectedUser;
+		}
 
-			embed.Title = kaomoji;
-			embed.Description = selectedUser.Mention;
-			embed.ThumbnailUrl = selectedUser.GetDisplayAvatarUrl();
-			_ = await embed.SendAsync();
+		private class SomeoneArgs
+		{
+			public SomeoneArgs(IRole withRole, IRole withoutRole, bool onlyInThisChannel, bool includeOffline, bool includeBots, bool includeSelf, bool printSettings)
+			{
+				this.WithRole = withRole;
+				this.WithoutRole = withoutRole;
+				this.OnlyInThisChannel = onlyInThisChannel;
+				this.IncludeOffline = includeOffline;
+				this.IncludeBots = includeBots;
+				this.IncludeSelf = includeSelf;
+				this.PrintSettings = printSettings;
+			}
+
+			public IRole? WithRole { get; set; }
+			public IRole? WithoutRole { get; set; }
+			public bool OnlyInThisChannel { get; set; }
+			public bool IncludeOffline { get; set; }
+			public bool IncludeBots { get; set; }
+			public bool IncludeSelf { get; set; }
+			public bool PrintSettings { get; set; }
 		}
 	}
 }
