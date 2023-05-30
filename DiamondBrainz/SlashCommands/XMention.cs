@@ -50,7 +50,7 @@ namespace Diamond.API.SlashCommands
 			await embed.SendAsync(component.Build());
 		}
 
-		[ComponentInteraction("xmention_channel_selector:*")]
+		[ComponentInteraction("xmention_channel_selector:*", true)]
 		public async Task XChannelSelectionAsync(ulong messageId, string selectedChannelId)
 		{
 			await this.DeferAsync();
