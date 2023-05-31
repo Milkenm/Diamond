@@ -10,6 +10,8 @@ using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 
+using ScriptsLibV2.Extensions;
+
 using SUtils = ScriptsLibV2.Util.Utils;
 
 namespace Diamond.API
@@ -145,9 +147,26 @@ namespace Diamond.API
 			// Load command modules
 			_ = await this._interactionService.AddModulesAsync(SUtils.GetAssemblyByName("DiamondAPI"), this._serviceProvider);
 
-			// Register commands globally (to every guild)
-			_ = await this._interactionService.RegisterCommandsGloballyAsync(true);
-			OnLog?.Invoke($"Registered {this._interactionService.SlashCommands.Count} commands to {this.Guilds.Count} guild{(this.Guilds.Count != 1 ? "s" : "")}.", false);
+			if (!SUtils.IsDebugEnabled())
+			{
+				// Register commands globally (to every guild)
+				_ = await this._interactionService.RegisterCommandsGloballyAsync(true);
+				OnLog?.Invoke($"Registered {this._interactionService.SlashCommands.Count} commands to {this.Guilds.Count} guild{(this.Guilds.Count != 1 ? "s" : "")}.", false);
+			}
+			else
+			{
+				// Check if debug guild is found
+				string? debugGuildIdString = db.GetSetting(ConfigSetting.DebugGuildID);
+				ulong? debugGuildId = !debugGuildIdString.IsEmpty() ? Convert.ToUInt64(debugGuildIdString) : null;
+				if (debugGuildId == null || this.GetGuild((ulong)debugGuildId) == null)
+				{
+					OnLog?.Invoke("Debug guild not found.", false);
+					return;
+				}
+				// Register commands to debug guild
+				_ = await this._interactionService.RegisterCommandsToGuildAsync((ulong)debugGuildId, true);
+				OnLog?.Invoke($"Registered {this._interactionService.SlashCommands.Count} commands to debug guild.", false);
+			}
 		}
 
 		private Task DiamondClient_LoggedIn()
