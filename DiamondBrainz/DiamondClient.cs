@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,10 +9,6 @@ using Diamond.API.Util;
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
-
-using ScriptsLibV2.Extensions;
-
-using static Diamond.API.Data.DiamondContext;
 
 using SUtils = ScriptsLibV2.Util.Utils;
 
@@ -147,32 +142,12 @@ namespace Diamond.API
 			}
 			this.IsReady = true;
 
+			// Load command modules
 			_ = await this._interactionService.AddModulesAsync(SUtils.GetAssemblyByName("DiamondAPI"), this._serviceProvider);
-			string? debugGuildIdString = db.GetSetting(ConfigSetting.DebugGuildID);
-			ulong? debugGuildId = !debugGuildIdString.IsEmpty() ? Convert.ToUInt64(debugGuildIdString) : null;
 
-			// Release build
-			if (!SUtils.IsDebugEnabled())
-			{
-				// Register commands globally (to every guild)
-				_ = await this._interactionService.RegisterCommandsGloballyAsync(true);
-				OnLog?.Invoke($"Registered {this._interactionService.SlashCommands.Count} commands to {this.Guilds.Count} guilds.", false);
-			}
-			// Debug build
-			else if (debugGuildId.HasValue)
-			{
-				// Check if bot is in debug guild
-				if (!this.Guilds.Where(g => g.Id == debugGuildId).Any())
-				{
-					OnLog?.Invoke("Debug guild was not found.", false);
-				}
-				else
-				{
-					// Register commands only to dev guild
-					_ = await this._interactionService.RegisterCommandsToGuildAsync((ulong)debugGuildId);
-					OnLog?.Invoke($"Registered {this._interactionService.SlashCommands.Count} commands to dev guild.", false);
-				}
-			}
+			// Register commands globally (to every guild)
+			_ = await this._interactionService.RegisterCommandsGloballyAsync(true);
+			OnLog?.Invoke($"Registered {this._interactionService.SlashCommands.Count} commands to {this.Guilds.Count} guild{(this.Guilds.Count != 1 ? "s" : "")}.", false);
 		}
 
 		private Task DiamondClient_LoggedIn()

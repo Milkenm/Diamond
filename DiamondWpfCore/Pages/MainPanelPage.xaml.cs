@@ -12,11 +12,11 @@ using Diamond.API.Data;
 using Diamond.API.Util;
 
 using Discord;
-using Discord.WebSocket;
 
 using ScriptsLibV2.Extensions;
 
 using Color = System.Windows.Media.Color;
+using SUtils = ScriptsLibV2.Util.Utils;
 
 namespace Diamond.GUI.Pages;
 /// <summary>
@@ -42,10 +42,10 @@ public partial class MainPanelPage : Page
 		// Start
 		if (this._client.LoginState is not LoginState.LoggedIn and not LoginState.LoggingIn)
 		{
-			string token = db.GetSetting(DiamondContext.ConfigSetting.Token);
+			string token = !SUtils.IsDebugEnabled() ? db.GetSetting(ConfigSetting.Token) : db.GetSetting(ConfigSetting.DevToken);
 			if (token.IsEmpty())
 			{
-				MessageBox.Show("Bot token is not set.");
+				_ = MessageBox.Show("Bot token is not set.");
 				return;
 			}
 			await this._client.BringToLifeAsync(token);

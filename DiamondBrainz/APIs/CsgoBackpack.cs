@@ -59,7 +59,7 @@ namespace Diamond.API.APIs
 				{
 					Debug.WriteLine("Checking last refresh unix...");
 					// Check if items need to be updated
-					long lastUpdate = Convert.ToInt64(db.GetSetting(DiamondContext.ConfigSetting.CsgoItemsLoadUnix));
+					long lastUpdate = Convert.ToInt64(db.GetSetting(ConfigSetting.CsgoItemsLoadUnix));
 					if (lastUpdate + (KEEP_RESULTS_FOR_MINUTES * 60) >= currentUnix)
 					{
 						this.IsLoadingItems = false;
@@ -160,7 +160,7 @@ namespace Diamond.API.APIs
 						}
 					}
 				}
-				await db.SetSettingAsync(DiamondContext.ConfigSetting.CsgoItemsLoadUnix, currentUnix);
+				await db.SetSettingAsync(ConfigSetting.CsgoItemsLoadUnix, currentUnix);
 				int remainingRecords = await db.SaveChangesAsync();
 				Debug.WriteLine($"Saved the remaining {remainingRecords} records.");
 				Debug.WriteLine("Done!");

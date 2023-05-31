@@ -22,28 +22,10 @@ namespace Diamond.API.Data
 			/*options.LogTo((msg) => Debug.WriteLine(msg));*/
 		}
 
-		public enum ConfigSetting
-		{
-			// Settings
-			Token,
-			OpenAI_API_Key,
-			NightAPI_API_Key,
-			RiotAPI_Key,
-			DebugGuildID,
-			DebugChannelsID,
-			IgnoreDebugChannels,
-			// Random Stuff
-			CsgoItemsLoadUnix,
-			TotalUptime,
-			// Activity
-			ActivityType,
-			ActivityText,
-			ActivityStreamURL,
-		}
-
 		private static readonly Dictionary<ConfigSetting, string> _settingsList = new Dictionary<ConfigSetting, string>()
 		{
 			{ ConfigSetting.Token, "Token" },
+			{ ConfigSetting.DevToken, "DevToken" },
 			{ ConfigSetting.OpenAI_API_Key, "OpenaiApiKey" },
 			{ ConfigSetting.NightAPI_API_Key, "NightapiApiKey" },
 			{ ConfigSetting.RiotAPI_Key, "RiotApiKey" },
@@ -63,7 +45,10 @@ namespace Diamond.API.Data
 		{
 			// Random stuff
 #if DEBUG
+			ConfigSetting.Token,
 			ConfigSetting.IgnoreDebugChannels,
+#elif RELEASE
+			ConfigSetting.DevToken,
 #endif
 			ConfigSetting.CsgoItemsLoadUnix,
 			ConfigSetting.TotalUptime,
@@ -156,5 +141,25 @@ namespace Diamond.API.Data
 		{
 			_ = this.Database.ExecuteSqlRaw($"DELETE FROM [{tableName}]");
 		}
+	}
+
+	public enum ConfigSetting
+	{
+		// Settings
+		Token,
+		DevToken,
+		OpenAI_API_Key,
+		NightAPI_API_Key,
+		RiotAPI_Key,
+		DebugGuildID,
+		DebugChannelsID,
+		IgnoreDebugChannels,
+		// Random Stuff
+		CsgoItemsLoadUnix,
+		TotalUptime,
+		// Activity
+		ActivityType,
+		ActivityText,
+		ActivityStreamURL,
 	}
 }

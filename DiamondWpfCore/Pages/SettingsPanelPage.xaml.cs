@@ -53,6 +53,7 @@ public partial class SettingsPanelPage : Page
 		SettingsJSON settings = new SettingsJSON()
 		{
 			Token = db.GetSetting(ConfigSetting.Token),
+			DevToken = db.GetSetting(ConfigSetting.DevToken),
 			ActivityType = db.GetSetting(ConfigSetting.ActivityType, string.Empty),
 			ActivityText = db.GetSetting(ConfigSetting.ActivityText, string.Empty),
 			ActivityStreamURL = db.GetSetting(ConfigSetting.ActivityStreamURL, string.Empty),
@@ -74,6 +75,7 @@ public partial class SettingsPanelPage : Page
 
 		// Bot stuff
 		await db.SetSettingAsync(ConfigSetting.Token, settingsJson.Token);
+		await db.SetSettingAsync(ConfigSetting.DevToken, settingsJson.DevToken);
 		await db.SetSettingAsync(ConfigSetting.ActivityType, this.comboBox_activityType.SelectedItem.ToString());
 		await db.SetSettingAsync(ConfigSetting.ActivityText, this.textBox_activityText.Text);
 		await db.SetSettingAsync(ConfigSetting.ActivityStreamURL, this.textBox_activityStreamUrl.Text);
@@ -161,6 +163,7 @@ public partial class SettingsPanelPage : Page
 	{
 		// Bot stuff
 		this.passwordBox_token.Password = settingsObject.Token;
+		this.passwordBox_devToken.Password = settingsObject.DevToken;
 		if (settingsObject.ActivityType.IsEmpty())
 		{
 			this.comboBox_activityType.SelectedIndex = 0;
@@ -204,6 +207,7 @@ public partial class SettingsPanelPage : Page
 		return new SettingsJSON()
 		{
 			Token = this.passwordBox_token.Password,
+			DevToken = this.passwordBox_devToken.Password,
 			ActivityType = this.comboBox_activityType.SelectedItem.ToString(),
 			ActivityText = this.textBox_activityText.Text,
 			ActivityStreamURL = this.textBox_activityStreamUrl.Text,
@@ -231,6 +235,7 @@ public partial class SettingsPanelPage : Page
 	public class SettingsJSON
 	{
 		[JsonProperty("token")] public string Token { get; set; }
+		[JsonProperty("dev_token")] public string DevToken { get; set; }
 		[JsonProperty("activity_type")] public string ActivityType { get; set; }
 		[JsonProperty("activity_text")] public string ActivityText { get; set; }
 		[JsonProperty("activity_stream_url")] public string ActivityStreamURL { get; set; }

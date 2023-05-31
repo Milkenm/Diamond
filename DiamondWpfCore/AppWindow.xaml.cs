@@ -15,6 +15,7 @@ using Diamond.GUI.Pages;
 using Microsoft.Extensions.DependencyInjection;
 
 using Image = System.Windows.Controls.Image;
+using SUtils = ScriptsLibV2.Util.Utils;
 
 namespace Diamond.GUI
 {
@@ -41,6 +42,11 @@ namespace Diamond.GUI
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			using DiamondContext db = new DiamondContext();
+
+			if (SUtils.IsDebugEnabled())
+			{
+				this.Title = $"{this.Title} (Debug)";
+			}
 
 			MainPanelPage mainPanel = this._serviceProvider.GetRequiredService<MainPanelPage>();
 			LogsPanelPage logsPanel = this._serviceProvider.GetRequiredService<LogsPanelPage>();
@@ -88,7 +94,6 @@ namespace Diamond.GUI
 				{
 					this.ToggleUIElement(this.image_guilds, this.tabItem_guilds, false);
 				});
-
 				return Task.CompletedTask;
 			});
 			// Bot log
@@ -109,7 +114,7 @@ namespace Diamond.GUI
 			// Bot login
 			this._client.LoggedIn += new Func<Task>(async () =>
 			{
-				await Utils.SetClientActivityAsync(_client);
+				await Utils.SetClientActivityAsync(this._client);
 			});
 
 			// App events

@@ -5,46 +5,61 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Diamond.GUI.Pages"
       mc:Ignorable="d" 
-      Width="909" Height="396" d:Height="800"
+      Width="909" Height="396" d:Height="1000"
       Title="Settings" Initialized="Page_Initialized">
 
 	<Grid>
 		<ScrollViewer Style="{StaticResource ScrollViewerStyle}" Margin="0,0,0,50" >
 			<StackPanel>
 				<Grid>
+					<!-- Bot token -->
 					<Label Style="{StaticResource LabelStyle}" HorizontalAlignment="Left" Margin="10,10,0,0" Content="Bot Token" VerticalAlignment="Top"/>
 					<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_token" Margin="10,38,10,0" VerticalAlignment="Top"/>
-					<Label Style="{StaticResource LabelStyle}" Content="Activity" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top"/>
-					<ComboBox x:Name="comboBox_activityType" Style="{DynamicResource ComboBoxStyle}" HorizontalAlignment="Left" Margin="10,118,0,0" VerticalAlignment="Top" Width="175"/>
-					<Label Style="{StaticResource LabelStyle}" Content="Activity Name" Margin="200,90,0,0"/>
-					<TextBox x:Name="textBox_activityText" Style="{StaticResource TextBoxStyle}" HorizontalAlignment="Left" Margin="200,118,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="210"/>
-					<Label Style="{StaticResource LabelStyle}" Content="Stream URL" Margin="415,90,0,0"/>
-					<TextBox x:Name="textBox_activityStreamUrl" Style="{StaticResource TextBoxStyle}" HorizontalAlignment="Left" Margin="415,118,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="467"/>
+					<!-- Dev Bot Token -->
+					<Label Style="{StaticResource LabelStyle}" Margin="10,90,0,0" Content="Dev Bot Token"/>
+					<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_devToken" Margin="10,118,10,0"/>
+					<!-- Activity -->
+					<Label Style="{StaticResource LabelStyle}" Content="Activity" Margin="10,170,0,0"/>
+					<ComboBox x:Name="comboBox_activityType" Style="{DynamicResource ComboBoxStyle}" HorizontalAlignment="Left" Margin="10,198,0,0" VerticalAlignment="Top" Width="175"/>
+					<!-- Acitivty Name -->
+					<Label Style="{StaticResource LabelStyle}" Content="Activity Name" Margin="200,170,0,0"/>
+					<TextBox x:Name="textBox_activityText" Style="{StaticResource TextBoxStyle}" HorizontalAlignment="Left" Margin="200,198,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="210"/>
+					<!-- Stream URL -->
+					<Label Style="{StaticResource LabelStyle}" Content="Stream URL" Margin="415,170,0,0"/>
+					<TextBox x:Name="textBox_activityStreamUrl" Style="{StaticResource TextBoxStyle}" HorizontalAlignment="Left" Margin="415,198,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="467"/>
 				</Grid>
 				<Separator Style="{StaticResource SeparatorStyle}"/>
 				<Grid>
+					<!-- OpenAI API Key -->
 					<Label Style="{StaticResource LabelStyle}" Content="OpenAI API Key" Margin="10,10,0,0"/>
 					<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_openaiApiKey" Margin="10,38,257,0"/>
+					<!-- NightAPI API Key -->
 					<Label Style="{StaticResource LabelStyle}" Content="NightAPI API Key" Margin="10,90,0,0"/>
 					<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_nightapiApiKey" Margin="10,118,257,0"/>
+					<!-- Riot API Key -->
 					<Label Style="{StaticResource LabelStyle}" Content="Riot API Key" Margin="10,170,0,0"/>
 					<PasswordBox Style="{StaticResource PasswordBoxStyle}" x:Name="passwordBox_riotApiKey" Margin="10,198,257,0"/>
 				</Grid>
 				<Separator Style="{StaticResource SeparatorStyle}"/>
 				<Grid>
+					<!-- Debug Guild ID -->
 					<Label Style="{StaticResource LabelStyle}" Content="Debug Guild ID" Margin="10,10,0,0"/>
 					<TextBox Style="{StaticResource TextBoxStyle}" x:Name="textBox_debugGuildId" Margin="10,38,0,0" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Width="400"/>
-					<Label Style="{StaticResource LabelStyle}" Content="Debug Channels ID" Margin="10,90,0,0"/>
-					<TextBox Style="{StaticResource MainTextBoxStyle}" x:Name="textBox_debugChannelId" VerticalAlignment="Top" Margin="10,225,0,0" HorizontalAlignment="Left" Width="270"/>
+					<!-- Ignore Debug Channels -->
 					<CheckBox Style="{StaticResource CheckBoxStyle}" x:Name="checkBox_ignoreDebugChannel" Content="Ignore Debug Channels" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="446,37,0,0"/>
+					<!-- Debug Channels ID -->
+					<Label Style="{StaticResource LabelStyle}" Content="Debug Channels ID" Margin="10,90,0,0"/>
 					<ListBox x:Name="listBox_debugChannels" Style="{StaticResource ListBoxStyle}" d:ItemsSource="{d:SampleData ItemCount=5}" Height="102" VerticalAlignment="Top" HorizontalAlignment="Left" Width="400" Margin="10,118,0,0"/>
+					<TextBox Style="{StaticResource MainTextBoxStyle}" x:Name="textBox_debugChannelId" VerticalAlignment="Top" Margin="10,225,0,0" HorizontalAlignment="Left" Width="270"/>
 					<Button x:Name="button_addDebugChannel" Style="{StaticResource MainButtonStyle}" Content="Add" HorizontalAlignment="Left" Margin="280,225,0,0" VerticalAlignment="Top" Width="40" Click="button_addDebugChannel_Click"/>
 					<Button x:Name="button_removeDebugChannel" Style="{StaticResource ButtonStyle}" Content="Remove" Margin="325,225,482,0" Click="button_removeDebugChannel_Click"/>
 				</Grid>
 			</StackPanel>
 		</ScrollViewer>
-		<Button x:Name="button_save" Style="{StaticResource ButtonStyle}" Content="Save" Margin="0,0,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="114" Click="ButtonSave_Click"/>
+		<!-- Load/Export JSON -->
 		<Button x:Name="button_loadJson" Style="{StaticResource ButtonStyle}" Content="Load JSON" Margin="0,0,758,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="141" Click="ButtonLoadJson_Click"/>
 		<Button x:Name="button_exportJson" Style="{StaticResource ButtonStyle}" Content="Export as JSON" Margin="0,0,612,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="141" Click="ButtonExportJson_Click"/>
+		<!-- Save -->
+		<Button x:Name="button_save" Style="{StaticResource ButtonStyle}" Content="Save" Margin="0,0,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="114" Click="ButtonSave_Click"/>
 	</Grid>
 </Page>
