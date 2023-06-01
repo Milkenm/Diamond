@@ -1,13 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Diamond.API.APIs;
 using Diamond.API.Attributes;
 using Diamond.API.Util;
 
 using Discord.Interactions;
-
-using Microsoft.Extensions.DependencyInjection;
 
 using OpenAI_API.Completions;
 
@@ -17,11 +14,11 @@ namespace Diamond.API.SlashCommands
 {
 	public class Gpt : InteractionModuleBase<SocketInteractionContext>
 	{
-		private readonly IServiceProvider _serviceProvider;
+		private readonly OpenAIAPI _openaiApi;
 
-		public Gpt(IServiceProvider serviceProvider)
+		public Gpt(OpenAIAPI openaiApi)
 		{
-			this._serviceProvider = serviceProvider;
+			this._openaiApi = openaiApi;
 		}
 
 		[DSlashCommand("gpt", "Ask something to ChatGPT-3.")]
@@ -53,7 +50,7 @@ namespace Diamond.API.SlashCommands
 				Temperature = 0.5,
 				MaxTokens = 300,
 			};
-			CompletionResult result = await this._serviceProvider.GetRequiredService<OpenAIAPI>().Completions.CreateCompletionsAsync(completionRequest, 1);
+			CompletionResult result = await this._openaiApi.Completions.CreateCompletionsAsync(completionRequest, 1);
 			return result.Completions.Count > 0 ? result.Completions[0].Text : null;
 		}
 	}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
 using Discord;
@@ -110,6 +111,11 @@ namespace Diamond.API.Util
 			DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(unixTimestamp);
 			return FormatTime(dateTimeOffset);
 		}
+
+		public static string GetTimestampBlock(long unixTimestamp)
+		{
+			return $"<t:{unixTimestamp}>";
+		}
 	}
 
 	public static class ExtensionUtils
@@ -136,6 +142,18 @@ namespace Diamond.API.Util
 				await client.StopAsync();
 				await client.LogoutAsync();
 			}
+		}
+		#endregion
+
+		#region StringBuilder
+		public static StringBuilder Append(this StringBuilder sb, string text, string separator)
+		{
+			if (sb.Length > 0)
+			{
+				_ = sb.Append(separator);
+			}
+			_ = sb.Append(text);
+			return sb;
 		}
 		#endregion
 	}

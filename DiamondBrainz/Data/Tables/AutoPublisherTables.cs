@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace Diamond.API.Data
 {
@@ -14,5 +15,7 @@ namespace Diamond.API.Data
 		public long Id { get; set; }
 		public ulong GuildId { get; set; }
 		public ulong ChannelId { get; set; }
+		public long TrackingSince { get; set; }
+		public ulong AddedByUserId { get; set; }
 	}
 }

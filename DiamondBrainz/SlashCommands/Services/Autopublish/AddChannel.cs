@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
@@ -26,7 +27,7 @@ namespace Diamond.API.SlashCommands.Services
 				using DiamondContext db = new DiamondContext();
 
 				// Create the base embed
-				DefaultEmbed embed = new DefaultEmbed("Auto Publisher", "📣", this.Context);
+				DefaultEmbed embed = this.DefaultEmbed;
 
 				// Check if channel already exists
 				if (db.AutoPublisherChannels.Where(pc => pc.ChannelId == announcementsChannel.Id).Any())
@@ -43,6 +44,8 @@ namespace Diamond.API.SlashCommands.Services
 				{
 					GuildId = announcementsChannel.Guild.Id,
 					ChannelId = announcementsChannel.Id,
+					TrackingSince = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+					AddedByUserId = this.Context.User.Id,
 				});
 				await db.SaveAsync();
 
@@ -50,20 +53,77 @@ namespace Diamond.API.SlashCommands.Services
 				embed.Title = "Channel added!";
 				embed.Description = $"Now tracking {announcementsChannel.Mention}!\nNew messages in this channel will be automatically published.";
 				_ = await embed.SendAsync();
+
+				// Set permissions
+				bool success = await SetPermissionsAsync(this._client, announcementsChannel);
+				if (!success)
+				{
+					await SendSetPermissionsErrorEmbedAsync(this.DefaultEmbed, announcementsChannel);
+				}
 			}
 
-			private async Task OnClientMessageReceived(SocketMessage message)
+			private static async Task<bool> SetPermissionsAsync(DiamondClient client, SocketNewsChannel announcementsChannel)
 			{
-				// Check if channel is announcements channel
-				if (message.Channel is not SocketNewsChannel newsChannel) return;
+				// Check if permission is already set
+				OverwritePermissions? existingOverwrites = announcementsChannel.GetPermissionOverwrite(client.CurrentUser);
+				if (existingOverwrites != null)
+				{
+					if (((OverwritePermissions)existingOverwrites).SendMessages == PermValue.Allow)
+					{
+						return true;
+					}
+				}
+				// Set the permission
+				try
+				{
+					await announcementsChannel.AddPermissionOverwriteAsync(client.CurrentUser, new OverwritePermissions(sendMessages: PermValue.Allow));
+					return true;
+				}
+				catch
+				{
+					return false;
+				}
+			}
 
-				using DiamondContext db = new DiamondContext();
+			private static async Task SendSetPermissionsErrorEmbedAsync(DefaultEmbed defaultEmbed, SocketNewsChannel announcementsChannel)
+			{
+				defaultEmbed.Title = "Error setting permissions";
+				defaultEmbed.Description = $"I couldn't set the **{ChannelPermission.SendMessages}** permission for the {announcementsChannel.Mention} channel.\nThis permission is needed for me to publish the messages.\nIt cannot be given through a role. This only works by setting the permission specifically for me in the channel's permissions tab (Discord stuff...).\n\nPlease give me the **{ChannelPermission.SendMessages}** permission on the {announcementsChannel.Mention} channel or give me the **{GuildPermission.ManageRoles}** permission on the guild so I can set it myself.\nIf it still doesn't work, it's probably because you have a permission denying **{ChannelPermission.SendMessages}** and I can't override it. For that I need the **{GuildPermission.Administrator}** permission.";
+				MessageComponent components = new ComponentBuilder()
+					.WithButton("Retry", $"button_autopublish_setpermissions_retry:{announcementsChannel.Id}", ButtonStyle.Primary, Emoji.Parse("🔁"))
+					.WithButton("I'll do it myself", $"button_autopublish_setpermissions_close", ButtonStyle.Secondary, Emoji.Parse("💪"))
+					.Build();
+				defaultEmbed.Component = components;
+				_ = await defaultEmbed.SendAsync(true, true);
+			}
 
-				// Check if channel is being tracked
-				if (!db.AutoPublisherChannels.Where(pc => pc.ChannelId == newsChannel.Id).Any()) return;
+			[ComponentInteraction("button_autopublish_setpermissions_retry:*", true)]
+			public async Task ButtonPublishRetryHandlerAsync(ulong channelId)
+			{
+				await this.DeferAsync();
 
-				// Publish the message
-				await (message as IUserMessage).CrosspostAsync();
+				// Get the channel
+				SocketGuildChannel channel = this.Context.Guild.GetChannel(channelId);
+				if (channel == null || channel is not SocketNewsChannel newsChannel)
+				{
+					await Utils.DeleteResponseAsync(this.Context);
+					return;
+				}
+
+				// Set permissions
+				bool success = await SetPermissionsAsync(this._client, newsChannel);
+				if (success)
+				{
+					await Utils.DeleteResponseAsync(this.Context);
+				}
+			}
+
+			[ComponentInteraction("button_autopublish_setpermissions_close", true)]
+			public async Task ButtonPublishCloseHandlerAsync()
+			{
+				await this.DeferAsync();
+
+				await Utils.DeleteResponseAsync(this.Context);
 			}
 		}
 	}
