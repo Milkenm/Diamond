@@ -48,8 +48,8 @@ namespace Diamond.API.SlashCommands
 			_ = embed.AddField("🏷 Version", $"v{Utils.GetAssemblyVersion()}", true);
 			_ = embed.AddField("⏰ Latency", $"{this._client.Latency}ms", true);
 			// Second row
-			_ = embed.AddField("🪺 Created at", Utils.FormatTime(appInfo.CreatedAt), true);
-			_ = embed.AddField("🛏 Online since", $"{Utils.FormatTime(this._client.LastLogin)} UTC", true);
+			_ = embed.AddField("🪺 Created at", Utils.GetTimestampBlock(appInfo.CreatedAt.ToUnixTimeSeconds()), true);
+			_ = embed.AddField("🛏 Online since", $"{Utils.GetTimestampBlock(this._client.LastLogin)} UTC", true);
 			_ = embed.AddField("🕒 Uptime", uptime, true);
 			// Third row
 			_ = embed.AddField("🧠 Server CPU Usage", $"**{SMath.Round(cpuUsage, 0)}%**/100%", true);

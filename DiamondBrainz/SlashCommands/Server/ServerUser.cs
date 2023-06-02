@@ -79,9 +79,9 @@ namespace Diamond.API.SlashCommands.Server
 			_ = embed.AddField("🛏️ Status", _statusMap[member.Status], true);
 			_ = embed.AddField("Clients", clientsSb.Length > 0 ? clientsSb.ToString() : "None", true);
 			// Second row
-			_ = embed.AddField("📆 Created at", member.CreatedAt.ToString("dd/MM/yyyy, HH:mm:ss"), true);
-			_ = embed.AddField("📆 Joined at", member.JoinedAt?.ToString("dd/MM/yyyy, HH:mm:ss"), true);
-			_ = embed.AddField("🚀 Server Boosting since", member.PremiumSince != null ? member.PremiumSince?.ToString("dd/MM/yyyy, HH:mm:ss") : "Currently not boosting", true);
+			_ = embed.AddField("📆 Created at", Utils.GetTimestampBlock(member.CreatedAt.ToUnixTimeSeconds()), true);
+			_ = embed.AddField("📆 Joined at", Utils.GetTimestampBlock((long)member.JoinedAt?.ToUnixTimeSeconds()), true);
+			_ = embed.AddField("🚀 Server Boosting since", member.PremiumSince != null ? Utils.GetTimestampBlock((long)member.PremiumSince?.ToUnixTimeSeconds()) : "Currently not boosting", true);
 			// Third row
 			_ = embed.AddField("🏷 Roles", rolesSb.ToString());
 			// Fourth row
