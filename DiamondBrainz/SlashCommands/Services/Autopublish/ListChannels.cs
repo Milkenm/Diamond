@@ -44,7 +44,7 @@ namespace Diamond.API.SlashCommands.Services
 
 					// Get user + timestamp block
 					SocketGuildUser? user = this.Context.Guild.GetUser(pc.AddedByUserId);
-					string addedBy = $"{(user != null ? user.Mention : "<unknown>")} at {Utils.GetTimestampBlock(pc.TrackingSince)}";
+					string addedBy = $"{(user != null ? user.Mention : "<unknown>")} at {Utils.GetTimestampBlock(pc.TrackingSinceUnix)}";
 
 					// Check if the announcements channel was turned into a text channel
 					if (channel is not SocketNewsChannel newsChannel)

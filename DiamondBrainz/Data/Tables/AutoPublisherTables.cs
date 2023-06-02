@@ -15,7 +15,7 @@ namespace Diamond.API.Data
 		public long Id { get; set; }
 		public ulong GuildId { get; set; }
 		public ulong ChannelId { get; set; }
-		public long TrackingSince { get; set; }
+		[Column("TrackingSince")] public long TrackingSinceUnix { get; set; }
 		public ulong AddedByUserId { get; set; }
 	}
 }

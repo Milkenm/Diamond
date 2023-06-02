@@ -44,7 +44,7 @@ namespace Diamond.API.SlashCommands.Services
 				{
 					GuildId = announcementsChannel.Guild.Id,
 					ChannelId = announcementsChannel.Id,
-					TrackingSince = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+					TrackingSinceUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
 					AddedByUserId = this.Context.User.Id,
 				});
 				await db.SaveAsync();
