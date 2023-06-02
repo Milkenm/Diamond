@@ -32,7 +32,7 @@ namespace Diamond.API.SlashCommands
 			await this.DeferAsync(!showEveryone);
 
 			// Get some bot info
-			string uptime = TimeSpan.FromSeconds(this._client.Uptime).ToString(@"hh\:mm\:ss");
+			TimeSpan uptime = TimeSpan.FromSeconds(this._client.Uptime);
 			RestApplication appInfo = await this._client.GetApplicationInfoAsync();
 			// Get system info
 			float cpuUsage = this.GetCpuUsage();
@@ -48,9 +48,9 @@ namespace Diamond.API.SlashCommands
 			_ = embed.AddField("🏷 Version", $"v{Utils.GetAssemblyVersion()}", true);
 			_ = embed.AddField("⏰ Latency", $"{this._client.Latency}ms", true);
 			// Second row
-			_ = embed.AddField("🪺 Created at", Utils.GetTimestampBlock(appInfo.CreatedAt.ToUnixTimeSeconds()), true);
-			_ = embed.AddField("🛏 Online since", $"{Utils.GetTimestampBlock(this._client.LastLogin)} UTC", true);
-			_ = embed.AddField("🕒 Uptime", uptime, true);
+			_ = embed.AddField("🪺 Bot created at", Utils.GetTimestampBlock(appInfo.CreatedAt.ToUnixTimeSeconds()), true);
+			_ = embed.AddField("🛏 Online since", $"{Utils.GetTimestampBlock(this._client.LastLogin)}", true);
+			_ = embed.AddField("🕒 Uptime", Utils.GetTimestampBlock((long)SMath.Round(uptime.TotalSeconds, 0), TimestampSetting.TimeOnly), true);
 			// Third row
 			_ = embed.AddField("🧠 Server CPU Usage", $"**{SMath.Round(cpuUsage, 0)}%**/100%", true);
 			_ = embed.AddField("💾 Server RAM Usage", $"**{SMath.Round(usedRam / 1024, 1)} GB**/{totalRam} GB", true);

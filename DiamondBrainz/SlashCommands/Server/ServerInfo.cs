@@ -33,7 +33,7 @@ namespace Diamond.API.SlashCommands.Server
 			};
 			// First row
 			_ = embed.AddField("👤 Owner", this.Context.Guild.Owner.Mention, true);
-			_ = embed.AddField("📆 Creation date", Utils.GetTimestampBlock(this.Context.Guild.CreatedAt.ToUnixTimeSeconds()), true);
+			_ = embed.AddField("📆 Guild creation date", Utils.GetTimestampBlock(this.Context.Guild.CreatedAt.ToUnixTimeSeconds()), true);
 			_ = embed.AddField("🔗 Vanity URL", this.Context.Guild.VanityURLCode.IsEmpty() ? "None" : this.Context.Guild.VanityURLCode, true);
 			// Second row
 			_ = embed.AddField("👥 Members", this.Context.Guild.Users.Where(u => !u.IsBot).Count(), true);

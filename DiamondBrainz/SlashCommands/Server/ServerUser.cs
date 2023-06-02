@@ -20,7 +20,7 @@ namespace Diamond.API.SlashCommands.Server
 			{ UserStatus.DoNotDisturb, "<:discord_busy_icon:1112230662833975407> Do Not Disturb" },
 			{ UserStatus.Invisible, "<:discord_offline_icon:1112230664310378537> Invisible" },
 			{ UserStatus.AFK, "<:discord_away_icon:1112230660426448986> AFK" },
-			{ UserStatus.Offline, "<:discord_offline_icon:1112230664310378537> Offline" },
+			{ UserStatus.Offline, "<:discord_offline_icon:1112230664310378537> Offline/Invisible" },
 		};
 
 		[DSlashCommand("member", "Show info about a guild member.")]
@@ -76,12 +76,12 @@ namespace Diamond.API.SlashCommands.Server
 
 			// First row
 			_ = embed.AddField("📛 Real name", $"{member.Username}#{member.DiscriminatorValue}", true);
-			_ = embed.AddField("🛏️ Status", _statusMap[member.Status], true);
-			_ = embed.AddField("Clients", clientsSb.Length > 0 ? clientsSb.ToString() : "None", true);
+			_ = embed.AddField("🛏 Status", _statusMap[member.Status], true);
+			_ = embed.AddField("🖥 Clients", clientsSb.Length > 0 ? clientsSb.ToString() : "None", true);
 			// Second row
-			_ = embed.AddField("📆 Created at", Utils.GetTimestampBlock(member.CreatedAt.ToUnixTimeSeconds()), true);
-			_ = embed.AddField("📆 Joined at", Utils.GetTimestampBlock((long)member.JoinedAt?.ToUnixTimeSeconds()), true);
-			_ = embed.AddField("🚀 Server Boosting since", member.PremiumSince != null ? Utils.GetTimestampBlock((long)member.PremiumSince?.ToUnixTimeSeconds()) : "Currently not boosting", true);
+			_ = embed.AddField("📆 Account creation date", Utils.GetTimestampBlock(member.CreatedAt.ToUnixTimeSeconds()), true);
+			_ = embed.AddField("🏠 Guild join date", Utils.GetTimestampBlock((long)member.JoinedAt?.ToUnixTimeSeconds()), true);
+			_ = embed.AddField("🚀 Server boosting", member.PremiumSince != null ? Utils.GetTimestampBlock((long)member.PremiumSince?.ToUnixTimeSeconds()) : "Currently not boosting", true);
 			// Third row
 			_ = embed.AddField("🏷 Roles", rolesSb.ToString());
 			// Fourth row

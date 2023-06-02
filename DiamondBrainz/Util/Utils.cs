@@ -112,10 +112,32 @@ namespace Diamond.API.Util
 			return FormatTime(dateTimeOffset);
 		}
 
-		public static string GetTimestampBlock(long unixTimestamp)
+		private static readonly Dictionary<TimestampSetting, string> _timestampSettingValuesMap = new Dictionary<TimestampSetting, string>
 		{
-			return $"<t:{unixTimestamp}>";
+			{ TimestampSetting.FullDate, "f" },
+			{ TimestampSetting.FullDateWithWeekday, "F" },
+			{ TimestampSetting.DateOnly, "d" },
+			{ TimestampSetting.DateWithMonth, "D" },
+			{ TimestampSetting.TimeOnly, "t" },
+			{ TimestampSetting.TimeOnlyWithSeconds, "T" },
+			{ TimestampSetting.TimeSince, "R" },
+		};
+
+		public static string GetTimestampBlock(long unixTimestamp, TimestampSetting setting = TimestampSetting.FullDate)
+		{
+			return $"<t:{unixTimestamp}:{_timestampSettingValuesMap[setting]}>";
 		}
+	}
+
+	public enum TimestampSetting
+	{
+		FullDate,
+		FullDateWithWeekday,
+		DateOnly,
+		DateWithMonth,
+		TimeOnly,
+		TimeOnlyWithSeconds,
+		TimeSince
 	}
 
 	public static class ExtensionUtils
