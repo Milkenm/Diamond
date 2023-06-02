@@ -37,6 +37,7 @@ namespace Diamond.API.SlashCommands.Services
 					if (channel == null)
 					{
 						_ = db.AutoPublisherChannels.Remove(pc);
+						await db.SaveAsync();
 						continue;
 					}
 

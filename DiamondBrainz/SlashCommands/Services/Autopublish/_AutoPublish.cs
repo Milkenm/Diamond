@@ -22,6 +22,8 @@ namespace Diamond.API.SlashCommands.Services
 
 			private static bool _eventInitialized = false;
 
+			private const string BUTTON_COMPONENT_PUBLISH_PREFIX = "button_autopublish_";
+
 			public AutoPublish(DiamondClient client)
 			{
 				this._client = client;
@@ -35,7 +37,7 @@ namespace Diamond.API.SlashCommands.Services
 
 					this._client.MessageReceived += this.OnClientMessageReceived;
 					// Publish messages sent while the bot was offline
-					_ = this.PublishOldMessages().GetAwaiter();
+					_ = this.PublishOldMessagesAsync(10, true).GetAwaiter();
 				}
 			}
 
@@ -55,41 +57,57 @@ namespace Diamond.API.SlashCommands.Services
 				await (message as IUserMessage).CrosspostAsync();
 			}
 
-			private async Task PublishOldMessages()
+			private async Task PublishOldMessagesAsync(int messageCount, bool filterOldMessages)
 			{
 				DiamondContext db = new DiamondContext();
 
 				foreach (PublishChannel pc in db.AutoPublisherChannels)
 				{
-					// Get channel
-					IChannel channel = await this._client.GetChannelAsync(pc.ChannelId);
+					await this.PublishOldMessagesInChannelAsync(pc, messageCount, filterOldMessages);
+				}
+			}
 
-					// Check if channel exists
-					if (channel == null)
+			private async Task PublishOldMessagesInChannelAsync(PublishChannel pc, int messageCount, bool filterOldMessages)
+			{
+				using DiamondContext db = new DiamondContext();
+
+				IChannel channel = this._client.GetChannel(pc.ChannelId);
+
+				// Check if channel exists
+				if (channel == null)
+				{
+					_ = db.AutoPublisherChannels.Remove(pc);
+					await db.SaveAsync();
+					return;
+				}
+
+				// Check if channel is a news channel
+				if (channel is not SocketNewsChannel newsChannel) return;
+
+				// Get last messages from channel
+				IEnumerable<IMessage> messages = (await newsChannel.GetMessagesAsync(messageCount).FlattenAsync()).Reverse();
+
+				// Filter old messages
+				if (filterOldMessages)
+				{
+					messages = messages.Where(msg => msg.CreatedAt.ToUnixTimeSeconds() >= pc.TrackingSinceUnix);
+				}
+
+				// Check if all messages are published
+				foreach (IMessage message in messages)
+				{
+					RestUserMessage msg = (RestUserMessage)message;
+
+					// Check if the message is already published
+					MessageFlags? flags = msg.Flags;
+					if (flags != null && flags.Value == MessageFlags.Crossposted) continue;
+
+					// Publish the message
+					try
 					{
-						_ = db.AutoPublisherChannels.Remove(pc);
-						await db.SaveAsync();
-						continue;
-					}
-
-					// Check if channel is a news channel
-					if (channel is not SocketNewsChannel newsChannel) continue;
-
-					// Get last 10 messages from channel
-					IEnumerable<IMessage> messages = (await newsChannel.GetMessagesAsync(10).FlattenAsync()).Where(msg => msg.CreatedAt.ToUnixTimeSeconds() >= pc.TrackingSinceUnix).Reverse();
-
-					// Check if all messages are published
-					foreach (IMessage message in messages)
-					{
-						RestUserMessage msg = (RestUserMessage)message;
-
-						// Check if the message is already published
-						MessageFlags? flags = msg.Flags;
-						if (flags != null && flags.Value == MessageFlags.Crossposted) continue;
-
-						// Publish the message
 						await msg.CrosspostAsync();
 					}
+					catch { }
 				}
 			}
 		}

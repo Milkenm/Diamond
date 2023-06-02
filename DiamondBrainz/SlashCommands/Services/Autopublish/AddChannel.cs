@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,6 +17,10 @@ namespace Diamond.API.SlashCommands.Services
 	{
 		public partial class AutoPublish
 		{
+			private const string BUTTON_PUBLISH_EXISTING_MESSAGES_ID = BUTTON_COMPONENT_PUBLISH_PREFIX + "publish_existing";
+			private const string BUTTON_RETRY_SET_PERMISSIONS_ID = BUTTON_COMPONENT_PUBLISH_PREFIX + "setpermissions_retry";
+			private const string BUTTON_CLOSE_SET_PERMISSIONS_ID = BUTTON_COMPONENT_PUBLISH_PREFIX + "setpermissions_close";
+
 			[DSlashCommand("add-channel", "Select an announcements channel to automatically publish messages.")]
 			public async Task AddChannelCommandAsync(
 				[Summary("announcements-channel", "The channel to automatically publish messages.")] SocketNewsChannel announcementsChannel,
@@ -49,9 +54,15 @@ namespace Diamond.API.SlashCommands.Services
 				});
 				await db.SaveAsync();
 
+				// Send existing messages button
+				MessageComponent components = new ComponentBuilder()
+					.WithButton("Publish the latest 5 messages", $"{BUTTON_PUBLISH_EXISTING_MESSAGES_ID}:{announcementsChannel.Id}", ButtonStyle.Primary, Emoji.Parse("📣"))
+					.Build();
+
 				// Send success embed
 				embed.Title = "Channel added!";
 				embed.Description = $"Now tracking {announcementsChannel.Mention}!\nNew messages in this channel will be automatically published.";
+				embed.Component = components;
 				_ = await embed.SendAsync();
 
 				// Set permissions
@@ -59,6 +70,28 @@ namespace Diamond.API.SlashCommands.Services
 				if (!success)
 				{
 					await SendSetPermissionsErrorEmbedAsync(this.DefaultEmbed, announcementsChannel);
+				}
+			}
+
+			[ComponentInteraction($"{BUTTON_PUBLISH_EXISTING_MESSAGES_ID}:*", true)]
+			public async Task ButtonPublishExistingHandler(ulong channelId)
+			{
+				await this.DeferAsync();
+
+				// Remove the button from the embed
+				_ = await this.ModifyOriginalResponseAsync((msg) =>
+				{
+					msg.Components = new ComponentBuilder().Build();
+				});
+
+				using DiamondContext db = new DiamondContext();
+
+				// Check if the channel still exists in the database
+				PublishChannel pc = db.AutoPublisherChannels.Where(pc => pc.ChannelId == channelId).FirstOrDefault();
+				if (pc != null)
+				{
+					// Publish old messages
+					await this.PublishOldMessagesInChannelAsync(pc, 5, false);
 				}
 			}
 
@@ -90,14 +123,14 @@ namespace Diamond.API.SlashCommands.Services
 				defaultEmbed.Title = "Error setting permissions";
 				defaultEmbed.Description = $"I couldn't set the **{ChannelPermission.SendMessages}** permission for the {announcementsChannel.Mention} channel.\nThis permission is needed for me to publish the messages.\nIt cannot be given through a role. This only works by setting the permission specifically for me in the channel's permissions tab (Discord stuff...).\n\nPlease give me the **{ChannelPermission.SendMessages}** permission on the {announcementsChannel.Mention} channel or give me the **{GuildPermission.ManageRoles}** permission on the guild so I can set it myself.\nIf it still doesn't work, it's probably because you have a permission denying **{ChannelPermission.SendMessages}** and I can't override it. For that I need the **{GuildPermission.Administrator}** permission.";
 				MessageComponent components = new ComponentBuilder()
-					.WithButton("Retry", $"button_autopublish_setpermissions_retry:{announcementsChannel.Id}", ButtonStyle.Primary, Emoji.Parse("🔁"))
-					.WithButton("I'll do it myself", $"button_autopublish_setpermissions_close", ButtonStyle.Secondary, Emoji.Parse("💪"))
+					.WithButton("Retry", $"{BUTTON_RETRY_SET_PERMISSIONS_ID}:{announcementsChannel.Id}", ButtonStyle.Primary, Emoji.Parse("🔁"))
+					.WithButton("I'll do it myself", BUTTON_CLOSE_SET_PERMISSIONS_ID, ButtonStyle.Secondary, Emoji.Parse("💪"))
 					.Build();
 				defaultEmbed.Component = components;
 				_ = await defaultEmbed.SendAsync(true, true);
 			}
 
-			[ComponentInteraction("button_autopublish_setpermissions_retry:*", true)]
+			[ComponentInteraction($"{BUTTON_RETRY_SET_PERMISSIONS_ID}:*", true)]
 			public async Task ButtonPublishRetryHandlerAsync(ulong channelId)
 			{
 				await this.DeferAsync();
@@ -118,7 +151,7 @@ namespace Diamond.API.SlashCommands.Services
 				}
 			}
 
-			[ComponentInteraction("button_autopublish_setpermissions_close", true)]
+			[ComponentInteraction(BUTTON_CLOSE_SET_PERMISSIONS_ID, true)]
 			public async Task ButtonPublishCloseHandlerAsync()
 			{
 				await this.DeferAsync();
