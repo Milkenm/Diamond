@@ -101,7 +101,7 @@ namespace Diamond.API
 							errorEmbed = new DefaultEmbed("Error", "🔥", context)
 							{
 								Title = "Something bad happened... :(",
-								Description = "This error was reported to the dev, hope to get it fixed soon...",
+								Description = "This unexpected error was reported to the dev.\nHope to get it fixed soon...",
 							};
 							OnLog?.Invoke($"Error running '{(command != null ? command.Name : "unknown")}' (user: {context.User.Username}#{context.User.Discriminator}):\n{result.ErrorReason} ({result.Error.GetType()})\nInteraction: {command}\n{contextProperties}\n{interactionProperties}\n{slashCommandDataProperties}", true);
 						}
