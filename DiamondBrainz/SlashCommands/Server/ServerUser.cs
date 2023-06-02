@@ -75,7 +75,7 @@ namespace Diamond.API.SlashCommands.Server
 			};
 
 			// First row
-			_ = embed.AddField("📛 Real name", $"{member.Username}#{member.DiscriminatorValue}", true);
+			_ = embed.AddField("📛 Real name", $"{member.Username}#{member.Discriminator}", true);
 			_ = embed.AddField("🛏 Status", _statusMap[member.Status], true);
 			_ = embed.AddField("🖥 Clients", clientsSb.Length > 0 ? clientsSb.ToString() : "None", true);
 			// Second row
