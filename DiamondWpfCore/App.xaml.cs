@@ -39,6 +39,7 @@ namespace Diamond.GUI
 				.AddSingleton<LeagueOfLegendsDataDragonAPI>()
 				.AddSingleton<LeagueOfLegendsAPI>()
 				.AddSingleton<McsrvstatAPI>()
+				.AddSingleton<PokemonAPI>()
 				// Lavalink
 				.AddSingleton<Lava>()
 				// Console commands

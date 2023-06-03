@@ -67,6 +67,9 @@ namespace Diamond.GUI
 			csgoBackpack.OnUpdateStart += new CsgoItemsStateChanged(async () => await mainPanel.LogAsync("Downloading CS:GO items..."));
 			csgoBackpack.OnUpdateEnd += new CsgoItemsStateChanged(async () => await mainPanel.LogAsync("CS:GO items loaded!"));
 			_ = csgoBackpack.LoadItems(/*SUtils.IsDebugEnabled()*/);
+			// Load Pokemons
+			PokemonAPI pokeApi = this._serviceProvider.GetRequiredService<PokemonAPI>();
+			_ = pokeApi.LoadPokemonsAsync();
 
 			// Initalize bot
 			this._client.Initialize();
