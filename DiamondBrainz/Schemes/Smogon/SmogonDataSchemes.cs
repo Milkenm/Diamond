@@ -18,7 +18,7 @@ namespace Diamond.API.Schemes.Smogon
 		public List<Ability> abilities { get; set; }
 		public List<object> moveflags { get; set; }
 		public List<Move> moves { get; set; }
-		public List<Type> types { get; set; }
+		public List<SmogonPokemonType> types { get; set; }
 		public List<Item> items { get; set; }
 	}
 
@@ -91,7 +91,7 @@ namespace Diamond.API.Schemes.Smogon
 		public List<string> genfamily { get; set; }
 	}
 
-	public class Type
+	public class SmogonPokemonType
 	{
 		public string name { get; set; }
 		public List<object> atk_effectives { get; set; }

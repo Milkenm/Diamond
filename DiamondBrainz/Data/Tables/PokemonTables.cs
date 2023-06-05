@@ -6,18 +6,18 @@ namespace Diamond.API.Data
 {
 	public partial class DiamondContext
 	{
-		public DbSet<Pokemon> Pokemons { get; set; }
+		public DbSet<DbPokemon> Pokemons { get; set; }
 		public DbSet<PokemonAbility> PokemonAbilities { get; set; }
 		public DbSet<PokemonFormat> PokemonFormats { get; set; }
 		public DbSet<PokemonItem> PokemonItems { get; set; }
 		public DbSet<PokemonNature> PokemonNatures { get; set; }
 		public DbSet<PokemonPassive> PokemonPassives { get; set; }
-		public DbSet<PokemonType> PokemonTypes { get; set; }
-		public DbSet<PokemonAttackEffectives> PokemonAttackEffectives { get; set; }
+		public DbSet<DbPokemonType> PokemonTypes { get; set; }
+		public DbSet<DbPokemonAttackEffectives> PokemonAttackEffectives { get; set; }
 	}
 
 	[Table("Pokemons")]
-	public class Pokemon
+	public class DbPokemon
 	{
 		public long Id { get; set; }
 		public string Name { get; set; }
@@ -98,7 +98,7 @@ namespace Diamond.API.Data
 	}
 
 	[Table("PokemonTypes")]
-	public class PokemonType
+	public class DbPokemonType
 	{
 		public long Id { get; set; }
 		public string Name { get; set; }
@@ -107,11 +107,11 @@ namespace Diamond.API.Data
 	}
 
 	[Table("PokemonAttackEffectives")]
-	public class PokemonAttackEffectives
+	public class DbPokemonAttackEffectives
 	{
 		public long Id { get; set; }
-		public PokemonType AttackerType { get; set; }
-		public PokemonType TargetType { get; set; }
+		public DbPokemonType AttackerType { get; set; }
+		public DbPokemonType TargetType { get; set; }
 		public float Value { get; set; }
 	}
 }

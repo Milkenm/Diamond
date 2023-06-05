@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using Newtonsoft.Json.Linq;
 
 using ScriptsLibV2.Util;
 
+using DbPokemonType = Diamond.API.Data.DbPokemonType;
 using DUtils = Diamond.API.Util.Utils;
 using SConvert = System.Convert;
 
@@ -23,9 +25,42 @@ namespace Diamond.API.APIs
 		/// <summary>
 		/// {0}: Pokemon name
 		/// </summary>
-		private const string SMOGON_POKEMON_IMAGES_URL = "https://www.smogon.com/dex/media/sprites/xy/{0}.gif";
+		private const string SMOGON_POKEMON_GIFS_URL = "https://www.smogon.com/dex/media/sprites/xy/{0}.gif";
+		/// <summary>
+		/// {0}: Dex number
+		/// </summary>
+		private const string POKEMON_IMAGES_URL = "https://assets.pokemon.com/assets/cms2/img/pokedex/full/{0}.png";
 
-		private static readonly Dictionary<string, PokemonInfo> _pokemonsMap = new Dictionary<string, PokemonInfo>();
+		private static readonly Dictionary<string, DbPokemon> _pokemonsMap = new Dictionary<string, DbPokemon>();
+
+		private static readonly Dictionary<PokemonType, string> _pokemonTypesEmojiMap = new Dictionary<PokemonType, string>()
+		{
+			{ PokemonType.Normal, "<:pokemon_type_normal1:1114518386383269920><:pokemon_type_normal2:1114518377654927452>" },
+			{ PokemonType.Fire, "<:pokemon_type_fire1:1114518572857819166><:pokemon_type_fire2:1114518561503846451>" },
+			{ PokemonType.Water, "<:pokemon_type_water1:1114518601731428352><:pokemon_type_water2:1114518590935285820>" },
+			{ PokemonType.Grass, "<:pokemon_type_grass1:1114522123269050428><:pokemon_type_grass2:1114522114674921513>" },
+			{ PokemonType.Electric, "<:pokemon_type_electric1:1114522151333150781><:pokemon_type_electric2:1114522141103230997>" },
+			{ PokemonType.Ice, "<:pokemon_type_ice1:1114522188452741130><:pokemon_type_ice2:1114522178059259945>" },
+			{ PokemonType.Fighting, "<:pokemon_type_fighting1:1114522209654952030><:pokemon_type_fighting2:1114522198640697396>" },
+			{ PokemonType.Poison, "<:pokemon_type_poison1:1114522249194635316><:pokemon_type_poison2:1114522239145082971>" },
+			{ PokemonType.Ground, "<:pokemon_type_ground1:1114522278584127518><:pokemon_type_ground2:1114522268668796979>" },
+			{ PokemonType.Flying, "<:pokemon_type_flying1:1114522298884558929><:pokemon_type_flying2:1114522289862619246>" },
+			{ PokemonType.Psychic, "<:pokemon_type_psychic1:1114522324415287347><:pokemon_type_psychic2:1114522312398602240>" },
+			{ PokemonType.Bug, "<:pokemon_type_bug1:1114522346724798576><:pokemon_type_pokemon_type_bug2:1114522337484738653> " },
+			{ PokemonType.Rock, "<:pokemon_type_rock1:1114522375724204123><:pokemon_type_rock2:1114522364827402272>" },
+			{ PokemonType.Ghost, "<:pokemon_type_ghost1:1114522395571667024><:pokemon_type_ghost2:1114522386587463700>" },
+			{ PokemonType.Dragon, "<:pokemon_type_dragon1:1114522415779815476><:pokemon_type_dragon2:1114522406682361896>" },
+			{ PokemonType.Dark, "<:pokemon_type_dark1:1114522435061030953><:pokemon_type_dark2:1114522426622103562>" },
+			{ PokemonType.Steel, "<:pokemon_type_steel1:1114522461002801343><:pokemon_type_steel2:1114522451322339449>" },
+			{ PokemonType.Fairy, "<:pokemon_type_fairy1:1114522480619565067><:pokemon_type_fairy2:1114522471417258066>" },
+		};
+
+		private static readonly Dictionary<AttackType, string> _pokemonAttackTypesEmojiMap = new Dictionary<AttackType, string>
+		{
+			{ AttackType.Status, "<:pokemon_attack_type_status1:1114536566740766720><:pokemon_attack_type_status2:1114536555961393303>" },
+			{ AttackType.Physical, "<:pokemon_attack_type_physical1:1114536599657644122><:pokemon_attack_type_physical2:1114536581399859281>" },
+			{ AttackType.Special, "<:pokemon_attack_type_special1:1114536620817911847><:pokemon_attack_type_special2:1114536611389116546>" },
+		};
 
 		public async Task LoadPokemonsAsync()
 		{
@@ -130,10 +165,10 @@ namespace Diamond.API.APIs
 				});
 			}
 
-			// Store types and counters
-			foreach (Type type in data.types)
+			// Store types
+			foreach (SmogonPokemonType type in data.types)
 			{
-				_ = db.PokemonTypes.Add(new PokemonType()
+				_ = db.PokemonTypes.Add(new DbPokemonType()
 				{
 					Name = type.name,
 					Description = type.description,
@@ -141,31 +176,34 @@ namespace Diamond.API.APIs
 				});
 			}
 			await db.SaveAsync();
-			foreach (Type type in data.types)
+
+			// Store counters
+			foreach (SmogonPokemonType type in data.types)
 			{
-				PokemonType attackerType = db.PokemonTypes.Where(t => t.Name == type.name).FirstOrDefault();
+				DbPokemonType attackerType = db.PokemonTypes.Where(t => t.Name == type.name).FirstOrDefault();
 				foreach (object attackEffectiveness in type.atk_effectives)
 				{
 					JToken token = JToken.FromObject(attackEffectiveness);
 
 					string targetTypeString = token.SelectToken("[0]").ToString();
-					PokemonType targetType = db.PokemonTypes.Where(t => t.Name == targetTypeString).FirstOrDefault();
+					DbPokemonType targetType = db.PokemonTypes.Where(t => t.Name == targetTypeString).FirstOrDefault();
 
 					float effectiveness = SConvert.ToSingle(token.SelectToken("[1]").ToString());
 
-					_ = db.PokemonAttackEffectives.Add(new PokemonAttackEffectives()
+					_ = db.PokemonAttackEffectives.Add(new DbPokemonAttackEffectives()
 					{
 						AttackerType = attackerType,
 						TargetType = targetType,
 						Value = effectiveness,
 					});
+					await db.SaveAsync();
 				}
 			}
 
 			// Store pokemons
 			foreach (PokemonInfo pokemon in data.pokemon)
 			{
-				_ = db.Pokemons.Add(new Pokemon()
+				DbPokemon dbPokemon = new DbPokemon()
 				{
 					Name = pokemon.name,
 					TypesList = string.Join(",", pokemon.types),
@@ -183,25 +221,71 @@ namespace Diamond.API.APIs
 					DexNumber = pokemon.oob?.dex_number,
 					EvolutionsList = pokemon.oob != null ? string.Join(",", pokemon.oob.evos) : null,
 					GenerationsList = pokemon.oob != null ? string.Join(",", pokemon.oob.genfamily) : null,
-				});
+				};
+				_ = db.Pokemons.Add(dbPokemon);
 
 				// Create pokemons map
-				_pokemonsMap.Add(pokemon.name, pokemon);
+				_pokemonsMap.Add(pokemon.name, dbPokemon);
 			}
 
 			// Save to database
 			await db.SaveAsync();
 		}
 
-		public PokemonInfo SearchPokemon(string name)
+		public DbPokemon SearchPokemon(string name)
 		{
-			List<SearchMatchInfo<PokemonInfo>> result = DUtils.Search(_pokemonsMap, name);
+			List<SearchMatchInfo<DbPokemon>> result = DUtils.Search(_pokemonsMap, name);
 			return result[0].Item;
 		}
 
-		public string GetPokemonImage(string name)
+		public string GetTypeEmoji(string typeString)
 		{
-			return string.Format(SMOGON_POKEMON_IMAGES_URL, name);
+			PokemonType type = GetPokemonTypeByName(typeString);
+			return _pokemonTypesEmojiMap[type];
 		}
+
+		public string GetPokemonGif(string name)
+		{
+			return string.Format(SMOGON_POKEMON_GIFS_URL, name.ToLower());
+		}
+
+		public string GetPokemonImage(int dexNumber)
+		{
+			return string.Format(POKEMON_IMAGES_URL, dexNumber);
+		}
+
+		public static PokemonType GetPokemonTypeByName(string type)
+		{
+			return (PokemonType)Enum.Parse(typeof(PokemonType), type);
+		}
+	}
+
+	public enum PokemonType
+	{
+		Normal,
+		Fire,
+		Water,
+		Grass,
+		Electric,
+		Ice,
+		Fighting,
+		Poison,
+		Ground,
+		Flying,
+		Psychic,
+		Bug,
+		Rock,
+		Ghost,
+		Dragon,
+		Dark,
+		Steel,
+		Fairy,
+	}
+
+	public enum AttackType
+	{
+		Status,
+		Physical,
+		Special,
 	}
 }
