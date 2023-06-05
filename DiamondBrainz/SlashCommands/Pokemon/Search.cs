@@ -11,6 +11,8 @@ using Diamond.API.Util;
 using Discord;
 using Discord.Interactions;
 
+using Microsoft.EntityFrameworkCore;
+
 namespace Diamond.API.SlashCommands.Pokemon
 {
 	public partial class Pokemon
@@ -35,10 +37,10 @@ namespace Diamond.API.SlashCommands.Pokemon
 				DbPokemonType dbType = db.PokemonTypes.Where(t => t.Name == type).FirstOrDefault();
 
 				// Get all counters
-				foreach (DbPokemonAttackEffectives atkef in db.PokemonAttackEffectives.Where(af => af.TargetType == dbType))
+				foreach (DbPokemonAttackEffectives atkef in db.PokemonAttackEffectives.Include(af => af.AttackerType).Where(af => af.TargetType == dbType))
 				{
 					// Ignore "neutral" attacks
-					if (atkef.Value == 1) continue;
+					if (atkef.Value <= 1) continue;
 
 					PokemonType attackerType = PokemonAPI.GetPokemonTypeByName(atkef.AttackerType.Name);
 
@@ -75,15 +77,15 @@ namespace Diamond.API.SlashCommands.Pokemon
 			{
 				Title = pokemon.Name,
 				Description = typesSb.ToString(),
-				ThumbnailUrl = this._pokeApi.GetPokemonGif(pokemon.Name),
-				ImageUrl = this._pokeApi.GetPokemonImage((int)pokemon.DexNumber),
+				ThumbnailUrl = PokemonAPI.GetPokemonGif(pokemon.Name),
+				ImageUrl = PokemonAPI.GetPokemonImage((int)pokemon.DexNumber),
 			};
 			_ = embed.AddField("Stats", $"HP: {pokemon.HealthPoints}\nAttack: {pokemon.Attack}\nDefense: {pokemon.Defense}\nSp. Atk: {pokemon.SpecialAttack}\nSp. Def: {pokemon.SpecialDefense}\nSpeed: {pokemon.SpecialDefense}", true);
 			_ = embed.AddField("Counters", countersSb.ToString(), true);
 			_ = embed.AddField($"Abilit{(abilitiesList.Count != 1 ? "ies" : "y")}", abilitiesSb.ToString());
 			MessageComponent components = new ComponentBuilder()
-				.WithButton("View on Pokédex", style: ButtonStyle.Link, url: $"https://www.pokemon.com/us/pokedex/{pokemon.Name.ToLower()}")
-				.WithButton("View on Smogon", style: ButtonStyle.Link, url: $"https://www.smogon.com/dex/sm/pokemon/{pokemon.DexNumber}/")
+				.WithButton("View on Pokédex", style: ButtonStyle.Link, url: PokemonAPI.GetPokedexLink((int)pokemon.DexNumber))
+				.WithButton("View on Smogon", style: ButtonStyle.Link, url: PokemonAPI.GetSmogonLink(pokemon.Name))
 				.Build();
 			embed.Component = components;
 

@@ -23,13 +23,21 @@ namespace Diamond.API.APIs
 	{
 		private const string SMOGON_ENDPOINT = "https://www.smogon.com/dex/sm/pokemon/";
 		/// <summary>
-		/// {0}: Pokemon name
+		/// {0}: Pokémon name
 		/// </summary>
 		private const string SMOGON_POKEMON_GIFS_URL = "https://www.smogon.com/dex/media/sprites/xy/{0}.gif";
 		/// <summary>
 		/// {0}: Dex number
 		/// </summary>
 		private const string POKEMON_IMAGES_URL = "https://assets.pokemon.com/assets/cms2/img/pokedex/full/{0}.png";
+		/// <summary>
+		/// {0}: Pokémon name
+		/// </summary>
+		private const string SMOGON_POKEMON_URL = "https://www.smogon.com/dex/ss/pokemon/{0}/";
+		/// <summary>
+		/// {0}: Dex number
+		/// </summary>
+		private const string POKEMON_POKEDEX_URL = "https://www.pokemon.com/us/pokedex/{0}";
 
 		private static readonly Dictionary<string, DbPokemon> _pokemonsMap = new Dictionary<string, DbPokemon>();
 
@@ -244,14 +252,24 @@ namespace Diamond.API.APIs
 			return _pokemonTypesEmojiMap[type];
 		}
 
-		public string GetPokemonGif(string name)
+		public static string GetPokemonGif(string name)
 		{
-			return string.Format(SMOGON_POKEMON_GIFS_URL, name.ToLower());
+			return string.Format(SMOGON_POKEMON_GIFS_URL, name.ToLower().Replace(" ", "-"));
 		}
 
-		public string GetPokemonImage(int dexNumber)
+		public static string GetPokemonImage(int dexNumber)
 		{
 			return string.Format(POKEMON_IMAGES_URL, dexNumber);
+		}
+
+		public static string GetSmogonLink(string name)
+		{
+			return string.Format(SMOGON_POKEMON_URL, name.ToLower().Replace(" ", "-"));
+		}
+
+		public static string GetPokedexLink(int dexNumber)
+		{
+			return string.Format(POKEMON_POKEDEX_URL, dexNumber);
 		}
 
 		public static PokemonType GetPokemonTypeByName(string type)
