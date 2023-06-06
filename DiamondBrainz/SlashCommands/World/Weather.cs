@@ -15,7 +15,6 @@ namespace Diamond.API.SlashCommands.World
 {
     public partial class World
 	{
-		[RequireBotPermission(GuildPermission.Administrator)]
 		[DSlashCommand("weather", "View the weather for a certain region.")]
 		public async Task WeatherCommandAsync(
 			[Summary("location", "The country or city to get information of.")] string location,
