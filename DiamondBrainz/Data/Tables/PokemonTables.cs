@@ -7,13 +7,14 @@ namespace Diamond.API.Data
 	public partial class DiamondContext
 	{
 		public DbSet<DbPokemon> Pokemons { get; set; }
-		public DbSet<PokemonAbility> PokemonAbilities { get; set; }
-		public DbSet<PokemonFormat> PokemonFormats { get; set; }
-		public DbSet<PokemonItem> PokemonItems { get; set; }
-		public DbSet<PokemonNature> PokemonNatures { get; set; }
-		public DbSet<PokemonPassive> PokemonPassives { get; set; }
+		public DbSet<DbPokemonMove> PokemonMoves { get; set; }
+		public DbSet<DbPokemonFormat> PokemonFormats { get; set; }
+		public DbSet<DbPokemonItem> PokemonItems { get; set; }
+		public DbSet<DbPokemonNature> PokemonNatures { get; set; }
+		public DbSet<DbPokemonPassive> PokemonPassives { get; set; }
 		public DbSet<DbPokemonType> PokemonTypes { get; set; }
 		public DbSet<DbPokemonAttackEffectives> PokemonAttackEffectives { get; set; }
+		public DbSet<DbPokemonGenerations> PokemonGenerations { get; set; }
 	}
 
 	[Table("Pokemons")]
@@ -39,7 +40,7 @@ namespace Diamond.API.Data
 	}
 
 	[Table("PokemonAbilities")]
-	public class PokemonAbility
+	public class DbPokemonMove
 	{
 		public long Id { get; set; }
 		public string Name { get; set; }
@@ -54,7 +55,7 @@ namespace Diamond.API.Data
 	}
 
 	[Table("PokemonFormats")]
-	public class PokemonFormat
+	public class DbPokemonFormat
 	{
 		public long Id { get; set; }
 		public string Name { get; set; }
@@ -63,7 +64,7 @@ namespace Diamond.API.Data
 	}
 
 	[Table("PokemonItems")]
-	public class PokemonItem
+	public class DbPokemonItem
 	{
 		public long Id { get; set; }
 		public string Name { get; set; }
@@ -73,7 +74,7 @@ namespace Diamond.API.Data
 	}
 
 	[Table("PokemonNatures")]
-	public class PokemonNature
+	public class DbPokemonNature
 	{
 		public long Id { get; set; }
 		public string Name { get; set; }
@@ -88,7 +89,7 @@ namespace Diamond.API.Data
 	}
 
 	[Table("PokemonPassives")]
-	public class PokemonPassive
+	public class DbPokemonPassive
 	{
 		public long Id { get; set; }
 		public string Name { get; set; }
@@ -113,5 +114,13 @@ namespace Diamond.API.Data
 		public DbPokemonType AttackerType { get; set; }
 		public DbPokemonType TargetType { get; set; }
 		public float Value { get; set; }
+	}
+
+	[Table("PokemonGenerations")]
+	public class DbPokemonGenerations
+	{
+		public long Id { get; set; }
+		public string Name { get; set; }
+		public string Abbreviation { get; set; }
 	}
 }

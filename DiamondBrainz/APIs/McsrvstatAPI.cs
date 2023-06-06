@@ -32,7 +32,7 @@ namespace Diamond.API.APIs
 			if (keepFor > 0)
 			{
 				Debug.WriteLine($"Saving ServerStatus to cache for {keepFor} seconds");
-				this._cache.CacheValue(serverIp, serverStatus, keepFor);
+				this._cache.CacheValue(serverIp, serverStatus, (ulong)keepFor);
 			}
 
 			Debug.WriteLine("Returned ServerStatus from API");

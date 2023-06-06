@@ -127,6 +127,11 @@ namespace Diamond.API.Util
 		{
 			return $"<t:{unixTimestamp}:{_timestampSettingValuesMap[setting]}>";
 		}
+
+		public static string Plural<T>(string @base, string singular, string plural, IEnumerable<T> elements)
+		{
+			return @base + ((elements.Count() is 1 or -1) ? singular : plural);
+		}
 	}
 
 	public enum TimestampSetting
@@ -176,6 +181,18 @@ namespace Diamond.API.Util
 			}
 			_ = sb.Append(text);
 			return sb;
+		}
+
+		public static string ToStringOrDefault(this StringBuilder sb, string defaultValue)
+		{
+			return sb.Length > 0 ? sb.ToString() : defaultValue;
+		}
+		#endregion
+
+		#region EmbedBuilder
+		public static EmbedBuilder AddEmptyField(this EmbedBuilder embedBuilder, bool inline = false)
+		{
+			return embedBuilder.AddField("‍", "‍", inline);
 		}
 		#endregion
 	}

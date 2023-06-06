@@ -3,51 +3,56 @@ using System.Collections.Generic;
 
 namespace Diamond.API
 {
-    public class Cache<T>
-    {
-        private readonly Dictionary<string, CacheRecord> _cache = new Dictionary<string, CacheRecord>();
+	public class Cache<T>
+	{
+		private readonly Dictionary<string, CacheRecord> _cache = new Dictionary<string, CacheRecord>();
 
-        public void CacheValue(string key, T value, long keepForSeconds)
-        {
-            CacheRecord cacheRecord = new CacheRecord(value, keepForSeconds);
-            _ = _cache.Remove(key);
-            _cache.Add(key, cacheRecord);
-        }
+		public void CacheValue(string key, T value, ulong keepForSeconds)
+		{
+			CacheRecord cacheRecord = new CacheRecord(value, keepForSeconds);
+			_ = this._cache.Remove(key);
+			this._cache.Add(key, cacheRecord);
+		}
 
-        public T? GetCachedValue(string key)
-        {
-            if (_cache.ContainsKey(key))
-            {
-                CacheRecord cachedRecord = _cache[key];
-                if (cachedRecord.IsValid())
-                {
-                    return cachedRecord.Value;
-                }
-                else
-                {
-                    _ = _cache.Remove(key);
-                }
-            }
-            return default;
-        }
+		public T? GetCachedValue(string key)
+		{
+			if (this._cache.ContainsKey(key))
+			{
+				CacheRecord cachedRecord = this._cache[key];
+				if (cachedRecord.IsValid())
+				{
+					return cachedRecord.Value;
+				}
+				else
+				{
+					_ = this._cache.Remove(key);
+				}
+			}
+			return default;
+		}
 
-        public class CacheRecord
-        {
-            private readonly long _keepFor;
-            private readonly long _cachedAt;
+		public void ClearCache()
+		{
+			this._cache.Clear();
+		}
 
-            public CacheRecord(T value, long cacheKeepSeconds)
-            {
-                _keepFor = cacheKeepSeconds;
-                _cachedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            }
+		private class CacheRecord
+		{
+			private readonly ulong _keepFor;
+			private readonly ulong _cachedAt;
 
-            public T Value { get; set; }
+			public CacheRecord(T value, ulong cacheKeepSeconds)
+			{
+				this._keepFor = cacheKeepSeconds;
+				this._cachedAt = (ulong)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+			}
 
-            public bool IsValid()
-            {
-                return _cachedAt + _keepFor >= DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            }
-        }
-    }
+			public T Value { get; set; }
+
+			public bool IsValid()
+			{
+				return this._cachedAt + this._keepFor >= (ulong)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+			}
+		}
+	}
 }

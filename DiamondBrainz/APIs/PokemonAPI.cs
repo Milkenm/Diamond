@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.Data;
 using Diamond.API.Schemes.Smogon;
-using Diamond.API.Util;
+using Diamond.API.Util.APIManager;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -14,12 +13,11 @@ using Newtonsoft.Json.Linq;
 using ScriptsLibV2.Util;
 
 using DbPokemonType = Diamond.API.Data.DbPokemonType;
-using DUtils = Diamond.API.Util.Utils;
 using SConvert = System.Convert;
 
 namespace Diamond.API.APIs
 {
-	public class PokemonAPI
+	public class PokemonAPI : AutoUpdatingSearchableAPIManager<DbPokemon>
 	{
 		private const string SMOGON_ENDPOINT = "https://www.smogon.com/dex/sm/pokemon/";
 		/// <summary>
@@ -38,8 +36,16 @@ namespace Diamond.API.APIs
 		/// {0}: Dex number
 		/// </summary>
 		private const string POKEMON_POKEDEX_URL = "https://www.pokemon.com/us/pokedex/{0}";
+		/// <summary>
+		/// {0}: Generation abbreviation
+		/// </summary>
+		private const string SMOGON_GENERATION_URL = "https://www.smogon.com/dex/{0}/pokemon/";
+		/// <summary>
+		/// {0}: Format abbreviation
+		/// </summary>
+		private const string SMOGON_FORMAT_URL = "https://www.smogon.com/dex/ss/formats/{0}/";
 
-		private static readonly Dictionary<string, DbPokemon> _pokemonsMap = new Dictionary<string, DbPokemon>();
+		private readonly Dictionary<string, DbPokemon> _pokemonsMap = new Dictionary<string, DbPokemon>();
 
 		private static readonly Dictionary<PokemonType, string> _pokemonTypesEmojiMap = new Dictionary<PokemonType, string>()
 		{
@@ -70,7 +76,11 @@ namespace Diamond.API.APIs
 			{ AttackType.Special, "<:pokemon_attack_type_special1:1114536620817911847><:pokemon_attack_type_special2:1114536611389116546>" },
 		};
 
-		public async Task LoadPokemonsAsync()
+		private const long KEEP_CACHE_FOR_SECONDS = 60L * 60L * 24L;
+
+		public PokemonAPI() : base(KEEP_CACHE_FOR_SECONDS, KEEP_CACHE_FOR_SECONDS) { }
+
+		public override async Task LoadItemsAsync()
 		{
 			using DiamondContext db = new DiamondContext();
 
@@ -83,113 +93,114 @@ namespace Diamond.API.APIs
 			db.ClearTable("PokemonPassives");
 			db.ClearTable("PokemonTypes");
 			db.ClearTable("Pokemons");
+			db.ClearTable("PokemonGenerations");
 
-			string response = await RequestUtils.GetAsync(SMOGON_ENDPOINT);
-
-			string json = null;
-			foreach (string line in response.Split('\n'))
-			{
-				if (line.Trim().StartsWith("dexSettings"))
-				{
-					json = line.Split(" = ")[1]
-						.Replace(@"""[\""dump-gens\""]"",", "")
-						.Replace(@"""[\""dump-basics\"",{\""gen\"":\""sm\""}]"",", "");
-				}
-			}
-
+			string json = await GetSmogonResponseJsonAsync(null);
 			if (json == null) return;
 
 			// Idk how to make this so yah
 			SmogonRootObject resp = JsonConvert.DeserializeObject<SmogonRootObject>(json);
-			SmogonData data = JsonConvert.DeserializeObject<SmogonData>(resp.InjectRpcs[1][0].ToString());
+			List<SmogonGeneration> generationsList = JsonConvert.DeserializeObject<List<SmogonGeneration>>(resp.InjectRpcs[0][1].ToString());
+			SmogonData data = JsonConvert.DeserializeObject<SmogonData>(resp.InjectRpcs[1][1].ToString());
+
+			// Store generations
+			foreach (SmogonGeneration generation in generationsList)
+			{
+				_ = db.PokemonGenerations.Add(new DbPokemonGenerations()
+				{
+					Name = generation.Name,
+					Abbreviation = generation.Shorthand,
+				});
+			}
 
 			// Store moves
-			foreach (Move move in data.moves)
+			foreach (SmogonMove move in data.MovesList)
 			{
-				Debug.WriteLine("saving move: " + move.name);
-				_ = db.PokemonAbilities.Add(new PokemonAbility()
+				_ = db.PokemonMoves.Add(new DbPokemonMove()
 				{
-					Name = move.name,
-					Description = move.description,
-					Type = move.type,
-					Category = move.category,
-					Power = move.power,
-					Accuracy = move.accuracy,
-					Priority = move.priority,
-					PowerPoints = move.pp,
-					GenerationsList = string.Join(",", move.genfamily)
+					Name = move.Name,
+					Description = move.Description,
+					Type = move.Type,
+					Category = move.Category,
+					Power = move.Power,
+					Accuracy = move.Accuracy,
+					Priority = move.Priority,
+					PowerPoints = move.PowerPoints,
+					GenerationsList = string.Join(",", move.GenerationsList)
 				});
 			}
 
 			// Store abilities
-			foreach (Ability ability in data.abilities)
+			foreach (SmogonAbility ability in data.AbilitiesList)
 			{
-				_ = db.PokemonPassives.Add(new PokemonPassive()
+				_ = db.PokemonPassives.Add(new DbPokemonPassive()
 				{
-					Name = ability.name,
-					Description = ability.description,
-					IsNonstandard = ability.isNonstandard != "Standard",
-					GenerationsList = string.Join(",", ability.genfamily),
+					Name = ability.Name,
+					Description = ability.Description,
+					IsNonstandard = ability.IsNonstandard != "Standard",
+					GenerationsList = string.Join(",", ability.GenerationsList),
 				});
 			}
 
 			// Store formats
-			foreach (Format format in data.formats)
+			foreach (SmogonFormat format in data.FormatsList)
 			{
-				_ = db.PokemonFormats.Add(new PokemonFormat()
+				_ = db.PokemonFormats.Add(new DbPokemonFormat()
 				{
-					Name = format.name,
-					Abbreviation = format.shorthand,
-					GenerationsList = string.Join(",", format.genfamily),
+					Name = format.Name,
+					Abbreviation = format.Abbreviation,
+					GenerationsList = string.Join(",", format.GenerationsList),
 				});
 			}
 
 			// Store items
-			foreach (Item item in data.items)
+			foreach (SmogonItem item in data.ItemsList)
 			{
-				_ = db.PokemonItems.Add(new PokemonItem()
+				_ = db.PokemonItems.Add(new DbPokemonItem()
 				{
-					Name = item.name,
-					Description = item.description,
-					IsNonstandard = item.isNonstandard != "Standard",
-					GenerationsList = string.Join(",", item.genfamily),
+					Name = item.Name,
+					Description = item.Description,
+					IsNonstandard = item.IsNonstandard != "Standard",
+					GenerationsList = string.Join(",", item.GenerationsList),
 				});
 			}
 
 			// Store natures
-			foreach (Nature nature in data.natures)
+			foreach (SmogonNature nature in data.NaturesList)
 			{
-				_ = db.PokemonNatures.Add(new PokemonNature()
+				_ = db.PokemonNatures.Add(new DbPokemonNature()
 				{
-					Name = nature.name,
-					Summary = nature.summary,
-					HealthPoints = nature.hp,
-					Attack = nature.atk,
-					Defense = nature.def,
-					SpecialAttack = nature.spa,
-					SpecialDefense = nature.spd,
-					Speed = nature.spe,
-					GenerationsList = string.Join(",", nature.genfamily),
+					Name = nature.Name,
+					Summary = nature.Summary,
+					HealthPoints = nature.HealthPoints,
+					Attack = nature.Attack,
+					Defense = nature.Defense,
+					SpecialAttack = nature.SpecialAttack,
+					SpecialDefense = nature.SpecialDefense,
+					Speed = nature.Speed,
+					GenerationsList = string.Join(",", nature.GenerationsList),
 				});
 			}
 
 			// Store types
-			foreach (SmogonPokemonType type in data.types)
+			foreach (SmogonPokemonType type in data.TypesList)
 			{
 				_ = db.PokemonTypes.Add(new DbPokemonType()
 				{
-					Name = type.name,
-					Description = type.description,
-					GenerationsList = string.Join(",", type.genfamily),
+					Name = type.Name,
+					Description = type.Description,
+					GenerationsList = string.Join(",", type.GenerationsList),
 				});
 			}
+
+			// We need to save here because counters gets data from the database
 			await db.SaveAsync();
 
-			// Store counters
-			foreach (SmogonPokemonType type in data.types)
+			// Store counters (this needs to be after (Store types) because we need all types loaded before running this)
+			foreach (SmogonPokemonType type in data.TypesList)
 			{
-				DbPokemonType attackerType = db.PokemonTypes.Where(t => t.Name == type.name).FirstOrDefault();
-				foreach (object attackEffectiveness in type.atk_effectives)
+				DbPokemonType attackerType = db.PokemonTypes.Where(t => t.Name == type.Name).FirstOrDefault();
+				foreach (object attackEffectiveness in type.AttackEffectivesList)
 				{
 					JToken token = JToken.FromObject(attackEffectiveness);
 
@@ -209,47 +220,68 @@ namespace Diamond.API.APIs
 			}
 
 			// Store pokemons
-			foreach (PokemonInfo pokemon in data.pokemon)
+			foreach (SmogonPokemonInfo pokemon in data.PokemonsList)
 			{
 				DbPokemon dbPokemon = new DbPokemon()
 				{
-					Name = pokemon.name,
-					TypesList = string.Join(",", pokemon.types),
-					AbilitiesList = string.Join(",", pokemon.abilities),
-					FormatsList = string.Join(",", pokemon.formats),
-					IsNonstandard = pokemon.isNonstandard != "Standard",
-					HealthPoints = pokemon.hp,
-					Attack = pokemon.atk,
-					Defense = pokemon.def,
-					SpecialAttack = pokemon.spa,
-					SpecialDefense = pokemon.spd,
-					Speed = pokemon.spe,
-					Weight = pokemon.weight,
-					Height = pokemon.height,
-					DexNumber = pokemon.oob?.dex_number,
-					EvolutionsList = pokemon.oob != null ? string.Join(",", pokemon.oob.evos) : null,
-					GenerationsList = pokemon.oob != null ? string.Join(",", pokemon.oob.genfamily) : null,
+					Name = pokemon.Name,
+					TypesList = string.Join(",", pokemon.TypesList),
+					AbilitiesList = string.Join(",", pokemon.AbilitiesList),
+					FormatsList = string.Join(",", pokemon.FormatsList),
+					IsNonstandard = pokemon.IsNonstandard != "Standard",
+					HealthPoints = pokemon.HealthPoints,
+					Attack = pokemon.Attack,
+					Defense = pokemon.Defense,
+					SpecialAttack = pokemon.SpecialAttack,
+					SpecialDefense = pokemon.SpecialDefense,
+					Speed = pokemon.Speed,
+					Weight = pokemon.Weight,
+					Height = pokemon.Height,
+					DexNumber = pokemon.DexNumber,
+					EvolutionsList = pokemon.EvolutionsList != null ? string.Join(",", pokemon.EvolutionsList) : null,
+					GenerationsList = pokemon.GenerationsList != null ? string.Join(",", pokemon.GenerationsList) : null,
 				};
 				_ = db.Pokemons.Add(dbPokemon);
 
 				// Create pokemons map
-				_pokemonsMap.Add(pokemon.name, dbPokemon);
+				this._pokemonsMap.Add(pokemon.Name, dbPokemon);
 			}
 
 			// Save to database
 			await db.SaveAsync();
 		}
 
-		public DbPokemon SearchPokemon(string name)
+		public override void LoadItemsMap(Dictionary<string, DbPokemon> itemsMap)
 		{
-			List<SearchMatchInfo<DbPokemon>> result = DUtils.Search(_pokemonsMap, name);
-			return result[0].Item;
+			using DiamondContext db = new DiamondContext();
+
+			foreach (DbPokemon pokemon in db.Pokemons)
+			{
+				itemsMap.Add(pokemon.Name, pokemon);
+			}
 		}
 
-		public string GetTypeEmoji(string typeString)
+		#region Utils
+		public static async Task<SmogonStrategies?> GetStrategiesForPokemonAsync(string pokemonName)
+		{
+			string json = await GetSmogonResponseJsonAsync(pokemonName);
+			if (json == null) return null;
+
+			SmogonRootObject resp = JsonConvert.DeserializeObject<SmogonRootObject>(json);
+			SmogonStrategies strats = JsonConvert.DeserializeObject<SmogonStrategies>(resp.InjectRpcs[2][1].ToString());
+
+			return strats;
+		}
+
+		public static string GetTypeEmoji(PokemonType type)
+		{
+			return _pokemonTypesEmojiMap[type];
+		}
+
+		public static string GetTypeEmoji(string typeString)
 		{
 			PokemonType type = GetPokemonTypeByTypeName(typeString);
-			return _pokemonTypesEmojiMap[type];
+			return GetTypeEmoji(type);
 		}
 
 		public static string GetPokemonGif(string name)
@@ -262,20 +294,63 @@ namespace Diamond.API.APIs
 			return string.Format(POKEMON_IMAGES_URL, dexNumber);
 		}
 
-		public static string GetSmogonLink(string name)
+		public static string GetSmogonUrl(string name)
 		{
 			return string.Format(SMOGON_POKEMON_URL, name.ToLower().Replace(" ", "-"));
 		}
 
-		public static string GetPokedexLink(int dexNumber)
+		public static string GetPokedexUrl(int dexNumber)
 		{
 			return string.Format(POKEMON_POKEDEX_URL, dexNumber);
+		}
+
+		public static string GetGenerationUrl(string generationAbbreviation)
+		{
+			return string.Format(SMOGON_GENERATION_URL, generationAbbreviation);
+		}
+
+		public static string GetFormatUrl(string formatAbbreviation)
+		{
+			return string.Format(SMOGON_FORMAT_URL, formatAbbreviation);
 		}
 
 		public static PokemonType GetPokemonTypeByTypeName(string type)
 		{
 			return (PokemonType)Enum.Parse(typeof(PokemonType), type);
 		}
+
+		public static string? GetGenerationName(string generationAbbreviation)
+		{
+			using DiamondContext db = new DiamondContext();
+
+			DbPokemonGenerations generation = db.PokemonGenerations.Where(g => g.Abbreviation == generationAbbreviation).FirstOrDefault();
+			return generation?.Name;
+		}
+
+		public static string? GetFormatName(string formatAbbreviation)
+		{
+			using DiamondContext db = new DiamondContext();
+
+			DbPokemonFormat format = db.PokemonFormats.Where(pf => pf.Abbreviation == formatAbbreviation).FirstOrDefault();
+			return format?.Name;
+		}
+
+		private static async Task<string?> GetSmogonResponseJsonAsync(string pokemonName)
+		{
+			string url = pokemonName != null ? string.Format(SMOGON_POKEMON_URL, pokemonName) : SMOGON_ENDPOINT;
+			string response = await RequestUtils.GetAsync(url);
+
+			string json = null;
+			foreach (string line in response.Split('\n'))
+			{
+				if (line.Trim().StartsWith("dexSettings"))
+				{
+					json = line.Split(" = ")[1];
+				}
+			}
+			return json;
+		}
+		#endregion
 	}
 
 	public enum PokemonType

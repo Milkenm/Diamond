@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Diamond.API.Schemes.Smogon
 {
-	public class Generation
+	public class SmogonGeneration
 	{
 		[JsonProperty("name")] public string Name { get; set; }
 		[JsonProperty("shorthand")] public string Shorthand { get; set; }
@@ -12,98 +12,93 @@ namespace Diamond.API.Schemes.Smogon
 
 	public class SmogonData
 	{
-		public List<PokemonInfo> pokemon { get; set; }
-		public List<Format> formats { get; set; }
-		public List<Nature> natures { get; set; }
-		public List<Ability> abilities { get; set; }
-		public List<object> moveflags { get; set; }
-		public List<Move> moves { get; set; }
-		public List<SmogonPokemonType> types { get; set; }
-		public List<Item> items { get; set; }
+		[JsonProperty("pokemon")] public List<SmogonPokemonInfo> PokemonsList { get; set; }
+		[JsonProperty("formats")] public List<SmogonFormat> FormatsList { get; set; }
+		[JsonProperty("natures")] public List<SmogonNature> NaturesList { get; set; }
+		[JsonProperty("abilities")] public List<SmogonAbility> AbilitiesList { get; set; }
+		[JsonProperty("moveflags")] public List<object> Moveflags { get; set; }
+		[JsonProperty("moves")] public List<SmogonMove> MovesList { get; set; }
+		[JsonProperty("types")] public List<SmogonPokemonType> TypesList { get; set; }
+		[JsonProperty("items")] public List<SmogonItem> ItemsList { get; set; }
 	}
 
-	public class PokemonInfo
+	public class SmogonPokemonInfo
 	{
-		public string name { get; set; }
-		public int hp { get; set; }
-		public int atk { get; set; }
-		public int def { get; set; }
-		public int spa { get; set; }
-		public int spd { get; set; }
-		public int spe { get; set; }
-		public float weight { get; set; }
-		public float height { get; set; }
-		public List<string> types { get; set; }
-		public List<string> abilities { get; set; }
-		public List<string> formats { get; set; }
-		public string isNonstandard { get; set; }
-		public Oob oob { get; set; }
+		[JsonProperty("name")] public string Name { get; set; }
+		[JsonProperty("hp")] public int HealthPoints { get; set; }
+		[JsonProperty("atk")] public int Attack { get; set; }
+		[JsonProperty("def")] public int Defense { get; set; }
+		[JsonProperty("spa")] public int SpecialAttack { get; set; }
+		[JsonProperty("spd")] public int SpecialDefense { get; set; }
+		[JsonProperty("spe")] public int Speed { get; set; }
+		[JsonProperty("weight")] public float Weight { get; set; }
+		[JsonProperty("height")] public float Height { get; set; }
+		[JsonProperty("types")] public List<string> TypesList { get; set; }
+		[JsonProperty("abilities")] public List<string> AbilitiesList { get; set; }
+		[JsonProperty("formats")] public List<string> FormatsList { get; set; }
+		[JsonProperty("isNonstandard")] public string IsNonstandard { get; set; }
+		[JsonProperty("oob.dex_number")] public int DexNumber { get; set; }
+		[JsonProperty("oob.evos")] public List<string> EvolutionsList { get; set; }
+		[JsonProperty("oob.alts")] public List<string> AltsList { get; set; }
+		[JsonProperty("oob.genfamily")] public List<string> GenerationsList { get; set; }
 	}
 
-	public class Oob
+	public class SmogonFormat
 	{
-		public int dex_number { get; set; }
-		public List<string> evos { get; set; }
-		public List<string> alts { get; set; }
-		public List<string> genfamily { get; set; }
+		[JsonProperty("name")] public string Name { get; set; }
+		[JsonProperty("shorthand")] public string Abbreviation { get; set; }
+		[JsonProperty("genfamily")] public List<string> GenerationsList { get; set; }
 	}
 
-	public class Format
+	public class SmogonNature
 	{
-		public string name { get; set; }
-		public string shorthand { get; set; }
-		public List<string> genfamily { get; set; }
+		[JsonProperty("name")] public string Name { get; set; }
+		[JsonProperty("hp")] public int HealthPoints { get; set; }
+		[JsonProperty("atk")] public float Attack { get; set; }
+		[JsonProperty("def")] public float Defense { get; set; }
+		[JsonProperty("spa")] public float SpecialAttack { get; set; }
+		[JsonProperty("spd")] public float SpecialDefense { get; set; }
+		[JsonProperty("spe")] public float Speed { get; set; }
+		[JsonProperty("summary")] public string Summary { get; set; }
+		[JsonProperty("genfamily")] public List<string> GenerationsList { get; set; }
 	}
 
-	public class Nature
+	public class SmogonAbility
 	{
-		public string name { get; set; }
-		public int hp { get; set; }
-		public float atk { get; set; }
-		public float def { get; set; }
-		public float spa { get; set; }
-		public float spd { get; set; }
-		public float spe { get; set; }
-		public string summary { get; set; }
-		public List<string> genfamily { get; set; }
+		[JsonProperty("name")] public string Name { get; set; }
+		[JsonProperty("description")] public string Description { get; set; }
+		[JsonProperty("isNonstandard")] public string IsNonstandard { get; set; }
+		[JsonProperty("genfamily")] public List<string> GenerationsList { get; set; }
 	}
 
-	public class Ability
+	public class SmogonMove
 	{
-		public string name { get; set; }
-		public string description { get; set; }
-		public string isNonstandard { get; set; }
-		public List<string> genfamily { get; set; }
-	}
-
-	public class Move
-	{
-		public string name { get; set; }
-		public string isNonstandard { get; set; }
-		public string category { get; set; }
-		public int power { get; set; }
-		public int accuracy { get; set; }
-		public int priority { get; set; }
-		public int pp { get; set; }
-		public string description { get; set; }
-		public string type { get; set; }
-		public List<object> flags { get; set; }
-		public List<string> genfamily { get; set; }
+		[JsonProperty("name")] public string Name { get; set; }
+		[JsonProperty("isNonstandard")] public string IsNonstandard { get; set; }
+		[JsonProperty("category")] public string Category { get; set; }
+		[JsonProperty("power")] public int Power { get; set; }
+		[JsonProperty("accuracy")] public int Accuracy { get; set; }
+		[JsonProperty("priority")] public int Priority { get; set; }
+		[JsonProperty("pp")] public int PowerPoints { get; set; }
+		[JsonProperty("description")] public string Description { get; set; }
+		[JsonProperty("type")] public string Type { get; set; }
+		[JsonProperty("flags")] public List<object> FlagsList { get; set; }
+		[JsonProperty("genfamily")] public List<string> GenerationsList { get; set; }
 	}
 
 	public class SmogonPokemonType
 	{
-		public string name { get; set; }
-		public List<object> atk_effectives { get; set; }
-		public List<string> genfamily { get; set; }
-		public string description { get; set; }
+		[JsonProperty("name")] public string Name { get; set; }
+		[JsonProperty("atk_effectives")] public List<object> AttackEffectivesList { get; set; }
+		[JsonProperty("genfamily")] public List<string> GenerationsList { get; set; }
+		[JsonProperty("description")] public string Description { get; set; }
 	}
 
-	public class Item
+	public class SmogonItem
 	{
-		public string name { get; set; }
-		public string description { get; set; }
-		public string isNonstandard { get; set; }
-		public List<string> genfamily { get; set; }
+		[JsonProperty("name")] public string Name { get; set; }
+		[JsonProperty("description")] public string Description { get; set; }
+		[JsonProperty("isNonstandard")] public string IsNonstandard { get; set; }
+		[JsonProperty("genfamily")] public List<string> GenerationsList { get; set; }
 	}
 }

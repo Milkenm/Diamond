@@ -10,6 +10,7 @@ using Diamond.API;
 using Diamond.API.APIs;
 using Diamond.API.Data;
 using Diamond.API.Util;
+using Diamond.API.Util.APIManager;
 using Diamond.GUI.Pages;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -67,9 +68,11 @@ namespace Diamond.GUI
 			csgoBackpack.OnUpdateStart += new CsgoItemsStateChanged(async () => await mainPanel.LogAsync("Downloading CS:GO items..."));
 			csgoBackpack.OnUpdateEnd += new CsgoItemsStateChanged(async () => await mainPanel.LogAsync("CS:GO items loaded!"));
 			_ = csgoBackpack.LoadItems(/*SUtils.IsDebugEnabled()*/);
-			// Load Pokemons
+			// Load Pokémons
 			PokemonAPI pokeApi = this._serviceProvider.GetRequiredService<PokemonAPI>();
-			_ = pokeApi.LoadPokemonsAsync();
+			pokeApi.OnUpdateStart += new APIManagerStateChanged(async () => await mainPanel.LogAsync("Downloading Pokémons list..."));
+			pokeApi.OnUpdateEnd += new APIManagerStateChanged(async () => await mainPanel.LogAsync("Pokémons list loaded!"));
+			_ = pokeApi.LoadItemsAsync();
 
 			// Initalize bot
 			this._client.Initialize();
