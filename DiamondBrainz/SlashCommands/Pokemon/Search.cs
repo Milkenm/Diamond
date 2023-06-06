@@ -29,25 +29,36 @@ namespace Diamond.API.SlashCommands.Pokemon
 
 			DbPokemon pokemon = this._pokeApi.SearchPokemon(name);
 
-			List<string> typesList = pokemon.TypesList.Split(",").ToList();
-			StringBuilder typesSb = new StringBuilder();
 			Dictionary<PokemonType, double> effectivenessMap = new Dictionary<PokemonType, double>();
-			foreach (string type in typesList)
+			StringBuilder typesSb = new StringBuilder();
+			foreach (string type in pokemon.TypesList.Split(",").ToList())
 			{
 				DbPokemonType dbType = db.PokemonTypes.Where(t => t.Name == type).FirstOrDefault();
+				PokemonType pokeType = PokemonAPI.GetPokemonTypeByTypeName(type);
 
 				// Get all counters
 				foreach (DbPokemonAttackEffectives atkef in db.PokemonAttackEffectives.Include(af => af.AttackerType).Where(af => af.TargetType == dbType))
 				{
-					// Ignore "neutral" attacks
-					if (atkef.Value <= 1) continue;
+					if (atkef.Value == 1) continue;
 
-					PokemonType attackerType = PokemonAPI.GetPokemonTypeByName(atkef.AttackerType.Name);
-
-					PokemonType pokeType = PokemonAPI.GetPokemonTypeByName(type);
-					if (effectivenessMap.ContainsKey(pokeType))
+					PokemonType attackerType = PokemonAPI.GetPokemonTypeByTypeName(atkef.AttackerType.Name);
+					if (effectivenessMap.ContainsKey(attackerType))
 					{
-						effectivenessMap[attackerType] += atkef.Value;
+						if (atkef.Value == 0.5)
+						{
+							effectivenessMap[attackerType] -= 1;
+						}
+						else
+						{
+							if (atkef.Value == 0.5)
+							{
+								effectivenessMap[attackerType] = -1;
+							}
+							else
+							{
+								effectivenessMap[attackerType] += atkef.Value;
+							}
+						}
 					}
 					else
 					{
@@ -60,9 +71,10 @@ namespace Diamond.API.SlashCommands.Pokemon
 			StringBuilder countersSb = new StringBuilder();
 			foreach (KeyValuePair<PokemonType, double> counter in effectivenessMap)
 			{
-				if (counter.Value == 1) continue;
-
-				_ = countersSb.Append(counter.Key.ToString(), "\n");
+				if (counter.Value > 1)
+				{
+					_ = countersSb.Append($"{counter.Key} (x{counter.Value})", "\n");
+				}
 			}
 
 			List<string> abilitiesList = pokemon.AbilitiesList.Split(",").ToList();
@@ -81,7 +93,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 				ImageUrl = PokemonAPI.GetPokemonImage((int)pokemon.DexNumber),
 			};
 			_ = embed.AddField("Stats", $"HP: {pokemon.HealthPoints}\nAttack: {pokemon.Attack}\nDefense: {pokemon.Defense}\nSp. Atk: {pokemon.SpecialAttack}\nSp. Def: {pokemon.SpecialDefense}\nSpeed: {pokemon.SpecialDefense}", true);
-			_ = embed.AddField("Counters", countersSb.ToString(), true);
+			_ = embed.AddField("Is countered by", countersSb.ToString(), true);
 			_ = embed.AddField($"Abilit{(abilitiesList.Count != 1 ? "ies" : "y")}", abilitiesSb.ToString());
 			MessageComponent components = new ComponentBuilder()
 				.WithButton("View on Pokédex", style: ButtonStyle.Link, url: PokemonAPI.GetPokedexLink((int)pokemon.DexNumber))

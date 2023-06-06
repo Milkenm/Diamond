@@ -248,7 +248,7 @@ namespace Diamond.API.APIs
 
 		public string GetTypeEmoji(string typeString)
 		{
-			PokemonType type = GetPokemonTypeByName(typeString);
+			PokemonType type = GetPokemonTypeByTypeName(typeString);
 			return _pokemonTypesEmojiMap[type];
 		}
 
@@ -272,7 +272,7 @@ namespace Diamond.API.APIs
 			return string.Format(POKEMON_POKEDEX_URL, dexNumber);
 		}
 
-		public static PokemonType GetPokemonTypeByName(string type)
+		public static PokemonType GetPokemonTypeByTypeName(string type)
 		{
 			return (PokemonType)Enum.Parse(typeof(PokemonType), type);
 		}
