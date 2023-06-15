@@ -33,6 +33,7 @@ namespace Diamond.API.Data
 			{ ConfigSetting.DebugChannelsID, "DebugChannelId" },
 			{ ConfigSetting.IgnoreDebugChannels, "IgnoreDebugChannels" },
 			{ ConfigSetting.CsgoItemsLoadUnix, "CsgoItemsLoadUnix" },
+			{ ConfigSetting.PokemonsListLoadUnix, "PokemonsListLoadUnix" },
 			{ ConfigSetting.TotalUptime, "TotalUptime" },
 			{ ConfigSetting.ActivityType, "ActivityType" },
 			{ ConfigSetting.ActivityText, "ActivityText" },
@@ -51,6 +52,7 @@ namespace Diamond.API.Data
 			ConfigSetting.DevToken,
 #endif
 			ConfigSetting.CsgoItemsLoadUnix,
+			ConfigSetting.PokemonsListLoadUnix,
 			ConfigSetting.TotalUptime,
 			// Activity
 			ConfigSetting.ActivityType,
@@ -161,5 +163,6 @@ namespace Diamond.API.Data
 		ActivityType,
 		ActivityText,
 		ActivityStreamURL,
+		PokemonsListLoadUnix,
 	}
 }

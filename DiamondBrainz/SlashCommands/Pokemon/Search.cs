@@ -33,7 +33,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 
 			using DiamondContext db = new DiamondContext();
 
-			DbPokemon pokemon = this._pokeApi.SearchItem(name)[0].Item;
+			DbPokemon pokemon = (await this._pokeApi.SearchItemAsync(name))[0].Item;
 
 			Dictionary<PokemonType, double> effectivenessMap = new Dictionary<PokemonType, double>();
 			StringBuilder typesSb = new StringBuilder();

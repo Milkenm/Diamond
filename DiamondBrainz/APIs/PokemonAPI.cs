@@ -76,27 +76,19 @@ namespace Diamond.API.APIs
 			{ AttackType.Special, "<:pokemon_attack_type_special1:1114536620817911847><:pokemon_attack_type_special2:1114536611389116546>" },
 		};
 
+		// Keep for 1 day
 		private const long KEEP_CACHE_FOR_SECONDS = 60L * 60L * 24L;
 
-		public PokemonAPI() : base(KEEP_CACHE_FOR_SECONDS, KEEP_CACHE_FOR_SECONDS) { }
+		public PokemonAPI()
+			: base(ConfigSetting.PokemonsListLoadUnix, KEEP_CACHE_FOR_SECONDS, new string[] { "PokemonAbilities", "PokemonAttackEffectives", "PokemonFormats", "PokemonItems", "PokemonNatures", "PokemonPassives", "PokemonTypes", "Pokemons", "PokemonGenerations" }, KEEP_CACHE_FOR_SECONDS)
+		{ }
 
-		public override async Task LoadItemsAsync()
+		public override async Task<bool> LoadItemsLogicAsync(bool forceUpdate)
 		{
 			using DiamondContext db = new DiamondContext();
 
-			// Clear database
-			db.ClearTable("PokemonAbilities");
-			db.ClearTable("PokemonAttackEffectives");
-			db.ClearTable("PokemonFormats");
-			db.ClearTable("PokemonItems");
-			db.ClearTable("PokemonNatures");
-			db.ClearTable("PokemonPassives");
-			db.ClearTable("PokemonTypes");
-			db.ClearTable("Pokemons");
-			db.ClearTable("PokemonGenerations");
-
 			string json = await GetSmogonResponseJsonAsync(null);
-			if (json == null) return;
+			if (json == null) return false;
 
 			// Idk how to make this so yah
 			SmogonRootObject resp = JsonConvert.DeserializeObject<SmogonRootObject>(json);
@@ -238,8 +230,8 @@ namespace Diamond.API.APIs
 					Weight = pokemon.Weight,
 					Height = pokemon.Height,
 					DexNumber = pokemon.DexNumber,
-					EvolutionsList = pokemon.EvolutionsList != null ? string.Join(",", pokemon.EvolutionsList) : null,
-					GenerationsList = pokemon.GenerationsList != null ? string.Join(",", pokemon.GenerationsList) : null,
+					EvolutionsList = pokemon.Oob?.EvolutionsList != null ? string.Join(",", pokemon.Oob.EvolutionsList) : string.Empty,
+					GenerationsList = pokemon.Oob?.GenerationsList != null ? string.Join(",", pokemon.Oob.GenerationsList) : string.Empty,
 				};
 				_ = db.Pokemons.Add(dbPokemon);
 
@@ -249,6 +241,8 @@ namespace Diamond.API.APIs
 
 			// Save to database
 			await db.SaveAsync();
+
+			return true;
 		}
 
 		public override void LoadItemsMap(Dictionary<string, DbPokemon> itemsMap)

@@ -70,6 +70,8 @@ namespace Diamond.GUI
 			_ = csgoBackpack.LoadItems(/*SUtils.IsDebugEnabled()*/);
 			// Load Pokémons
 			PokemonAPI pokeApi = this._serviceProvider.GetRequiredService<PokemonAPI>();
+			pokeApi.OnCheckingForUpdate += new APIManagerStateChanged(async () => await mainPanel.LogAsync("Checking for Pokémons list update..."));
+			pokeApi.OnUpdateCancelled += new APIManagerStateChanged(async () => await mainPanel.LogAsync("No update needed for Pokémons list!"));
 			pokeApi.OnUpdateStart += new APIManagerStateChanged(async () => await mainPanel.LogAsync("Downloading Pokémons list..."));
 			pokeApi.OnUpdateEnd += new APIManagerStateChanged(async () => await mainPanel.LogAsync("Pokémons list loaded!"));
 			_ = pokeApi.LoadItemsAsync();

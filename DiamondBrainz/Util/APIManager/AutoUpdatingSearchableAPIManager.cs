@@ -1,26 +1,33 @@
-﻿using ScriptsLibV2;
+﻿using Diamond.API.Data;
+
+using ScriptsLibV2;
 
 namespace Diamond.API.Util.APIManager
 {
 	public abstract class AutoUpdatingSearchableAPIManager<T> : SearchableAPIManager<T>
 	{
-		public event APIManagerStateChanged OnAutoUpdating;
+		public event APIManagerStateChanged OnCheckingForUpdate;
 
 		private readonly long _autoupdateDelaySeconds;
 
-		public AutoUpdatingSearchableAPIManager(long autoupdateDelaySeconds, ulong keepSearchCacheForSeconds) : base(keepSearchCacheForSeconds)
+		private readonly Timer _timer;
+
+		public AutoUpdatingSearchableAPIManager(ConfigSetting dbUnixConfigSetting, ulong keepResultsForSeconds, string[] databaseTables, long autoupdateDelaySeconds)
+			: base(dbUnixConfigSetting, keepResultsForSeconds, databaseTables)
 		{
 			this._autoupdateDelaySeconds = autoupdateDelaySeconds;
 
-			Timer timer = new Timer(autoupdateDelaySeconds);
-			timer.OnTick += this.BeginAutoUpdate;
+			this._timer = new Timer(autoupdateDelaySeconds);
+			this._timer.OnTick += this.BeginAutoUpdate;
 		}
 
 		private async void BeginAutoUpdate(long currentTick)
 		{
-			OnAutoUpdating?.Invoke();
+			if (this.IsLoadingItems) return;
 
-			await this.LoadItemsAsync();
+			OnCheckingForUpdate?.Invoke();
+
+			await this.LoadItemsAsync(true);
 		}
 	}
 }

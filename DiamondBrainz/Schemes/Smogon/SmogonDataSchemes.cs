@@ -38,9 +38,14 @@ namespace Diamond.API.Schemes.Smogon
 		[JsonProperty("formats")] public List<string> FormatsList { get; set; }
 		[JsonProperty("isNonstandard")] public string IsNonstandard { get; set; }
 		[JsonProperty("oob.dex_number")] public int DexNumber { get; set; }
-		[JsonProperty("oob.evos")] public List<string> EvolutionsList { get; set; }
-		[JsonProperty("oob.alts")] public List<string> AltsList { get; set; }
-		[JsonProperty("oob.genfamily")] public List<string> GenerationsList { get; set; }
+		[JsonProperty("oob")] public SmogonOob Oob { get; set; }
+	}
+
+	public class SmogonOob
+	{
+		[JsonProperty("evos")] public List<string> EvolutionsList { get; set; }
+		[JsonProperty("alts")] public List<string> AltsList { get; set; }
+		[JsonProperty("genfamily")] public List<string> GenerationsList { get; set; }
 	}
 
 	public class SmogonFormat
