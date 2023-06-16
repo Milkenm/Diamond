@@ -12,8 +12,8 @@ namespace Diamond.API.Util.APIManager
 
 		private readonly Timer _timer;
 
-		public AutoUpdatingSearchableAPIManager(ConfigSetting dbUnixConfigSetting, ulong keepResultsForSeconds, string[] databaseTables, long autoupdateDelaySeconds)
-			: base(dbUnixConfigSetting, keepResultsForSeconds, databaseTables)
+		public AutoUpdatingSearchableAPIManager(ConfigSetting dbUnixConfigSetting, ulong keepResultsForSeconds, string[] tablesName, long autoupdateDelaySeconds)
+			: base(dbUnixConfigSetting, keepResultsForSeconds, tablesName)
 		{
 			this._autoupdateDelaySeconds = autoupdateDelaySeconds;
 

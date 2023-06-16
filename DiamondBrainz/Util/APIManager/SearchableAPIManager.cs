@@ -11,8 +11,8 @@ namespace Diamond.API.Util.APIManager
 
 		private readonly Cache<List<SearchMatchInfo<T>>> _searchCache = new Cache<List<SearchMatchInfo<T>>>();
 
-		public SearchableAPIManager(ConfigSetting dbUnixConfigSetting, ulong keepResultsForSeconds, string[] databaseTables)
-			: base(dbUnixConfigSetting, keepResultsForSeconds, databaseTables)
+		public SearchableAPIManager(ConfigSetting dbUnixConfigSetting, ulong keepResultsForSeconds, string[] tablesName)
+			: base(dbUnixConfigSetting, keepResultsForSeconds, tablesName)
 		{ }
 
 		public async Task<List<SearchMatchInfo<T>>> SearchItemAsync(string search)

@@ -26,14 +26,14 @@ namespace Diamond.API.Util.APIManager
 		public T ResponseObject { get; private set; }
 
 		public ulong KeepResultsForSeconds { get; private set; }
-		public string[] DatabaseTables { get; private set; }
+		public string[] TablesName { get; private set; }
 
-		public APIManager(ConfigSetting dbUnixConfigSetting, ulong keepResultsForSeconds, string[] databaseTables)
+		public APIManager(ConfigSetting dbUnixConfigSetting, ulong keepResultsForSeconds, string[] tablesName)
 		{
 			this._dbUnixConfigSetting = dbUnixConfigSetting;
 
 			this.KeepResultsForSeconds = keepResultsForSeconds;
-			this.DatabaseTables = databaseTables;
+			this.TablesName = tablesName;
 		}
 
 		public abstract Task<bool> LoadItemsLogicAsync(bool forceUpdate);
@@ -72,9 +72,9 @@ namespace Diamond.API.Util.APIManager
 				OnUpdateStart?.Invoke();
 				Debug.WriteLine("Clearing database...");
 				// Clear database and items map
-				foreach (string databaseTable in this.DatabaseTables)
+				foreach (string tableName in this.TablesName)
 				{
-					db.ClearTable(databaseTable);
+					db.ClearTable(tableName);
 				}
 				this._itemsMap?.Clear();
 
