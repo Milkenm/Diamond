@@ -59,7 +59,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 				DbPokemonMove dbMove = db.PokemonMoves.Where(m => m.Name == movesArray[i]).FirstOrDefault();
 				if (dbMove == null) continue;
 
-				_ = embed.AddField($"{PokemonAPIHelpers.GetTypeEmoji(dbMove.Type)} {PokemonAPIHelpers.GetAttackTypeEmoji(dbMove.Category)} {dbMove.Name} (💥 {GetAttackStatString(dbMove.Power, Stat.Power)}   🎯 {GetAttackStatString(dbMove.Accuracy, Stat.Accuracy)}   💦 {GetAttackStatString(dbMove.PowerPoints, Stat.PowerPoints)})", dbMove.Description);
+				_ = embed.AddField($"{PokemonAPIHelpers.GetTypeEmoji(dbMove.Type)} {PokemonAPIHelpers.GetAttackTypeEmoji(dbMove.Category)} {dbMove.Name} (💥 {GetAttackStatString(dbMove.Power, Stat.Power)}   🎯 {GetAttackStatString(dbMove.Accuracy, Stat.Accuracy)}   ⚡ {GetAttackStatString(dbMove.PowerPoints, Stat.PowerPoints)})", dbMove.Description);
 			}
 
 			_ = await embed.SendAsync(await this.GetEmbedButtonsAsync(pokemonName, PokemonEmbed.Moves, replaceEmojis, startingIndex, movesArray.Length));
