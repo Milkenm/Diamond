@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ScriptsLib\ScriptsLibV2\ScriptsLibV2.csproj" />
+    <ProjectReference Include="..\ScriptsLib\ScriptsLibV2\ScriptsLibV2.csproj" />
   </ItemGroup>
 
 </Project>
