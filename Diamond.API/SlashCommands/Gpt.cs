@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
-
-using Diamond.API.APIs;
+using Diamond.API.APIs.OpenAi;
 using Diamond.API.Attributes;
 using Diamond.API.Helpers;
 

@@ -4,15 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Diamond.API.APIs;
+using Diamond.API.APIs.Pokemon;
 using Diamond.API.Attributes;
 using Diamond.API.Helpers;
-using Diamond.API.Schemes.Smogon;
 using Diamond.API.Util;
 using Diamond.Data;
 using Diamond.Data.Models.Pokemons;
 
-using Discord;
 using Discord.Interactions;
 
 using Microsoft.EntityFrameworkCore;
@@ -21,35 +19,45 @@ namespace Diamond.API.SlashCommands.Pokemon
 {
 	public partial class Pokemon
 	{
-		private const string BUTTON_POKEMON_VIEW_MOVES = $"{BUTTON_POKEMON_BASE}_moves";
-		private const string BUTTON_POKEMON_VIEW_BUILDS = $"{BUTTON_POKEMON_BASE}_builds";
-
-		[DSlashCommand("search", "Search for a pokémon.")]
+		[DSlashCommand("info", "View info about a pokémon.")]
 		public async Task PokemonSearchCommandAsync(
-			[Summary("name", "The name of the pokémon to search for.")] string name,
+			[Summary("name", "The name of the pokémon.")] string pokemonName,
 			[Summary("replace-emojis", "Replaces the type emojis with a text in case you a have trouble reading.")] bool replaceEmojis = false,
 			[ShowEveryone] bool showEveryone = false
 		)
 		{
 			await this.DeferAsync(!showEveryone);
 
+			await this.SendInfoEmbedAsync(pokemonName, replaceEmojis);
+		}
+
+		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_INFO}:*,*", true)]
+		public async Task ButtonViewStatsHandler(string pokemonName, bool replaceEmojis)
+		{
+			await this.DeferAsync();
+
+			await this.SendInfoEmbedAsync(pokemonName, replaceEmojis);
+		}
+
+		private async Task SendInfoEmbedAsync(string pokemonName, bool replaceEmojis)
+		{
 			using DiamondContext db = new DiamondContext();
 
-			DbPokemon pokemon = (await this._pokeApi.SearchItemAsync(name))[0].Item;
+			DbPokemon pokemon = (await this._pokemonApi.SearchItemAsync(pokemonName))[0].Item;
 
 			Dictionary<PokemonType, double> effectivenessMap = new Dictionary<PokemonType, double>();
 			StringBuilder typesSb = new StringBuilder();
 			foreach (string type in pokemon.TypesList.Split(",").ToList())
 			{
 				DbPokemonType dbType = db.PokemonTypes.Where(t => t.Name == type).FirstOrDefault();
-				PokemonType pokeType = PokemonAPI.GetPokemonTypeByTypeName(type);
+				PokemonType pokeType = PokemonAPIHelpers.GetPokemonTypeByName(type);
 
 				// Get all counters
 				foreach (DbPokemonAttackEffectiveness atkef in db.PokemonAttackEffectivenesses.Include(af => af.AttackerType).Where(af => af.TargetType == dbType))
 				{
 					if (atkef.Value == 1) continue;
 
-					PokemonType attackerType = PokemonAPI.GetPokemonTypeByTypeName(atkef.AttackerType.Name);
+					PokemonType attackerType = PokemonAPIHelpers.GetPokemonTypeByName(atkef.AttackerType.Name);
 					if (effectivenessMap.ContainsKey(attackerType))
 					{
 						if (atkef.Value == 0.5)
@@ -74,7 +82,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 					}
 				}
 
-				_ = typesSb.Append($"{GetTypeDisplay(type, replaceEmojis)}", " ");
+				_ = typesSb.Append($"{PokemonAPIHelpers.GetTypeDisplay(type, replaceEmojis)}", " ");
 			}
 			StringBuilder weakToSb = new StringBuilder();
 			StringBuilder immuneToSb = new StringBuilder();
@@ -85,26 +93,26 @@ namespace Diamond.API.SlashCommands.Pokemon
 				{
 					if (effectiveness.Value == 2)
 					{
-						_ = weakToSb.Append($"{GetTypeDisplay(effectiveness.Key, replaceEmojis)} (x2)", "\n");
+						_ = weakToSb.Append($"{PokemonAPIHelpers.GetTypeDisplay(effectiveness.Key, replaceEmojis)} (x2)", "\n");
 					}
 					else if (effectiveness.Value == 3)
 					{
-						_ = weakToSb.Append($"**{GetTypeDisplay(effectiveness.Key, replaceEmojis)} (x4)**", "\n");
+						_ = weakToSb.Append($"**{PokemonAPIHelpers.GetTypeDisplay(effectiveness.Key, replaceEmojis)} (x4)**", "\n");
 					}
 				}
 				else if (effectiveness.Value == 0)
 				{
-					_ = immuneToSb.Append(GetTypeDisplay(effectiveness.Key, replaceEmojis), "\n");
+					_ = immuneToSb.Append(PokemonAPIHelpers.GetTypeDisplay(effectiveness.Key, replaceEmojis), "\n");
 				}
 				else if (effectiveness.Value < 0)
 				{
 					if (effectiveness.Value == -1)
 					{
-						_ = resistsToSb.Append($"{GetTypeDisplay(effectiveness.Key, replaceEmojis)} (x0.5)", "\n");
+						_ = resistsToSb.Append($"{PokemonAPIHelpers.GetTypeDisplay(effectiveness.Key, replaceEmojis)} (x0.5)", "\n");
 					}
 					else if (effectiveness.Value == -2)
 					{
-						_ = resistsToSb.Append($"**{GetTypeDisplay(effectiveness.Key, replaceEmojis)} (x0.25)**", "\n");
+						_ = resistsToSb.Append($"**{PokemonAPIHelpers.GetTypeDisplay(effectiveness.Key, replaceEmojis)} (x0.25)**", "\n");
 					}
 				}
 			}
@@ -123,15 +131,15 @@ namespace Diamond.API.SlashCommands.Pokemon
 			StringBuilder evolutionsSb = new StringBuilder();
 			foreach (string evolution in evolutionsList)
 			{
-				_ = evolutionsSb.Append($"[{evolution}]({PokemonAPI.GetSmogonUrl(evolution)})", "\n");
+				_ = evolutionsSb.Append($"[{evolution}]({PokemonAPIHelpers.GetSmogonUrl(evolution)})", "\n");
 			}
 
 			DefaultEmbed embed = new DefaultEmbed("Pokédex", "🖥️", this.Context)
 			{
 				Title = $"{pokemon.Name} #{pokemon.DexNumber}",
 				Description = typesSb.ToString(),
-				/*ThumbnailUrl = PokemonAPI.GetPokemonGif(pokemon.Name),
-				ImageUrl = PokemonAPI.GetPokemonImage((int)pokemon.DexNumber),*/
+				/*ThumbnailUrl = PokemonAPIHelpers.GetPokemonGif(pokemon.Name),
+				ImageUrl = PokemonAPIHelpers.GetPokemonImage((int)pokemon.DexNumber),*/
 			};
 
 			// Generations
@@ -139,8 +147,8 @@ namespace Diamond.API.SlashCommands.Pokemon
 			StringBuilder generationsSb = new StringBuilder();
 			foreach (string generation in generationsList)
 			{
-				string fullGeneration = PokemonAPI.GetGenerationName(generation);
-				_ = generationsSb.Append($"[{fullGeneration}]({PokemonAPI.GetGenerationUrl(generation)})", "\n");
+				string fullGeneration = PokemonAPIHelpers.GetGenerationName(generation);
+				_ = generationsSb.Append($"[{fullGeneration}]({PokemonAPIHelpers.GetGenerationUrl(generation)})", "\n");
 			}
 
 			// Formats
@@ -148,8 +156,8 @@ namespace Diamond.API.SlashCommands.Pokemon
 			StringBuilder formatsSb = new StringBuilder();
 			foreach (string format in formatsList)
 			{
-				string fullFormat = PokemonAPI.GetFormatName(format);
-				_ = formatsSb.Append($"[{fullFormat}]({PokemonAPI.GetFormatUrl(format)})", "\n");
+				string fullFormat = PokemonAPIHelpers.GetFormatName(format);
+				_ = formatsSb.Append($"[{fullFormat}]({PokemonAPIHelpers.GetFormatUrl(format)})", "\n");
 			}
 
 			// First row
@@ -166,49 +174,27 @@ namespace Diamond.API.SlashCommands.Pokemon
 			_ = embed.AddEmptyField(true);
 			// Fourth row
 			_ = embed.AddField($"✨ **__{Utils.Plural("Abilit", "y", "ies", abilitiesList)}__**", abilitiesSb.ToString());
-			MessageComponent components = new ComponentBuilder()
-				.WithButton("Moves", $"{BUTTON_POKEMON_VIEW_MOVES}:{pokemon.Name}", style: ButtonStyle.Primary, Emoji.Parse("👊"))
-				.WithButton("Strategies", $"{BUTTON_POKEMON_VIEW_BUILDS}:{pokemon.Name}", style: ButtonStyle.Primary, Emoji.Parse("🧱"))
-				.WithButton("View on Pokédex", style: ButtonStyle.Link, url: PokemonAPI.GetPokedexUrl((int)pokemon.DexNumber))
-				.WithButton("View on Smogon", style: ButtonStyle.Link, url: PokemonAPI.GetSmogonUrl(pokemon.Name))
-				.Build();
-			embed.Component = components;
 
-			_ = await embed.SendAsync();
+			_ = await embed.SendAsync(await this.GetEmbedButtonsAsync(pokemonName, PokemonEmbed.Info, replaceEmojis));
 		}
 
-		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_MOVES}:*", true)]
-		public async Task ButtonViewMovesHandler(string pokemonName)
+		private static string GetAttackStatString(int value, Stat stat)
 		{
-			await this.DeferAsync();
+			return value == 0
+				? "—"
+				: stat switch
+				{
+					Stat.Accuracy => $"{value}%",
+					Stat.PowerPoints => $"{value}PP",
+					_ => value.ToString()
+				};
 		}
 
-		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_BUILDS}:*", true)]
-		public async Task ButtonViewStrategiesHandler(string pokemonName)
+		private enum Stat
 		{
-			await this.DeferAsync();
-
-			SmogonStrategies strats = await PokemonAPI.GetStrategiesForPokemonAsync(pokemonName);
-
-			_ = await this.Context.Channel.SendMessageAsync(strats.StrategiesList[0].Overview);
-		}
-
-		private static string GetTypeDisplay(PokemonType type, bool replaceEmojis)
-		{
-			return !replaceEmojis ? PokemonAPI.GetTypeEmoji(type) : type.ToString();
-		}
-
-		private static string GetTypeDisplay(string typeString, bool replaceEmojis)
-		{
-			if (!replaceEmojis)
-			{
-				PokemonType type = PokemonAPI.GetPokemonTypeByTypeName(typeString);
-				return PokemonAPI.GetTypeEmoji(type);
-			}
-			else
-			{
-				return typeString;
-			}
+			Power,
+			Accuracy,
+			PowerPoints,
 		}
 	}
 }

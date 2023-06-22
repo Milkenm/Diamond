@@ -2,8 +2,14 @@
 using System.Windows;
 
 using Diamond.API;
-using Diamond.API.APIs;
+using Diamond.API.APIs.CsgoBackpack;
+using Diamond.API.APIs.LeagueOfLegends;
+using Diamond.API.APIs.Minecraft;
+using Diamond.API.APIs.OpenAi;
+using Diamond.API.APIs.Pokemon;
+using Diamond.API.APIs.Weather;
 using Diamond.API.ConsoleCommands;
+using Diamond.API.Helpers;
 using Diamond.GUI.Pages;
 
 using Microsoft.Extensions.DependencyInjection;

@@ -17,7 +17,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 		/// Saves the user's <see cref="PollVote"/>, deletes the <see cref="VotingEmbed"/> used to vote and refreshes the <see cref="PublishedEmbed"/> with the updated votes.
 		/// <para>(Called when the user submits it's vote by clicking the "Submit vote" button on the <see cref="VotingEmbed"/>)</para>
 		/// </summary>
-		[ComponentInteraction("button_poll_submit_vote:*:*", true)]
+		[ComponentInteraction("button_poll_submit_vote:*,*", true)]
 		public async Task ButtonSubmitVoteHandlerAsync(ulong pollMessageId, long selectedOptionId)
 		{
 			await this.DeferAsync(true);

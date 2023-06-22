@@ -33,8 +33,4 @@
     <ProjectReference Include="..\ScriptsLib\ScriptsLibV2\ScriptsLibV2.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Preconditions\" />
-  </ItemGroup>
-
 </Project>

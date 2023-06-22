@@ -7,7 +7,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using Diamond.API;
-using Diamond.API.APIs;
+using Diamond.API.APIs.CsgoBackpack;
+using Diamond.API.APIs.Pokemon;
+using Diamond.API.Helpers;
 using Diamond.API.Helpers.APIManager;
 using Diamond.API.Util;
 using Diamond.Data;
@@ -20,10 +22,10 @@ using SUtils = ScriptsLibV2.Util.Utils;
 
 namespace Diamond.GUI
 {
-	/// <summary>
-	/// Interaction logic for AppWindow.xaml
-	/// </summary>
-	public partial class AppWindow : Window
+    /// <summary>
+    /// Interaction logic for AppWindow.xaml
+    /// </summary>
+    public partial class AppWindow : Window
 	{
 		private readonly DiamondClient _client;
 		private readonly IServiceProvider _serviceProvider;

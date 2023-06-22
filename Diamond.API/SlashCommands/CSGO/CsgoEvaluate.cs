@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-using Diamond.API.APIs;
+using Diamond.API.APIs.CsgoBackpack;
 using Diamond.API.Attributes;
 using Diamond.API.Helpers;
 using Diamond.API.Schemes.Steam;
@@ -20,7 +19,7 @@ using ScriptsLibV2.Util;
 namespace Diamond.API.SlashCommands.CSGO
 {
 
-	public partial class Csgo
+    public partial class Csgo
 	{
 		// <SteamID, EvaluateCache>
 		public static Dictionary<string, EvaluateCache> _evaluateCache = new Dictionary<string, EvaluateCache>();

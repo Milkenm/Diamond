@@ -8,7 +8,7 @@ using Diamond.API.Schemes.LolDataDragon;
 
 using Discord.Interactions;
 
-using static Diamond.API.APIs.LeagueOfLegendsDataDragonAPI;
+using static Diamond.API.APIs.LeagueOfLegends.LeagueOfLegendsDataDragonAPI;
 using Diamond.API.Helpers;
 
 namespace Diamond.API.SlashCommands.LeagueOfLegends

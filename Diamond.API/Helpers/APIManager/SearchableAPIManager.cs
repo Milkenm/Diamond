@@ -6,7 +6,7 @@ using Diamond.Data.Enums;
 
 namespace Diamond.API.Helpers.APIManager
 {
-	public abstract class SearchableAPIManager<T> : APIManager<T>
+    public abstract class SearchableAPIManager<T> : APIManager<T>
 	{
 		private bool _cacheSearches { get; set; }
 

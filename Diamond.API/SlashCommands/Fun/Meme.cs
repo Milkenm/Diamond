@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-using Diamond.API.APIs;
+using Diamond.API.APIs.Funny;
 using Diamond.API.Attributes;
 using Diamond.API.Helpers;
 using Diamond.API.Util;
@@ -11,7 +10,7 @@ using Discord;
 using Discord.Interactions;
 using Discord.Rest;
 
-using static Diamond.API.APIs.MemeAPI;
+using static Diamond.API.APIs.Funny.MemeAPI;
 
 namespace Diamond.API.SlashCommands.Fun
 {

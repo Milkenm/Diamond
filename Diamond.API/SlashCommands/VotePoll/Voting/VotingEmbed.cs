@@ -47,8 +47,8 @@ namespace Diamond.API.SlashCommands.VotePoll.Voting
 			// Add select menu to the response
 			ComponentBuilder builder = new ComponentBuilder()
 				.WithSelectMenu(selectMenu)
-				.WithButton(new ButtonBuilder("Submit vote", $"button_poll_submit_vote:{pollMessageId}:{optionId}", ButtonStyle.Success, isDisabled: optionId == null))
-				.WithButton(new ButtonBuilder("Cancel", $"button_poll_cancel_vote:{pollMessageId}:{optionId}", ButtonStyle.Secondary));
+				.WithButton(new ButtonBuilder("Submit vote", $"button_poll_submit_vote:{pollMessageId},{optionId}", ButtonStyle.Success, isDisabled: optionId == null))
+				.WithButton(new ButtonBuilder("Cancel", $"button_poll_cancel_vote", ButtonStyle.Secondary));
 			this.Component = builder.Build();
 		}
 	}

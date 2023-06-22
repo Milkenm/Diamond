@@ -7,7 +7,7 @@ using Diamond.API.Attributes;
 using Discord;
 using Discord.Interactions;
 
-using static Diamond.API.APIs.OpenMeteoWeather;
+using static Diamond.API.APIs.Weather.OpenMeteoWeather;
 using Diamond.API.Schemes.OpenMeteo;
 using Diamond.API.Helpers;
 

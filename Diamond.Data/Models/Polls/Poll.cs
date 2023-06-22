@@ -10,11 +10,11 @@ namespace Diamond.Data.Models.Polls
 		public required ulong DiscordMessageId { get; set; }
 		public required ulong DiscordUserId { get; set; }
 		public required string Title { get; set; }
-		public required string Description { get; set; }
-		public required string ImageUrl { get; set; }
-		public required string ThumbnailUrl { get; set; }
+		public string? Description { get; set; }
+		public string? ImageUrl { get; set; }
+		public string? ThumbnailUrl { get; set; }
 		[DefaultValue(false)] public bool IsPublished { get; set; }
 		public required long CreatedAt { get; set; }
-		public required long UpdatedAt { get; set; }
+		public long? UpdatedAt { get; set; }
 	}
 }

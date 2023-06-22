@@ -1,8 +1,9 @@
-﻿using Discord.Interactions;
+﻿using Diamond.API.Helpers;
+using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.Music
 {
-	[EnabledInDm(false)]
+    [EnabledInDm(false)]
 	[Group("music", "Music related commands.")]
 	public partial class Music : InteractionModuleBase<SocketInteractionContext>
 	{

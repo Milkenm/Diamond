@@ -1,10 +1,9 @@
-﻿using Diamond.API.APIs;
-
+﻿using Diamond.API.APIs.Weather;
 using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.World
 {
-	[Group("world", "Real world related commands.")]
+    [Group("world", "Real world related commands.")]
 	public partial class World : InteractionModuleBase<SocketInteractionContext>
 	{
 		private readonly OpenMeteoGeocoding _openMeteoGeocoding;
