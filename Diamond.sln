@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond.GUI", "DiamondWpfCore\Diamond.GUI.csproj", "{976DE436-2239-4F4D-9F7B-AD28D71C2341}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond.GUI", "Diamond.GUI\Diamond.GUI.csproj", "{976DE436-2239-4F4D-9F7B-AD28D71C2341}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond.API", "DiamondBrainz\Diamond.API.csproj", "{A0CFF49E-5214-4078-80BC-12B2C0C72947}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond.API", "Diamond.API\Diamond.API.csproj", "{A0CFF49E-5214-4078-80BC-12B2C0C72947}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScriptsLibV2", "..\ScriptsLib\ScriptsLibV2\ScriptsLibV2.csproj", "{B9D38E54-747E-4D2C-A2B2-85158E9CC07B}"
 EndProject
@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lavalink", "Lavalink", "{52
 		Lavalink\run.bat = Lavalink\run.bat
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond.Data", "DiamondData\Diamond.Data.csproj", "{C9DD9E04-CCF6-4C8B-936B-ABF84CD45313}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond.Data", "Diamond.Data\Diamond.Data.csproj", "{C9DD9E04-CCF6-4C8B-936B-ABF84CD45313}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

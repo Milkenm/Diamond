@@ -53,8 +53,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DiamondBrainz\Diamond.API.csproj" />
-    <ProjectReference Include="..\DiamondData\Diamond.Data.csproj" />
+    <ProjectReference Include="..\Diamond.API\Diamond.API.csproj" />
+    <ProjectReference Include="..\Diamond.Data\Diamond.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>

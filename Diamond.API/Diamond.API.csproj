@@ -30,7 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\ScriptsLib\ScriptsLibV2\ScriptsLibV2.csproj" />
-    <ProjectReference Include="..\DiamondData\Diamond.Data.csproj" />
+    <ProjectReference Include="..\Diamond.Data\Diamond.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>
