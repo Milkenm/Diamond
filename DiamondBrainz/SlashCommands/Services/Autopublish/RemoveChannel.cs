@@ -3,8 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
-using Diamond.API.Data;
+using Diamond.API.Helpers;
 using Diamond.API.Util;
+using Diamond.Data;
+using Diamond.Data.Models.AutoPublisher;
 
 using Discord;
 using Discord.Interactions;
@@ -29,7 +31,7 @@ namespace Diamond.API.SlashCommands.Services
 				DefaultEmbed embed = this.DefaultEmbed;
 
 				// Check if channel exists 
-				IQueryable<PublishChannel> trackedChannel = db.AutoPublisherChannels.Where(pc => pc.ChannelId == announcementsChannel.Id);
+				IQueryable<DbAutoPublisherChannel> trackedChannel = db.AutoPublisherChannels.Where(pc => pc.ChannelId == announcementsChannel.Id);
 				if (!trackedChannel.Any())
 				{
 					embed.Title = "That channel is not being tracked";
@@ -39,7 +41,7 @@ namespace Diamond.API.SlashCommands.Services
 				}
 
 				// Remove the channel from the database
-				PublishChannel pc = trackedChannel.First();
+				DbAutoPublisherChannel pc = trackedChannel.First();
 				_ = db.AutoPublisherChannels.Remove(pc);
 				await db.SaveAsync();
 
@@ -92,7 +94,7 @@ namespace Diamond.API.SlashCommands.Services
 			[ComponentInteraction("button_autopublish_removepermissions_retry:*", true)]
 			public async Task ButtonRetryUnsetPermissionsHandlerAsync(ulong channelId)
 			{
-				await DeferAsync();
+				await this.DeferAsync();
 
 				// Get channel
 				SocketGuildChannel channel = this.Context.Guild.GetChannel(channelId);

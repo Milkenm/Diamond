@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-
+using Diamond.API.Helpers;
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
@@ -16,7 +16,7 @@ using SUtils = ScriptsLibV2.Util.Utils;
 
 namespace Diamond.API.Util
 {
-	public static class Utils
+    public static class Utils
 	{
 		public static string GetMessageContent(IMessage message)
 		{

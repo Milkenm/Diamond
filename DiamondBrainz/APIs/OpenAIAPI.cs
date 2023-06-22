@@ -1,6 +1,5 @@
-﻿using Diamond.API.Data;
-
-using static Diamond.API.Data.DiamondContext;
+﻿using Diamond.Data;
+using Diamond.Data.Enums;
 
 namespace Diamond.API.APIs
 {

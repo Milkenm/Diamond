@@ -4,8 +4,8 @@ namespace Diamond.API.Util
 {
 	public static partial class PInvoke
 	{
-		[LibraryImport("kernel32.dll")]
+		[DllImport("kernel32.dll")]
 		[return: MarshalAs(UnmanagedType.Bool)]
-		public static partial bool GetPhysicallyInstalledSystemMemory(out long TotalMemoryInKilobytes);
+		public static extern bool GetPhysicallyInstalledSystemMemory(out long TotalMemoryInKilobytes);
 	}
 }

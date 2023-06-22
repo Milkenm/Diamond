@@ -6,6 +6,7 @@ using System.Management;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Helpers;
 using Diamond.API.Util;
 
 using Discord;
@@ -15,7 +16,7 @@ using Discord.Rest;
 using SMath = System.Math;
 namespace Diamond.API.SlashCommands
 {
-	public class Info : InteractionModuleBase<SocketInteractionContext>
+    public class Info : InteractionModuleBase<SocketInteractionContext>
 	{
 		private readonly DiamondClient _client;
 

@@ -4,13 +4,13 @@ using System.Net;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
-using Diamond.API.Util;
+using Diamond.API.Helpers;
 
 using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.Fun
 {
-	public partial class Fun
+    public partial class Fun
 	{
 		[DSlashCommand("cat", "Shows a random picture of a cat.")]
 		public async Task CatCommandAsync(

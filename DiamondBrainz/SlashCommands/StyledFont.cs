@@ -2,13 +2,13 @@
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
-using Diamond.API.Util;
+using Diamond.API.Helpers;
 
 using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands
 {
-	public class StyledFont : InteractionModuleBase<SocketInteractionContext>
+    public class StyledFont : InteractionModuleBase<SocketInteractionContext>
 	{
 		[DSlashCommand("styled-font", "Convert normal text to styled text.")]
 		public async Task IgfontCommandAsync(

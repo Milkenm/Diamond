@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using Diamond.API.APIs;
 using Diamond.API.Attributes;
+using Diamond.API.Helpers;
 using Diamond.API.Util;
 
 using Discord;
@@ -14,7 +15,7 @@ using static Diamond.API.APIs.MemeAPI;
 
 namespace Diamond.API.SlashCommands.Fun
 {
-	public partial class Fun
+    public partial class Fun
 	{
 		/// Key: MessageId, Value: List of Reddit Post ID
 		private static readonly Dictionary<ulong, List<string>> _shownMemes = new Dictionary<ulong, List<string>>();

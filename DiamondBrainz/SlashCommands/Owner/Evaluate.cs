@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Helpers;
 using Diamond.API.Util;
 
 using Discord;
@@ -12,7 +13,7 @@ using Microsoft.CodeAnalysis.CSharp.Scripting;
 
 namespace Diamond.API.SlashCommands.Owner
 {
-	public partial class Owner
+    public partial class Owner
 	{
 		[DSlashCommand("eval", "Evaluate a C# expression.", true)]
 		public async Task EvalCommandAsync(

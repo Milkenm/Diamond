@@ -5,14 +5,13 @@ using System.Windows.Documents;
 using System.Windows.Media;
 
 using Diamond.API;
-using Diamond.API.Data;
 using Diamond.API.Util;
+using Diamond.Data;
+using Diamond.Data.Enums;
 
 using Discord;
 
 using ScriptsLibV2.Extensions;
-
-using static Diamond.API.Data.DiamondContext;
 
 namespace Diamond.GUI;
 public static class Utils

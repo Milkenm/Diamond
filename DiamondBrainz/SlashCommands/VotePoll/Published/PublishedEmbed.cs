@@ -1,22 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using Diamond.API.Data;
+using Diamond.Data;
+using Diamond.Data.Models.Polls;
 
 using Discord;
 
-namespace Diamond.API.SlashCommands.VotePoll
+namespace Diamond.API.SlashCommands.VotePoll.Published
 {
 	public class PublishedEmbed : BasePollEmbed
 	{
-		public PublishedEmbed(IInteractionContext context, Poll poll) : base(context, poll)
+		public PublishedEmbed(IInteractionContext context, DbPoll poll) : base(context, poll)
 		{
 			using DiamondContext db = new DiamondContext();
 
-			List<PollVote> pollVotes = VoteUtils.GetPollVotes(db, poll);
-			List<PollOption> pollOptions = VoteUtils.GetPollOptions(db, poll);
+			List<DbPollVote> pollVotes = VoteUtils.GetPollVotes(db, poll);
+			List<DbPollOption> pollOptions = VoteUtils.GetPollOptions(db, poll);
 
-			foreach (PollOption pollOption in pollOptions)
+			foreach (DbPollOption pollOption in pollOptions)
 			{
 				if (pollVotes.Count > 0)
 				{

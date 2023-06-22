@@ -4,9 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Diamond.API.Data;
 using Diamond.API.Schemes.CsgoBackpack;
 using Diamond.API.Util;
+using Diamond.Data;
+using Diamond.Data.Enums;
+using Diamond.Data.Models.CsgoItems;
 
 using Newtonsoft.Json;
 
@@ -204,13 +206,5 @@ namespace Diamond.API.APIs
 		}
 
 		public void ClearCache() => this._searchCacheMap.Clear();
-	}
-
-	public enum Currency
-	{
-		BRL,
-		EUR,
-		USD,
-		JPY,
 	}
 }

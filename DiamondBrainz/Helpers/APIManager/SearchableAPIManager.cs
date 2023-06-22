@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Diamond.API.Data;
+using Diamond.API.Util;
+using Diamond.Data.Enums;
 
-namespace Diamond.API.Util.APIManager
+namespace Diamond.API.Helpers.APIManager
 {
 	public abstract class SearchableAPIManager<T> : APIManager<T>
 	{
@@ -28,25 +29,19 @@ namespace Diamond.API.Util.APIManager
 			{
 				List<SearchMatchInfo<T>> cacheValue = this._searchCache.GetCachedValue(search);
 				if (cacheValue != null)
-				{
 					return cacheValue;
-				}
 			}
 
 			// Generate items map
 			if (this._itemsMap.Count == 0)
-			{
 				this.LoadItemsMap(this._itemsMap);
-			}
 
 			// Search item
 			List<SearchMatchInfo<T>> searchResults = Utils.Search(this._itemsMap, search);
 
 			// Save to cache (if enabled)
 			if (this._cacheSearches)
-			{
 				this._searchCache.CacheValue(search, searchResults, this.KeepResultsForSeconds);
-			}
 
 			return searchResults;
 		}

@@ -8,8 +8,9 @@ using System.Windows.Media;
 
 using Diamond.API;
 using Diamond.API.ConsoleCommands;
-using Diamond.API.Data;
 using Diamond.API.Util;
+using Diamond.Data;
+using Diamond.Data.Enums;
 
 using Discord;
 

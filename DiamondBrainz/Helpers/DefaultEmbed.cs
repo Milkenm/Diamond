@@ -5,7 +5,7 @@ using Discord.WebSocket;
 
 using ScriptsLibV2.Util;
 
-namespace Diamond.API.Util
+namespace Diamond.API.Helpers
 {
 	public class DefaultEmbed : EmbedBuilder
 	{

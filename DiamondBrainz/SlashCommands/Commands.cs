@@ -4,13 +4,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
-using Diamond.API.Util;
+using Diamond.API.Helpers;
 
 using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands
 {
-	public class Commands : InteractionModuleBase<SocketInteractionContext>
+    public class Commands : InteractionModuleBase<SocketInteractionContext>
 	{
 		private readonly InteractionService _interactionService;
 

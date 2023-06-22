@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Diamond.API.Data;
+using Diamond.API.Helpers.APIManager;
 using Diamond.API.Schemes.Smogon;
-using Diamond.API.Util.APIManager;
+using Diamond.Data;
+using Diamond.Data.Enums;
+using Diamond.Data.Models.Pokemons;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using ScriptsLibV2.Util;
 
-using DbPokemonType = Diamond.API.Data.DbPokemonType;
 using SConvert = System.Convert;
 
 namespace Diamond.API.APIs
@@ -201,7 +202,7 @@ namespace Diamond.API.APIs
 
 					float effectiveness = SConvert.ToSingle(token.SelectToken("[1]").ToString());
 
-					_ = db.PokemonAttackEffectives.Add(new DbPokemonAttackEffectives()
+					_ = db.PokemonAttackEffectivenesses.Add(new DbPokemonAttackEffectiveness()
 					{
 						AttackerType = attackerType,
 						TargetType = targetType,

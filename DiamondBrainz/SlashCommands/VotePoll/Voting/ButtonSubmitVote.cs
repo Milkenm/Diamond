@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-using Diamond.API.Data;
+using Diamond.API.SlashCommands.VotePoll.Published;
+using Diamond.API.SlashCommands.VotePoll.Voting;
 using Diamond.API.Util;
+using Diamond.Data;
+using Diamond.Data.Models.Polls;
 
 using Discord.Interactions;
 
@@ -20,15 +23,15 @@ namespace Diamond.API.SlashCommands.VotePoll
 			await this.DeferAsync(true);
 			using DiamondContext db = new DiamondContext();
 
-			Poll poll = VoteUtils.GetPollByMessageId(db, pollMessageId);
+			DbPoll poll = VoteUtils.GetPollByMessageId(db, pollMessageId);
 			if (poll == null) return;
-			PollVote existingVote = VoteUtils.GetPollVoteByUserId(db, poll, this.Context.User.Id);
+			DbPollVote existingVote = VoteUtils.GetPollVoteByUserId(db, poll, this.Context.User.Id);
 
-			PollOption selectedOption = db.PollOptions.Find(selectedOptionId);
+			DbPollOption selectedOption = db.PollOptions.Find(selectedOptionId);
 			// New vote
 			if (existingVote == null)
 			{
-				_ = db.PollVotes.Add(new PollVote()
+				_ = db.PollVotes.Add(new DbPollVote()
 				{
 					UserId = this.Context.User.Id,
 					Poll = poll,

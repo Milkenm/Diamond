@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-using Diamond.API.Data;
+using Diamond.API.SlashCommands.VotePoll.Voting;
+using Diamond.Data;
+using Diamond.Data.Models.Polls;
 
 using Discord.Interactions;
 
@@ -20,7 +22,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 			await this.DeferAsync();
 			using DiamondContext db = new DiamondContext();
 
-			Poll poll = VoteUtils.GetPollByMessageId(db, messageId);
+			DbPoll poll = VoteUtils.GetPollByMessageId(db, messageId);
 			await VoteUtils.UpdateVotingEmbed(this.Context, poll, messageId, selectedOptionId);
 		}
 	}

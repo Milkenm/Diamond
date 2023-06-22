@@ -1,5 +1,5 @@
-﻿using Diamond.API.Data;
-using Diamond.API.Util;
+﻿using Diamond.API.Helpers;
+using Diamond.Data.Models.Polls;
 
 using Discord;
 
@@ -9,7 +9,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 {
 	public abstract class BasePollEmbed : DefaultEmbed
 	{
-		public BasePollEmbed(IInteractionContext context, Poll poll) : base($"Poll", "🗳️", context)
+		public BasePollEmbed(IInteractionContext context, DbPoll poll) : base($"Poll", "🗳️", context)
 		{
 			this.Title = poll.Title;
 			this.Description = poll.Description;

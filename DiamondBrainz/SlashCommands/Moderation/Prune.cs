@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Helpers;
 using Diamond.API.Util;
 
 using Discord;
@@ -10,7 +11,7 @@ using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.Moderation
 {
-	public partial class Moderation
+    public partial class Moderation
 	{
 		[RequireBotPermission(GuildPermission.ManageMessages)]
 		[RequireUserPermission(GuildPermission.ManageMessages)]

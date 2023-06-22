@@ -2,7 +2,7 @@
 
 using Diamond.API.APIs;
 using Diamond.API.Attributes;
-using Diamond.API.Util;
+using Diamond.API.Helpers;
 
 using Discord.Interactions;
 
@@ -12,7 +12,7 @@ using ScriptsLibV2.Extensions;
 
 namespace Diamond.API.SlashCommands
 {
-	public class Gpt : InteractionModuleBase<SocketInteractionContext>
+    public class Gpt : InteractionModuleBase<SocketInteractionContext>
 	{
 		private readonly OpenAIAPI _openaiApi;
 

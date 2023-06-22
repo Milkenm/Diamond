@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-using Diamond.API.Data;
+using Diamond.API.SlashCommands.VotePoll.Editor;
+using Diamond.Data;
+using Diamond.Data.Models.Polls;
 
 using Discord;
 using Discord.Interactions;
@@ -61,8 +63,8 @@ namespace Diamond.API.SlashCommands.VotePoll
 			await this.DeferAsync();
 			using DiamondContext db = new DiamondContext();
 
-			Poll poll = VoteUtils.GetPollByMessageId(db, messageId);
-			PollOption newOption = new PollOption()
+			DbPoll poll = VoteUtils.GetPollByMessageId(db, messageId);
+			DbPollOption newOption = new DbPollOption()
 			{
 				TargetPoll = poll,
 				Name = modal.OptionName,

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
-using Diamond.API.Util;
+using Diamond.API.Helpers;
 
 using Discord;
 using Discord.Interactions;
@@ -12,7 +12,7 @@ using Discord.WebSocket;
 
 namespace Diamond.API.SlashCommands
 {
-	public class Someone : InteractionModuleBase<SocketInteractionContext>
+    public class Someone : InteractionModuleBase<SocketInteractionContext>
 	{
 		private static readonly List<string> _kaomojisList = new List<string>()
 		{

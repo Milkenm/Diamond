@@ -4,14 +4,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Helpers;
 using Diamond.API.Schemes.Mcsrvstat;
-using Diamond.API.Util;
 
 using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.Minecraft
 {
-	public partial class Minecraft
+    public partial class Minecraft
 	{
 		[DSlashCommand("server-status", "Get a server status.")]
 		public async Task ServerStatusCommandAsync(

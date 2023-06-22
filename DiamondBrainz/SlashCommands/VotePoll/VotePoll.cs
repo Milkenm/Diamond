@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
-using Diamond.API.Data;
+using Diamond.API.SlashCommands.VotePoll.Editor;
+using Diamond.Data;
+using Diamond.Data.Models.Polls;
 
 using Discord.Interactions;
 
@@ -31,7 +33,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 
 			ulong responseMessageId = (await this.Context.Interaction.GetOriginalResponseAsync()).Id;
 			ulong userId = this.Context.Interaction.User.Id;
-			Poll poll = await VoteUtils.CreatePollAsync(db, title, description, imageUrl, thumbnailUrl, responseMessageId, userId);
+			DbPoll poll = await VoteUtils.CreatePollAsync(db, title, description, imageUrl, thumbnailUrl, responseMessageId, userId);
 
 			ulong deferId = (await this.GetOriginalResponseAsync()).Id;
 

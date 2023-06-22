@@ -7,15 +7,14 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 
 using Diamond.API;
-using Diamond.API.Data;
+using Diamond.Data;
+using Diamond.Data.Enums;
 
 using Discord;
 
 using Newtonsoft.Json;
 
 using ScriptsLibV2.Extensions;
-
-using static Diamond.API.Data.DiamondContext;
 
 using MessageBox = System.Windows.Forms.MessageBox;
 using SUtils = ScriptsLibV2.Util.Utils;

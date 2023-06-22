@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
 
-using Diamond.API.Data;
+using Diamond.Data;
+using Diamond.Data.Models.Polls;
 
 using Discord;
 
-namespace Diamond.API.SlashCommands.VotePoll
+namespace Diamond.API.SlashCommands.VotePoll.Editor
 {
 	public class EditorEmbed : BasePollEmbed
 	{
-		public EditorEmbed(IInteractionContext context, Poll poll, ulong messageId) : base(context, poll)
+		public EditorEmbed(IInteractionContext context, DbPoll poll, ulong messageId) : base(context, poll)
 		{
 			using DiamondContext db = new DiamondContext();
 
-			List<PollOption> pollOptions = VoteUtils.GetPollOptions(db, poll);
+			List<DbPollOption> pollOptions = VoteUtils.GetPollOptions(db, poll);
 
 			ComponentBuilder builder = new ComponentBuilder()
 				.WithButton(new ButtonBuilder("Publish", $"button_publish:{messageId}", ButtonStyle.Success, isDisabled: pollOptions.Count < 2))
@@ -27,7 +28,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 					CustomId = "sm_poll_remove_option:" + messageId,
 					Placeholder = "Remove an option...",
 				};
-				foreach (PollOption pollOption in pollOptions)
+				foreach (DbPollOption pollOption in pollOptions)
 				{
 					_ = selectMenu.AddOption(pollOption.Name, pollOption.Id.ToString(), pollOption.Description);
 				}

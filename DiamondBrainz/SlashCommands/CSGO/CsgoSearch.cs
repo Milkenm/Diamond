@@ -10,8 +10,10 @@ using System.Web;
 
 using Diamond.API.APIs;
 using Diamond.API.Attributes;
-using Diamond.API.Data;
+using Diamond.API.Helpers;
 using Diamond.API.Util;
+using Diamond.Data.Enums;
+using Diamond.Data.Models.CsgoItems;
 
 using Discord;
 using Discord.Interactions;

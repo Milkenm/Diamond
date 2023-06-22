@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
-using Diamond.API.Util;
+using Diamond.API.Helpers;
 
 using Discord;
 using Discord.Interactions;
@@ -13,7 +13,7 @@ using ScriptsLibV2.Extensions;
 
 namespace Diamond.API.SlashCommands.Moderation
 {
-	public partial class Moderation
+    public partial class Moderation
 	{
 		[RequireBotPermission(GuildPermission.BanMembers)]
 		[DefaultMemberPermissions(GuildPermission.BanMembers)]

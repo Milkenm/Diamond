@@ -1,27 +1,26 @@
 ﻿using System.Collections.Generic;
 
-using Diamond.API.Data;
+using Diamond.Data;
+using Diamond.Data.Models.Polls;
 
 using Discord;
 
 using ScriptsLibV2.Extensions;
 
-namespace Diamond.API.SlashCommands.VotePoll
+namespace Diamond.API.SlashCommands.VotePoll.Voting
 {
 	public class VotingEmbed : BasePollEmbed
 	{
-		public VotingEmbed(IInteractionContext context, Poll poll, ulong pollMessageId, long? optionId) : base(context, poll)
+		public VotingEmbed(IInteractionContext context, DbPoll poll, ulong pollMessageId, long? optionId) : base(context, poll)
 		{
 			using DiamondContext db = new DiamondContext();
 
 			// Get user vote
 			if (optionId == null)
 			{
-				PollVote vote = VoteUtils.GetPollVoteByUserId(db, poll, context.User.Id);
+				DbPollVote vote = VoteUtils.GetPollVoteByUserId(db, poll, context.User.Id);
 				if (vote != null)
-				{
 					optionId = vote.PollOption.Id;
-				}
 			}
 			// Create the selection menu
 			SelectMenuBuilder selectMenu = new SelectMenuBuilder()
@@ -31,12 +30,10 @@ namespace Diamond.API.SlashCommands.VotePoll
 			};
 			// Add "No vote" option
 			if (optionId != null)
-			{
 				_ = selectMenu.AddOption("No vote", 0.ToString(), "Don't vote for this poll.", Emoji.Parse("❌"), isDefault: optionId == 0);
-			}
 			// Add options
-			List<PollOption> pollOptions = VoteUtils.GetPollOptions(db, poll);
-			foreach (PollOption pollOption in pollOptions)
+			List<DbPollOption> pollOptions = VoteUtils.GetPollOptions(db, poll);
+			foreach (DbPollOption pollOption in pollOptions)
 			{
 				SelectMenuOptionBuilder selectMenuOption = new SelectMenuOptionBuilder(pollOption.Name, pollOption.Id.ToString(), pollOption.Description);
 				if (optionId != null && optionId == pollOption.Id)

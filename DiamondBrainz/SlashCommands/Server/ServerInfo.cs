@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Helpers;
 using Diamond.API.Util;
 
 using Discord.WebSocket;
@@ -14,7 +15,7 @@ using ScriptsLibV2.Extensions;
 
 namespace Diamond.API.SlashCommands.Server
 {
-	public partial class Server
+    public partial class Server
 	{
 		[DSlashCommand("info", "Show info about the guild.")]
 		public async Task ServerInfoCommandAsync(

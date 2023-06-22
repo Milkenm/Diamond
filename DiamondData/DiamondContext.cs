@@ -1,25 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Diamond.Data.Enums;
+using Diamond.Data.Models.Settings;
 
 using Microsoft.EntityFrameworkCore;
 
 using ScriptsLibV2.Extensions;
 
-using SUtils = ScriptsLibV2.Util.Utils;
-
-namespace Diamond.API.Data
+namespace Diamond.Data
 {
 	public partial class DiamondContext : DbContext
 	{
-		public string DatabasePath => Path.Join(SUtils.GetInstallationFolder(), @"\Data\DiamondDB.db");
+		private const string CONNECTION_STRING = "Server=localhost; User ID=Diamond; Password=diamond; Database=diamond";
 
-		protected override void OnConfiguring(DbContextOptionsBuilder options)
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			_ = options.UseSqlite($"Data Source={this.DatabasePath}");
-			/*options.LogTo((msg) => Debug.WriteLine(msg));*/
+			_ = optionsBuilder.UseMySql(CONNECTION_STRING, ServerVersion.AutoDetect(CONNECTION_STRING));
 		}
 
 		private static readonly Dictionary<ConfigSetting, string> _settingsList = new Dictionary<ConfigSetting, string>()
@@ -71,11 +65,9 @@ namespace Diamond.API.Data
 					await Task.Delay(1000);
 					return this.SaveAsync();
 				}
-
 				this._isSaving = true;
 				_ = await base.SaveChangesAsync();
 				this._isSaving = false;
-
 				return Task.CompletedTask;
 			});
 		}
@@ -87,7 +79,6 @@ namespace Diamond.API.Data
 			foreach (ConfigSetting setting in _settingsList.Keys)
 			{
 				if (_settingsToIgnoreInValidation.Contains(setting)) continue;
-
 				if (this.GetSetting(setting).IsEmpty())
 				{
 					return false;
@@ -98,7 +89,7 @@ namespace Diamond.API.Data
 
 		public string? GetSetting(ConfigSetting setting, bool exceptionIfNull = false)
 		{
-			Setting dbSetting = this.Settings.Where(s => s.Name == GetSettingString(setting)).FirstOrDefault();
+			DbSetting dbSetting = this.Settings.Where(s => s.Name == GetSettingString(setting)).FirstOrDefault();
 			// Setting not set
 			if (dbSetting == null)
 			{
@@ -116,21 +107,19 @@ namespace Diamond.API.Data
 		public async Task SetSettingAsync(ConfigSetting setting, object value)
 		{
 			string settingName = GetSettingString(setting);
-
-			string stringValue = value != null ? value.ToString() : string.Empty;
+			string? stringValue = value != null ? value.ToString() : string.Empty;
 			if (stringValue.IsEmpty())
 			{
 				return;
 			}
-
-			Setting dbSetting = this.Settings.Where(s => s.Name == settingName).FirstOrDefault();
+			DbSetting dbSetting = this.Settings.Where(s => s.Name == settingName).FirstOrDefault();
 			if (dbSetting != null)
 			{
 				dbSetting.Value = stringValue;
 			}
 			else
 			{
-				_ = this.Settings.Add(new Setting()
+				_ = this.Settings.Add(new DbSetting()
 				{
 					Name = settingName,
 					Value = stringValue,
@@ -141,28 +130,7 @@ namespace Diamond.API.Data
 
 		public void ClearTable(string tableName)
 		{
-			_ = this.Database.ExecuteSqlRaw($"DELETE FROM [{tableName}]");
+			_ = this.Database.ExecuteSqlRaw($"SET FOREIGN_KEY_CHECKS = 0; TRUNCATE TABLE {tableName}; SET FOREIGN_KEY_CHECKS = 1;");
 		}
-	}
-
-	public enum ConfigSetting
-	{
-		// Settings
-		Token,
-		DevToken,
-		OpenAI_API_Key,
-		NightAPI_API_Key,
-		RiotAPI_Key,
-		DebugGuildID,
-		DebugChannelsID,
-		IgnoreDebugChannels,
-		// Random Stuff
-		CsgoItemsLoadUnix,
-		TotalUptime,
-		// Activity
-		ActivityType,
-		ActivityText,
-		ActivityStreamURL,
-		PokemonsListLoadUnix,
 	}
 }

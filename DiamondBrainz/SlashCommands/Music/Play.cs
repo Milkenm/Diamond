@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
-using Diamond.API.Util;
+using Diamond.API.Helpers;
 
 using Discord;
 using Discord.Interactions;
@@ -14,7 +14,7 @@ using Victoria.Responses.Search;
 
 namespace Diamond.API.SlashCommands.Music
 {
-	public partial class Music
+    public partial class Music
 	{
 		[DSlashCommand("play", "Add an audio to the queue.")]
 		public async Task PlayCommandAsync(

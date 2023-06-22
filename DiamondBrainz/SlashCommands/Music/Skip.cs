@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
-using Diamond.API.Util;
+using Diamond.API.Helpers;
 
 using Discord.Interactions;
 
@@ -10,7 +10,7 @@ using Victoria.Player;
 
 namespace Diamond.API.SlashCommands.Music
 {
-	public partial class Music
+    public partial class Music
 	{
 		[DSlashCommand("skip", "Skips the current playing song.")]
 		public async Task SkipCommandAsync()

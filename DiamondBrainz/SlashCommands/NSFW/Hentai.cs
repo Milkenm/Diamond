@@ -2,16 +2,15 @@
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
-using Diamond.API.Data;
-using Diamond.API.Util;
+using Diamond.API.Helpers;
+using Diamond.Data;
+using Diamond.Data.Enums;
 
 using Discord.Interactions;
 
 using Newtonsoft.Json;
 
 using ScriptsLibV2.Util;
-
-using static Diamond.API.Data.DiamondContext;
 
 namespace Diamond.API.SlashCommands.NSFW
 {
@@ -47,10 +46,10 @@ namespace Diamond.API.SlashCommands.NSFW
 
 			// Create the embed
 			DefaultEmbed embed = new DefaultEmbed("Hentai", "💮", this.Context);
-			embed.WithImageUrl(resp.Content.Url);
+			_ = embed.WithImageUrl(resp.Content.Url);
 
 			// Reply
-			await embed.SendAsync();
+			_ = await embed.SendAsync();
 		}
 
 		public enum HentaiType

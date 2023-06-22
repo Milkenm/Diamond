@@ -1,14 +1,14 @@
 ﻿using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
-using Diamond.API.Util;
+using Diamond.API.Helpers;
 
 using Discord;
 using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands
 {
-	public class Avatar : InteractionModuleBase<SocketInteractionContext>
+    public class Avatar : InteractionModuleBase<SocketInteractionContext>
 	{
 		[DSlashCommand("avatar", "Gets the avatar image of the selected user.")]
 		public async Task AvatarCommandAsync(

@@ -1,7 +1,10 @@
 ﻿using System.Threading.Tasks;
 
-using Diamond.API.Data;
+using Diamond.API.SlashCommands.VotePoll.Editor;
+using Diamond.API.SlashCommands.VotePoll.Published;
 using Diamond.API.Util;
+using Diamond.Data;
+using Diamond.Data.Models.Polls;
 
 using Discord.Interactions;
 
@@ -23,7 +26,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 
 			await Utils.DeleteResponseAsync(this.Context);
 
-			Poll poll = VoteUtils.GetPollByMessageId(db, messageId);
+			DbPoll poll = VoteUtils.GetPollByMessageId(db, messageId);
 			PublishedEmbed publishedEmbed = new PublishedEmbed(this.Context, poll);
 
 			ulong responseId = await publishedEmbed.SendAsync(sendAsNew: true);

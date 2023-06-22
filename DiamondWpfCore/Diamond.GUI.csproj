@@ -46,7 +46,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DiamondBrainz\DiamondAPI.csproj" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DiamondBrainz\Diamond.API.csproj" />
+    <ProjectReference Include="..\DiamondData\Diamond.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,13 +1,13 @@
 ﻿using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
-using Diamond.API.Util;
+using Diamond.API.Helpers;
 
 using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.Math
 {
-	public partial class Math
+    public partial class Math
 	{
 		[DSlashCommand("sincos", "Calculate the consine of the given angle.")]
 		public async Task MathSinCosCommandAsync(

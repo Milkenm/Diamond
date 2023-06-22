@@ -1,7 +1,10 @@
 ﻿using System.Threading.Tasks;
 
-using Diamond.API.Data;
+using Diamond.API.SlashCommands.VotePoll.Published;
+using Diamond.API.SlashCommands.VotePoll.Voting;
 using Diamond.API.Util;
+using Diamond.Data;
+using Diamond.Data.Models.Polls;
 
 using Discord.Interactions;
 
@@ -21,7 +24,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 			using DiamondContext db = new DiamondContext();
 			ulong messageId = Utils.GetButtonMessageId(this.Context);
 
-			Poll poll = VoteUtils.GetPollByMessageId(db, messageId);
+			DbPoll poll = VoteUtils.GetPollByMessageId(db, messageId);
 			if (poll == null) return;
 
 			VotingEmbed voteEmbed = new VotingEmbed(this.Context, poll, messageId, null);

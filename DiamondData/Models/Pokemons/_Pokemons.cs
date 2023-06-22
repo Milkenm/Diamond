@@ -1,0 +1,19 @@
+﻿using Diamond.Data.Models.Pokemons;
+
+using Microsoft.EntityFrameworkCore;
+
+namespace Diamond.Data
+{
+	public partial class DiamondContext
+	{
+		public DbSet<DbPokemon> Pokemons { get; set; }
+		public DbSet<DbPokemonAttackEffectiveness> PokemonAttackEffectivenesses { get; set; }
+		public DbSet<DbPokemonFormat> PokemonFormats { get; set; }
+		public DbSet<DbPokemonGenerations> PokemonGenerations { get; set; }
+		public DbSet<DbPokemonItem> PokemonItems { get; set; }
+		public DbSet<DbPokemonMove> PokemonMoves { get; set; }
+		public DbSet<DbPokemonNature> PokemonNatures { get; set; }
+		public DbSet<DbPokemonPassive> PokemonPassives { get; set; }
+		public DbSet<DbPokemonType> PokemonTypes { get; set; }
+	}
+}

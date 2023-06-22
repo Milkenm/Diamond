@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-using Diamond.API.Data;
+using Diamond.API.SlashCommands.VotePoll.Editor;
+using Diamond.Data;
+using Diamond.Data.Models.Polls;
 
 using Discord;
 using Discord.Interactions;
@@ -20,7 +22,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 		{
 			using DiamondContext db = new DiamondContext();
 
-			Poll poll = VoteUtils.GetPollByMessageId(db, messageId);
+			DbPoll poll = VoteUtils.GetPollByMessageId(db, messageId);
 			PollEditorModal editorModal = new PollEditorModal()
 			{
 				PollName = poll.Title,
@@ -44,7 +46,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 			await this.DeferAsync();
 			using DiamondContext db = new DiamondContext();
 
-			Poll poll = VoteUtils.GetPollByMessageId(db, messageId);
+			DbPoll poll = VoteUtils.GetPollByMessageId(db, messageId);
 
 			// Get the values of components.
 			poll.Title = modal.PollName;

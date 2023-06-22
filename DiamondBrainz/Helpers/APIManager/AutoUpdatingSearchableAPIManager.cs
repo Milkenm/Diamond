@@ -1,8 +1,8 @@
-﻿using Diamond.API.Data;
+﻿using Diamond.Data.Enums;
 
 using ScriptsLibV2;
 
-namespace Diamond.API.Util.APIManager
+namespace Diamond.API.Helpers.APIManager
 {
 	public abstract class AutoUpdatingSearchableAPIManager<T> : SearchableAPIManager<T>
 	{

@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
-using Diamond.API.Data;
+using Diamond.API.Helpers;
 using Diamond.API.Util;
+using Diamond.Data;
+using Diamond.Data.Models.AutoPublisher;
 
 using Discord;
 using Discord.Interactions;
@@ -45,7 +47,7 @@ namespace Diamond.API.SlashCommands.Services
 				}
 
 				// Save channel to database
-				_ = db.AutoPublisherChannels.Add(new PublishChannel()
+				_ = db.AutoPublisherChannels.Add(new DbAutoPublisherChannel()
 				{
 					GuildId = announcementsChannel.Guild.Id,
 					ChannelId = announcementsChannel.Id,
@@ -87,7 +89,7 @@ namespace Diamond.API.SlashCommands.Services
 				using DiamondContext db = new DiamondContext();
 
 				// Check if the channel still exists in the database
-				PublishChannel pc = db.AutoPublisherChannels.Where(pc => pc.ChannelId == channelId).FirstOrDefault();
+				DbAutoPublisherChannel pc = db.AutoPublisherChannels.Where(pc => pc.ChannelId == channelId).FirstOrDefault();
 				if (pc != null)
 				{
 					// Publish old messages

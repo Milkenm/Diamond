@@ -3,8 +3,10 @@ using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
 
-using Diamond.API.Data;
+using Diamond.API.Helpers;
 using Diamond.API.Util;
+using Diamond.Data;
+using Diamond.Data.Enums;
 
 using Discord;
 using Discord.Interactions;
@@ -145,7 +147,7 @@ namespace Diamond.API
 			this.IsReady = true;
 
 			// Load command modules
-			_ = await this._interactionService.AddModulesAsync(SUtils.GetAssemblyByName("DiamondAPI"), this._serviceProvider);
+			_ = await this._interactionService.AddModulesAsync(SUtils.GetAssemblyByName("Diamond.API"), this._serviceProvider);
 
 			if (!SUtils.IsDebugEnabled())
 			{

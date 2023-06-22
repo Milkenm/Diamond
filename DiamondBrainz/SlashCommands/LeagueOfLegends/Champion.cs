@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Helpers;
 using Diamond.API.Schemes.LolDataDragon;
 using Diamond.API.Util;
 
@@ -10,7 +11,7 @@ using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.LeagueOfLegends
 {
-	public partial class LeagueOfLegends
+    public partial class LeagueOfLegends
 	{
 		[DSlashCommand("champion", "View info about a champion.")]
 		public async Task ChampionCommandAsync(

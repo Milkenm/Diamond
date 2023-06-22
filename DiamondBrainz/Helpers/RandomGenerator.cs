@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Diamond.API.Util
+namespace Diamond.API.Helpers
 {
 	public class RandomGenerator
 	{

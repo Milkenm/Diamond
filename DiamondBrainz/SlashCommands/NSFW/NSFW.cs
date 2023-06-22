@@ -3,7 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
-using Diamond.API.Util;
+using Diamond.API.Helpers;
 
 using Discord.Interactions;
 
@@ -13,7 +13,7 @@ using ScriptsLibV2.Util;
 
 namespace Diamond.API.SlashCommands.NSFW
 {
-	public partial class NSFW
+    public partial class NSFW
 	{
 		[DSlashCommand("pic", "Shows you a sus image.")]
 		public async Task NsfwCommandAsync(

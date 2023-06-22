@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
-using Diamond.API.Util;
 
 using Discord;
 using Discord.Interactions;
 
 using static Diamond.API.APIs.OpenMeteoWeather;
 using Diamond.API.Schemes.OpenMeteo;
+using Diamond.API.Helpers;
 
 namespace Diamond.API.SlashCommands.World
 {

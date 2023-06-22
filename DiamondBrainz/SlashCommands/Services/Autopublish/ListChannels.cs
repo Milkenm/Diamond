@@ -4,8 +4,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
-using Diamond.API.Data;
+using Diamond.API.Helpers;
 using Diamond.API.Util;
+using Diamond.Data;
+using Diamond.Data.Models.AutoPublisher;
 
 using Discord.WebSocket;
 
@@ -26,11 +28,11 @@ namespace Diamond.API.SlashCommands.Services
 
 				DefaultEmbed embed = this.DefaultEmbed;
 
-				List<PublishChannel> trackedChannels = db.AutoPublisherChannels.Where(pc => pc.GuildId == this.Context.Guild.Id).ToList();
+				List<DbAutoPublisherChannel> trackedChannels = db.AutoPublisherChannels.Where(pc => pc.GuildId == this.Context.Guild.Id).ToList();
 
 				StringBuilder channelsSb = new StringBuilder();
 				int trackingChannelsCount = 0;
-				foreach (PublishChannel pc in trackedChannels)
+				foreach (DbAutoPublisherChannel pc in trackedChannels)
 				{
 					// Check if the channel exists. If it doesn't exist, delete it from the database
 					SocketGuildChannel? channel = this.Context.Guild.GetChannel(pc.ChannelId);

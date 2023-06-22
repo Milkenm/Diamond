@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 using Diamond.API.APIs;
 using Diamond.API.Attributes;
-using Diamond.API.Data;
+using Diamond.API.Helpers;
 using Diamond.API.Schemes.Smogon;
 using Diamond.API.Util;
+using Diamond.Data;
+using Diamond.Data.Models.Pokemons;
 
 using Discord;
 using Discord.Interactions;
@@ -43,7 +45,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 				PokemonType pokeType = PokemonAPI.GetPokemonTypeByTypeName(type);
 
 				// Get all counters
-				foreach (DbPokemonAttackEffectives atkef in db.PokemonAttackEffectives.Include(af => af.AttackerType).Where(af => af.TargetType == dbType))
+				foreach (DbPokemonAttackEffectiveness atkef in db.PokemonAttackEffectivenesses.Include(af => af.AttackerType).Where(af => af.TargetType == dbType))
 				{
 					if (atkef.Value == 1) continue;
 

@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-using Diamond.API.Data;
+using Diamond.API.SlashCommands.VotePoll.Editor;
+using Diamond.Data;
+using Diamond.Data.Models.Polls;
 
 using Discord.Interactions;
 namespace Diamond.API.SlashCommands.VotePoll
@@ -21,13 +23,13 @@ namespace Diamond.API.SlashCommands.VotePoll
 			using DiamondContext db = new DiamondContext();
 
 			// Remove option from database
-			PollOption? pollOption = db.PollOptions.Find(selectedOptionId);
+			DbPollOption? pollOption = db.PollOptions.Find(selectedOptionId);
 			if (pollOption == null) return;
 			_ = db.PollOptions.Remove(pollOption);
 			await db.SaveAsync();
 
 			// Refresh embed
-			Poll poll = VoteUtils.GetPollByMessageId(db, messageId);
+			DbPoll poll = VoteUtils.GetPollByMessageId(db, messageId);
 			await VoteUtils.UpdateEditorEmbed(this.Context, poll, messageId);
 		}
 	}

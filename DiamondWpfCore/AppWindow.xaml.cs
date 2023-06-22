@@ -8,9 +8,9 @@ using System.Windows.Media.Imaging;
 
 using Diamond.API;
 using Diamond.API.APIs;
-using Diamond.API.Data;
+using Diamond.API.Helpers.APIManager;
 using Diamond.API.Util;
-using Diamond.API.Util.APIManager;
+using Diamond.Data;
 using Diamond.GUI.Pages;
 
 using Microsoft.Extensions.DependencyInjection;

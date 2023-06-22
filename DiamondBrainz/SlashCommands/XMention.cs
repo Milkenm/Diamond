@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using Diamond.API.Helpers;
 using Diamond.API.Util;
 
 using Discord;
@@ -10,7 +10,7 @@ using Discord.WebSocket;
 
 namespace Diamond.API.SlashCommands
 {
-	public class XMention : InteractionModuleBase<SocketInteractionContext>
+    public class XMention : InteractionModuleBase<SocketInteractionContext>
 	{
 
 		[EnabledInDm(false)]

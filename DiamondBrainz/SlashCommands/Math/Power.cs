@@ -1,13 +1,13 @@
 ﻿using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
-using Diamond.API.Util;
+using Diamond.API.Helpers;
 
 using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.Math
 {
-	public partial class Math
+    public partial class Math
 	{
 		[DSlashCommand("power", "Calculate the power of a given number.")]
 		public async Task MathPowerCommandAsync(

@@ -3,8 +3,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Diamond.API.Data;
-using Diamond.API.Util;
+using Diamond.API.Helpers;
+using Diamond.Data;
+using Diamond.Data.Models.AutoPublisher;
 
 using Discord;
 using Discord.Interactions;
@@ -61,13 +62,13 @@ namespace Diamond.API.SlashCommands.Services
 			{
 				DiamondContext db = new DiamondContext();
 
-				foreach (PublishChannel pc in db.AutoPublisherChannels)
+				foreach (DbAutoPublisherChannel pc in db.AutoPublisherChannels)
 				{
 					await this.PublishOldMessagesInChannelAsync(pc, messageCount, filterOldMessages);
 				}
 			}
 
-			private async Task PublishOldMessagesInChannelAsync(PublishChannel pc, int messageCount, bool filterOldMessages)
+			private async Task PublishOldMessagesInChannelAsync(DbAutoPublisherChannel pc, int messageCount, bool filterOldMessages)
 			{
 				using DiamondContext db = new DiamondContext();
 

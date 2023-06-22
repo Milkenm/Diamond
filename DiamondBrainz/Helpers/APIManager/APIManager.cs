@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-using Diamond.API.Data;
+using Diamond.Data;
+using Diamond.Data.Enums;
 
-namespace Diamond.API.Util.APIManager
+namespace Diamond.API.Helpers.APIManager
 {
 	public delegate void APIManagerStateChanged();
 

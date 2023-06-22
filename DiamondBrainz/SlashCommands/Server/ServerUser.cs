@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
+using Diamond.API.Helpers;
 using Diamond.API.Util;
 
 using Discord;
@@ -11,7 +12,7 @@ using Discord.WebSocket;
 
 namespace Diamond.API.SlashCommands.Server
 {
-	public partial class Server
+    public partial class Server
 	{
 		private static readonly Dictionary<UserStatus, string> _statusMap = new Dictionary<UserStatus, string>()
 		{

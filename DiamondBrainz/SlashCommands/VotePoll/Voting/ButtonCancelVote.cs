@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 
+using Diamond.API.SlashCommands.VotePoll.Voting;
 using Diamond.API.Util;
 
 using Discord.Interactions;

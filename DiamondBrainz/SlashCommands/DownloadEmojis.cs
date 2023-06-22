@@ -6,7 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
-using Diamond.API.Util;
+using Diamond.API.Helpers;
 
 using Discord;
 using Discord.Interactions;
@@ -14,7 +14,7 @@ using Discord.WebSocket;
 
 namespace Diamond.API.SlashCommands
 {
-	public class DownloadEmojis : InteractionModuleBase<SocketInteractionContext>
+    public class DownloadEmojis : InteractionModuleBase<SocketInteractionContext>
 	{
 		private readonly DiamondClient _client;
 

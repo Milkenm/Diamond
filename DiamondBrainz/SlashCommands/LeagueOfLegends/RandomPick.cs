@@ -4,16 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
-using Diamond.API.Util;
 using Diamond.API.Schemes.LolDataDragon;
 
 using Discord.Interactions;
 
 using static Diamond.API.APIs.LeagueOfLegendsDataDragonAPI;
+using Diamond.API.Helpers;
 
 namespace Diamond.API.SlashCommands.LeagueOfLegends
 {
-	public partial class LeagueOfLegends
+    public partial class LeagueOfLegends
 	{
 		[DSlashCommand("random-pick", "Pick a random champ and/or role.")]
 		public async Task RandomizeCommandAsync(

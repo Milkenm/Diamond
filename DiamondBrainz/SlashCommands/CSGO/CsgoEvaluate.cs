@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 
 using Diamond.API.APIs;
 using Diamond.API.Attributes;
-using Diamond.API.Data;
-using Diamond.API.Util;
+using Diamond.API.Helpers;
+using Diamond.API.Schemes.Steam;
+using Diamond.Data.Enums;
+using Diamond.Data.Models.CsgoItems;
 
 using Discord;
 using Discord.Interactions;
@@ -14,12 +16,11 @@ using Discord.Interactions;
 using Newtonsoft.Json;
 
 using ScriptsLibV2.Util;
-using Diamond.API.Schemes.Steam;
 
 namespace Diamond.API.SlashCommands.CSGO
 {
 
-    public partial class Csgo
+	public partial class Csgo
 	{
 		// <SteamID, EvaluateCache>
 		public static Dictionary<string, EvaluateCache> _evaluateCache = new Dictionary<string, EvaluateCache>();
@@ -36,10 +37,10 @@ namespace Diamond.API.SlashCommands.CSGO
 			[ShowEveryone] bool showEveryone = false
 		)
 		{
-			await DeferAsync(!showEveryone);
+			await this.DeferAsync(!showEveryone);
 
 			// Create embed
-			DefaultEmbed embed = new DefaultEmbed("CS:GO Inventory value", "💸", Context);
+			DefaultEmbed embed = new DefaultEmbed("CS:GO Inventory value", "💸", this.Context);
 
 			// Vars
 			bool fromCache = false;
@@ -88,9 +89,9 @@ namespace Diamond.API.SlashCommands.CSGO
 				}
 				if (userInfo == null)
 				{
-					embed.WithDescription("**The profile you searched for could not be found.**");
+					_ = embed.WithDescription("**The profile you searched for could not be found.**");
 
-					await embed.SendAsync();
+					_ = await embed.SendAsync();
 					return;
 				}
 				userInfo.SteamProfileUrl = steamProfileUrl;
@@ -103,9 +104,9 @@ namespace Diamond.API.SlashCommands.CSGO
 				}
 				catch
 				{
-					embed.WithDescription($"**There was an error downloading the inventory.**");
+					_ = embed.WithDescription($"**There was an error downloading the inventory.**");
 
-					await embed.SendAsync();
+					_ = await embed.SendAsync();
 					return;
 				}
 
@@ -126,8 +127,8 @@ namespace Diamond.API.SlashCommands.CSGO
 				// Calculate inventory value
 				foreach (AssetDescription description in inventory.Descriptions)
 				{
-					DbCsgoItem csgoItem = (_csgoBackpack.SearchItem(description.MarketName))[0].Item;
-					List<DbCsgoItemPrice> itemPrices = _csgoBackpack.GetItemPrices(csgoItem, currency);
+					DbCsgoItem csgoItem = this._csgoBackpack.SearchItem(description.MarketName)[0].Item;
+					List<DbCsgoItemPrice> itemPrices = this._csgoBackpack.GetItemPrices(csgoItem, currency);
 					if (itemPrices.Count == 0)
 					{
 						ignoredItems++;
@@ -150,7 +151,7 @@ namespace Diamond.API.SlashCommands.CSGO
 			if (!fromCache)
 			{
 				// Cache results
-				_evaluateCache.Remove(userInfo.SteamID);
+				_ = _evaluateCache.Remove(userInfo.SteamID);
 
 				EvaluateCache userCache = new EvaluateCache()
 				{
@@ -169,26 +170,26 @@ namespace Diamond.API.SlashCommands.CSGO
 			}
 
 			// Send embed
-			embed.WithThumbnailUrl(userInfo.AvatarUrl);
-			embed.WithTitle(userInfo.Username);
-			embed.AddField("Value", $"{string.Format("{0:0.00}", totalValue)}{CsgoBackpack.CurrencySymbols[currency]}");
-			embed.AddField("Most valuable item", $"{mostValuableItemName} ({string.Format("{0:0.00}", mostValuableItemValue)}{CsgoBackpack.CurrencySymbols[currency]})");
-			embed.AddField("Unique items", uniqueItems, true);
-			embed.AddField("Total items", totalItems, true);
-			embed.AddField("Unpriced items", ignoredItems, true);
+			_ = embed.WithThumbnailUrl(userInfo.AvatarUrl);
+			_ = embed.WithTitle(userInfo.Username);
+			_ = embed.AddField("Value", $"{string.Format("{0:0.00}", totalValue)}{CsgoBackpack.CurrencySymbols[currency]}");
+			_ = embed.AddField("Most valuable item", $"{mostValuableItemName} ({string.Format("{0:0.00}", mostValuableItemValue)}{CsgoBackpack.CurrencySymbols[currency]})");
+			_ = embed.AddField("Unique items", uniqueItems, true);
+			_ = embed.AddField("Total items", totalItems, true);
+			_ = embed.AddField("Unpriced items", ignoredItems, true);
 
 			ComponentBuilder component = new ComponentBuilder()
 				.WithButton(new ButtonBuilder("View Steam Profile", style: ButtonStyle.Link, url: userInfo.SteamProfileUrl, emote: Emoji.Parse("🎮")))
 				.WithButton(new ButtonBuilder("View on CS:GO Backpack", style: ButtonStyle.Link, url: $"https://csgobackpack.net/index.php?nick={userInfo.SteamID}", emote: Emoji.Parse("💰")));
 
-			await embed.SendAsync(component.Build());
+			_ = await embed.SendAsync(component.Build());
 		}
 
 		public class EvaluateCache
 		{
 			public EvaluateCache()
 			{
-				RefreshedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+				this.RefreshedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 			}
 
 			public List<string> Searches { get; set; }
