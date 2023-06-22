@@ -1,0 +1,3 @@
+[submodule "ScriptsLib"]
+	path = ScriptsLib
+	url = https://github.com/Milkenm/ScriptsLib.git
