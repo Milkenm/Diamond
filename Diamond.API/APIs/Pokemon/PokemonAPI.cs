@@ -17,7 +17,7 @@ namespace Diamond.API.APIs.Pokemon
 	public class PokemonAPI : AutoUpdatingSearchableAPIManager<DbPokemon>
 	{
 		public PokemonAPI()
-			: base(ConfigSetting.PokemonsListLoadUnix, PokemonAPIHelpers.KEEP_CACHE_FOR_SECONDS, new string[] { "PokemonAbilities", "PokemonAttackEffectives", "PokemonFormats", "PokemonItems", "PokemonNatures", "PokemonPassives", "PokemonTypes", "Pokemons", "PokemonGenerations" }, PokemonAPIHelpers.KEEP_CACHE_FOR_SECONDS)
+			: base(ConfigSetting.PokemonsListLoadUnix, PokemonAPIHelpers.KEEP_CACHE_FOR_SECONDS, new string[] { "PokemonAbilities", "PokemonAttackEffectives", "PokemonFormats", "PokemonItems", "PokemonNatures", "PokemonPassives", "PokemonTypes", "Pokemons", "PokemonGenerations", "PokemonLearnsets" }, PokemonAPIHelpers.KEEP_CACHE_FOR_SECONDS)
 		{ }
 
 		public override async Task<bool> LoadItemsLogicAsync(bool forceUpdate)
@@ -27,7 +27,7 @@ namespace Diamond.API.APIs.Pokemon
 			string json = await PokemonAPIHelpers.GetSmogonResponseJsonAsync(null);
 			if (json == null) return false;
 
-			// Idk how to make this so yah
+			// TODO: Idk how to make this so yah
 			SmogonRootObject resp = JsonConvert.DeserializeObject<SmogonRootObject>(json);
 			List<SmogonGeneration> generationsList = JsonConvert.DeserializeObject<List<SmogonGeneration>>(resp.InjectRpcs[0][1].ToString());
 			SmogonData data = JsonConvert.DeserializeObject<SmogonData>(resp.InjectRpcs[1][1].ToString());
@@ -151,7 +151,7 @@ namespace Diamond.API.APIs.Pokemon
 			// Store pokemons
 			foreach (SmogonPokemonInfo pokemon in data.PokemonsList)
 			{
-				DbPokemon dbPokemon = new DbPokemon()
+				_ = db.Pokemons.Add(new DbPokemon()
 				{
 					Name = pokemon.Name,
 					TypesList = string.Join(",", pokemon.TypesList),
@@ -169,10 +169,8 @@ namespace Diamond.API.APIs.Pokemon
 					DexNumber = pokemon.DexNumber,
 					EvolutionsList = pokemon.Oob?.EvolutionsList != null ? string.Join(",", pokemon.Oob.EvolutionsList) : string.Empty,
 					GenerationsList = pokemon.Oob?.GenerationsList != null ? string.Join(",", pokemon.Oob.GenerationsList) : string.Empty,
-				};
-				_ = db.Pokemons.Add(dbPokemon);
+				});
 			}
-
 			// Save to database
 			await db.SaveAsync();
 
@@ -189,15 +187,52 @@ namespace Diamond.API.APIs.Pokemon
 			}
 		}
 
-		public async Task<string[]> GetPokemonMovesAsync(string pokemonName)
+		public async Task<List<DbPokemonMove>> GetPokemonMovesAsync(string pokemonName)
 		{
-			string json = await PokemonAPIHelpers.GetSmogonResponseJsonAsync(pokemonName);
+			using DiamondContext db = new DiamondContext();
 
-			// Idk how to make this so yah
-			SmogonRootObject resp = JsonConvert.DeserializeObject<SmogonRootObject>(json);
-			SmogonPokemonStrats strats = JsonConvert.DeserializeObject<SmogonPokemonStrats>(resp.InjectRpcs[2][1].ToString());
+			IQueryable<DbPokemonLearnset> moves = db.PokemonLearnsets.Where(ls => ls.Pokemon.Name == pokemonName);
+			if (!moves.Any())
+			{
+				await this.DownloadPokemonMovesAsync(pokemonName);
+				return await this.GetPokemonMovesAsync(pokemonName);
+			}
+			return moves.Select(ls => ls.Move).ToList();
+		}
 
-			return strats.Learnset;
+		public async Task DownloadPokemonMovesAsync(string pokemonName)
+		{
+			using DiamondContext db = new DiamondContext();
+
+			List<DbPokemon> pokemonsList = db.Pokemons.ToList();
+
+			DbPokemon dbPokemon = pokemonsList.Where(p => p.Name == pokemonName).FirstOrDefault();
+			if (dbPokemon == null) return;
+
+			List<DbPokemonMove> movesList = db.PokemonMoves.ToList();
+
+			string extraJson = await PokemonAPIHelpers.GetSmogonResponseJsonAsync(pokemonName);
+
+			// TOOD: Idk how to make this so yah
+			SmogonRootObject extraResp = JsonConvert.DeserializeObject<SmogonRootObject>(extraJson);
+			SmogonPokemonStrats strats = JsonConvert.DeserializeObject<SmogonPokemonStrats>(extraResp.InjectRpcs[2][1].ToString());
+
+			foreach (string move in strats.Learnset)
+			{
+				DbPokemonMove dbMove = movesList.Where(m => m.Name == move).FirstOrDefault();
+				if (dbMove == null) continue;
+
+				lock (db.PokemonLearnsets)
+				{
+					_ = db.PokemonLearnsets.Add(new DbPokemonLearnset()
+					{
+						Pokemon = dbPokemon,
+						Move = dbMove,
+					});
+				}
+			}
+
+			await db.SaveAsync();
 		}
 	}
 }

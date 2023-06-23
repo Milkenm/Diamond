@@ -17,7 +17,7 @@ using ScriptsLibV2.Util;
 
 using Utils = Diamond.API.Util.Utils;
 
-namespace Diamond.API.APIs.CsgoBackpack
+namespace Diamond.API.APIs.Csgo
 {
 
     public delegate void CsgoItemsStateChanged();

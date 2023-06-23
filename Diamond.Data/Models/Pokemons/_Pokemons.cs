@@ -11,6 +11,7 @@ namespace Diamond.Data
 		public DbSet<DbPokemonFormat> PokemonFormats { get; set; }
 		public DbSet<DbPokemonGenerations> PokemonGenerations { get; set; }
 		public DbSet<DbPokemonItem> PokemonItems { get; set; }
+		public DbSet<DbPokemonLearnset> PokemonLearnsets { get; set; }
 		public DbSet<DbPokemonMove> PokemonMoves { get; set; }
 		public DbSet<DbPokemonNature> PokemonNatures { get; set; }
 		public DbSet<DbPokemonPassive> PokemonPassives { get; set; }

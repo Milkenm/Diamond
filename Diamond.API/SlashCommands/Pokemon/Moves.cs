@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Diamond.API.APIs.Pokemon;
@@ -39,30 +39,31 @@ namespace Diamond.API.SlashCommands.Pokemon
 		{
 			using DiamondContext db = new DiamondContext();
 
-			DefaultEmbed embed = new DefaultEmbed("Moves", "👊", this.Context);
+			DefaultEmbed embed = new DefaultEmbed("Pokédex - Moves", "👊", this.Context)
+			{
+				Title = pokemonName,
+			};
 
-			string[] movesArray = await this._pokemonApi.GetPokemonMovesAsync(pokemonName);
+			List<DbPokemonMove> movesList = await this._pokemonApi.GetPokemonMovesAsync(pokemonName);
 
 			// Go to last page (startingIndex = -1)
 			if (startingIndex == -1)
 			{
-				startingIndex = movesArray.Length - (movesArray.Length % MOVES_PER_PAGE);
-				if (startingIndex == movesArray.Length)
+				startingIndex = movesList.Count - (movesList.Count % MOVES_PER_PAGE);
+				if (startingIndex == movesList.Count)
 				{
 					// This is in case a pokémon has a multipe of 10 moves (10, 20, 30... like Eevee)
 					startingIndex -= MOVES_PER_PAGE;
 				}
 			}
 
-			for (int i = startingIndex; i < startingIndex + MOVES_PER_PAGE && i < movesArray.Length; i++)
+			for (int i = startingIndex; i < startingIndex + MOVES_PER_PAGE && i < movesList.Count; i++)
 			{
-				DbPokemonMove dbMove = db.PokemonMoves.Where(m => m.Name == movesArray[i]).FirstOrDefault();
-				if (dbMove == null) continue;
-
+				DbPokemonMove dbMove = movesList[i];
 				_ = embed.AddField($"{PokemonAPIHelpers.GetTypeEmoji(dbMove.Type)} {PokemonAPIHelpers.GetAttackTypeEmoji(dbMove.Category)} {dbMove.Name} (💥 {GetAttackStatString(dbMove.Power, Stat.Power)}   🎯 {GetAttackStatString(dbMove.Accuracy, Stat.Accuracy)}   ⚡ {GetAttackStatString(dbMove.PowerPoints, Stat.PowerPoints)})", dbMove.Description);
 			}
 
-			_ = await embed.SendAsync(await this.GetEmbedButtonsAsync(pokemonName, PokemonEmbed.Moves, replaceEmojis, startingIndex, movesArray.Length));
+			_ = await embed.SendAsync(await this.GetEmbedButtonsAsync(pokemonName, PokemonEmbed.Moves, replaceEmojis, startingIndex, movesList.Count));
 		}
 
 		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_MOVES_FIRST}:*,*", true)]

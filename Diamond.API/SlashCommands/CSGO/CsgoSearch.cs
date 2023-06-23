@@ -7,7 +7,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using Diamond.API.APIs.CsgoBackpack;
+
+using Diamond.API.APIs.Csgo;
 using Diamond.API.Attributes;
 using Diamond.API.Helpers;
 using Diamond.API.Util;
@@ -24,7 +25,7 @@ using SUtils = ScriptsLibV2.Util.Utils;
 
 namespace Diamond.API.SlashCommands.CSGO
 {
-    public partial class Csgo
+	public partial class Csgo
 	{
 		private static readonly Dictionary<string, Bitmap> _raritiesCacheMap = new Dictionary<string, Bitmap>();
 

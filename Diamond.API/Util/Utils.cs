@@ -5,7 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+
 using Diamond.API.Helpers;
+
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
@@ -16,7 +18,7 @@ using SUtils = ScriptsLibV2.Util.Utils;
 
 namespace Diamond.API.Util
 {
-    public static class Utils
+	public static class Utils
 	{
 		public static string GetMessageContent(IMessage message)
 		{
@@ -128,9 +130,14 @@ namespace Diamond.API.Util
 			return $"<t:{unixTimestamp}:{_timestampSettingValuesMap[setting]}>";
 		}
 
+		public static string Plural(string @base, string singular, string plural, long elements)
+		{
+			return @base + ((elements is 1 or -1) ? singular : plural);
+		}
+
 		public static string Plural<T>(string @base, string singular, string plural, IEnumerable<T> elements)
 		{
-			return @base + ((elements.Count() is 1 or -1) ? singular : plural);
+			return Plural(@base, singular, plural, elements.Count());
 		}
 	}
 

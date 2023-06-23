@@ -2,6 +2,7 @@
 
 using Diamond.API.APIs.Pokemon;
 using Diamond.API.Attributes;
+using Diamond.API.Helpers;
 using Diamond.API.Schemes.Smogon;
 
 using Discord.Interactions;
@@ -33,6 +34,8 @@ namespace Diamond.API.SlashCommands.Pokemon
 		private async Task SendStratsEmbed(string pokemonName, bool replaceEmojis)
 		{
 			SmogonStrategies strats = await PokemonAPIHelpers.GetStrategiesForPokemonAsync(pokemonName);
+
+			DefaultEmbed embed = new DefaultEmbed("Pokédex - Strategies", "🧠", Context);
 
 			_ = await this.Context.Channel.SendMessageAsync(strats.StrategiesList[0].Overview);
 		}

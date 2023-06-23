@@ -15,6 +15,8 @@ using Discord.Interactions;
 
 using Microsoft.EntityFrameworkCore;
 
+using ScriptsLibV2.Extensions;
+
 namespace Diamond.API.SlashCommands.Pokemon
 {
 	public partial class Pokemon
@@ -127,14 +129,19 @@ namespace Diamond.API.SlashCommands.Pokemon
 			}
 
 			// Evolutions
-			List<string> evolutionsList = pokemon.EvolutionsList.Split(",").ToList();
+			int evolutions = 0;
 			StringBuilder evolutionsSb = new StringBuilder();
-			foreach (string evolution in evolutionsList)
+			if (!pokemon.EvolutionsList.IsEmpty())
 			{
-				_ = evolutionsSb.Append($"[{evolution}]({PokemonAPIHelpers.GetSmogonUrl(evolution)})", "\n");
+			List<string> evolutionsList = pokemon.EvolutionsList.Split(",").ToList();
+				foreach (string evolution in evolutionsList)
+				{
+					evolutions++;
+					_ = evolutionsSb.Append($"[{evolution}]({PokemonAPIHelpers.GetSmogonUrl(evolution)})", "\n");
+				}
 			}
 
-			DefaultEmbed embed = new DefaultEmbed("Pokédex", "🖥️", this.Context)
+			DefaultEmbed embed = new DefaultEmbed("Pokédex - Info", "🖥️", this.Context)
 			{
 				Title = $"{pokemon.Name} #{pokemon.DexNumber}",
 				Description = typesSb.ToString(),
@@ -162,7 +169,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 
 			// First row
 			_ = embed.AddField("⚔️ **__Stats__**", $"HP: {pokemon.HealthPoints}\nAttack: {pokemon.Attack}\nDefense: {pokemon.Defense}\nSp. Atk: {pokemon.SpecialAttack}\nSp. Def: {pokemon.SpecialDefense}\nSpeed: {pokemon.SpecialDefense}", true);
-			_ = embed.AddField($"⬆️ **__{Utils.Plural("Evolution", "", "s", evolutionsList)}__**", evolutionsSb.ToStringOrDefault("None"), true);
+			_ = embed.AddField($"⬆️ **__{Utils.Plural("Evolution", "", "s", evolutions)}__**", evolutionsSb.ToStringOrDefault("None"), true);
 			_ = embed.AddEmptyField(true);
 			// Second row
 			_ = embed.AddField("😨 **__Weak to__**", weakToSb.ToStringOrDefault("None"), true);
@@ -185,7 +192,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 				: stat switch
 				{
 					Stat.Accuracy => $"{value}%",
-					Stat.PowerPoints => $"{value}PP",
+					Stat.PowerPoints => $"{value} PP",
 					_ => value.ToString()
 				};
 		}

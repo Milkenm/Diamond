@@ -2,7 +2,7 @@
 using System.Windows;
 
 using Diamond.API;
-using Diamond.API.APIs.CsgoBackpack;
+using Diamond.API.APIs.Csgo;
 using Diamond.API.APIs.LeagueOfLegends;
 using Diamond.API.APIs.Minecraft;
 using Diamond.API.APIs.OpenAi;
@@ -16,10 +16,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Diamond.GUI
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
+	/// <summary>
+	/// Interaction logic for App.xaml
+	/// </summary>
+	public partial class App : Application
 	{
 		private readonly IServiceProvider _serviceProvider;
 

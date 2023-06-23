@@ -44,7 +44,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			}
 			if (embed != PokemonEmbed.Strategies)
 			{
-				_ = components.WithButton("Strategies", $"{BUTTON_POKEMON_VIEW_STRATS}:{pokemon.Name},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("🧱"));
+				_ = components.WithButton("Strategies", $"{BUTTON_POKEMON_VIEW_STRATS}:{pokemon.Name},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("🧠"));
 			}
 
 			if (!pokemon.IsNonstandard)

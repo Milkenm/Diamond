@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 using Diamond.API.Schemes.Smogon;
@@ -170,7 +171,7 @@ namespace Diamond.API.APIs.Pokemon
 		public static async Task<string> GetSmogonResponseJsonAsync(string pokemonName)
 		{
 			string url = pokemonName != null ? string.Format(SMOGON_POKEMON_URL, pokemonName) : SMOGON_ENDPOINT;
-			string response = await RequestUtils.GetAsync(url);
+			string response = await (await new HttpClient().GetAsync(url)).Content.ReadAsStringAsync();
 
 			string json = null;
 			foreach (string line in response.Split('\n'))
