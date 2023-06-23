@@ -36,6 +36,12 @@ namespace Diamond.API.Util
 			{
 				string formattedItemName = itemName.ToLower();
 
+				if (searchCriteria.ToLower() == formattedItemName)
+				{
+					bestMatches.Add(new SearchMatchInfo<T>(value, double.MaxValue));
+					continue;
+				}
+
 				double matches = 0;
 				foreach (string word in formattedItemName.Split(" "))
 				{
@@ -43,8 +49,7 @@ namespace Diamond.API.Util
 						matches++;
 				}
 				matches *= SUtils.CalculateLevenshteinSimilarity(searchCriteria, formattedItemName);
-				if (matches == 0)
-					continue;
+				if (matches == 0) continue;
 				bestMatches.Add(new SearchMatchInfo<T>(value, matches));
 			}
 			if (bestMatches.Count > 0)
