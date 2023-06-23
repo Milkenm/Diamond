@@ -1,11 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Diamond.Data.Models.Pokemons
 {
 	[Table("PokemonNatures")]
 	public class DbPokemonNature
 	{
-		public long Id { get; set; }
+		[Key] public long Id { get; set; }
 		public required string Name { get; set; }
 		public required string Summary { get; set; }
 		public required int HealthPoints { get; set; }

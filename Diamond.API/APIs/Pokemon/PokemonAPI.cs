@@ -194,45 +194,23 @@ namespace Diamond.API.APIs.Pokemon
 			IQueryable<DbPokemonLearnset> moves = db.PokemonLearnsets.Where(ls => ls.Pokemon.Name == pokemonName);
 			if (!moves.Any())
 			{
-				await this.DownloadPokemonMovesAsync(pokemonName);
+				await PokemonAPIHelpers.DownloadPokemonAdditionalInfoAsync(pokemonName);
 				return await this.GetPokemonMovesAsync(pokemonName);
 			}
 			return moves.Select(ls => ls.Move).ToList();
 		}
 
-		public async Task DownloadPokemonMovesAsync(string pokemonName)
+		public async Task<List<DbPokemonStrategy>> GetPokemonStrategies(string pokemonName)
 		{
 			using DiamondContext db = new DiamondContext();
 
-			List<DbPokemon> pokemonsList = db.Pokemons.ToList();
-
-			DbPokemon dbPokemon = pokemonsList.Where(p => p.Name == pokemonName).FirstOrDefault();
-			if (dbPokemon == null) return;
-
-			List<DbPokemonMove> movesList = db.PokemonMoves.ToList();
-
-			string extraJson = await PokemonAPIHelpers.GetSmogonResponseJsonAsync(pokemonName);
-
-			// TOOD: Idk how to make this so yah
-			SmogonRootObject extraResp = JsonConvert.DeserializeObject<SmogonRootObject>(extraJson);
-			SmogonPokemonStrats strats = JsonConvert.DeserializeObject<SmogonPokemonStrats>(extraResp.InjectRpcs[2][1].ToString());
-
-			foreach (string move in strats.Learnset)
+			IQueryable<DbPokemonStrategy> strategies = db.PokemonStrategies.Where(st => st.Pokemon.Name == pokemonName);
+			if (!strategies.Any())
 			{
-				DbPokemonMove dbMove = movesList.Where(m => m.Name == move).FirstOrDefault();
-				if (dbMove == null) continue;
-
-				lock (db.PokemonLearnsets)
-				{
-					_ = db.PokemonLearnsets.Add(new DbPokemonLearnset()
-					{
-						Pokemon = dbPokemon,
-						Move = dbMove,
-					});
-				}
+				await PokemonAPIHelpers.DownloadPokemonAdditionalInfoAsync(pokemonName);
+				return await this.GetPokemonStrategies(pokemonName);
 			}
-
-			await db.SaveAsync();
+			return strategies.ToList();
 		}
 	}
 }

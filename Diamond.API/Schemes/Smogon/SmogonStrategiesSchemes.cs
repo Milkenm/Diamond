@@ -15,7 +15,7 @@ namespace Diamond.API.Schemes.Smogon
 	public class SmogonStrategy
 	{
 		[JsonProperty("format")] public string Format { get; set; }
-		[JsonProperty("outdated")] public object Outdated { get; set; }
+		[JsonProperty("outdated")] public bool? Outdated { get; set; }
 		[JsonProperty("overview")] public string Overview { get; set; }
 		[JsonProperty("comments")] public string Comments { get; set; }
 		[JsonProperty("movesets")] public List<SmogonStrategyMoveSet> MovesetsList { get; set; }

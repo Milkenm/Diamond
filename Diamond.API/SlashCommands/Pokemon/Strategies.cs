@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Diamond.API.APIs.Pokemon;
 using Diamond.API.Attributes;
 using Diamond.API.Helpers;
-using Diamond.API.Schemes.Smogon;
+using Diamond.Data.Models.Pokemons;
 
 using Discord.Interactions;
 
@@ -11,7 +12,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 {
 	public partial class Pokemon
 	{
-		[DSlashCommand("strats", "View strategies for a pokémon.")]
+		/*[DSlashCommand("strats", "View strategies for a pokémon.")]
 		public async void StratsCommandHandler(
 			[Summary("name", "The name of the pokémon.")] string pokemonName,
 			[Summary("replace-emojis", "Replaces the type emojis with a text in case you a have trouble reading.")] bool replaceEmojis = false,
@@ -21,7 +22,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			await this.DeferAsync(!showEveryone);
 
 			await this.SendStratsEmbed(pokemonName, replaceEmojis);
-		}
+		}*/
 
 		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_STRATS}:*,*", true)]
 		public async Task ButtonViewStrategiesHandler(string pokemonName, bool replaceEmojis)
@@ -33,11 +34,18 @@ namespace Diamond.API.SlashCommands.Pokemon
 
 		private async Task SendStratsEmbed(string pokemonName, bool replaceEmojis)
 		{
-			SmogonStrategies strats = await PokemonAPIHelpers.GetStrategiesForPokemonAsync(pokemonName);
+			_ = await PokemonAPIHelpers.GetStrategiesForPokemonAsync(pokemonName);
 
-			DefaultEmbed embed = new DefaultEmbed("Pokédex - Strategies", "🧠", Context);
+			DefaultEmbed embed = new DefaultEmbed("Pokédex - Strategies", "🧠", this.Context)
+			{
+				Title = pokemonName,
+			};
 
-			_ = await this.Context.Channel.SendMessageAsync(strats.StrategiesList[0].Overview);
+			List<DbPokemonStrategy> strategiesList = await this._pokemonApi.GetPokemonStrategies(pokemonName);
+
+			embed.Description = strategiesList[0].Comments;
+
+			_ = await embed.SendAsync(await this.GetEmbedButtonsAsync(pokemonName, PokemonEmbed.Strategies, replaceEmojis));
 		}
 	}
 }

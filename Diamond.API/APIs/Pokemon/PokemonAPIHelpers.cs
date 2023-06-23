@@ -10,8 +10,6 @@ using Diamond.Data.Models.Pokemons;
 
 using Newtonsoft.Json;
 
-using ScriptsLibV2.Util;
-
 namespace Diamond.API.APIs.Pokemon
 {
 	public class PokemonAPIHelpers
@@ -41,6 +39,10 @@ namespace Diamond.API.APIs.Pokemon
 		/// {0}: Format abbreviation
 		/// </summary>
 		public const string SMOGON_FORMAT_URL = "https://www.smogon.com/dex/ss/formats/{0}/";
+		/// <summary>
+		/// {0}: User ID
+		/// </summary>
+		public const string SMOGON_USER_PROFILE_URL = "https://www.smogon.com/forums/members/{0}/";
 
 		public readonly Dictionary<string, DbPokemon> _pokemonsMap = new Dictionary<string, DbPokemon>();
 
@@ -75,6 +77,176 @@ namespace Diamond.API.APIs.Pokemon
 
 		// Keep for 1 day
 		public const long KEEP_CACHE_FOR_SECONDS = 60L * 60L * 24L;
+
+		public static async Task DownloadPokemonAdditionalInfoAsync(string pokemonName)
+		{
+			using DiamondContext db = new DiamondContext();
+
+			List<DbPokemon> pokemonsList = db.Pokemons.ToList();
+
+			DbPokemon dbPokemon = pokemonsList.Where(p => p.Name == pokemonName).FirstOrDefault();
+			if (dbPokemon == null) return;
+
+			List<DbPokemonMove> movesList = db.PokemonMoves.ToList();
+
+			string extraJson = await PokemonAPIHelpers.GetSmogonResponseJsonAsync(pokemonName);
+
+			// TOOD: Idk how to make this so yah
+			SmogonRootObject extraResp = JsonConvert.DeserializeObject<SmogonRootObject>(extraJson);
+			SmogonPokemonStrats strats = JsonConvert.DeserializeObject<SmogonPokemonStrats>(extraResp.InjectRpcs[2][1].ToString());
+
+			foreach (string move in strats.Learnset)
+			{
+				DbPokemonMove dbMove = movesList.Where(m => m.Name == move).FirstOrDefault();
+				if (dbMove == null) continue;
+
+				_ = db.PokemonLearnsets.Add(new DbPokemonLearnset()
+				{
+					Pokemon = dbPokemon,
+					Move = dbMove,
+				});
+			}
+			await db.SaveAsync();
+
+			// TODO: FFS
+			/*List<DbPokemonFormat> formatsList = db.PokemonFormats.ToList();
+			List<DbPokemonPassive> passivesList = db.PokemonPassives.ToList();
+			List<DbPokemonItem> itemsList = db.PokemonItems.ToList();
+			List<DbPokemonNature> naturesList = db.PokemonNatures.ToList();
+			List<DbPokemonType> typesList = db.PokemonTypes.ToList();
+
+			foreach (SmogonStrategy strat in strats.Strategies)
+			{
+				// Get format
+				DbPokemonFormat format = formatsList.Where(f => f.Name == strat.Format).FirstOrDefault();
+				// Get passives/abilities
+				List<DbPokemonPassive> passives = new List<DbPokemonPassive>();
+				foreach (string passive in strat.MovesetsList[0].AbilitiesList)
+				{
+					passives.Add(passivesList.Where(p => p.Name == passive).FirstOrDefault());
+				}
+				// Get items
+				List<DbPokemonItem> items = new List<DbPokemonItem>();
+				foreach (string item in strat.MovesetsList[0].ItemsList)
+				{
+					items.Add(itemsList.Where(i => i.Name == item).FirstOrDefault());
+				}
+				// Get movesets
+				List<DbPokemonStrategyMoveset> movesets = new List<DbPokemonStrategyMoveset>();
+				foreach (SmogonStrategyMoveSlot moveset in strat.MovesetsList[0].MoveSlotsList)
+				{
+					DbPokemonMove move = movesList.Where(m => m.Name == moveset.Move).FirstOrDefault();
+					DbPokemonType type = null;
+					if (moveset.Type != null)
+					{
+						type = typesList.Where(t => t.Name == moveset.Type).FirstOrDefault();
+					}
+
+					DbPokemonStrategyMoveset dbMoveset = new DbPokemonStrategyMoveset()
+					{
+						Move = move,
+						Type = type,
+					};
+					_ = db.PokemonStrategyMovesets.Add(dbMoveset);
+					movesets.Add(dbMoveset);
+				}
+				// Save movesets
+				await db.SaveAsync();
+				// Get natures
+				List<DbPokemonNature> natures = new List<DbPokemonNature>();
+				foreach (string nature in strat.MovesetsList[0].NaturesList)
+				{
+					natures.Add(naturesList.Where(n => n.Name == nature).FirstOrDefault());
+				}
+				// Get written by
+				List<PokemonSmogonUser> writtenBy = new List<PokemonSmogonUser>();
+				foreach (SmogonStrategyMember user in strat.Credits.WrittenByList)
+				{
+					// TODO: Improve code
+					// Check if the user already exists in the database
+					IQueryable<PokemonSmogonUser> dbUsers = db.PokemonSmogonUsers.Where(u => u.Id == user.UserId);
+					PokemonSmogonUser dbUser = null;
+					if (dbUsers.Any())
+					{
+						dbUser = dbUsers.FirstOrDefault();
+					}
+					else
+					{
+						dbUser = new PokemonSmogonUser()
+						{
+							Username = user.Username,
+							SmogonUserId = user.UserId,
+						};
+						_ = db.PokemonSmogonUsers.Add(dbUser);
+						await db.SaveAsync();
+					}
+
+					writtenBy.Add(dbUser);
+				}
+				// Get credits teams
+				List<DbPokemonStrategyCreditsTeam> creditsTeams = new List<DbPokemonStrategyCreditsTeam>();
+				foreach (SmogonStrategyTeam team in strat.Credits.TeamsList)
+				{
+					List<PokemonSmogonUser> teamUsers = new List<PokemonSmogonUser>();
+					foreach (SmogonStrategyMember user in team.MembersList)
+					{
+						// TODO: Improve code
+						IQueryable<PokemonSmogonUser> dbUsers = db.PokemonSmogonUsers.Where(u => u.Id == user.UserId);
+						PokemonSmogonUser dbUser = null;
+						if (dbUsers.Any())
+						{
+							dbUser = dbUsers.FirstOrDefault();
+						}
+						else
+						{
+							dbUser = new PokemonSmogonUser()
+							{
+								Username = user.Username,
+								SmogonUserId = user.UserId,
+							};
+							_ = db.PokemonSmogonUsers.Add(dbUser);
+							await db.SaveAsync();
+						}
+						teamUsers.Add(dbUser);
+					}
+
+					DbPokemonStrategyCreditsTeam dbTeam = new DbPokemonStrategyCreditsTeam()
+					{
+						TeamName = team.Name,
+						TeamMembersList = teamUsers,
+					};
+					_ = db.PokemonStrategyCreditsTeams.Add(dbTeam);
+					await db.SaveAsync();
+
+					creditsTeams.Add(dbTeam);
+				}
+
+				_ = db.PokemonStrategies.Add(new DbPokemonStrategy()
+				{
+					Format = format,
+					Outdated = strat.Outdated,
+					Pokemon = dbPokemon,
+					Overview = strat.Overview,
+					Comments = strat.Comments,
+					MovesetName = strat.MovesetsList[0].Name,
+					Gender = strat.MovesetsList[0].Gender,
+					PassivesList = passives,
+					ItemsList = items,
+					Movesets = movesets,
+					EVsHealth = strat.MovesetsList[0].EvConfigsList[0].HP,
+					EVsAttack = strat.MovesetsList[0].EvConfigsList[0].Attack,
+					EVsDefense = strat.MovesetsList[0].EvConfigsList[0].Defense,
+					EVsSpecialAttack = strat.MovesetsList[0].EvConfigsList[0].SpecialAttack,
+					EVsSpecialDefense = strat.MovesetsList[0].EvConfigsList[0].SpecialDefense,
+					EVsSpeed = strat.MovesetsList[0].EvConfigsList[0].Speed,
+					NaturesList = natures,
+					WrittenByUsersList = writtenBy,
+					TeamsList = creditsTeams,
+				});
+			}
+
+			await db.SaveAsync();*/
+		}
 
 		#region Utils
 		public static async Task<SmogonStrategies> GetStrategiesForPokemonAsync(string pokemonName)
@@ -150,6 +322,11 @@ namespace Diamond.API.APIs.Pokemon
 		public static string GetFormatUrl(string formatAbbreviation)
 		{
 			return string.Format(SMOGON_FORMAT_URL, formatAbbreviation);
+		}
+
+		public static string GetUserProfileUrl(long userId)
+		{
+			return string.Format(SMOGON_USER_PROFILE_URL, userId);
 		}
 
 		public static string GetGenerationName(string generationAbbreviation)

@@ -1,11 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Diamond.Data.Models.Pokemons
 {
 	[Table("PokemonAttackEffectives")]
 	public class DbPokemonAttackEffectiveness
 	{
-		public long Id { get; set; }
+		[Key] public long Id { get; set; }
 		public required DbPokemonType AttackerType { get; set; }
 		public required DbPokemonType TargetType { get; set; }
 		public required float Value { get; set; }

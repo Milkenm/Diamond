@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using Diamond.API.Helpers;
@@ -138,6 +139,11 @@ namespace Diamond.API.Util
 		public static string Plural<T>(string @base, string singular, string plural, IEnumerable<T> elements)
 		{
 			return Plural(@base, singular, plural, elements.Count());
+		}
+
+		public static string RemoveHtmlTags(string inputString)
+		{
+			return Regex.Replace(inputString, "<.*?>", string.Empty);
 		}
 	}
 
