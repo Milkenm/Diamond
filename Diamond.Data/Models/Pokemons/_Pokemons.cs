@@ -9,7 +9,7 @@ namespace Diamond.Data
 		public DbSet<DbPokemon> Pokemons { get; set; }
 		public DbSet<DbPokemonAttackEffectiveness> PokemonAttackEffectivenesses { get; set; }
 		public DbSet<DbPokemonFormat> PokemonFormats { get; set; }
-		public DbSet<DbPokemonGenerations> PokemonGenerations { get; set; }
+		public DbSet<DbPokemonGeneration> PokemonGenerations { get; set; }
 		public DbSet<DbPokemonItem> PokemonItems { get; set; }
 		public DbSet<DbPokemonLearnset> PokemonLearnsets { get; set; }
 		public DbSet<DbPokemonMove> PokemonMoves { get; set; }

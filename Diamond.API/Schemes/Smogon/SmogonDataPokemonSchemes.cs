@@ -4,12 +4,6 @@ using Newtonsoft.Json;
 
 namespace Diamond.API.Schemes.Smogon
 {
-	public class SmogonGeneration
-	{
-		[JsonProperty("name")] public string Name { get; set; }
-		[JsonProperty("shorthand")] public string Shorthand { get; set; }
-	}
-
 	public class SmogonData
 	{
 		[JsonProperty("pokemon")] public List<SmogonPokemonInfo> PokemonsList { get; set; }
@@ -37,12 +31,12 @@ namespace Diamond.API.Schemes.Smogon
 		[JsonProperty("abilities")] public List<string> AbilitiesList { get; set; }
 		[JsonProperty("formats")] public List<string> FormatsList { get; set; }
 		[JsonProperty("isNonstandard")] public string IsNonstandard { get; set; }
-		[JsonProperty("oob.dex_number")] public int DexNumber { get; set; }
 		[JsonProperty("oob")] public SmogonOob Oob { get; set; }
 	}
 
 	public class SmogonOob
 	{
+		[JsonProperty("dex_number")] public int DexNumber { get; set; }
 		[JsonProperty("evos")] public List<string> EvolutionsList { get; set; }
 		[JsonProperty("alts")] public List<string> AltsList { get; set; }
 		[JsonProperty("genfamily")] public List<string> GenerationsList { get; set; }

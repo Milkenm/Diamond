@@ -51,7 +51,7 @@ namespace Diamond.API.Schemes.Smogon
 		[JsonProperty("abilities")] public List<string> AbilitiesList { get; set; }
 		[JsonProperty("items")] public List<string> ItemsList { get; set; }
 		[JsonProperty("teratypes")] public List<object> TeratypesList { get; set; }
-		[JsonProperty("moveslots")] public List<SmogonStrategyMoveSlot> MoveSlotsList { get; set; }
+		[JsonProperty("moveslots")] public List<List<SmogonStrategyMoveSlot>> MoveSlotsList { get; set; }
 		[JsonProperty("evconfigs")] public List<SmogonStrategyStatsConfig> EvConfigsList { get; set; }
 		[JsonProperty("ivconfigs")] public List<SmogonStrategyStatsConfig> IvConfigsList { get; set; }
 		[JsonProperty("natures")] public List<string> NaturesList { get; set; }

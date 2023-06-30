@@ -44,14 +44,14 @@ namespace Diamond.API.SlashCommands.Pokemon
 			}
 			if (embed != PokemonEmbed.Strategies)
 			{
-				_ = components.WithButton("Strategies", $"{BUTTON_POKEMON_VIEW_STRATS}:{pokemon.Name},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("🧠"), disabled: true);
+				_ = components.WithButton("Strategies", $"{BUTTON_POKEMON_VIEW_STRATS}:{pokemon.Name},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("🧠"));
 			}
 
 			if (!pokemon.IsNonstandard)
 			{
 				_ = components.WithButton("View on Pokédex", style: ButtonStyle.Link, url: PokemonAPIHelpers.GetPokedexUrl((int)pokemon.DexNumber));
 			}
-			_ = components.WithButton("View on Smogon", style: ButtonStyle.Link, url: PokemonAPIHelpers.GetSmogonUrl(pokemon.Name));
+			_ = components.WithButton("View on Smogon", style: ButtonStyle.Link, url: PokemonAPIHelpers.GetSmogonPokemonUrl(pokemon.Name));
 
 			// Second row
 			if (embed == PokemonEmbed.Moves)
@@ -64,6 +64,8 @@ namespace Diamond.API.SlashCommands.Pokemon
 
 			return components.Build();
 		}
+
+
 
 		private enum PokemonEmbed
 		{

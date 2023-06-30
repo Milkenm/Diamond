@@ -6,7 +6,7 @@ using Diamond.Data.Enums;
 
 namespace Diamond.API.Helpers.APIManager
 {
-    public abstract class SearchableAPIManager<T> : APIManager<T>
+	public abstract class SearchableAPIManager<T> : APIManager<T>
 	{
 		private bool _cacheSearches { get; set; }
 
@@ -16,7 +16,7 @@ namespace Diamond.API.Helpers.APIManager
 			: base(dbUnixConfigSetting, keepResultsForSeconds, tablesName)
 		{ }
 
-		public async Task<List<SearchMatchInfo<T>>> SearchItemAsync(string search)
+		public virtual async Task<List<SearchMatchInfo<T>>> SearchItemAsync(string search)
 		{
 			// Lock thread while pokémons are not loaded
 			while (!this.AreItemsLoaded)

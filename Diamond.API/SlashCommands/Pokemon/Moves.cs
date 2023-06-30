@@ -44,7 +44,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 				Title = pokemonName,
 			};
 
-			List<DbPokemonMove> movesList = await this._pokemonApi.GetPokemonMovesAsync(pokemonName);
+			List<DbPokemonMove> movesList = await PokemonAPIHelpers.GetPokemonMovesAsync(pokemonName);
 
 			// Go to last page (startingIndex = -1)
 			if (startingIndex == -1)

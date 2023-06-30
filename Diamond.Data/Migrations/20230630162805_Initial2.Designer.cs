@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Diamond.Data.Migrations
 {
     [DbContext(typeof(DiamondContext))]
-    [Migration("20230622093642_InitializeDatabase")]
-    partial class InitializeDatabase
+    [Migration("20230630162805_Initial2")]
+    partial class Initial2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,6 +21,21 @@ namespace Diamond.Data.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("DbPokemonDbPokemon", b =>
+                {
+                    b.Property<long>("AltsListId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("EvolutionsListId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("AltsListId", "EvolutionsListId");
+
+                    b.HasIndex("EvolutionsListId");
+
+                    b.ToTable("DbPokemonDbPokemon");
+                });
 
             modelBuilder.Entity("Diamond.Data.Models.AutoPublisher.DbAutoPublisherChannel", b =>
                 {
@@ -122,10 +137,6 @@ namespace Diamond.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    b.Property<string>("AbilitiesList")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<int>("Attack")
                         .HasColumnType("int");
 
@@ -134,15 +145,6 @@ namespace Diamond.Data.Migrations
 
                     b.Property<int?>("DexNumber")
                         .HasColumnType("int");
-
-                    b.Property<string>("EvolutionsList")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("FormatsList")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("GenerationsList")
-                        .HasColumnType("longtext");
 
                     b.Property<int>("HealthPoints")
                         .HasColumnType("int");
@@ -165,10 +167,6 @@ namespace Diamond.Data.Migrations
 
                     b.Property<int>("Speed")
                         .HasColumnType("int");
-
-                    b.Property<string>("TypesList")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<float>("Weight")
                         .HasColumnType("float");
@@ -212,6 +210,9 @@ namespace Diamond.Data.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<long?>("DbPokemonId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("GenerationsList")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -222,10 +223,12 @@ namespace Diamond.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DbPokemonId");
+
                     b.ToTable("PokemonFormats");
                 });
 
-            modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonGenerations", b =>
+            modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonGeneration", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -235,11 +238,16 @@ namespace Diamond.Data.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<long?>("DbPokemonId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DbPokemonId");
 
                     b.ToTable("PokemonGenerations");
                 });
@@ -248,6 +256,9 @@ namespace Diamond.Data.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DbPokemonStrategyId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Description")
@@ -267,7 +278,30 @@ namespace Diamond.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DbPokemonStrategyId");
+
                     b.ToTable("PokemonItems");
+                });
+
+            modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonLearnset", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("MoveId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("PokemonId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MoveId");
+
+                    b.HasIndex("PokemonId");
+
+                    b.ToTable("PokemonLearnsets");
                 });
 
             modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonMove", b =>
@@ -322,6 +356,9 @@ namespace Diamond.Data.Migrations
                     b.Property<float>("Attack")
                         .HasColumnType("float");
 
+                    b.Property<long?>("DbPokemonStrategyId")
+                        .HasColumnType("bigint");
+
                     b.Property<float>("Defense")
                         .HasColumnType("float");
 
@@ -351,6 +388,8 @@ namespace Diamond.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DbPokemonStrategyId");
+
                     b.ToTable("PokemonNatures");
                 });
 
@@ -358,6 +397,12 @@ namespace Diamond.Data.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DbPokemonId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DbPokemonStrategyId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Description")
@@ -377,13 +422,124 @@ namespace Diamond.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DbPokemonId");
+
+                    b.HasIndex("DbPokemonStrategyId");
+
                     b.ToTable("PokemonPassives");
+                });
+
+            modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonStrategy", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Comments")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("EVsAttack")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EVsDefense")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EVsHealth")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EVsSpecialAttack")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EVsSpecialDefense")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EVsSpeed")
+                        .HasColumnType("int");
+
+                    b.Property<long>("FormatId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("MovesetName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool?>("Outdated")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Overview")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<long>("PokemonId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FormatId");
+
+                    b.HasIndex("PokemonId");
+
+                    b.ToTable("PokemonStrategies");
+                });
+
+            modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonStrategyCreditsTeam", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DbPokemonStrategyId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("TeamName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DbPokemonStrategyId");
+
+                    b.ToTable("PokemonStrategyCreditsTeams");
+                });
+
+            modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonStrategyMoveset", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DbPokemonStrategyId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("MoveId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("TypeId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DbPokemonStrategyId");
+
+                    b.HasIndex("MoveId");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("PokemonStrategyMovesets");
                 });
 
             modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonType", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DbPokemonId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Description")
@@ -400,7 +556,37 @@ namespace Diamond.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DbPokemonId");
+
                     b.ToTable("PokemonTypes");
+                });
+
+            modelBuilder.Entity("Diamond.Data.Models.Pokemons.PokemonSmogonUser", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DbPokemonStrategyCreditsTeamId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DbPokemonStrategyId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("SmogonUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DbPokemonStrategyCreditsTeamId");
+
+                    b.HasIndex("DbPokemonStrategyId");
+
+                    b.ToTable("PokemonSmogonUsers");
                 });
 
             modelBuilder.Entity("Diamond.Data.Models.Polls.DbPoll", b =>
@@ -413,7 +599,6 @@ namespace Diamond.Data.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<ulong>("DiscordMessageId")
@@ -423,21 +608,19 @@ namespace Diamond.Data.Migrations
                         .HasColumnType("bigint unsigned");
 
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<bool>("IsPublished")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("ThumbnailUrl")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<long>("UpdatedAt")
+                    b.Property<long?>("UpdatedAt")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -539,6 +722,21 @@ namespace Diamond.Data.Migrations
                     b.ToTable("Setting");
                 });
 
+            modelBuilder.Entity("DbPokemonDbPokemon", b =>
+                {
+                    b.HasOne("Diamond.Data.Models.Pokemons.DbPokemon", null)
+                        .WithMany()
+                        .HasForeignKey("AltsListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Diamond.Data.Models.Pokemons.DbPokemon", null)
+                        .WithMany()
+                        .HasForeignKey("EvolutionsListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Diamond.Data.Models.CsgoItems.DbCsgoItemPrice", b =>
                 {
                     b.HasOne("Diamond.Data.Models.CsgoItems.DbCsgoItem", "Item")
@@ -569,6 +767,129 @@ namespace Diamond.Data.Migrations
                     b.Navigation("TargetType");
                 });
 
+            modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonFormat", b =>
+                {
+                    b.HasOne("Diamond.Data.Models.Pokemons.DbPokemon", null)
+                        .WithMany("FormatsList")
+                        .HasForeignKey("DbPokemonId");
+                });
+
+            modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonGeneration", b =>
+                {
+                    b.HasOne("Diamond.Data.Models.Pokemons.DbPokemon", null)
+                        .WithMany("GenerationsList")
+                        .HasForeignKey("DbPokemonId");
+                });
+
+            modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonItem", b =>
+                {
+                    b.HasOne("Diamond.Data.Models.Pokemons.DbPokemonStrategy", null)
+                        .WithMany("ItemsList")
+                        .HasForeignKey("DbPokemonStrategyId");
+                });
+
+            modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonLearnset", b =>
+                {
+                    b.HasOne("Diamond.Data.Models.Pokemons.DbPokemonMove", "Move")
+                        .WithMany()
+                        .HasForeignKey("MoveId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Diamond.Data.Models.Pokemons.DbPokemon", "Pokemon")
+                        .WithMany()
+                        .HasForeignKey("PokemonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Move");
+
+                    b.Navigation("Pokemon");
+                });
+
+            modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonNature", b =>
+                {
+                    b.HasOne("Diamond.Data.Models.Pokemons.DbPokemonStrategy", null)
+                        .WithMany("NaturesList")
+                        .HasForeignKey("DbPokemonStrategyId");
+                });
+
+            modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonPassive", b =>
+                {
+                    b.HasOne("Diamond.Data.Models.Pokemons.DbPokemon", null)
+                        .WithMany("AbilitiesList")
+                        .HasForeignKey("DbPokemonId");
+
+                    b.HasOne("Diamond.Data.Models.Pokemons.DbPokemonStrategy", null)
+                        .WithMany("PassivesList")
+                        .HasForeignKey("DbPokemonStrategyId");
+                });
+
+            modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonStrategy", b =>
+                {
+                    b.HasOne("Diamond.Data.Models.Pokemons.DbPokemonFormat", "Format")
+                        .WithMany()
+                        .HasForeignKey("FormatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Diamond.Data.Models.Pokemons.DbPokemon", "Pokemon")
+                        .WithMany()
+                        .HasForeignKey("PokemonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Format");
+
+                    b.Navigation("Pokemon");
+                });
+
+            modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonStrategyCreditsTeam", b =>
+                {
+                    b.HasOne("Diamond.Data.Models.Pokemons.DbPokemonStrategy", null)
+                        .WithMany("TeamsList")
+                        .HasForeignKey("DbPokemonStrategyId");
+                });
+
+            modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonStrategyMoveset", b =>
+                {
+                    b.HasOne("Diamond.Data.Models.Pokemons.DbPokemonStrategy", null)
+                        .WithMany("Movesets")
+                        .HasForeignKey("DbPokemonStrategyId");
+
+                    b.HasOne("Diamond.Data.Models.Pokemons.DbPokemonMove", "Move")
+                        .WithMany()
+                        .HasForeignKey("MoveId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Diamond.Data.Models.Pokemons.DbPokemonType", "Type")
+                        .WithMany()
+                        .HasForeignKey("TypeId");
+
+                    b.Navigation("Move");
+
+                    b.Navigation("Type");
+                });
+
+            modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonType", b =>
+                {
+                    b.HasOne("Diamond.Data.Models.Pokemons.DbPokemon", null)
+                        .WithMany("TypesList")
+                        .HasForeignKey("DbPokemonId");
+                });
+
+            modelBuilder.Entity("Diamond.Data.Models.Pokemons.PokemonSmogonUser", b =>
+                {
+                    b.HasOne("Diamond.Data.Models.Pokemons.DbPokemonStrategyCreditsTeam", null)
+                        .WithMany("TeamMembersList")
+                        .HasForeignKey("DbPokemonStrategyCreditsTeamId");
+
+                    b.HasOne("Diamond.Data.Models.Pokemons.DbPokemonStrategy", null)
+                        .WithMany("WrittenByUsersList")
+                        .HasForeignKey("DbPokemonStrategyId");
+                });
+
             modelBuilder.Entity("Diamond.Data.Models.Polls.DbPollOption", b =>
                 {
                     b.HasOne("Diamond.Data.Models.Polls.DbPoll", "TargetPoll")
@@ -597,6 +918,37 @@ namespace Diamond.Data.Migrations
                     b.Navigation("Poll");
 
                     b.Navigation("PollOption");
+                });
+
+            modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemon", b =>
+                {
+                    b.Navigation("AbilitiesList");
+
+                    b.Navigation("FormatsList");
+
+                    b.Navigation("GenerationsList");
+
+                    b.Navigation("TypesList");
+                });
+
+            modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonStrategy", b =>
+                {
+                    b.Navigation("ItemsList");
+
+                    b.Navigation("Movesets");
+
+                    b.Navigation("NaturesList");
+
+                    b.Navigation("PassivesList");
+
+                    b.Navigation("TeamsList");
+
+                    b.Navigation("WrittenByUsersList");
+                });
+
+            modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonStrategyCreditsTeam", b =>
+                {
+                    b.Navigation("TeamMembersList");
                 });
 #pragma warning restore 612, 618
         }

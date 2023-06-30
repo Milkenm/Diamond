@@ -13,9 +13,8 @@ using Diamond.Data.Models.Pokemons;
 
 using Discord.Interactions;
 
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-
-using ScriptsLibV2.Extensions;
 
 namespace Diamond.API.SlashCommands.Pokemon
 {
@@ -46,16 +45,24 @@ namespace Diamond.API.SlashCommands.Pokemon
 			using DiamondContext db = new DiamondContext();
 
 			DbPokemon pokemon = (await this._pokemonApi.SearchItemAsync(pokemonName))[0].Item;
+			pokemon = db.Pokemons.Where(p => p.Id == pokemon.Id)
+				.Include(p => p.TypesList)
+				.Include(p => p.AbilitiesList)
+				.Include(p => p.EvolutionsList)
+				.Include(p => p.GenerationsList)
+				.Include(p => p.FormatsList)
+				.First();
+
+			PokemonAPIHelpers.LoadPokemonExtraInfo(ref pokemon);
 
 			Dictionary<PokemonType, double> effectivenessMap = new Dictionary<PokemonType, double>();
 			StringBuilder typesSb = new StringBuilder();
-			foreach (string type in pokemon.TypesList.Split(",").ToList())
+			foreach (DbPokemonType type in pokemon.TypesList)
 			{
-				DbPokemonType dbType = db.PokemonTypes.Where(t => t.Name == type).FirstOrDefault();
-				PokemonType pokeType = PokemonAPIHelpers.GetPokemonTypeByName(type);
+				PokemonType pokeType = PokemonAPIHelpers.GetPokemonTypeByName(type.Name);
 
 				// Get all counters
-				foreach (DbPokemonAttackEffectiveness atkef in db.PokemonAttackEffectivenesses.Include(af => af.AttackerType).Where(af => af.TargetType == dbType))
+				foreach (DbPokemonAttackEffectiveness atkef in db.PokemonAttackEffectivenesses.Include(af => af.AttackerType).Where(af => af.TargetType == type))
 				{
 					if (atkef.Value == 1) continue;
 
@@ -84,7 +91,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 					}
 				}
 
-				_ = typesSb.Append($"{PokemonAPIHelpers.GetTypeDisplay(type, replaceEmojis)}", " ");
+				_ = typesSb.Append($"{PokemonAPIHelpers.GetTypeDisplay(pokeType, replaceEmojis)}", " ");
 			}
 			StringBuilder weakToSb = new StringBuilder();
 			StringBuilder immuneToSb = new StringBuilder();
@@ -120,25 +127,19 @@ namespace Diamond.API.SlashCommands.Pokemon
 			}
 
 			// Abilities
-			List<string> abilitiesList = pokemon.AbilitiesList.Split(",").ToList();
 			StringBuilder abilitiesSb = new StringBuilder();
-			foreach (string ability in abilitiesList)
+			foreach (DbPokemonPassive ability in pokemon.AbilitiesList)
 			{
-				DbPokemonPassive passive = db.PokemonPassives.Where(p => p.Name == ability).FirstOrDefault();
-				_ = abilitiesSb.Append($"**{passive.Name}**: {passive.Description}", "\n");
+				_ = abilitiesSb.Append($"**{ability.Name}**: {ability.Description}", "\n");
 			}
 
 			// Evolutions
 			int evolutions = 0;
 			StringBuilder evolutionsSb = new StringBuilder();
-			if (!pokemon.EvolutionsList.IsEmpty())
+			foreach (DbPokemon evolution in pokemon.EvolutionsList)
 			{
-			List<string> evolutionsList = pokemon.EvolutionsList.Split(",").ToList();
-				foreach (string evolution in evolutionsList)
-				{
-					evolutions++;
-					_ = evolutionsSb.Append($"[{evolution}]({PokemonAPIHelpers.GetSmogonUrl(evolution)})", "\n");
-				}
+				evolutions++;
+				_ = evolutionsSb.Append($"[{evolution.Name}]({PokemonAPIHelpers.GetSmogonPokemonUrl(evolution.Name)})", "\n");
 			}
 
 			DefaultEmbed embed = new DefaultEmbed("Pokédex - Info", "🖥️", this.Context)
@@ -150,21 +151,17 @@ namespace Diamond.API.SlashCommands.Pokemon
 			};
 
 			// Generations
-			List<string> generationsList = pokemon.GenerationsList.Split(",").ToList();
 			StringBuilder generationsSb = new StringBuilder();
-			foreach (string generation in generationsList)
+			foreach (DbPokemonGeneration generation in pokemon.GenerationsList)
 			{
-				string fullGeneration = PokemonAPIHelpers.GetGenerationName(generation);
-				_ = generationsSb.Append($"[{fullGeneration}]({PokemonAPIHelpers.GetGenerationUrl(generation)})", "\n");
+				_ = generationsSb.Append($"[{generation.Name}]({PokemonAPIHelpers.GetGenerationUrl(generation.Abbreviation)})", "\n");
 			}
 
 			// Formats
-			List<string> formatsList = pokemon.FormatsList.Split(",").ToList();
 			StringBuilder formatsSb = new StringBuilder();
-			foreach (string format in formatsList)
+			foreach (DbPokemonFormat format in pokemon.FormatsList)
 			{
-				string fullFormat = PokemonAPIHelpers.GetFormatName(format);
-				_ = formatsSb.Append($"[{fullFormat}]({PokemonAPIHelpers.GetFormatUrl(format)})", "\n");
+				_ = formatsSb.Append($"[{format.Name}]({PokemonAPIHelpers.GetFormatUrl(format.Abbreviation)})", "\n");
 			}
 
 			// First row
@@ -176,11 +173,11 @@ namespace Diamond.API.SlashCommands.Pokemon
 			_ = embed.AddField("💪 **__Resists to__**", resistsToSb.ToStringOrDefault("None"), true);
 			_ = embed.AddField("🛡️ **__Immune to__**", immuneToSb.ToStringOrDefault("None"), true);
 			// Third row
-			_ = embed.AddField($"📆 **__{Utils.Plural("Generation", "", "s", generationsList)}__**", generationsSb.ToStringOrDefault("None"), true);
-			_ = embed.AddField($"🏆 **__{Utils.Plural("Format", "", "s", formatsList)}__**", formatsSb.ToStringOrDefault("None"), true);
+			_ = embed.AddField($"📆 **__{Utils.Plural("Generation", "", "s", pokemon.GenerationsList)}__**", generationsSb.ToStringOrDefault("None"), true);
+			_ = embed.AddField($"🏆 **__{Utils.Plural("Format", "", "s", pokemon.FormatsList)}__**", formatsSb.ToStringOrDefault("None"), true);
 			_ = embed.AddEmptyField(true);
 			// Fourth row
-			_ = embed.AddField($"✨ **__{Utils.Plural("Abilit", "y", "ies", abilitiesList)}__**", abilitiesSb.ToString());
+			_ = embed.AddField($"✨ **__{Utils.Plural("Abilit", "y", "ies", pokemon.AbilitiesList)}__**", abilitiesSb.ToString());
 
 			_ = await embed.SendAsync(await this.GetEmbedButtonsAsync(pokemonName, PokemonEmbed.Info, replaceEmojis));
 		}

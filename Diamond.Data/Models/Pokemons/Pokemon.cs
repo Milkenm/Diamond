@@ -8,9 +8,9 @@ namespace Diamond.Data.Models.Pokemons
 	{
 		[Key] public long Id { get; set; }
 		public required string Name { get; set; }
-		public required string TypesList { get; set; }
-		public required string AbilitiesList { get; set; }
-		public string? FormatsList { get; set; }
+		public required List<DbPokemonType> TypesList { get; set; }
+		public required List<DbPokemonPassive> AbilitiesList { get; set; }
+		public required List<DbPokemonFormat> FormatsList { get; set; }
 		public required bool IsNonstandard { get; set; }
 		public required int HealthPoints { get; set; }
 		public required int Attack { get; set; }
@@ -21,7 +21,8 @@ namespace Diamond.Data.Models.Pokemons
 		public required float Weight { get; set; }
 		public required float Height { get; set; }
 		public int? DexNumber { get; set; }
-		public string? EvolutionsList { get; set; }
-		public string? GenerationsList { get; set; }
+		public required List<DbPokemon> EvolutionsList { get; set; }
+		public required List<DbPokemon> AltsList { get; set; }
+		public required List<DbPokemonGeneration> GenerationsList { get; set; }
 	}
 }
