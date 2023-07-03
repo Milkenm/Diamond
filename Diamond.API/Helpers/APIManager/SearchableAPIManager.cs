@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.Util;
@@ -16,7 +18,7 @@ namespace Diamond.API.Helpers.APIManager
 			: base(dbUnixConfigSetting, keepResultsForSeconds, tablesName)
 		{ }
 
-		public virtual async Task<List<SearchMatchInfo<T>>> SearchItemAsync(string search)
+		public virtual async Task<List<SearchMatchInfo<T>>> SearchItemAsync(string search, Func<SearchMatchInfo<T>, bool>? filter = null)
 		{
 			// Lock thread while pokémons are not loaded
 			while (!this.AreItemsLoaded)
@@ -43,7 +45,7 @@ namespace Diamond.API.Helpers.APIManager
 			if (this._cacheSearches)
 				this._searchCache.CacheValue(search, searchResults, this.KeepResultsForSeconds);
 
-			return searchResults;
+			return filter != null ? searchResults.Where(filter).ToList() : searchResults;
 		}
 
 		public void ClearCache()

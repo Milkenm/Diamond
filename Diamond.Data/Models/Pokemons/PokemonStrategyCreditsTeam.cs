@@ -7,8 +7,8 @@ namespace Diamond.Data.Models.Pokemons
 	[Table("PokemonStrategyCreditsTeams")]
 	public class DbPokemonStrategyCreditsTeam
 	{
-		[Key] public long Id { get; set; }
+		[Key][DatabaseGenerated(DatabaseGeneratedOption.Identity)] public long Id { get; set; }
 		public required string TeamName { get; set; }
-		public required List<PokemonSmogonUser> TeamMembersList { get; set; }
+		public required List<DbPokemonSmogonUser> TeamMembersList { get; set; }
 	}
 }

@@ -208,6 +208,16 @@ namespace Diamond.API.Util
 			return embedBuilder.AddField("‍", "‍", inline);
 		}
 		#endregion
+
+		#region Dictionary
+		public static void AddRange<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, Dictionary<TKey, TValue> otherDictionary)
+		{
+			foreach (KeyValuePair<TKey, TValue> item in otherDictionary)
+			{
+				dictionary.Add(item.Key, item.Value);
+			}
+		}
+		#endregion
 	}
 
 	public class SearchMatchInfo<T>

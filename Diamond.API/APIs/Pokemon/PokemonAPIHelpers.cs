@@ -16,7 +16,10 @@ namespace Diamond.API.APIs.Pokemon
 {
 	public class PokemonAPIHelpers
 	{
-		public const string SMOGON_ENDPOINT = "https://www.smogon.com/dex/sm/pokemon/";
+		/// <summary>
+		/// {0}: Generation abbreviation
+		/// </summary>
+		public const string SMOGON_ENDPOINT = "https://www.smogon.com/dex/{0}/pokemon/";
 		/// <summary>
 		/// {0}: Pokémon name
 		/// </summary>
@@ -26,9 +29,10 @@ namespace Diamond.API.APIs.Pokemon
 		/// </summary>
 		public const string POKEMON_IMAGES_URL = "https://assets.pokemon.com/assets/cms2/img/pokedex/full/{0}.png";
 		/// <summary>
-		/// {0}: Pokémon name
+		/// {0}: Generation abbreviation
+		/// {1}: Pokémon name
 		/// </summary>
-		public const string SMOGON_POKEMON_URL = "https://www.smogon.com/dex/ss/pokemon/{0}/";
+		public const string SMOGON_POKEMON_URL = "https://www.smogon.com/dex/{0}/pokemon/{1}/";
 		/// <summary>
 		/// {0}: Dex number
 		/// </summary>
@@ -80,13 +84,24 @@ namespace Diamond.API.APIs.Pokemon
 		// Keep for 1 day
 		public const long KEEP_CACHE_FOR_SECONDS = 60L * 60L * 24L;
 
-		public static async Task DownloadPokemonAdditionalInfoAsync(string pokemonName)
+		public static async Task<bool> DownloadPokemonStratsAsync(string pokemonName, string generationAbbreviation, DiamondContext db)
 		{
-			using DiamondContext db = new DiamondContext();
+			if (!DoesPokemonExist(db, pokemonName, out DbPokemon dbPokemon)) return false;
 
-			if (!DoesPokemonExist(pokemonName, out DbPokemon dbPokemon)) return;
+			SmogonAditionalInfo strats = await GetPokemonAditionalInfoAsync(pokemonName, generationAbbreviation);
+			foreach (SmogonStrategy strat in strats.StrategiesList)
+			{
+				await SaveStrategy(dbPokemon, strat, db);
+			}
 
-			SmogonStrategies strats = await GetStratsForPokemon(pokemonName);
+			return strats.StrategiesList.Count > 0;
+		}
+
+		public static async Task DownloadPokemonLearnsetAsync(string pokemonName, string generationAbbreviation, DiamondContext db)
+		{
+			if (!DoesPokemonExist(db, pokemonName, out DbPokemon dbPokemon)) return;
+
+			SmogonAditionalInfo strats = await GetPokemonAditionalInfoAsync(pokemonName, generationAbbreviation);
 
 			List<DbPokemonMove> movesList = db.PokemonMoves.ToList();
 			foreach (string move in strats.LearnsetList)
@@ -100,18 +115,12 @@ namespace Diamond.API.APIs.Pokemon
 					Move = dbMove,
 				});
 			}
-			await db.SaveAsync();
 
-			foreach (SmogonStrategy strat in strats.StrategiesList)
-			{
-				await SaveStrategy(dbPokemon, movesList, strat);
-			}
+			await db.SaveAsync();
 		}
 
-		private static async Task SaveStrategy(DbPokemon dbPokemon, List<DbPokemonMove> movesList, SmogonStrategy strat)
+		private static async Task SaveStrategy(DbPokemon dbPokemon, SmogonStrategy strat, DiamondContext db)
 		{
-			using DiamondContext db = new DiamondContext();
-
 			// Get strat format
 			List<DbPokemonFormat> formatsList = db.PokemonFormats.ToList();
 			DbPokemonFormat format = formatsList.Where(f => f.Name == strat.Format).FirstOrDefault();
@@ -137,7 +146,7 @@ namespace Diamond.API.APIs.Pokemon
 			List<DbPokemonStrategyMoveset> movesets = new List<DbPokemonStrategyMoveset>();
 			foreach (SmogonStrategyMoveSlot moveset in strat.MovesetsList[0].MoveSlotsList[0])
 			{
-				DbPokemonMove move = movesList.Where(m => m.Name == moveset.Move).FirstOrDefault();
+				DbPokemonMove move = db.PokemonMoves.Where(m => m.Name == moveset.Move).FirstOrDefault();
 				DbPokemonType type = null;
 				if (moveset.Type != null)
 				{
@@ -164,20 +173,20 @@ namespace Diamond.API.APIs.Pokemon
 			}
 
 			// Get strat written by
-			List<PokemonSmogonUser> writtenBy = new List<PokemonSmogonUser>();
+			List<DbPokemonSmogonUser> writtenBy = new List<DbPokemonSmogonUser>();
 			foreach (SmogonStrategyMember user in strat.Credits.WrittenByList)
 			{
 				// TODO: Improve code
 				// Check if the user already exists in the database
-				IQueryable<PokemonSmogonUser> dbUsers = db.PokemonSmogonUsers.Where(u => u.Id == user.UserId);
-				PokemonSmogonUser dbUser = null;
+				IQueryable<DbPokemonSmogonUser> dbUsers = db.PokemonSmogonUsers.Where(u => u.Id == user.UserId);
+				DbPokemonSmogonUser dbUser = null;
 				if (dbUsers.Any())
 				{
 					dbUser = dbUsers.FirstOrDefault();
 				}
 				else
 				{
-					dbUser = new PokemonSmogonUser()
+					dbUser = new DbPokemonSmogonUser()
 					{
 						Username = user.Username,
 						SmogonUserId = user.UserId,
@@ -193,19 +202,19 @@ namespace Diamond.API.APIs.Pokemon
 			List<DbPokemonStrategyCreditsTeam> creditsTeams = new List<DbPokemonStrategyCreditsTeam>();
 			foreach (SmogonStrategyTeam team in strat.Credits.TeamsList)
 			{
-				List<PokemonSmogonUser> teamUsers = new List<PokemonSmogonUser>();
+				List<DbPokemonSmogonUser> teamUsers = new List<DbPokemonSmogonUser>();
 				foreach (SmogonStrategyMember user in team.MembersList)
 				{
 					// TODO: Improve code
-					IQueryable<PokemonSmogonUser> dbUsers = db.PokemonSmogonUsers.Where(u => u.Id == user.UserId);
-					PokemonSmogonUser dbUser = null;
+					IQueryable<DbPokemonSmogonUser> dbUsers = db.PokemonSmogonUsers.Where(u => u.Id == user.UserId);
+					DbPokemonSmogonUser dbUser = null;
 					if (dbUsers.Any())
 					{
 						dbUser = dbUsers.FirstOrDefault();
 					}
 					else
 					{
-						dbUser = new PokemonSmogonUser()
+						dbUser = new DbPokemonSmogonUser()
 						{
 							Username = user.Username,
 							SmogonUserId = user.UserId,
@@ -253,77 +262,103 @@ namespace Diamond.API.APIs.Pokemon
 			await db.SaveAsync();
 		}
 
-		public static void LoadPokemonExtraInfo(ref DbPokemon pokemon)
+		private static bool DoesPokemonExist(DiamondContext db, string pokemonName, out DbPokemon dbPokemon)
 		{
-			using DiamondContext db = new DiamondContext();
-
-			long id = pokemon.Id;
-			pokemon = db.Pokemons.Where(p => p.Id == id)
-				.Include(p => p.TypesList)
-				.Include(p => p.AbilitiesList)
-				.Include(p => p.EvolutionsList)
-				.Include(p => p.GenerationsList)
-				.Include(p => p.FormatsList)
-				.First();
-		}
-
-		private static bool DoesPokemonExist(string pokemonName, out DbPokemon dbPokemon)
-		{
-			using DiamondContext db = new DiamondContext();
-
 			List<DbPokemon> pokemonsList = db.Pokemons.ToList();
 			dbPokemon = pokemonsList.Where(p => p.Name == pokemonName).FirstOrDefault();
 			return dbPokemon != null;
 		}
 
-		private static async Task<SmogonStrategies> GetStratsForPokemon(string pokemonName)
+		private static async Task<SmogonAditionalInfo> GetPokemonAditionalInfoAsync(string pokemonName, string generationAbbreviation)
 		{
-			string extraJson = await GetSmogonResponseJsonAsync(pokemonName);
+			string extraJson = await GetSmogonResponseJsonAsync(pokemonName, generationAbbreviation);
 
 			// TOOD: Idk how to make this so yah
 			SmogonRootObject extraResp = JsonConvert.DeserializeObject<SmogonRootObject>(extraJson);
-			SmogonStrategies strats = JsonConvert.DeserializeObject<SmogonStrategies>(extraResp.InjectRpcs[2][1].ToString());
-			return strats;
+			SmogonAditionalInfo aditionalInfo = JsonConvert.DeserializeObject<SmogonAditionalInfo>(extraResp.InjectRpcs[2][1].ToString());
+			return aditionalInfo;
 		}
 
-		public static async Task<List<DbPokemonMove>> GetPokemonMovesAsync(string pokemonName)
+		public static async Task<List<DbPokemonMove>> GetPokemonMovesAsync(string pokemonName, string generationAbbreviation, DiamondContext db)
 		{
-			using DiamondContext db = new DiamondContext();
-
 			IQueryable<DbPokemonLearnset> moves = db.PokemonLearnsets.Where(ls => ls.Pokemon.Name == pokemonName);
 			if (!moves.Any())
 			{
-				await PokemonAPIHelpers.DownloadPokemonAdditionalInfoAsync(pokemonName);
-				return await GetPokemonMovesAsync(pokemonName);
+				await DownloadPokemonLearnsetAsync(pokemonName, generationAbbreviation, db);
+				return await GetPokemonMovesAsync(pokemonName, generationAbbreviation, db);
 			}
 			return moves.Select(ls => ls.Move).ToList();
 		}
 
-		public static async Task<List<DbPokemonStrategy>> GetPokemonStrategies(string pokemonName)
+		public static async Task<List<DbPokemonStrategy>> GetPokemonStrategies(string pokemonName, string generationAbbreviation, DiamondContext db)
 		{
-			using DiamondContext db = new DiamondContext();
+			if (!DoesPokemonExist(db, pokemonName, out DbPokemon dbPokemon)) return new List<DbPokemonStrategy>();
 
 			IQueryable<DbPokemonStrategy> strategies = db.PokemonStrategies.Where(st => st.Pokemon.Name == pokemonName);
 			if (!strategies.Any())
 			{
-				await PokemonAPIHelpers.DownloadPokemonAdditionalInfoAsync(pokemonName);
-				return await GetPokemonStrategies(pokemonName);
+				bool hasStrategies = await DownloadPokemonStratsAsync(pokemonName, generationAbbreviation, db);
+
+				dbPokemon.HasStrategies = hasStrategies;
+				await db.SaveAsync();
+
+				return !hasStrategies ? new List<DbPokemonStrategy>() : await GetPokemonStrategies(pokemonName, generationAbbreviation, db);
 			}
 			return strategies.ToList();
 		}
 
-		#region Utils
-		public static async Task<SmogonStrategies> GetStrategiesForPokemonAsync(string pokemonName)
+		public static Dictionary<PokemonType, double> GetEffectivenessMapForType(DbPokemonType type, DiamondContext db)
 		{
-			string json = await GetSmogonResponseJsonAsync(pokemonName);
-			if (json == null) return null;
+			Dictionary<PokemonType, double> effectivenessMap = new Dictionary<PokemonType, double>();
 
-			SmogonRootObject resp = JsonConvert.DeserializeObject<SmogonRootObject>(json);
-			SmogonStrategies strats = JsonConvert.DeserializeObject<SmogonStrategies>(resp.InjectRpcs[2][1].ToString());
+			// Get all counters
+			foreach (DbPokemonAttackEffectiveness atkef in db.PokemonAttackEffectivenesses.Include(af => af.AttackerType).Where(af => af.TargetType == type))
+			{
+				if (atkef.Value == 1) continue;
 
-			return strats;
+				PokemonType attackerType = PokemonAPIHelpers.GetPokemonTypeByName(atkef.AttackerType.Name);
+				if (effectivenessMap.ContainsKey(attackerType))
+				{
+					if (atkef.Value == 0.5)
+					{
+						effectivenessMap[attackerType] -= 1;
+					}
+					else
+					{
+						effectivenessMap[attackerType] += atkef.Value;
+					}
+				}
+				else
+				{
+					if (atkef.Value == 0.5)
+					{
+						effectivenessMap.Add(attackerType, -1);
+					}
+					else
+					{
+						effectivenessMap.Add(attackerType, atkef.Value);
+					}
+				}
+			}
+
+			return effectivenessMap;
 		}
 
+		public static List<DbPokemonGeneration> GetGenerationsFromList(List<string> generationsList, DiamondContext db)
+		{
+			List<DbPokemonGeneration> dbGenerationsList = new List<DbPokemonGeneration>();
+
+			foreach (string generation in generationsList)
+			{
+				DbPokemonGeneration dbGeneration = db.PokemonGenerations.Where(g => g.Abbreviation == generation).First();
+
+				dbGenerationsList.Add(dbGeneration);
+			}
+
+			return dbGenerationsList;
+		}
+
+		#region Utils
 		public static string GetTypeEmoji(PokemonType type)
 		{
 			return _pokemonTypesEmojiMap[type];
@@ -368,9 +403,9 @@ namespace Diamond.API.APIs.Pokemon
 			return string.Format(POKEMON_IMAGES_URL, dexNumber);
 		}
 
-		public static string GetSmogonPokemonUrl(string pokemonName)
+		public static string GetSmogonPokemonUrl(string pokemonName, string generationAbbreviation)
 		{
-			return string.Format(SMOGON_POKEMON_URL, pokemonName.ToLower().Replace(" ", "-"));
+			return string.Format(SMOGON_POKEMON_URL, generationAbbreviation.ToLowerInvariant(), pokemonName.ToLower().Replace(" ", "-"));
 		}
 
 		public static string GetPokedexUrl(int dexNumber)
@@ -393,9 +428,9 @@ namespace Diamond.API.APIs.Pokemon
 			return string.Format(SMOGON_USER_PROFILE_URL, userId);
 		}
 
-		public static async Task<string> GetSmogonResponseJsonAsync(string pokemonName)
+		public static async Task<string> GetSmogonResponseJsonAsync(string pokemonName, string generationAbbreviation)
 		{
-			string url = pokemonName != null ? string.Format(SMOGON_POKEMON_URL, pokemonName) : SMOGON_ENDPOINT;
+			string url = pokemonName != null ? string.Format(string.Format(SMOGON_POKEMON_URL, generationAbbreviation.ToLowerInvariant(), pokemonName), pokemonName) : string.Format(SMOGON_ENDPOINT, generationAbbreviation);
 			string response = await (await new HttpClient().GetAsync(url)).Content.ReadAsStringAsync();
 
 			string json = null;

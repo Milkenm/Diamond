@@ -6,7 +6,7 @@ namespace Diamond.Data.Models.Pokemons
 	[Table("PokemonStrategies")]
 	public class DbPokemonStrategy
 	{
-		[Key] public long Id { get; set; }
+		[Key][DatabaseGenerated(DatabaseGeneratedOption.Identity)] public long Id { get; set; }
 		public required DbPokemonFormat Format { get; set; }
 		public bool? Outdated { get; set; }
 		public required DbPokemon Pokemon { get; set; }
@@ -24,7 +24,7 @@ namespace Diamond.Data.Models.Pokemons
 		public required int EVsSpecialDefense { get; set; }
 		public required int EVsSpeed { get; set; }
 		public required List<DbPokemonNature> NaturesList { get; set; }
-		public required List<PokemonSmogonUser> WrittenByUsersList { get; set; }
+		public required List<DbPokemonSmogonUser> WrittenByUsersList { get; set; }
 		public required List<DbPokemonStrategyCreditsTeam> TeamsList { get; set; }
 	}
 }

@@ -13,9 +13,6 @@ using Diamond.Data.Models.Pokemons;
 
 using Discord.Interactions;
 
-using Microsoft.CodeAnalysis;
-using Microsoft.EntityFrameworkCore;
-
 namespace Diamond.API.SlashCommands.Pokemon
 {
 	public partial class Pokemon
@@ -23,37 +20,30 @@ namespace Diamond.API.SlashCommands.Pokemon
 		[DSlashCommand("info", "View info about a pokémon.")]
 		public async Task PokemonSearchCommandAsync(
 			[Summary("name", "The name of the pokémon.")] string pokemonName,
+			[Summary("generation", "The generation of the pokémon."), Autocomplete(typeof(PokemonGenerationAutocompleter))] string generationAbbreviation,
 			[Summary("replace-emojis", "Replaces the type emojis with a text in case you a have trouble reading.")] bool replaceEmojis = false,
 			[ShowEveryone] bool showEveryone = false
 		)
 		{
 			await this.DeferAsync(!showEveryone);
 
-			await this.SendInfoEmbedAsync(pokemonName, replaceEmojis);
+			await this.SendInfoEmbedAsync(pokemonName, generationAbbreviation, replaceEmojis);
 		}
 
-		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_INFO}:*,*", true)]
-		public async Task ButtonViewStatsHandler(string pokemonName, bool replaceEmojis)
+		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_INFO}:*,*,*", true)]
+		public async Task ButtonViewStatsHandler(string pokemonName, string generationAbbreviation, bool replaceEmojis)
 		{
 			await this.DeferAsync();
 
-			await this.SendInfoEmbedAsync(pokemonName, replaceEmojis);
+			await this.SendInfoEmbedAsync(pokemonName, generationAbbreviation, replaceEmojis);
 		}
 
-		private async Task SendInfoEmbedAsync(string pokemonName, bool replaceEmojis)
+		private async Task SendInfoEmbedAsync(string pokemonName, string generationAbbreviation, bool replaceEmojis)
 		{
 			using DiamondContext db = new DiamondContext();
 
-			DbPokemon pokemon = (await this._pokemonApi.SearchItemAsync(pokemonName))[0].Item;
-			pokemon = db.Pokemons.Where(p => p.Id == pokemon.Id)
-				.Include(p => p.TypesList)
-				.Include(p => p.AbilitiesList)
-				.Include(p => p.EvolutionsList)
-				.Include(p => p.GenerationsList)
-				.Include(p => p.FormatsList)
-				.First();
-
-			PokemonAPIHelpers.LoadPokemonExtraInfo(ref pokemon);
+			DbPokemon pokemon = (await this._pokemonApi.SearchItemAsync(pokemonName, generationAbbreviation)).Where(smi => smi.Item.GenerationAbbreviation == generationAbbreviation).First().Item;
+			pokemon = db.SelectFullPokemon(pokemon.Id, db);
 
 			Dictionary<PokemonType, double> effectivenessMap = new Dictionary<PokemonType, double>();
 			StringBuilder typesSb = new StringBuilder();
@@ -61,35 +51,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			{
 				PokemonType pokeType = PokemonAPIHelpers.GetPokemonTypeByName(type.Name);
 
-				// Get all counters
-				foreach (DbPokemonAttackEffectiveness atkef in db.PokemonAttackEffectivenesses.Include(af => af.AttackerType).Where(af => af.TargetType == type))
-				{
-					if (atkef.Value == 1) continue;
-
-					PokemonType attackerType = PokemonAPIHelpers.GetPokemonTypeByName(atkef.AttackerType.Name);
-					if (effectivenessMap.ContainsKey(attackerType))
-					{
-						if (atkef.Value == 0.5)
-						{
-							effectivenessMap[attackerType] -= 1;
-						}
-						else
-						{
-							effectivenessMap[attackerType] += atkef.Value;
-						}
-					}
-					else
-					{
-						if (atkef.Value == 0.5)
-						{
-							effectivenessMap.Add(attackerType, -1);
-						}
-						else
-						{
-							effectivenessMap.Add(attackerType, atkef.Value);
-						}
-					}
-				}
+				effectivenessMap.AddRange(PokemonAPIHelpers.GetEffectivenessMapForType(type, db));
 
 				_ = typesSb.Append($"{PokemonAPIHelpers.GetTypeDisplay(pokeType, replaceEmojis)}", " ");
 			}
@@ -139,7 +101,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			foreach (DbPokemon evolution in pokemon.EvolutionsList)
 			{
 				evolutions++;
-				_ = evolutionsSb.Append($"[{evolution.Name}]({PokemonAPIHelpers.GetSmogonPokemonUrl(evolution.Name)})", "\n");
+				_ = evolutionsSb.Append($"[{evolution.Name}]({PokemonAPIHelpers.GetSmogonPokemonUrl(evolution.Name, generationAbbreviation)})", "\n");
 			}
 
 			DefaultEmbed embed = new DefaultEmbed("Pokédex - Info", "🖥️", this.Context)
@@ -179,7 +141,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			// Fourth row
 			_ = embed.AddField($"✨ **__{Utils.Plural("Abilit", "y", "ies", pokemon.AbilitiesList)}__**", abilitiesSb.ToString());
 
-			_ = await embed.SendAsync(await this.GetEmbedButtonsAsync(pokemonName, PokemonEmbed.Info, replaceEmojis));
+			_ = await embed.SendAsync(await this.GetEmbedButtonsAsync(pokemonName, generationAbbreviation, PokemonEmbed.Info, replaceEmojis));
 		}
 
 		private static string GetAttackStatString(int value, Stat stat)

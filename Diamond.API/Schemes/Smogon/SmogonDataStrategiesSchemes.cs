@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace Diamond.API.Schemes.Smogon
 {
 
-	public class SmogonStrategies
+	public class SmogonAditionalInfo
 	{
 		[JsonProperty("languages")] public List<string> LanguagesList { get; set; }
 		[JsonProperty("learnset")] public List<string> LearnsetList { get; set; }

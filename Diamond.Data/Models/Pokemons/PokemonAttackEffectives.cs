@@ -6,7 +6,7 @@ namespace Diamond.Data.Models.Pokemons
 	[Table("PokemonAttackEffectives")]
 	public class DbPokemonAttackEffectiveness
 	{
-		[Key] public long Id { get; set; }
+		[Key][DatabaseGenerated(DatabaseGeneratedOption.Identity)] public long Id { get; set; }
 		public required DbPokemonType AttackerType { get; set; }
 		public required DbPokemonType TargetType { get; set; }
 		public required float Value { get; set; }
