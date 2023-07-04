@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 using Diamond.API.Helpers.APIManager;
 using Diamond.API.Schemes.Smogon;
-using Diamond.API.Util;
 using Diamond.Data;
 using Diamond.Data.Enums;
 using Diamond.Data.Models.Pokemons;
@@ -18,39 +17,33 @@ namespace Diamond.API.APIs.Pokemon
 {
 	public class PokemonAPI : AutoUpdatingSearchableAPIManager<DbPokemon>
 	{
+		/// <summary>
+		/// This is the first generation to be downloaded.
+		/// </summary>
+		public const string POKEMON_MAIN_GENERATION = "SM";
+
 		public PokemonAPI()
 			: base(ConfigSetting.PokemonsListLoadUnix, PokemonAPIHelpers.KEEP_CACHE_FOR_SECONDS, new string[] {
 				// Generated
-				"DbPokemonDbPokemon", "DbPokemonDbPokemonFormat", "DbPokemonDbPokemonGeneration", "DbPokemonDbPokemonPassive", "DbPokemonDbPokemonType", "DbPokemonFormatDbPokemonGeneration", "DbPokemonGenerationDbPokemonItem", "DbPokemonGenerationDbPokemonMove", "DbPokemonGenerationDbPokemonNature", "DbPokemonGenerationDbPokemonType",
+				"DbPokemonDbPokemon", "DbPokemonDbPokemonFormat", "DbPokemonDbPokemonGeneration", "DbPokemonDbPokemonPassive", "DbPokemonDbPokemonType", "DbPokemonFormatDbPokemonGeneration", "DbPokemonGenerationDbPokemonItem", "DbPokemonGenerationDbPokemonMove", "DbPokemonGenerationDbPokemonNature", "DbPokemonGenerationDbPokemonPassive", "DbPokemonGenerationDbPokemonType",
 				// Tables
 				"PokemonAbilities", "PokemonAttackEffectives", "PokemonFormats", "PokemonItems", "PokemonNatures", "PokemonPassives", "PokemonTypes", "Pokemons", "PokemonGenerations", "PokemonLearnsets"
 			}, PokemonAPIHelpers.KEEP_CACHE_FOR_SECONDS)
 		{ }
 
-		public override Task<List<SearchMatchInfo<DbPokemon>>> SearchItemAsync(string search, Func<SearchMatchInfo<DbPokemon>, bool> filter = null)
-		{
-			// "Disable" this method
-			throw new InvalidOperationException();
-		}
-
-		public async Task<List<SearchMatchInfo<DbPokemon>>> SearchItemAsync(string search, string generationAbbreviation)
-		{
-			return await base.SearchItemAsync(search, smi => smi.Item.GenerationAbbreviation == generationAbbreviation);
-		}
-
 		public override async Task<bool> LoadItemsLogicAsync(bool forceUpdate)
 		{
 			using DiamondContext db = new DiamondContext();
 
-			bool isFirstDownloadIsValid = await this.LoadPokemons("SM", db);
-			if (!isFirstDownloadIsValid)
+			bool isFirstDownloadValid = await this.LoadPokemons(POKEMON_MAIN_GENERATION, db);
+			if (!isFirstDownloadValid)
 			{
 				return false;
 			}
 
 			foreach (DbPokemonGeneration dbGeneration in db.PokemonGenerations.ToList())
 			{
-				if (dbGeneration.Abbreviation == "SM") continue;
+				if (dbGeneration.Abbreviation == POKEMON_MAIN_GENERATION) continue;
 
 				bool isValid = await this.LoadPokemons(dbGeneration.Abbreviation, db);
 
@@ -62,48 +55,38 @@ namespace Diamond.API.APIs.Pokemon
 
 		private async Task<bool> LoadPokemons(string generationAbbreviation, DiamondContext db, int retries = 5)
 		{
-			Debug.WriteLine($"Loading pokémons for generation '{generationAbbreviation}'.");
+			Debug.WriteLine($"Loading pokémons for generation '{generationAbbreviation}'");
 
 			string json = await PokemonAPIHelpers.GetSmogonResponseJsonAsync(null, generationAbbreviation);
 			if (json == null) return false;
 
-			try
-			{
-				// TODO: Idk how to make this so yah
+			// TODO: Idk how to make this so yah
+			SmogonRootObject resp = JsonConvert.DeserializeObject<SmogonRootObject>(json);
+			List<SmogonGeneration> generationsList = JsonConvert.DeserializeObject<List<SmogonGeneration>>(resp.InjectRpcs[0][1].ToString());
+			SmogonData data = JsonConvert.DeserializeObject<SmogonData>(resp.InjectRpcs[1][1].ToString());
 
-				SmogonRootObject resp = JsonConvert.DeserializeObject<SmogonRootObject>(json);
-				List<SmogonGeneration> generationsList = JsonConvert.DeserializeObject<List<SmogonGeneration>>(resp.InjectRpcs[0][1].ToString());
-				SmogonData data = JsonConvert.DeserializeObject<SmogonData>(resp.InjectRpcs[1][1].ToString());
+			if (generationAbbreviation == POKEMON_MAIN_GENERATION) await SaveGenerations(generationsList, db);
 
-				await SaveGenerations(generationsList, db);
-				await SaveMoves(data.MovesList, db);
-				await SaveAbilities(data.AbilitiesList, db);
-				await SaveFormats(data.FormatsList, db);
-				await SaveItems(data.ItemsList, db);
-				SaveNatures(data.NaturesList, db);
-				await SaveTypes(data.TypesList, db);
-				await SaveCounters(data.TypesList, db);
+			await SaveMovesAsync(data.MovesList, generationAbbreviation, db);
+			await SaveAbilitiesAsync(data.AbilitiesList, generationAbbreviation, db);
+			await SaveFormatsAsync(data.FormatsList, generationAbbreviation, db);
+			await SaveItemsAsync(data.ItemsList, generationAbbreviation, db);
+			await SaveNaturesAsync(data.NaturesList, generationAbbreviation, db);
+			await SaveTypesAsync(data.TypesList, generationAbbreviation, db);
+			await SaveCountersAsync(data.TypesList, generationAbbreviation, db);
 
-				DbPokemonGeneration smGen = db.PokemonGenerations.Where(g => g.Abbreviation == generationAbbreviation).First();
-				await SavePokemons(data.PokemonsList, smGen, db);
+			DbPokemonGeneration smGen = db.PokemonGenerations.Where(g => g.Abbreviation == generationAbbreviation).First();
+			await SavePokemonsAsync(data.PokemonsList, smGen, db);
 
-				// There is no need to save the database here
-				return true;
-			}
-			catch
-			{
-				if (retries == 0) throw;
-
-				// Retry
-				return await this.LoadPokemons(generationAbbreviation, db, --retries);
-			}
+			// There is no need to save to the database here
+			return true;
 		}
 
 		public override void LoadItemsMap(Dictionary<string, DbPokemon> itemsMap)
 		{
 			using DiamondContext db = new DiamondContext();
 
-			foreach (DbPokemon pokemon in db.Pokemons)
+			foreach (DbPokemon pokemon in db.Pokemons.AsEnumerable().DistinctBy(p => p.Name))
 			{
 				itemsMap.Add(pokemon.Name, pokemon);
 			}
@@ -125,13 +108,14 @@ namespace Diamond.API.APIs.Pokemon
 					MovesWithGenerationList = new List<DbPokemonMove>(),
 					NaturesWithGenerationList = new List<DbPokemonNature>(),
 					TypesWithGenerationList = new List<DbPokemonType>(),
+					PassivesWithGenerationList = new List<DbPokemonPassive>(),
 				});
 			}
 
 			await db.SaveAsync();
 		}
 
-		private static async Task SaveMoves(List<SmogonMove> movesList, DiamondContext db)
+		private static async Task SaveMovesAsync(List<SmogonMove> movesList, string generationAbbreviation, DiamondContext db)
 		{
 			// Store moves
 			foreach (SmogonMove move in movesList)
@@ -147,13 +131,14 @@ namespace Diamond.API.APIs.Pokemon
 					Priority = move.Priority,
 					PowerPoints = move.PowerPoints,
 					GenerationsList = PokemonAPIHelpers.GetGenerationsFromList(move.GenerationsList, db),
+					GenerationAbbreviation = generationAbbreviation
 				});
 			}
 
 			await db.SaveAsync();
 		}
 
-		private static async Task SaveAbilities(List<SmogonAbility> abilitiesList, DiamondContext db)
+		private static async Task SaveAbilitiesAsync(List<SmogonAbility> abilitiesList, string generationAbbreviation, DiamondContext db)
 		{
 			// Store abilities
 			foreach (SmogonAbility ability in abilitiesList)
@@ -163,15 +148,16 @@ namespace Diamond.API.APIs.Pokemon
 					Name = ability.Name,
 					Description = ability.Description,
 					IsNonstandard = ability.IsNonstandard != "Standard",
-					GenerationsList = string.Join(",", ability.GenerationsList),
-					PokemonsWithPassiveList = new List<DbPokemon>()
+					GenerationsList = PokemonAPIHelpers.GetGenerationsFromList(ability.GenerationsList, db),
+					PokemonsWithPassiveList = new List<DbPokemon>(),
+					GenerationAbbreviation = generationAbbreviation,
 				});
 			}
 
 			await db.SaveAsync();
 		}
 
-		private static async Task SaveFormats(List<SmogonFormat> formatsList, DiamondContext db)
+		private static async Task SaveFormatsAsync(List<SmogonFormat> formatsList, string generationAbbreviation, DiamondContext db)
 		{
 			// Store formats
 			foreach (SmogonFormat format in formatsList)
@@ -182,13 +168,14 @@ namespace Diamond.API.APIs.Pokemon
 					Abbreviation = format.Abbreviation,
 					GenerationsList = PokemonAPIHelpers.GetGenerationsFromList(format.GenerationsList, db),
 					PokemonsWithFormatList = new List<DbPokemon>(),
+					GenerationAbbreviation = generationAbbreviation,
 				});
 			}
 
 			await db.SaveAsync();
 		}
 
-		private static async Task SaveItems(List<SmogonItem> itemsList, DiamondContext db)
+		private static async Task SaveItemsAsync(List<SmogonItem> itemsList, string generationAbbreviation, DiamondContext db)
 		{
 			// Store items
 			foreach (SmogonItem item in itemsList)
@@ -199,13 +186,14 @@ namespace Diamond.API.APIs.Pokemon
 					Description = item.Description,
 					IsNonstandard = item.IsNonstandard != "Standard",
 					GenerationsList = PokemonAPIHelpers.GetGenerationsFromList(item.GenerationsList, db),
+					GenerationAbbreviation = generationAbbreviation,
 				});
 			}
 
 			await db.SaveAsync();
 		}
 
-		private static void SaveNatures(List<SmogonNature> naturesList, DiamondContext db)
+		private static async Task SaveNaturesAsync(List<SmogonNature> naturesList, string generationAbbreviation, DiamondContext db)
 		{
 			// Store natures
 			foreach (SmogonNature nature in naturesList)
@@ -221,11 +209,14 @@ namespace Diamond.API.APIs.Pokemon
 					SpecialDefense = nature.SpecialDefense,
 					Speed = nature.Speed,
 					GenerationsList = PokemonAPIHelpers.GetGenerationsFromList(nature.GenerationsList, db),
+					GenerationAbbreviation = generationAbbreviation,
 				});
 			}
+
+			await db.SaveAsync();
 		}
 
-		private static async Task SaveTypes(List<SmogonPokemonType> typesList, DiamondContext db)
+		private static async Task SaveTypesAsync(List<SmogonPokemonType> typesList, string generationAbbreviation, DiamondContext db)
 		{
 			// Store types
 			foreach (SmogonPokemonType type in typesList)
@@ -236,24 +227,25 @@ namespace Diamond.API.APIs.Pokemon
 					Description = type.Description,
 					GenerationsList = PokemonAPIHelpers.GetGenerationsFromList(type.GenerationsList, db),
 					PokemonsWithTypeList = new List<DbPokemon>(),
+					GenerationAbbreviation = generationAbbreviation,
 				});
 			}
 
 			await db.SaveAsync();
 		}
 
-		private static async Task SaveCounters(List<SmogonPokemonType> typesList, DiamondContext db)
+		private static async Task SaveCountersAsync(List<SmogonPokemonType> typesList, string generationAbbreviation, DiamondContext db)
 		{
 			// Store counters (this needs to be after (Store types) because we need all types loaded before running this)
 			foreach (SmogonPokemonType type in typesList)
 			{
-				DbPokemonType attackerType = db.PokemonTypes.Where(t => t.Name == type.Name).FirstOrDefault();
+				DbPokemonType attackerType = db.PokemonTypes.Where(t => t.Name == type.Name && t.GenerationAbbreviation == generationAbbreviation).FirstOrDefault();
 				foreach (object attackEffectiveness in type.AttackEffectivesList)
 				{
 					JToken token = JToken.FromObject(attackEffectiveness);
 
 					string targetTypeString = token.SelectToken("[0]").ToString();
-					DbPokemonType targetType = db.PokemonTypes.Where(t => t.Name == targetTypeString).FirstOrDefault();
+					DbPokemonType targetType = db.PokemonTypes.Where(t => t.Name == targetTypeString && t.GenerationAbbreviation == generationAbbreviation).FirstOrDefault();
 
 					float effectiveness = Convert.ToSingle(token.SelectToken("[1]").ToString());
 
@@ -262,6 +254,7 @@ namespace Diamond.API.APIs.Pokemon
 						AttackerType = attackerType,
 						TargetType = targetType,
 						Value = effectiveness,
+						GenerationAbbreviation = generationAbbreviation,
 					});
 				}
 			}
@@ -269,7 +262,7 @@ namespace Diamond.API.APIs.Pokemon
 			await db.SaveAsync();
 		}
 
-		private static async Task SavePokemons(List<SmogonPokemonInfo> pokemonsList, DbPokemonGeneration generation, DiamondContext db)
+		private static async Task SavePokemonsAsync(List<SmogonPokemonInfo> pokemonsList, DbPokemonGeneration generation, DiamondContext db)
 		{
 			// Store pokemons
 			foreach (SmogonPokemonInfo pokemon in pokemonsList)
@@ -281,19 +274,20 @@ namespace Diamond.API.APIs.Pokemon
 
 				foreach (string type in pokemon.TypesList)
 				{
-					DbPokemonType pokemonType = db.PokemonTypes.Where(t => t.Name == type).First();
+					DbPokemonType pokemonType = db.PokemonTypes.Where(t => t.Name == type && t.GenerationAbbreviation == generation.Abbreviation).First();
 					newPokemon.TypesList.Add(pokemonType);
 				}
 
 				foreach (string ability in pokemon.AbilitiesList)
 				{
-					DbPokemonPassive pokemonAbility = db.PokemonPassives.Where(p => p.Name == ability).First();
+					DbPokemonPassive pokemonAbility = db.PokemonPassives.Where(p => p.Name == ability && p.GenerationAbbreviation == generation.Abbreviation).First();
 					newPokemon.AbilitiesList.Add(pokemonAbility);
 				}
 
 				foreach (string format in pokemon.FormatsList)
 				{
-					DbPokemonFormat pokemonFormat = db.PokemonFormats.Where(f => f.Abbreviation == format).First();
+					// Pokemon format can be full name of abbreviation
+					DbPokemonFormat pokemonFormat = db.PokemonFormats.Where(f => f.Abbreviation == format || (f.Name == format && f.GenerationAbbreviation == generation.Abbreviation)).First();
 					newPokemon.FormatsList.Add(pokemonFormat);
 				}
 

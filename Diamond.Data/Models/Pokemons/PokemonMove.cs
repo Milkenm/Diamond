@@ -16,5 +16,6 @@ namespace Diamond.Data.Models.Pokemons
 		public required int Priority { get; set; }
 		public required int PowerPoints { get; set; }
 		public required List<DbPokemonGeneration> GenerationsList { get; set; }
+		public required string GenerationAbbreviation { get; set; }
 	}
 }

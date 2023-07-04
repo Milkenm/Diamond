@@ -15,5 +15,6 @@ namespace Diamond.Data.Models.Pokemons
 		public required List<DbPokemonMove> MovesWithGenerationList { get; set; }
 		public required List<DbPokemonNature> NaturesWithGenerationList { get; set; }
 		public required List<DbPokemonType> TypesWithGenerationList { get; set; }
+		public required List<DbPokemonPassive> PassivesWithGenerationList { get; set; }
 	}
 }

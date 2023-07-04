@@ -56,7 +56,7 @@ namespace Diamond.API.Helpers.APIManager
 				{
 					Debug.WriteLine("Checking last refresh unix...");
 					// Check if items need to be updated
-					ulong lastUpdate = Convert.ToUInt64(db.GetSetting(_dbUnixConfigSetting));
+					ulong lastUpdate = Convert.ToUInt64(db.GetSetting(this._dbUnixConfigSetting));
 					if (lastUpdate + this.KeepResultsForSeconds >= currentUnix)
 					{
 						this.IsLoadingItems = false;

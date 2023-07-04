@@ -8,7 +8,6 @@ namespace Diamond.Data.Models.Pokemons
 	{
 		[Key][DatabaseGenerated(DatabaseGeneratedOption.Identity)] public long Id { get; set; }
 		public required string Name { get; set; }
-		public required string GenerationAbbreviation { get; set; }
 		public required List<DbPokemonType> TypesList { get; set; }
 		public required List<DbPokemonPassive> AbilitiesList { get; set; }
 		public required List<DbPokemonFormat> FormatsList { get; set; }
@@ -26,5 +25,6 @@ namespace Diamond.Data.Models.Pokemons
 		public required List<DbPokemon> AltsList { get; set; }
 		public required List<DbPokemonGeneration> GenerationsList { get; set; }
 		public bool? HasStrategies { get; set; }
+		public required string GenerationAbbreviation { get; set; }
 	}
 }

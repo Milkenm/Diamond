@@ -11,5 +11,6 @@ namespace Diamond.Data.Models.Pokemons
 		public required string Description { get; set; }
 		public required List<DbPokemonGeneration> GenerationsList { get; set; }
 		public required List<DbPokemon> PokemonsWithTypeList { get; set; }
+		public required string GenerationAbbreviation { get; set; }
 	}
 }

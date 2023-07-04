@@ -9,5 +9,6 @@ namespace Diamond.Data.Models.Pokemons
 		[Key][DatabaseGenerated(DatabaseGeneratedOption.Identity)] public long Id { get; set; }
 		public required DbPokemon Pokemon { get; set; }
 		public required DbPokemonMove Move { get; set; }
+		public required string GenerationAbbreviation { get; set; }
 	}
 }

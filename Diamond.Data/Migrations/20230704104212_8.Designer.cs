@@ -3,6 +3,7 @@ using System;
 using Diamond.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Diamond.Data.Migrations
 {
     [DbContext(typeof(DiamondContext))]
-    partial class DiamondContextModelSnapshot : ModelSnapshot
+    [Migration("20230704104212_8")]
+    partial class _8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -365,10 +368,6 @@ namespace Diamond.Data.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("Abbreviation")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("GenerationAbbreviation")
                         .IsRequired()
                         .HasColumnType("longtext");
 

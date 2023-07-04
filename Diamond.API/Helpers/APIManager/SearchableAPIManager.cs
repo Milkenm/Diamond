@@ -36,14 +36,18 @@ namespace Diamond.API.Helpers.APIManager
 
 			// Generate items map
 			if (this._itemsMap.Count == 0)
+			{
 				this.LoadItemsMap(this._itemsMap);
+			}
 
 			// Search item
 			List<SearchMatchInfo<T>> searchResults = Utils.Search(this._itemsMap, search);
 
 			// Save to cache (if enabled)
 			if (this._cacheSearches)
+			{
 				this._searchCache.CacheValue(search, searchResults, this.KeepResultsForSeconds);
+			}
 
 			return filter != null ? searchResults.Where(filter).ToList() : searchResults;
 		}

@@ -44,8 +44,7 @@ namespace Diamond.API.Util
 						matches++;
 				}
 				matches *= SUtils.CalculateLevenshteinSimilarity(searchCriteria, formattedItemName);
-				if (matches == 0)
-					continue;
+				if (matches == 0) continue;
 				bestMatches.Add(new SearchMatchInfo<T>(value, matches));
 			}
 			if (bestMatches.Count > 0)
@@ -57,15 +56,12 @@ namespace Diamond.API.Util
 			return new List<SearchMatchInfo<T>>();
 		}
 
-		private static SearchMatchInfo<T> GetBestMatch<T>(List<SearchMatchInfo<T>> matches)
+		public static SearchMatchInfo<T>? GetBestMatch<T>(List<SearchMatchInfo<T>> matches)
 		{
-			SearchMatchInfo<T> bestMatch = default;
-			foreach (SearchMatchInfo<T> matchInfo in matches)
-			{
-				if (bestMatch == null || bestMatch.Match < matchInfo.Match)
-					bestMatch = matchInfo;
-			}
-			return bestMatch;
+			if (matches == null || matches.Count == 0) return null;
+
+			IOrderedEnumerable<SearchMatchInfo<T>> orderedMatches = matches.OrderBy(smi => smi.Match);
+			return orderedMatches.ElementAt(0);
 		}
 		#endregion
 

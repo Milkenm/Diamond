@@ -17,7 +17,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 
 		[DSlashCommand("moves", "View a pokémon's moves.")]
 		public async Task PokemonMovesCommandAsync(
-			[Summary("name", "The name of the pokémon.")] string pokemonName,
+			[Summary("name", "The name of the pokémon."), Autocomplete(typeof(PokemonNameAutocompleter))] string pokemonName,
 			[Summary("generation", "The generation of the pokémon."), Autocomplete(typeof(PokemonGenerationAutocompleter))] string generationAbbreviation,
 			[Summary("replace-emojis", "Replaces the type emojis with a text in case you a have trouble reading.")] bool replaceEmojis = false,
 			[ShowEveryone] bool showEveryone = false
@@ -64,7 +64,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 				_ = embed.AddField($"{PokemonAPIHelpers.GetTypeEmoji(dbMove.Type)} {PokemonAPIHelpers.GetAttackTypeEmoji(dbMove.Category)} {dbMove.Name} (💥 {GetAttackStatString(dbMove.Power, Stat.Power)}   🎯 {GetAttackStatString(dbMove.Accuracy, Stat.Accuracy)}   ⚡ {GetAttackStatString(dbMove.PowerPoints, Stat.PowerPoints)})", dbMove.Description);
 			}
 
-			_ = await embed.SendAsync(await this.GetEmbedButtonsAsync(pokemonName, generationAbbreviation, PokemonEmbed.Moves, replaceEmojis, startingIndex, movesList.Count));
+			_ = await embed.SendAsync(await this.GetEmbedButtonsAsync(pokemonName, generationAbbreviation, PokemonEmbed.Moves, replaceEmojis, db, startingIndex, movesList.Count));
 		}
 
 		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_MOVES_FIRST}:*,*,*", true)]

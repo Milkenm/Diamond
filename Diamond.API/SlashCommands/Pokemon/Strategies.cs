@@ -16,7 +16,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 	{
 		[DSlashCommand("strats", "View strategies for a pokémon.")]
 		public async void StratsCommandHandlerAsync(
-			[Summary("name", "The name of the pokémon.")] string pokemonName,
+			[Summary("name", "The name of the pokémon."), Autocomplete(typeof(PokemonNameAutocompleter))] string pokemonName,
 			[Summary("generation", "The generation of the pokémon."), Autocomplete(typeof(PokemonGenerationAutocompleter))] string generationAbbreviation,
 			[Summary("replace-emojis", "Replaces the type emojis with a text in case you a have trouble reading.")] bool replaceEmojis = false,
 			[ShowEveryone] bool showEveryone = false
@@ -79,12 +79,12 @@ namespace Diamond.API.SlashCommands.Pokemon
 			if (strategiesList.Count == 0)
 			{
 				embed.Description = "No strategies found for " + pokemonName;
-				_ = await embed.SendAsync(await this.GetEmbedButtonsAsync(pokemonName, generationAbbreviation, PokemonEmbed.Strategies, replaceEmojis));
+				_ = await embed.SendAsync(await this.GetEmbedButtonsAsync(pokemonName, generationAbbreviation, PokemonEmbed.Strategies, replaceEmojis, db));
 				return;
 			}
 
 			embed.Description = strategiesList[0].Comments;
-			_ = await embed.SendAsync(await this.GetEmbedButtonsAsync(pokemonName, generationAbbreviation, PokemonEmbed.Strategies, replaceEmojis));
+			_ = await embed.SendAsync(await this.GetEmbedButtonsAsync(pokemonName, generationAbbreviation, PokemonEmbed.Strategies, replaceEmojis, db));
 		}
 	}
 }

@@ -10,7 +10,8 @@ namespace Diamond.Data.Models.Pokemons
 		public required string Name { get; set; }
 		public required string Description { get; set; }
 		public required bool IsNonstandard { get; set; }
-		public required string GenerationsList { get; set; }
+		public required List<DbPokemonGeneration> GenerationsList { get; set; }
 		public required List<DbPokemon> PokemonsWithPassiveList { get; set; }
+		public required string GenerationAbbreviation { get; set; }
 	}
 }

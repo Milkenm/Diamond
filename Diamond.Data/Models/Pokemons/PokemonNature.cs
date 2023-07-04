@@ -16,5 +16,6 @@ namespace Diamond.Data.Models.Pokemons
 		public required float SpecialDefense { get; set; }
 		public required float Speed { get; set; }
 		public required List<DbPokemonGeneration> GenerationsList { get; set; }
+		public required string GenerationAbbreviation { get; set; }
 	}
 }

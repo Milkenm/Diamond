@@ -10,5 +10,6 @@ namespace Diamond.Data.Models.Pokemons
 		public required DbPokemonType AttackerType { get; set; }
 		public required DbPokemonType TargetType { get; set; }
 		public required float Value { get; set; }
+		public required string GenerationAbbreviation { get; set; }
 	}
 }
