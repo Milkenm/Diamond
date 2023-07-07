@@ -15,6 +15,7 @@ using Discord.Interactions;
 using Discord.WebSocket;
 
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using System.Globalization;
 
 namespace Diamond.API.SlashCommands.Pokemon
 {
@@ -32,6 +33,8 @@ namespace Diamond.API.SlashCommands.Pokemon
 		private const string BUTTON_POKEMON_LOAD_STRATEGIES = $"{BUTTON_POKEMON_BASE}_strats_load";
 
 		private const string SELECT_POKEMON_BASE = "select_pokemon";
+		private const string SELECT_POKEMON_INFO_GENERATION = $"{SELECT_POKEMON_BASE}_info_generation";
+		private const string SELECT_POKEMON_MOVES_GENERATION = $"{SELECT_POKEMON_BASE}_moves_generation";
 		private const string SELECT_POKEMON_STRATEGIES_GENERATION = $"{SELECT_POKEMON_BASE}_strats_generation";
 
 		private readonly PokemonAPI _pokemonApi;
@@ -59,6 +62,15 @@ namespace Diamond.API.SlashCommands.Pokemon
 			_ = components.WithButton("View on Smogon", style: ButtonStyle.Link, url: PokemonAPIHelpers.GetSmogonPokemonUrl(pokemon.Name, generationAbbreviation));
 
 			// Second row
+			if (embed == PokemonEmbed.Info)
+			{
+				List<SelectMenuOptionBuilder> infoGenerationsList = new List<SelectMenuOptionBuilder>();
+				foreach (DbPokemonGeneration dbGeneration in pokemon.GenerationsList)
+				{
+					AddGeneration(infoGenerationsList, dbGeneration, dbGeneration.Abbreviation == generationAbbreviation);
+				}
+				_ = components.WithSelectMenu(SELECT_POKEMON_INFO_GENERATION, infoGenerationsList,row:1);
+			}
 			if (embed == PokemonEmbed.Moves)
 			{
 				_ = components.WithButton("First page", $"{BUTTON_POKEMON_VIEW_MOVES_FIRST}:{pokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("⏮️"), disabled: movesStartingIndex == 0, row: 1);
@@ -68,6 +80,11 @@ namespace Diamond.API.SlashCommands.Pokemon
 			}
 
 			return components.Build();
+		}
+
+		private void AddGeneration(List<SelectMenuOptionBuilder> optionsList, DbPokemonGeneration dbGeneration ,bool isSelected)
+		{
+			optionsList.Add(new SelectMenuOptionBuilder($"{dbGeneration.Name} ({dbGeneration.Abbreviation})", dbGeneration.Abbreviation, $"{(isSelected ? "Currently selected" : "")}"));
 		}
 
 		public class PokemonNameAutocompleter : AutocompleteHandler
