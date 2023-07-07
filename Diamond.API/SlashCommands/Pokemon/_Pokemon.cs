@@ -46,7 +46,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 
 		private async Task<MessageComponent> GetEmbedButtonsAsync(string pokemonName, string generationAbbreviation, PokemonEmbed embed, bool replaceEmojis, DiamondContext db, int movesStartingIndex = 0, int movesMaxIndex = 0)
 		{
-			DbPokemon pokemon = (await PokemonAPIHelpers.SearchPokemon(pokemonName, generationAbbreviation, db))[0].Item;
+			DbPokemon pokemon =  PokemonAPIHelpers.SearchPokemon(pokemonName, generationAbbreviation, db)[0].Item;
 
 			ComponentBuilder components = new ComponentBuilder();
 

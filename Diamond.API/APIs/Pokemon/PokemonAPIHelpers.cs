@@ -312,10 +312,9 @@ namespace Diamond.API.APIs.Pokemon
 		}
 
 		public static Dictionary<PokemonType, double> GetEffectivenessMapForType(DbPokemonType type, DiamondContext db)
-		{ 
+		{
 			Dictionary<PokemonType, double> effectivenessMap = new Dictionary<PokemonType, double>();
 
-			// Get all counters
 			foreach (DbPokemonAttackEffectiveness atkef in db.PokemonAttackEffectivenesses.Include(af => af.AttackerType).Where(af => af.TargetType == type && af.GenerationAbbreviation == type.GenerationAbbreviation))
 			{
 				if (atkef.Value == 1) continue;
@@ -496,17 +495,24 @@ namespace Diamond.API.APIs.Pokemon
 			return generationsMap;
 		}
 
-		public static async Task<List<SearchMatchInfo<DbPokemon>>> SearchPokemon(string search, string generationAbbreviation, DiamondContext db)
+		public static List<SearchMatchInfo<DbPokemon>> SearchPokemon(string search, string? generationAbbreviation, DiamondContext db)
 		{
 			// Create map
 			Dictionary<string, DbPokemon> pokemonsMap = new Dictionary<string, DbPokemon>();
-			foreach (DbPokemon dbPokemon in db.Pokemons.Where(p => p.GenerationAbbreviation == generationAbbreviation))
+
+			List<DbPokemon> pokemonsList = db.Pokemons.ToList();
+			if (generationAbbreviation != null)
+			{
+				_ = pokemonsList.RemoveAll(p => p.GenerationAbbreviation != generationAbbreviation);
+			}
+
+			foreach (DbPokemon dbPokemon in pokemonsList)
 			{
 				pokemonsMap.Add(dbPokemon.Name, dbPokemon);
 			}
 
 			// Search
-			var searchResult = Utils.Search(pokemonsMap, search);
+			List<SearchMatchInfo<DbPokemon>> searchResult = Utils.Search(pokemonsMap, search);
 			return searchResult;
 		}
 		#endregion

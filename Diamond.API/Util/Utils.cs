@@ -213,6 +213,31 @@ namespace Diamond.API.Util
 				dictionary.Add(item.Key, item.Value);
 			}
 		}
+
+		public static void Merge<TKey>(this Dictionary<TKey, double> dictionary, Dictionary<TKey, double> otherDictionary)
+		{
+			foreach (KeyValuePair<TKey, double> kv in otherDictionary)
+			{
+				dictionary.Merge(kv.Key, kv.Value);
+			}
+		}
+
+		public static void Merge<TKey>(this Dictionary<TKey, double> dictionary, TKey key, double value)
+		{
+			if (!dictionary.ContainsKey(key))
+			{
+				dictionary.Add(key, value);
+			}
+
+			dictionary[key] += value;
+		}
+		#endregion
+
+		#region String
+		public static string OrDefault(this string @string, string @default)
+		{
+			return @string.IsEmpty() ? @default : @string;
+		}
 		#endregion
 	}
 
