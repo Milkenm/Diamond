@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.APIs.Pokemon;
 using Diamond.API.Util;
 using Diamond.Data;
-using Diamond.Data.Models.CsgoItems;
 using Diamond.Data.Models.Pokemons;
-using ScriptsLibV2.Extensions;
+
 using Discord;
 using Discord.Interactions;
-using Discord.WebSocket;
 
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using System.Globalization;
+using ScriptsLibV2.Extensions;
 
 namespace Diamond.API.SlashCommands.Pokemon
 {
@@ -46,45 +42,51 @@ namespace Diamond.API.SlashCommands.Pokemon
 
 		private async Task<MessageComponent> GetEmbedButtonsAsync(string pokemonName, string generationAbbreviation, PokemonEmbed embed, bool replaceEmojis, DiamondContext db, int movesStartingIndex = 0, int movesMaxIndex = 0)
 		{
-			DbPokemon pokemon =  PokemonAPIHelpers.SearchPokemon(pokemonName, generationAbbreviation, db)[0].Item;
+			Pokeporco poke = new Pokeporco(pokemonName, db);
+			DbPokemon dbPokemon = poke.GetFromGeneration(generationAbbreviation);
 
 			ComponentBuilder components = new ComponentBuilder();
 
 			// First row
-			_ = components.WithButton("Info", $"{BUTTON_POKEMON_VIEW_INFO}:{pokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("❤️"), disabled: embed == PokemonEmbed.Info);
-			_ = components.WithButton("Moves", $"{BUTTON_POKEMON_VIEW_MOVES}:{pokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("👊"), disabled: embed == PokemonEmbed.Moves);
-			_ = components.WithButton("Strategies", $"{BUTTON_POKEMON_VIEW_STRATS}:{pokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("🧠"), disabled: embed == PokemonEmbed.Strategies);
+			_ = components.WithButton("Info", $"{BUTTON_POKEMON_VIEW_INFO}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("❤️"), disabled: embed == PokemonEmbed.Info);
+			_ = components.WithButton("Moves", $"{BUTTON_POKEMON_VIEW_MOVES}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("👊"), disabled: embed == PokemonEmbed.Moves);
+			_ = components.WithButton("Strategies", $"{BUTTON_POKEMON_VIEW_STRATS}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("🧠"), disabled: embed == PokemonEmbed.Strategies);
 
-			if (!pokemon.IsNonstandard)
+			if (!dbPokemon.IsNonstandard)
 			{
-				_ = components.WithButton("View on Pokédex", style: ButtonStyle.Link, url: PokemonAPIHelpers.GetPokedexUrl((int)pokemon.DexNumber));
+				_ = components.WithButton("View on Pokédex", style: ButtonStyle.Link, url: poke.GetPokedexUrl());
 			}
-			_ = components.WithButton("View on Smogon", style: ButtonStyle.Link, url: PokemonAPIHelpers.GetSmogonPokemonUrl(pokemon.Name, generationAbbreviation));
+			_ = components.WithButton("View on Smogon", style: ButtonStyle.Link, url: poke.GetSmogonPokemonUrl(dbPokemon.GenerationAbbreviation));
 
 			// Second row
-			if (embed == PokemonEmbed.Info)
+			List<SelectMenuOptionBuilder> infoGenerationsList = new List<SelectMenuOptionBuilder>();
+			foreach (DbPokemonGeneration dbGeneration in dbPokemon.GenerationsList)
 			{
-				List<SelectMenuOptionBuilder> infoGenerationsList = new List<SelectMenuOptionBuilder>();
-				foreach (DbPokemonGeneration dbGeneration in pokemon.GenerationsList)
-				{
-					AddGeneration(infoGenerationsList, dbGeneration, dbGeneration.Abbreviation == generationAbbreviation);
-				}
-				_ = components.WithSelectMenu(SELECT_POKEMON_INFO_GENERATION, infoGenerationsList,row:1);
+				this.AddGeneration(infoGenerationsList, dbGeneration, dbGeneration.Abbreviation == generationAbbreviation);
 			}
+			string selectMenuId = embed switch
+			{
+				PokemonEmbed.Info => SELECT_POKEMON_INFO_GENERATION,
+				PokemonEmbed.Moves => SELECT_POKEMON_MOVES_GENERATION,
+				PokemonEmbed.Strategies => SELECT_POKEMON_STRATEGIES_GENERATION,
+				_ => throw new ArgumentOutOfRangeException(),
+			};
+			_ = components.WithSelectMenu($"{selectMenuId}:{pokemonName}:{replaceEmojis}", infoGenerationsList, row: 1);
+
 			if (embed == PokemonEmbed.Moves)
 			{
-				_ = components.WithButton("First page", $"{BUTTON_POKEMON_VIEW_MOVES_FIRST}:{pokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("⏮️"), disabled: movesStartingIndex == 0, row: 1);
-				_ = components.WithButton("Back", $"{BUTTON_POKEMON_VIEW_MOVES_BACK}:{pokemon.Name},{generationAbbreviation},{movesStartingIndex},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("◀️"), disabled: movesStartingIndex == 0, row: 1);
-				_ = components.WithButton("Next", $"{BUTTON_POKEMON_VIEW_MOVES_NEXT}:{pokemon.Name},{generationAbbreviation},{movesStartingIndex},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("▶️"), disabled: movesStartingIndex + MOVES_PER_PAGE >= movesMaxIndex, row: 1);
-				_ = components.WithButton("Last page", $"{BUTTON_POKEMON_VIEW_MOVES_LAST}:{pokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("⏭️"), disabled: movesStartingIndex + MOVES_PER_PAGE >= movesMaxIndex, row: 1);
+				_ = components.WithButton("First page", $"{BUTTON_POKEMON_VIEW_MOVES_FIRST}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("⏮️"), disabled: movesStartingIndex == 0, row: 1);
+				_ = components.WithButton("Back", $"{BUTTON_POKEMON_VIEW_MOVES_BACK}:{dbPokemon.Name},{generationAbbreviation},{movesStartingIndex},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("◀️"), disabled: movesStartingIndex == 0, row: 1);
+				_ = components.WithButton("Next", $"{BUTTON_POKEMON_VIEW_MOVES_NEXT}:{dbPokemon.Name},{generationAbbreviation},{movesStartingIndex},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("▶️"), disabled: movesStartingIndex + MOVES_PER_PAGE >= movesMaxIndex, row: 1);
+				_ = components.WithButton("Last page", $"{BUTTON_POKEMON_VIEW_MOVES_LAST}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("⏭️"), disabled: movesStartingIndex + MOVES_PER_PAGE >= movesMaxIndex, row: 1);
 			}
 
 			return components.Build();
 		}
 
-		private void AddGeneration(List<SelectMenuOptionBuilder> optionsList, DbPokemonGeneration dbGeneration ,bool isSelected)
+		private void AddGeneration(List<SelectMenuOptionBuilder> optionsList, DbPokemonGeneration dbGeneration, bool isSelected)
 		{
-			optionsList.Add(new SelectMenuOptionBuilder($"{dbGeneration.Name} ({dbGeneration.Abbreviation})", dbGeneration.Abbreviation, $"{(isSelected ? "Currently selected" : "")}"));
+			optionsList.Add(new SelectMenuOptionBuilder($"{dbGeneration.Name} ({dbGeneration.Abbreviation})", dbGeneration.Abbreviation, $"{(isSelected ? "Currently selected" : " ")}", isDefault: isSelected));
 		}
 
 		public class PokemonNameAutocompleter : AutocompleteHandler
@@ -93,7 +95,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 
 			public PokemonNameAutocompleter(PokemonAPI pokemonApi)
 			{
-				_pokemonApi = pokemonApi;
+				this._pokemonApi = pokemonApi;
 			}
 
 			public override async Task<AutocompletionResult> GenerateSuggestionsAsync(IInteractionContext context, IAutocompleteInteraction autocompleteInteraction, IParameterInfo parameter, IServiceProvider services)
@@ -102,7 +104,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 
 				if (!autocompleteInteraction.Data.Current.Value.ToString().IsEmpty())
 				{
-					List<SearchMatchInfo<DbPokemon>> searchResult = await _pokemonApi.SearchItemAsync(autocompleteInteraction.Data.Current.Value.ToString());
+					List<SearchMatchInfo<DbPokemon>> searchResult = await this._pokemonApi.SearchItemAsync(autocompleteInteraction.Data.Current.Value.ToString());
 
 					foreach (SearchMatchInfo<DbPokemon> pokemonSmi in searchResult.AsEnumerable().DistinctBy(smi => smi.Item.Name))
 					{
@@ -125,7 +127,9 @@ namespace Diamond.API.SlashCommands.Pokemon
 
 		public class PokemonGenerationAutocompleter : AutocompleteHandler
 		{
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 			public override async Task<AutocompletionResult> GenerateSuggestionsAsync(IInteractionContext context, IAutocompleteInteraction autocompleteInteraction, IParameterInfo parameter, IServiceProvider services)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
 			{
 				using DiamondContext db = new DiamondContext();
 
@@ -133,7 +137,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 
 				if (!autocompleteInteraction.Data.Current.Value.ToString().IsEmpty())
 				{
-					List<SearchMatchInfo<DbPokemonGeneration>> searchResult = Utils.Search(PokemonAPIHelpers.GetGenerationsMap(db), autocompleteInteraction.Data.Current.Value.ToString());
+					List<SearchMatchInfo<DbPokemonGeneration>> searchResult = Utils.Search(PokemonUtils.GetGenerationsMap(db), autocompleteInteraction.Data.Current.Value.ToString());
 
 					foreach (SearchMatchInfo<DbPokemonGeneration> smiGeneration in searchResult)
 					{

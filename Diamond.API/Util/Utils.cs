@@ -33,15 +33,18 @@ namespace Diamond.API.Util
 		public static List<SearchMatchInfo<T>> Search<T>(Dictionary<string, T> searchList, string searchCriteria)
 		{
 			List<SearchMatchInfo<T>> bestMatches = new List<SearchMatchInfo<T>>();
-			foreach ((string itemName, T value) in searchList)
+			// There is a random glitch where the collection is modified, so this should fix it for now:
+			foreach ((string itemName, T value) in new Dictionary<string, T>(searchList))
 			{
 				string formattedItemName = itemName.ToLower();
 
 				double matches = 0;
 				foreach (string word in formattedItemName.Split(" "))
 				{
-					if (formattedItemName.Replace(" ", "").Contains(word))
+					if (formattedItemName.Replace(" ", "").Replace("-", "").Contains(word))
+					{
 						matches++;
+					}
 				}
 				matches *= SUtils.CalculateLevenshteinSimilarity(searchCriteria, formattedItemName);
 				if (matches == 0) continue;

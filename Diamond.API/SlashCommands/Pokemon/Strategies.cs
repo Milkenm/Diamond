@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Diamond.API.APIs.Pokemon;
 using Diamond.API.Attributes;
 using Diamond.API.Helpers;
-using Diamond.Data;
+using Diamond.Data;using ScriptsLibV2.Extensions;
 using Diamond.Data.Models.Pokemons;
 
 using Discord;
@@ -24,7 +24,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 		{
 			await this.DeferAsync(!showEveryone);
 
-			await this.SendStratsGenerationSelectorEmbed(pokemonName, generationAbbreviation, replaceEmojis);
+			await this.SendStratsEmbed(pokemonName, generationAbbreviation, replaceEmojis);
 		}
 
 		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_STRATS}:*,*,*", true)]
@@ -32,49 +32,32 @@ namespace Diamond.API.SlashCommands.Pokemon
 		{
 			await this.DeferAsync();
 
-			await this.SendStratsGenerationSelectorEmbed(pokemonName, generationAbbreviation, replaceEmojis);
-		}
-
-		private async Task SendStratsGenerationSelectorEmbed(string pokemonName, string generationAbbreviation, bool replaceEmojis)
-		{
-			using DiamondContext db = new DiamondContext();
-
-			DefaultEmbed embed = new DefaultEmbed("Pokédex - Strategies", "🧠", this.Context)
-			{
-				Title = pokemonName,
-				Description = "Select a generation to get the strategies for.",
-			};
-
-			List<SelectMenuOptionBuilder> selectOptions = new List<SelectMenuOptionBuilder>();
-			foreach (DbPokemonGeneration gen in db.PokemonGenerations)
-			{
-				selectOptions.Add(new SelectMenuOptionBuilder(gen.Name, gen.Abbreviation));
-			}
-
-			ComponentBuilder components = new ComponentBuilder()
-				.WithSelectMenu($"{SELECT_POKEMON_STRATEGIES_GENERATION}:{pokemonName},{generationAbbreviation},{replaceEmojis}", selectOptions, row: 1);
-
-			_ = await embed.SendAsync(components.Build());
-		}
-
-		[ComponentInteraction($"{SELECT_POKEMON_STRATEGIES_GENERATION}:*,*,*", true)]
-		private async Task SelectStrategyGenerationHandlerAsync(string pokemonName, string generationAbbreviation, bool replaceEmojis)
-		{
-			await this.DeferAsync();
-
 			await this.SendStratsEmbed(pokemonName, generationAbbreviation, replaceEmojis);
 		}
 
-		private async Task SendStratsEmbed(string pokemonName, string generationAbbreviation, bool replaceEmojis)
+		[ComponentInteraction($"{SELECT_POKEMON_STRATEGIES_GENERATION}:*:*", true)]
+		public async Task SelectMenuStrategiesGenerationHandlerAsync(string pokemonName, bool replaceEmojis, string generationNumber)
+		{
+			await this.DeferAsync();
+
+			await this.SendStratsEmbed(pokemonName, generationNumber, replaceEmojis);
+		}
+
+		private async Task SendStratsEmbed(string pokemonName, string? generationAbbreviation, bool replaceEmojis)
 		{
 			using DiamondContext db = new DiamondContext();
+
+			if (generationAbbreviation.IsEmpty())
+			{
+				generationAbbreviation = PokemonAPI.POKEMON_DEFAULT_GENERATION;
+			}
 
 			DefaultEmbed embed = new DefaultEmbed("Pokédex - Strategies", "🧠", this.Context)
 			{
 				Title = pokemonName,
 			};
 
-			List<DbPokemonStrategy> strategiesList = await PokemonAPIHelpers.GetPokemonStrategies(pokemonName, generationAbbreviation, db);
+			List<DbPokemonStrategy> strategiesList = await PokemonUtils.GetPokemonStrategies(pokemonName, generationAbbreviation, db);
 
 			if (strategiesList.Count == 0)
 			{

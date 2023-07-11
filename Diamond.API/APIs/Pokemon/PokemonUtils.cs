@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 
 using Diamond.API.Schemes.Smogon;
-using Diamond.API.Util;
 using Diamond.Data;
 using Diamond.Data.Models.Pokemons;
 
@@ -15,44 +14,8 @@ using Newtonsoft.Json;
 
 namespace Diamond.API.APIs.Pokemon
 {
-	public class PokemonAPIHelpers
+	public class PokemonUtils
 	{
-		/// <summary>
-		/// {0}: Generation abbreviation
-		/// </summary>
-		public const string SMOGON_ENDPOINT = "https://www.smogon.com/dex/{0}/pokemon/";
-		/// <summary>
-		/// {0}: Generation Abbreviation
-		/// {1}: Pokémon name
-		/// </summary>
-		public const string SMOGON_POKEMON_GIFS_URL = "https://www.smogon.com/dex/media/sprites/{0}/{1}.gif";
-		/// <summary>
-		/// {0}: Dex number
-		/// </summary>
-		public const string POKEMON_IMAGES_URL = "https://assets.pokemon.com/assets/cms2/img/pokedex/full/{0}.png";
-		/// <summary>
-		/// {0}: Generation abbreviation
-		/// {1}: Pokémon name
-		/// </summary>
-		public const string SMOGON_POKEMON_URL = "https://www.smogon.com/dex/{0}/pokemon/{1}/";
-		/// <summary>
-		/// {0}: Dex number
-		/// </summary>
-		public const string POKEMON_POKEDEX_URL = "https://www.pokemon.com/us/pokedex/{0}";
-		/// <summary>
-		/// {0}: Generation abbreviation
-		/// </summary>
-		public const string SMOGON_GENERATION_URL = "https://www.smogon.com/dex/{0}/pokemon/";
-		/// <summary>
-		/// {0}: Generation abbreviation
-		/// {1}: Format abbreviation
-		/// </summary>
-		public const string SMOGON_FORMAT_URL = "https://www.smogon.com/dex/{0}/formats/{1}/";
-		/// <summary>
-		/// {0}: User ID
-		/// </summary>
-		public const string SMOGON_USER_PROFILE_URL = "https://www.smogon.com/forums/members/{0}/";
-
 		public readonly Dictionary<string, DbPokemon> _pokemonsMap = new Dictionary<string, DbPokemon>();
 
 		public static readonly Dictionary<PokemonType, string> _pokemonTypesEmojiMap = new Dictionary<PokemonType, string>()
@@ -283,17 +246,6 @@ namespace Diamond.API.APIs.Pokemon
 			return aditionalInfo;
 		}
 
-		public static async Task<List<DbPokemonMove>> GetPokemonMovesAsync(string pokemonName, string generationAbbreviation, DiamondContext db)
-		{
-			IQueryable<DbPokemonLearnset> moves = db.PokemonLearnsets.Where(ls => ls.Pokemon.Name == pokemonName);
-			if (!moves.Any())
-			{
-				await DownloadPokemonLearnsetAsync(pokemonName, generationAbbreviation, db);
-				return await GetPokemonMovesAsync(pokemonName, generationAbbreviation, db);
-			}
-			return moves.Select(ls => ls.Move).ToList();
-		}
-
 		public static async Task<List<DbPokemonStrategy>> GetPokemonStrategies(string pokemonName, string generationAbbreviation, DiamondContext db)
 		{
 			if (!DoesPokemonExist(db, pokemonName, out DbPokemon dbPokemon)) return new List<DbPokemonStrategy>();
@@ -317,6 +269,7 @@ namespace Diamond.API.APIs.Pokemon
 
 			foreach (DbPokemonAttackEffectiveness atkef in db.PokemonAttackEffectivenesses.Include(af => af.AttackerType).Where(af => af.TargetType == type && af.GenerationAbbreviation == type.GenerationAbbreviation))
 			{
+				// Normal attack
 				if (atkef.Value == 1) continue;
 
 				PokemonType attackerType = GetPokemonTypeByName(atkef.AttackerType.Name);
@@ -396,44 +349,24 @@ namespace Diamond.API.APIs.Pokemon
 				: (PokemonAttackType)Enum.Parse(typeof(PokemonAttackType), attackTypeString);
 		}
 
-		public static string GetPokemonGif(string pokemonName, string generationAbbreviation)
-		{
-			return string.Format(SMOGON_POKEMON_GIFS_URL, generationAbbreviation.ToLowerInvariant(), pokemonName.ToLowerInvariant().Replace(" ", "-"));
-		}
-
-		public static string GetPokemonImage(int dexNumber)
-		{
-			return string.Format(POKEMON_IMAGES_URL, dexNumber);
-		}
-
-		public static string GetSmogonPokemonUrl(string pokemonName, string generationAbbreviation)
-		{
-			return string.Format(SMOGON_POKEMON_URL, generationAbbreviation.ToLowerInvariant(), pokemonName.ToLowerInvariant().Replace(" ", "-"));
-		}
-
-		public static string GetPokedexUrl(int dexNumber)
-		{
-			return string.Format(POKEMON_POKEDEX_URL, dexNumber);
-		}
-
 		public static string GetGenerationUrl(string generationAbbreviation)
 		{
-			return string.Format(SMOGON_GENERATION_URL, generationAbbreviation);
+			return string.Format(PokemonAPI.SMOGON_GENERATION_URL, generationAbbreviation);
 		}
 
 		public static string GetFormatUrl(string formatAbbreviation, string generationAbbreviation)
 		{
-			return string.Format(SMOGON_FORMAT_URL, generationAbbreviation.ToLowerInvariant(), formatAbbreviation.ToLowerInvariant());
+			return string.Format(PokemonAPI.SMOGON_FORMAT_URL, generationAbbreviation.ToLowerInvariant(), formatAbbreviation.ToLowerInvariant());
 		}
 
 		public static string GetUserProfileUrl(long userId)
 		{
-			return string.Format(SMOGON_USER_PROFILE_URL, userId);
+			return string.Format(PokemonAPI.SMOGON_USER_PROFILE_URL, userId);
 		}
 
 		public static async Task<string> GetSmogonResponseJsonAsync(string pokemonName, string generationAbbreviation)
 		{
-			string url = pokemonName != null ? string.Format(string.Format(SMOGON_POKEMON_URL, generationAbbreviation.ToLowerInvariant(), pokemonName), pokemonName) : string.Format(SMOGON_ENDPOINT, generationAbbreviation.ToLowerInvariant());
+			string url = pokemonName != null ? string.Format(string.Format(PokemonAPI.SMOGON_POKEMON_URL, generationAbbreviation.ToLowerInvariant(), pokemonName), pokemonName) : string.Format(PokemonAPI.SMOGON_ENDPOINT, generationAbbreviation.ToLowerInvariant());
 			string response = await (await new HttpClient().GetAsync(url)).Content.ReadAsStringAsync();
 
 			string json = null;
@@ -493,27 +426,6 @@ namespace Diamond.API.APIs.Pokemon
 			}
 
 			return generationsMap;
-		}
-
-		public static List<SearchMatchInfo<DbPokemon>> SearchPokemon(string search, string? generationAbbreviation, DiamondContext db)
-		{
-			// Create map
-			Dictionary<string, DbPokemon> pokemonsMap = new Dictionary<string, DbPokemon>();
-
-			List<DbPokemon> pokemonsList = db.Pokemons.ToList();
-			if (generationAbbreviation != null)
-			{
-				_ = pokemonsList.RemoveAll(p => p.GenerationAbbreviation != generationAbbreviation);
-			}
-
-			foreach (DbPokemon dbPokemon in pokemonsList)
-			{
-				pokemonsMap.Add(dbPokemon.Name, dbPokemon);
-			}
-
-			// Search
-			List<SearchMatchInfo<DbPokemon>> searchResult = Utils.Search(pokemonsMap, search);
-			return searchResult;
 		}
 		#endregion
 	}

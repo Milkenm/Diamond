@@ -9,6 +9,8 @@ using Diamond.Data.Models.Pokemons;
 
 using Discord.Interactions;
 
+using ScriptsLibV2.Extensions;
+
 namespace Diamond.API.SlashCommands.Pokemon
 {
 	public partial class Pokemon
@@ -36,16 +38,31 @@ namespace Diamond.API.SlashCommands.Pokemon
 			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, 0, replaceEmojis);
 		}
 
-		private async Task SendMovesEmbedAsync(string pokemonName, string generationAbbreviation, int startingIndex, bool replaceEmojis)
+		[ComponentInteraction($"{SELECT_POKEMON_MOVES_GENERATION}:*:*", true)]
+		public async Task SelectMenuMovesGenerationHandlerAsync(string pokemonName, bool replaceEmojis, string generationAbbreviation)
+		{
+			await this.DeferAsync();
+
+			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, 0, replaceEmojis);
+		}
+
+		private async Task SendMovesEmbedAsync(string pokemonName, string? generationAbbreviation, int startingIndex, bool replaceEmojis)
 		{
 			using DiamondContext db = new DiamondContext();
+
+			Pokeporco poke = new Pokeporco(pokemonName, db);
+
+			if (generationAbbreviation.IsEmpty())
+			{
+				generationAbbreviation = PokemonAPI.POKEMON_DEFAULT_GENERATION;
+			}
 
 			DefaultEmbed embed = new DefaultEmbed("Pokédex - Moves", "👊", this.Context)
 			{
 				Title = pokemonName,
 			};
 
-			List<DbPokemonMove> movesList = await PokemonAPIHelpers.GetPokemonMovesAsync(pokemonName, generationAbbreviation, db);
+			List<DbPokemonMove> movesList = await poke.GetMovesAsync(generationAbbreviation);
 
 			// Go to last page (startingIndex = -1)
 			if (startingIndex == -1)
@@ -61,7 +78,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			for (int i = startingIndex; i < startingIndex + MOVES_PER_PAGE && i < movesList.Count; i++)
 			{
 				DbPokemonMove dbMove = movesList[i];
-				_ = embed.AddField($"{PokemonAPIHelpers.GetTypeEmoji(dbMove.Type)} {PokemonAPIHelpers.GetAttackTypeEmoji(dbMove.Category)} {dbMove.Name} (💥 {GetAttackStatString(dbMove.Power, Stat.Power)}   🎯 {GetAttackStatString(dbMove.Accuracy, Stat.Accuracy)}   ⚡ {GetAttackStatString(dbMove.PowerPoints, Stat.PowerPoints)})", dbMove.Description);
+				_ = embed.AddField($"{PokemonUtils.GetTypeEmoji(dbMove.Type)} {PokemonUtils.GetAttackTypeEmoji(dbMove.Category)} {dbMove.Name} (💥 {GetAttackStatString(dbMove.Power, Stat.Power)}   🎯 {GetAttackStatString(dbMove.Accuracy, Stat.Accuracy)}   ⚡ {GetAttackStatString(dbMove.PowerPoints, Stat.PowerPoints)})", dbMove.Description);
 			}
 
 			_ = await embed.SendAsync(await this.GetEmbedButtonsAsync(pokemonName, generationAbbreviation, PokemonEmbed.Moves, replaceEmojis, db, startingIndex, movesList.Count));

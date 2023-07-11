@@ -23,9 +23,9 @@ namespace Diamond.Data
 		public DbSet<DbPokemonType> PokemonTypes { get; set; }
 		#endregion
 
-		public DbPokemon? SelectFullPokemon(long id, DiamondContext db)
+		public DbPokemon? SelectFullPokemon(long id)
 		{
-			return db.Pokemons.Where(p => p.Id == id)
+			return this.Pokemons.Where(p => p.Id == id)
 				.Include(p => p.TypesList)
 				.Include(p => p.AbilitiesList)
 				.Include(p => p.EvolutionsList)
@@ -34,16 +34,16 @@ namespace Diamond.Data
 				.First();
 		}
 
-		public DbPokemon? SelectPokemon(string pokemonName, DbPokemonGeneration generation, DiamondContext db)
+		public DbPokemon? SelectPokemon(string pokemonName, DbPokemonGeneration generation)
 		{
-			return db.Pokemons.Where(p => p.Name == pokemonName && p.GenerationAbbreviation == generation.Abbreviation).FirstOrDefault();
+			return this.Pokemons.Where(p => p.Name == pokemonName && p.GenerationAbbreviation == generation.Abbreviation).FirstOrDefault();
 		}
 
 		public async Task<DbPokemon> CreatePokemonAsync(
 			string pokemonName, string generationAbbreviation, string isNonstandard,
 			int healthPoints, int attack, int defense, int specialAttack, int specialDefense, int speed, float weight, float height,
 			int? dexNumber,
-			DiamondContext db, bool save = true
+			bool save = true
 		)
 		{
 			DbPokemon newPokemon = new DbPokemon()
@@ -71,15 +71,15 @@ namespace Diamond.Data
 
 			if (save)
 			{
-				await db.SaveAsync();
+				await this.SaveAsync();
 			}
 
 			return newPokemon;
 		}
 
-		public DbPokemonGeneration? SelectGeneration(string generationAbbreviation, DiamondContext db)
+		public DbPokemonGeneration? SelectGeneration(string generationAbbreviation)
 		{
-			return db.PokemonGenerations.Where(g => g.Abbreviation == generationAbbreviation).FirstOrDefault();
+			return this.PokemonGenerations.Where(g => g.Abbreviation == generationAbbreviation).FirstOrDefault();
 		}
 	}
 }

@@ -36,20 +36,31 @@ namespace Diamond.API.SlashCommands.Pokemon
 			await this.SendInfoEmbedAsync(pokemonName, generationAbbreviation, replaceEmojis);
 		}
 
+		[ComponentInteraction($"{SELECT_POKEMON_INFO_GENERATION}:*:*", true)]
+		public async Task SelectMenuInfoGenerationHandlerAsync(string pokemonName, bool replaceEmojis, string generationAbbreviation)
+		{
+			await this.DeferAsync();
+
+			await this.SendInfoEmbedAsync(pokemonName, generationAbbreviation, replaceEmojis);
+		}
+
 		private async Task SendInfoEmbedAsync(string pokemonName, string? generationAbbreviation, bool replaceEmojis)
 		{
+			generationAbbreviation ??= PokemonAPI.POKEMON_DEFAULT_GENERATION;
+
 			using DiamondContext db = new DiamondContext();
 
-			DbPokemon dbPokemon = PokemonAPIHelpers.SearchPokemon(pokemonName, generationAbbreviation, db).First().Item;
+			Pokeporco poke = new Pokeporco(pokemonName,db);
+			DbPokemon dbPokemon = poke.GetFullFromGeneration(generationAbbreviation);
 
 			// Effectiveness
-			Dictionary<Effectiveness, string> attackEffectiveness = new TypeEffectiveness(dbPokemon.TypesList).ToString(replaceEmojis);
+			Dictionary<Effectiveness, string> attackEffectiveness = new PokemonTypeEffectiveness(dbPokemon.TypesList).ToString(replaceEmojis);
 
 			// Types
 			StringBuilder typesSb = new StringBuilder();
 			foreach (DbPokemonType dbType in dbPokemon.TypesList)
 			{
-				_ = typesSb.Append($"{PokemonAPIHelpers.GetTypeDisplay(dbType.Name, replaceEmojis)}", " ");
+				_ = typesSb.Append($"{PokemonUtils.GetTypeDisplay(dbType.Name, replaceEmojis)}", " ");
 			}
 
 			// Abilities
@@ -65,7 +76,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			foreach (DbPokemon evolution in dbPokemon.EvolutionsList)
 			{
 				evolutions++;
-				_ = evolutionsSb.Append($"[{evolution.Name}]({PokemonAPIHelpers.GetSmogonPokemonUrl(evolution.Name, generationAbbreviation)})", "\n");
+				_ = evolutionsSb.Append($"[{evolution.Name}]({new Pokeporco(evolution, db).GetSmogonPokemonUrl(evolution.GenerationAbbreviation)})", "\n");
 			}
 
 			DefaultEmbed embed = new DefaultEmbed("Pokédex - Info", "🖥️", this.Context)
@@ -80,14 +91,14 @@ namespace Diamond.API.SlashCommands.Pokemon
 			StringBuilder generationsSb = new StringBuilder();
 			foreach (DbPokemonGeneration generation in dbPokemon.GenerationsList)
 			{
-				_ = generationsSb.Append($"[{generation.Name}]({PokemonAPIHelpers.GetGenerationUrl(generation.Abbreviation)})", "\n");
+				_ = generationsSb.Append($"[{generation.Name}]({PokemonUtils.GetGenerationUrl(generation.Abbreviation)})", "\n");
 			}
 
 			// Formats
 			StringBuilder formatsSb = new StringBuilder();
 			foreach (DbPokemonFormat format in dbPokemon.FormatsList)
 			{
-				_ = formatsSb.Append($"[{format.Name}]({PokemonAPIHelpers.GetFormatUrl(format.Abbreviation, generationAbbreviation)})", "\n");
+				_ = formatsSb.Append($"[{format.Name}]({PokemonUtils.GetFormatUrl(format.Abbreviation, dbPokemon.GenerationAbbreviation)})", "\n");
 			}
 
 			// First row
@@ -105,7 +116,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			// Fourth row
 			_ = embed.AddField($"✨ **__{Utils.Plural("Abilit", "y", "ies", dbPokemon.AbilitiesList)}__**", abilitiesSb.ToString());
 
-			_ = await embed.SendAsync(await this.GetEmbedButtonsAsync(dbPokemon.Name, generationAbbreviation, PokemonEmbed.Info, replaceEmojis, db));
+			_ = await embed.SendAsync(await this.GetEmbedButtonsAsync(dbPokemon.Name, dbPokemon.GenerationAbbreviation, PokemonEmbed.Info, replaceEmojis, db));
 		}
 
 		private static string GetAttackStatString(int value, Stat stat)
@@ -120,17 +131,17 @@ namespace Diamond.API.SlashCommands.Pokemon
 				};
 		}
 
-		public class TypeEffectiveness
+		public class PokemonTypeEffectiveness
 		{
 			private readonly Dictionary<PokemonType, double> EffectivenessMap = new Dictionary<PokemonType, double>();
 
-			public TypeEffectiveness(List<DbPokemonType> attackerTypes)
+			public PokemonTypeEffectiveness(List<DbPokemonType> attackerTypes)
 			{
 				using DiamondContext db = new DiamondContext();
 
 				foreach (DbPokemonType type in attackerTypes)
 				{
-					this.EffectivenessMap.Merge(PokemonAPIHelpers.GetEffectivenessMapForType(type, db));
+					this.EffectivenessMap.Merge(PokemonUtils.GetEffectivenessMapForType(type, db));
 				}
 			}
 
@@ -146,26 +157,26 @@ namespace Diamond.API.SlashCommands.Pokemon
 					{
 						if (kv.Value == 2)
 						{
-							_ = weakToSb.Append($"{PokemonAPIHelpers.GetTypeDisplay(kv.Key, replaceEmojis)} (x2)", "\n");
+							_ = weakToSb.Append($"{PokemonUtils.GetTypeDisplay(kv.Key, replaceEmojis)} (x2)", "\n");
 						}
 						else if (kv.Value == 3)
 						{
-							_ = weakToSb.Append($"**{PokemonAPIHelpers.GetTypeDisplay(kv.Key, replaceEmojis)} (x4)**", "\n");
+							_ = weakToSb.Append($"**{PokemonUtils.GetTypeDisplay(kv.Key, replaceEmojis)} (x4)**", "\n");
 						}
 					}
 					else if (kv.Value == 0)
 					{
-						_ = immuneToSb.Append(PokemonAPIHelpers.GetTypeDisplay(kv.Key, replaceEmojis), "\n");
+						_ = immuneToSb.Append(PokemonUtils.GetTypeDisplay(kv.Key, replaceEmojis), "\n");
 					}
 					else if (kv.Value < 0)
 					{
 						if (kv.Value == -1)
 						{
-							_ = resistsToSb.Append($"{PokemonAPIHelpers.GetTypeDisplay(kv.Key, replaceEmojis)} (x0.5)", "\n");
+							_ = resistsToSb.Append($"{PokemonUtils.GetTypeDisplay(kv.Key, replaceEmojis)} (x0.5)", "\n");
 						}
 						else if (kv.Value == -2)
 						{
-							_ = resistsToSb.Append($"**{PokemonAPIHelpers.GetTypeDisplay(kv.Key, replaceEmojis)} (x0.25)**", "\n");
+							_ = resistsToSb.Append($"**{PokemonUtils.GetTypeDisplay(kv.Key, replaceEmojis)} (x0.25)**", "\n");
 						}
 					}
 				}
