@@ -4,11 +4,12 @@ using System.Threading.Tasks;
 using Diamond.API.APIs.Pokemon;
 using Diamond.API.Attributes;
 using Diamond.API.Helpers;
-using Diamond.Data;using ScriptsLibV2.Extensions;
+using Diamond.Data;
 using Diamond.Data.Models.Pokemons;
 
-using Discord;
 using Discord.Interactions;
+
+using ScriptsLibV2.Extensions;
 
 namespace Diamond.API.SlashCommands.Pokemon
 {
@@ -24,7 +25,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 		{
 			await this.DeferAsync(!showEveryone);
 
-			await this.SendStratsEmbed(pokemonName, generationAbbreviation, replaceEmojis);
+			await this.SendStratsEmbed(pokemonName, generationAbbreviation, replaceEmojis, showEveryone);
 		}
 
 		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_STRATS}:*,*,*", true)]
@@ -32,7 +33,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 		{
 			await this.DeferAsync();
 
-			await this.SendStratsEmbed(pokemonName, generationAbbreviation, replaceEmojis);
+			await this.SendStratsEmbed(pokemonName, generationAbbreviation, replaceEmojis, false);
 		}
 
 		[ComponentInteraction($"{SELECT_POKEMON_STRATEGIES_GENERATION}:*:*", true)]
@@ -40,10 +41,10 @@ namespace Diamond.API.SlashCommands.Pokemon
 		{
 			await this.DeferAsync();
 
-			await this.SendStratsEmbed(pokemonName, generationNumber, replaceEmojis);
+			await this.SendStratsEmbed(pokemonName, generationNumber, replaceEmojis, false);
 		}
 
-		private async Task SendStratsEmbed(string pokemonName, string? generationAbbreviation, bool replaceEmojis)
+		private async Task SendStratsEmbed(string pokemonName, string? generationAbbreviation, bool replaceEmojis, bool showEveryone)
 		{
 			using DiamondContext db = new DiamondContext();
 
@@ -62,12 +63,12 @@ namespace Diamond.API.SlashCommands.Pokemon
 			if (strategiesList.Count == 0)
 			{
 				embed.Description = "No strategies found for " + pokemonName;
-				_ = await embed.SendAsync(await this.GetEmbedButtonsAsync(pokemonName, generationAbbreviation, PokemonEmbed.Strategies, replaceEmojis, db));
+				_ = await embed.SendAsync(this.GetEmbedButtons(pokemonName, generationAbbreviation, PokemonEmbed.Strategies, replaceEmojis, showEveryone, db));
 				return;
 			}
 
 			embed.Description = strategiesList[0].Comments;
-			_ = await embed.SendAsync(await this.GetEmbedButtonsAsync(pokemonName, generationAbbreviation, PokemonEmbed.Strategies, replaceEmojis, db));
+			_ = await embed.SendAsync(this.GetEmbedButtons(pokemonName, generationAbbreviation, PokemonEmbed.Strategies, replaceEmojis, showEveryone, db));
 		}
 	}
 }

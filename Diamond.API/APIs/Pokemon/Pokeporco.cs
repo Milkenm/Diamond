@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 using Diamond.API.Util;
 using Diamond.Data;
 using Diamond.Data.Models.Pokemons;
 
+using Microsoft.EntityFrameworkCore;
+
 namespace Diamond.API.APIs.Pokemon
 {
 	public class Pokeporco
 	{
+		private readonly Dictionary<string, DbPokemon> _pokemonGenerationsMap = new Dictionary<string, DbPokemon>();
 
-		private readonly Dictionary<string, DbPokemon> PokemonGenerationsMap = new Dictionary<string, DbPokemon>();
 		public int DexNumber { get; private set; }
 		public string PokemonName { get; private set; }
 
@@ -97,14 +100,14 @@ namespace Diamond.API.APIs.Pokemon
 
 		private void CachePokemon(DbPokemon dbPokemon)
 		{
-			this.PokemonGenerationsMap.Add(dbPokemon.GenerationAbbreviation, dbPokemon);
+			this._pokemonGenerationsMap.Add(dbPokemon.GenerationAbbreviation, dbPokemon);
 		}
 
 		public DbPokemon GetFromGeneration(string generationAbbreviation)
 		{
-			if (this.PokemonGenerationsMap.ContainsKey(generationAbbreviation))
+			if (this._pokemonGenerationsMap.ContainsKey(generationAbbreviation))
 			{
-				return this.PokemonGenerationsMap[generationAbbreviation];
+				return this._pokemonGenerationsMap[generationAbbreviation];
 			}
 
 			IQueryable<DbPokemon> results = this._db.Pokemons.Where(p => p.Name == this.PokemonName && p.GenerationAbbreviation == generationAbbreviation);
@@ -112,7 +115,7 @@ namespace Diamond.API.APIs.Pokemon
 			if (!results.Any()) return null;
 
 			DbPokemon found = results.First();
-			this.PokemonGenerationsMap.Add(generationAbbreviation, found);
+			this._pokemonGenerationsMap.Add(generationAbbreviation, found);
 			return found;
 		}
 
@@ -170,6 +173,11 @@ namespace Diamond.API.APIs.Pokemon
 			}
 			return strategies.ToList();
 		}
+
+		public PokemonTypeEffectiveness GetPokemonTypeEffectiveness(string generationAbbreviation)
+		{
+			return new PokemonTypeEffectiveness(this.GetFromGeneration(generationAbbreviation).TypesList, this._db);
+		}
 	}
 
 	public class PokemonNotFoundException : Exception
@@ -185,5 +193,76 @@ namespace Diamond.API.APIs.Pokemon
 				  $"A pokémon named '{pokemonName}' could not be found."
 			)
 		{ }
+	}
+
+	public class PokemonTypeEffectiveness
+	{
+		private readonly DiamondContext _db;
+
+		private readonly Dictionary<PokemonType, double> EffectivenessMap = new Dictionary<PokemonType, double>();
+
+		public PokemonTypeEffectiveness(List<DbPokemonType> pokemonTypes, DiamondContext db)
+		{
+			this._db = db;
+
+			foreach (DbPokemonType type in pokemonTypes)
+			{
+				this.EffectivenessMap.Merge(this.GetEffectivenessMapForType(type), DictionaryMergeOperation.Multiply);
+			}
+		}
+
+		private Dictionary<PokemonType, double> GetEffectivenessMapForType(DbPokemonType type)
+		{
+			Dictionary<PokemonType, double> effectivenessMap = new Dictionary<PokemonType, double>();
+
+			foreach (DbPokemonAttackEffectiveness atkef in this._db.PokemonAttackEffectivenesses.Include(af => af.AttackerType).Where(af => af.TargetType == type && af.GenerationAbbreviation == type.GenerationAbbreviation))
+			{
+				Debug.WriteLine($"{type.Name} « {atkef.AttackerType.Name}: {atkef.Value}");
+
+				PokemonType attackerType = PokemonUtils.GetPokemonTypeByName(atkef.AttackerType.Name);
+
+				effectivenessMap.Merge(attackerType, atkef.Value == 0 ? -1 : atkef.Value, DictionaryMergeOperation.Sum);
+			}
+
+			return effectivenessMap;
+		}
+
+		public Dictionary<Effectiveness, string> ToString(bool replaceEmojis)
+		{
+			StringBuilder weakToSb = new StringBuilder();
+			StringBuilder resistsToSb = new StringBuilder();
+			StringBuilder immuneToSb = new StringBuilder();
+
+			foreach (KeyValuePair<PokemonType, double> kv in this.EffectivenessMap.OrderBy(kv => kv.Value))
+			{
+				Debug.WriteLine($"kv.value: {kv.Value} ({kv.Key})");
+				switch (kv.Value)
+				{
+					// Immune
+					case -1 or -2: _ = immuneToSb.Append(PokemonUtils.GetTypeDisplay(kv.Key, replaceEmojis), "\n"); break;
+					// Resists
+					case 0.25: _ = resistsToSb.Append($"**{PokemonUtils.GetTypeDisplay(kv.Key, replaceEmojis)} (x0.25)**", "\n"); break;
+					case 0.5: _ = resistsToSb.Append($"{PokemonUtils.GetTypeDisplay(kv.Key, replaceEmojis)} (x0.5)", "\n"); break;
+					// Weak
+					case 2: _ = weakToSb.Append($"{PokemonUtils.GetTypeDisplay(kv.Key, replaceEmojis)} (x2)", "\n"); break;
+					case 4: _ = weakToSb.Append($"**{PokemonUtils.GetTypeDisplay(kv.Key, replaceEmojis)} (x4)**", "\n"); break;
+				}
+			}
+
+			return new Dictionary<Effectiveness, string>()
+				{
+					{ Effectiveness.Weak, weakToSb.ToString() },
+					{ Effectiveness.Resists, resistsToSb.ToString() },
+					{ Effectiveness.Immune, immuneToSb.ToString() },
+				};
+		}
+	}
+
+	public enum Effectiveness
+	{
+		Weak,
+		Immune,
+		Resists,
+		Normal,
 	}
 }

@@ -27,6 +27,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 		private const string BUTTON_POKEMON_VIEW_MOVES_NEXT = $"{BUTTON_POKEMON_BASE}_next";
 		private const string BUTTON_POKEMON_VIEW_MOVES_LAST = $"{BUTTON_POKEMON_BASE}_last";
 		private const string BUTTON_POKEMON_LOAD_STRATEGIES = $"{BUTTON_POKEMON_BASE}_strats_load";
+		private const string BUTTON_POKEMON_SHARE = $"{BUTTON_POKEMON_BASE}_share";
 
 		private const string SELECT_POKEMON_BASE = "select_pokemon";
 		private const string SELECT_POKEMON_INFO_GENERATION = $"{SELECT_POKEMON_BASE}_info_generation";
@@ -40,45 +41,55 @@ namespace Diamond.API.SlashCommands.Pokemon
 			this._pokemonApi = pokemonApi;
 		}
 
-		private async Task<MessageComponent> GetEmbedButtonsAsync(string pokemonName, string generationAbbreviation, PokemonEmbed embed, bool replaceEmojis, DiamondContext db, int movesStartingIndex = 0, int movesMaxIndex = 0)
+		private MessageComponent GetEmbedButtons(string pokemonName, string generationAbbreviation, PokemonEmbed embed, bool replaceEmojis, bool showEveryone, DiamondContext db, int movesStartingIndex = 0, int movesMaxIndex = 0)
 		{
 			Pokeporco poke = new Pokeporco(pokemonName, db);
-			DbPokemon dbPokemon = poke.GetFromGeneration(generationAbbreviation);
+			DbPokemon dbPokemon = poke.GetFullFromGeneration(generationAbbreviation);
 
 			ComponentBuilder components = new ComponentBuilder();
 
 			// First row
-			_ = components.WithButton("Info", $"{BUTTON_POKEMON_VIEW_INFO}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("❤️"), disabled: embed == PokemonEmbed.Info);
-			_ = components.WithButton("Moves", $"{BUTTON_POKEMON_VIEW_MOVES}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("👊"), disabled: embed == PokemonEmbed.Moves);
-			_ = components.WithButton("Strategies", $"{BUTTON_POKEMON_VIEW_STRATS}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("🧠"), disabled: embed == PokemonEmbed.Strategies);
+			if (!showEveryone)
+			{
+				_ = components.WithButton("Info", $"{BUTTON_POKEMON_VIEW_INFO}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("❤️"), disabled: embed == PokemonEmbed.Info);
+				_ = components.WithButton("Moves", $"{BUTTON_POKEMON_VIEW_MOVES}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("👊"), disabled: embed == PokemonEmbed.Moves);
+				_ = components.WithButton("Strategies", $"{BUTTON_POKEMON_VIEW_STRATS}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("🧠"), disabled: embed == PokemonEmbed.Strategies);
+			}
 
-			if (!dbPokemon.IsNonstandard)
+			if (!dbPokemon.IsNonstandard || dbPokemon.DexNumber > 0)
 			{
 				_ = components.WithButton("View on Pokédex", style: ButtonStyle.Link, url: poke.GetPokedexUrl());
 			}
 			_ = components.WithButton("View on Smogon", style: ButtonStyle.Link, url: poke.GetSmogonPokemonUrl(dbPokemon.GenerationAbbreviation));
-
-			// Second row
-			List<SelectMenuOptionBuilder> infoGenerationsList = new List<SelectMenuOptionBuilder>();
-			foreach (DbPokemonGeneration dbGeneration in dbPokemon.GenerationsList)
+			if (!showEveryone)
 			{
-				this.AddGeneration(infoGenerationsList, dbGeneration, dbGeneration.Abbreviation == generationAbbreviation);
+				_ = components.WithButton("Share", $"{BUTTON_POKEMON_SHARE}:{dbPokemon.Name},{dbPokemon.GenerationAbbreviation}", style: ButtonStyle.Secondary, emote: Emoji.Parse("📲"));
 			}
-			string selectMenuId = embed switch
-			{
-				PokemonEmbed.Info => SELECT_POKEMON_INFO_GENERATION,
-				PokemonEmbed.Moves => SELECT_POKEMON_MOVES_GENERATION,
-				PokemonEmbed.Strategies => SELECT_POKEMON_STRATEGIES_GENERATION,
-				_ => throw new ArgumentOutOfRangeException(),
-			};
-			_ = components.WithSelectMenu($"{selectMenuId}:{pokemonName}:{replaceEmojis}", infoGenerationsList, row: 1);
 
-			if (embed == PokemonEmbed.Moves)
+			if (!showEveryone)
 			{
-				_ = components.WithButton("First page", $"{BUTTON_POKEMON_VIEW_MOVES_FIRST}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("⏮️"), disabled: movesStartingIndex == 0, row: 1);
-				_ = components.WithButton("Back", $"{BUTTON_POKEMON_VIEW_MOVES_BACK}:{dbPokemon.Name},{generationAbbreviation},{movesStartingIndex},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("◀️"), disabled: movesStartingIndex == 0, row: 1);
-				_ = components.WithButton("Next", $"{BUTTON_POKEMON_VIEW_MOVES_NEXT}:{dbPokemon.Name},{generationAbbreviation},{movesStartingIndex},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("▶️"), disabled: movesStartingIndex + MOVES_PER_PAGE >= movesMaxIndex, row: 1);
-				_ = components.WithButton("Last page", $"{BUTTON_POKEMON_VIEW_MOVES_LAST}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("⏭️"), disabled: movesStartingIndex + MOVES_PER_PAGE >= movesMaxIndex, row: 1);
+				// Second row
+				List<SelectMenuOptionBuilder> infoGenerationsList = new List<SelectMenuOptionBuilder>();
+				foreach (DbPokemonGeneration dbGeneration in dbPokemon.GenerationsList)
+				{
+					this.AddGeneration(infoGenerationsList, dbGeneration, dbGeneration.Abbreviation == generationAbbreviation);
+				}
+				string selectMenuId = embed switch
+				{
+					PokemonEmbed.Info => SELECT_POKEMON_INFO_GENERATION,
+					PokemonEmbed.Moves => SELECT_POKEMON_MOVES_GENERATION,
+					PokemonEmbed.Strategies => SELECT_POKEMON_STRATEGIES_GENERATION,
+					_ => throw new ArgumentOutOfRangeException(),
+				};
+				_ = components.WithSelectMenu($"{selectMenuId}:{pokemonName},{replaceEmojis}", infoGenerationsList, row: 1);
+
+				if (embed == PokemonEmbed.Moves)
+				{
+					_ = components.WithButton("First page", $"{BUTTON_POKEMON_VIEW_MOVES_FIRST}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("⏮️"), disabled: movesStartingIndex == 0, row: 1);
+					_ = components.WithButton("Back", $"{BUTTON_POKEMON_VIEW_MOVES_BACK}:{dbPokemon.Name},{generationAbbreviation},{movesStartingIndex},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("◀️"), disabled: movesStartingIndex == 0, row: 1);
+					_ = components.WithButton("Next", $"{BUTTON_POKEMON_VIEW_MOVES_NEXT}:{dbPokemon.Name},{generationAbbreviation},{movesStartingIndex},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("▶️"), disabled: movesStartingIndex + MOVES_PER_PAGE >= movesMaxIndex, row: 1);
+					_ = components.WithButton("Last page", $"{BUTTON_POKEMON_VIEW_MOVES_LAST}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("⏭️"), disabled: movesStartingIndex + MOVES_PER_PAGE >= movesMaxIndex, row: 1);
+				}
 			}
 
 			return components.Build();

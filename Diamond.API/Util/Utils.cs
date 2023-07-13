@@ -217,22 +217,34 @@ namespace Diamond.API.Util
 			}
 		}
 
-		public static void Merge<TKey>(this Dictionary<TKey, double> dictionary, Dictionary<TKey, double> otherDictionary)
-		{
-			foreach (KeyValuePair<TKey, double> kv in otherDictionary)
-			{
-				dictionary.Merge(kv.Key, kv.Value);
-			}
-		}
-
-		public static void Merge<TKey>(this Dictionary<TKey, double> dictionary, TKey key, double value)
+		public static void Merge<TKey>(this Dictionary<TKey, double> dictionary, TKey key, double value, DictionaryMergeOperation operation)
 		{
 			if (!dictionary.ContainsKey(key))
 			{
 				dictionary.Add(key, value);
+				return;
 			}
 
-			dictionary[key] += value;
+			_ = operation switch
+			{
+				DictionaryMergeOperation.Sum => dictionary[key] += value,
+				DictionaryMergeOperation.Subtract => dictionary[key] -= value,
+				DictionaryMergeOperation.Multiply => dictionary[key] *= value,
+				DictionaryMergeOperation.Divide => dictionary[key] /= value,
+			};
+		}
+
+		public static void Merge<TKey>(this Dictionary<TKey, double> dictionary, KeyValuePair<TKey, double> kv, DictionaryMergeOperation operation)
+		{
+			Merge(dictionary, kv.Key, kv.Value, operation);
+		}
+
+		public static void Merge<TKey>(this Dictionary<TKey, double> dictionary, Dictionary<TKey, double> otherDictionary, DictionaryMergeOperation operation)
+		{
+			foreach (KeyValuePair<TKey, double> kv in otherDictionary)
+			{
+				Merge(dictionary, kv, operation);
+			}
 		}
 		#endregion
 
@@ -254,5 +266,13 @@ namespace Diamond.API.Util
 			this.Item = item;
 			this.Match = match;
 		}
+	}
+
+	public enum DictionaryMergeOperation
+	{
+		Sum,
+		Subtract,
+		Multiply,
+		Divide,
 	}
 }

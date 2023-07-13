@@ -27,7 +27,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 		{
 			await this.DeferAsync(!showEveryone);
 
-			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, 0, replaceEmojis);
+			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, 0, replaceEmojis, showEveryone);
 		}
 
 		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_MOVES}:*,*,*", true)]
@@ -35,7 +35,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 		{
 			await this.DeferAsync();
 
-			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, 0, replaceEmojis);
+			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, 0, replaceEmojis, false);
 		}
 
 		[ComponentInteraction($"{SELECT_POKEMON_MOVES_GENERATION}:*:*", true)]
@@ -43,10 +43,10 @@ namespace Diamond.API.SlashCommands.Pokemon
 		{
 			await this.DeferAsync();
 
-			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, 0, replaceEmojis);
+			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, 0, replaceEmojis, false);
 		}
 
-		private async Task SendMovesEmbedAsync(string pokemonName, string? generationAbbreviation, int startingIndex, bool replaceEmojis)
+		private async Task SendMovesEmbedAsync(string pokemonName, string? generationAbbreviation, int startingIndex, bool replaceEmojis, bool showEveryone)
 		{
 			using DiamondContext db = new DiamondContext();
 
@@ -81,7 +81,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 				_ = embed.AddField($"{PokemonUtils.GetTypeEmoji(dbMove.Type)} {PokemonUtils.GetAttackTypeEmoji(dbMove.Category)} {dbMove.Name} (💥 {GetAttackStatString(dbMove.Power, Stat.Power)}   🎯 {GetAttackStatString(dbMove.Accuracy, Stat.Accuracy)}   ⚡ {GetAttackStatString(dbMove.PowerPoints, Stat.PowerPoints)})", dbMove.Description);
 			}
 
-			_ = await embed.SendAsync(await this.GetEmbedButtonsAsync(pokemonName, generationAbbreviation, PokemonEmbed.Moves, replaceEmojis, db, startingIndex, movesList.Count));
+			_ = await embed.SendAsync(this.GetEmbedButtons(pokemonName, generationAbbreviation, PokemonEmbed.Moves, replaceEmojis, showEveryone, db, startingIndex, movesList.Count));
 		}
 
 		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_MOVES_FIRST}:*,*,*", true)]
@@ -89,7 +89,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 		{
 			await this.DeferAsync();
 
-			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, 0, replaceEmojis);
+			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, 0, replaceEmojis, false);
 		}
 
 		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_MOVES_BACK}:*,*,*,*", true)]
@@ -97,7 +97,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 		{
 			await this.DeferAsync();
 
-			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, startingIndex - MOVES_PER_PAGE, replaceEmojis);
+			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, startingIndex - MOVES_PER_PAGE, replaceEmojis, false);
 		}
 
 		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_MOVES_NEXT}:*,*,*,*", true)]
@@ -105,7 +105,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 		{
 			await this.DeferAsync();
 
-			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, startingIndex + MOVES_PER_PAGE, replaceEmojis);
+			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, startingIndex + MOVES_PER_PAGE, replaceEmojis, false);
 		}
 
 		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_MOVES_LAST}:*,*,*", true)]
@@ -113,7 +113,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 		{
 			await this.DeferAsync();
 
-			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, -1, replaceEmojis);
+			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, -1, replaceEmojis, false);
 		}
 	}
 }

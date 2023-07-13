@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 using Diamond.API.Schemes.Smogon;
+using Diamond.API.Util;
 using Diamond.Data;
 using Diamond.Data.Models.Pokemons;
 
@@ -261,43 +263,6 @@ namespace Diamond.API.APIs.Pokemon
 				return !hasStrategies ? new List<DbPokemonStrategy>() : await GetPokemonStrategies(pokemonName, generationAbbreviation, db);
 			}
 			return strategies.ToList();
-		}
-
-		public static Dictionary<PokemonType, double> GetEffectivenessMapForType(DbPokemonType type, DiamondContext db)
-		{
-			Dictionary<PokemonType, double> effectivenessMap = new Dictionary<PokemonType, double>();
-
-			foreach (DbPokemonAttackEffectiveness atkef in db.PokemonAttackEffectivenesses.Include(af => af.AttackerType).Where(af => af.TargetType == type && af.GenerationAbbreviation == type.GenerationAbbreviation))
-			{
-				// Normal attack
-				if (atkef.Value == 1) continue;
-
-				PokemonType attackerType = GetPokemonTypeByName(atkef.AttackerType.Name);
-				if (effectivenessMap.ContainsKey(attackerType))
-				{
-					if (atkef.Value == 0.5)
-					{
-						effectivenessMap[attackerType] -= 1;
-					}
-					else
-					{
-						effectivenessMap[attackerType] += atkef.Value;
-					}
-				}
-				else
-				{
-					if (atkef.Value == 0.5)
-					{
-						effectivenessMap.Add(attackerType, -1);
-					}
-					else
-					{
-						effectivenessMap.Add(attackerType, atkef.Value);
-					}
-				}
-			}
-
-			return effectivenessMap;
 		}
 
 		public static List<DbPokemonGeneration> GetGenerationsFromList(List<string> generationsList, DiamondContext db)
