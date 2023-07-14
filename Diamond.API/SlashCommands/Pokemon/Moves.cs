@@ -45,7 +45,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, movesStartIndex, replaceEmojis, true);
 		}
 
-		[ComponentInteraction($"{SELECT_POKEMON_MOVES_GENERATION}:*:*", true)]
+		[ComponentInteraction($"{SELECT_POKEMON_MOVES_GENERATION}:*,*", true)]
 		public async Task SelectMenuMovesGenerationHandlerAsync(string pokemonName, bool replaceEmojis, string generationAbbreviation)
 		{
 			await this.DeferAsync();
