@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiamondGUI", "DiamondWpfCore\DiamondGUI.csproj", "{976DE436-2239-4F4D-9F7B-AD28D71C2341}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond.GUI", "Diamond.GUI\Diamond.GUI.csproj", "{976DE436-2239-4F4D-9F7B-AD28D71C2341}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiamondAPI", "DiamondBrainz\DiamondAPI.csproj", "{A0CFF49E-5214-4078-80BC-12B2C0C72947}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScriptsLibV2", "..\ScriptsLib\ScriptsLibV2\ScriptsLibV2.csproj", "{B9D38E54-747E-4D2C-A2B2-85158E9CC07B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond.API", "Diamond.API\Diamond.API.csproj", "{A0CFF49E-5214-4078-80BC-12B2C0C72947}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lavalink", "Lavalink", "{52AC0583-4684-4A29-AD11-F917E57EDF48}"
 	ProjectSection(SolutionItems) = preProject
@@ -15,6 +13,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lavalink", "Lavalink", "{52
 		Lavalink\Lavalink.jar = Lavalink\Lavalink.jar
 		Lavalink\run.bat = Lavalink\run.bat
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond.Data", "Diamond.Data\Diamond.Data.csproj", "{C9DD9E04-CCF6-4C8B-936B-ABF84CD45313}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScriptsLibV2", "ScriptsLib\ScriptsLibV2\ScriptsLibV2.csproj", "{14D49CD3-5679-4C61-BE9B-37FA2F9B8F06}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,10 +32,14 @@ Global
 		{A0CFF49E-5214-4078-80BC-12B2C0C72947}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0CFF49E-5214-4078-80BC-12B2C0C72947}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0CFF49E-5214-4078-80BC-12B2C0C72947}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B9D38E54-747E-4D2C-A2B2-85158E9CC07B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B9D38E54-747E-4D2C-A2B2-85158E9CC07B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B9D38E54-747E-4D2C-A2B2-85158E9CC07B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B9D38E54-747E-4D2C-A2B2-85158E9CC07B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9DD9E04-CCF6-4C8B-936B-ABF84CD45313}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9DD9E04-CCF6-4C8B-936B-ABF84CD45313}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9DD9E04-CCF6-4C8B-936B-ABF84CD45313}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9DD9E04-CCF6-4C8B-936B-ABF84CD45313}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14D49CD3-5679-4C61-BE9B-37FA2F9B8F06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14D49CD3-5679-4C61-BE9B-37FA2F9B8F06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14D49CD3-5679-4C61-BE9B-37FA2F9B8F06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14D49CD3-5679-4C61-BE9B-37FA2F9B8F06}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
