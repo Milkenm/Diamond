@@ -87,12 +87,48 @@ namespace Diamond.Data.Migrations
                     Accuracy = table.Column<int>(type: "int", nullable: false),
                     Priority = table.Column<int>(type: "int", nullable: false),
                     PowerPoints = table.Column<int>(type: "int", nullable: false),
-                    GenerationsList = table.Column<string>(type: "longtext", nullable: false)
+                    GenerationAbbreviation = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PokemonAbilities", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "PokemonFormats",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Abbreviation = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    GenerationAbbreviation = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PokemonFormats", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "PokemonGenerations",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Abbreviation = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PokemonGenerations", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -113,11 +149,33 @@ namespace Diamond.Data.Migrations
                     Speed = table.Column<int>(type: "int", nullable: false),
                     Weight = table.Column<float>(type: "float", nullable: false),
                     Height = table.Column<float>(type: "float", nullable: false),
-                    DexNumber = table.Column<int>(type: "int", nullable: true)
+                    DexNumber = table.Column<int>(type: "int", nullable: true),
+                    HasStrategies = table.Column<bool>(type: "tinyint(1)", nullable: true),
+                    GenerationAbbreviation = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Pokemons", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "PokemonTypes",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Description = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    GenerationAbbreviation = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PokemonTypes", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -194,6 +252,56 @@ namespace Diamond.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "DbPokemonFormatDbPokemonGeneration",
+                columns: table => new
+                {
+                    FormatsWithGenerationListId = table.Column<long>(type: "bigint", nullable: false),
+                    GenerationsListId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DbPokemonFormatDbPokemonGeneration", x => new { x.FormatsWithGenerationListId, x.GenerationsListId });
+                    table.ForeignKey(
+                        name: "FK_DbPokemonFormatDbPokemonGeneration_PokemonFormats_FormatsWit~",
+                        column: x => x.FormatsWithGenerationListId,
+                        principalTable: "PokemonFormats",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DbPokemonFormatDbPokemonGeneration_PokemonGenerations_Genera~",
+                        column: x => x.GenerationsListId,
+                        principalTable: "PokemonGenerations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "DbPokemonGenerationDbPokemonMove",
+                columns: table => new
+                {
+                    GenerationsListId = table.Column<long>(type: "bigint", nullable: false),
+                    MovesWithGenerationListId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DbPokemonGenerationDbPokemonMove", x => new { x.GenerationsListId, x.MovesWithGenerationListId });
+                    table.ForeignKey(
+                        name: "FK_DbPokemonGenerationDbPokemonMove_PokemonAbilities_MovesWithG~",
+                        column: x => x.MovesWithGenerationListId,
+                        principalTable: "PokemonAbilities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DbPokemonGenerationDbPokemonMove_PokemonGenerations_Generati~",
+                        column: x => x.GenerationsListId,
+                        principalTable: "PokemonGenerations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "DbPokemonDbPokemon",
                 columns: table => new
                 {
@@ -219,50 +327,52 @@ namespace Diamond.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "PokemonFormats",
+                name: "DbPokemonDbPokemonFormat",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Abbreviation = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    GenerationsList = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    DbPokemonId = table.Column<long>(type: "bigint", nullable: true)
+                    FormatsListId = table.Column<long>(type: "bigint", nullable: false),
+                    PokemonsWithFormatListId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PokemonFormats", x => x.Id);
+                    table.PrimaryKey("PK_DbPokemonDbPokemonFormat", x => new { x.FormatsListId, x.PokemonsWithFormatListId });
                     table.ForeignKey(
-                        name: "FK_PokemonFormats_Pokemons_DbPokemonId",
-                        column: x => x.DbPokemonId,
+                        name: "FK_DbPokemonDbPokemonFormat_PokemonFormats_FormatsListId",
+                        column: x => x.FormatsListId,
+                        principalTable: "PokemonFormats",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DbPokemonDbPokemonFormat_Pokemons_PokemonsWithFormatListId",
+                        column: x => x.PokemonsWithFormatListId,
                         principalTable: "Pokemons",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "PokemonGenerations",
+                name: "DbPokemonDbPokemonGeneration",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Abbreviation = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    DbPokemonId = table.Column<long>(type: "bigint", nullable: true)
+                    GenerationsListId = table.Column<long>(type: "bigint", nullable: false),
+                    PokemonsWithGenerationListId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PokemonGenerations", x => x.Id);
+                    table.PrimaryKey("PK_DbPokemonDbPokemonGeneration", x => new { x.GenerationsListId, x.PokemonsWithGenerationListId });
                     table.ForeignKey(
-                        name: "FK_PokemonGenerations_Pokemons_DbPokemonId",
-                        column: x => x.DbPokemonId,
+                        name: "FK_DbPokemonDbPokemonGeneration_PokemonGenerations_GenerationsL~",
+                        column: x => x.GenerationsListId,
+                        principalTable: "PokemonGenerations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DbPokemonDbPokemonGeneration_Pokemons_PokemonsWithGeneration~",
+                        column: x => x.PokemonsWithGenerationListId,
                         principalTable: "Pokemons",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -273,7 +383,9 @@ namespace Diamond.Data.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     PokemonId = table.Column<long>(type: "bigint", nullable: false),
-                    MoveId = table.Column<long>(type: "bigint", nullable: false)
+                    MoveId = table.Column<long>(type: "bigint", nullable: false),
+                    GenerationAbbreviation = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -294,27 +406,123 @@ namespace Diamond.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "PokemonTypes",
+                name: "PokemonStrategies",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: false)
+                    FormatId = table.Column<long>(type: "bigint", nullable: true),
+                    Outdated = table.Column<bool>(type: "tinyint(1)", nullable: true),
+                    PokemonId = table.Column<long>(type: "bigint", nullable: false),
+                    Overview = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Description = table.Column<string>(type: "longtext", nullable: false)
+                    Comments = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    GenerationsList = table.Column<string>(type: "longtext", nullable: false)
+                    MovesetName = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    DbPokemonId = table.Column<long>(type: "bigint", nullable: true)
+                    Gender = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    EVsHealth = table.Column<int>(type: "int", nullable: true),
+                    EVsAttack = table.Column<int>(type: "int", nullable: true),
+                    EVsDefense = table.Column<int>(type: "int", nullable: true),
+                    EVsSpecialAttack = table.Column<int>(type: "int", nullable: true),
+                    EVsSpecialDefense = table.Column<int>(type: "int", nullable: true),
+                    EVsSpeed = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PokemonTypes", x => x.Id);
+                    table.PrimaryKey("PK_PokemonStrategies", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PokemonTypes_Pokemons_DbPokemonId",
-                        column: x => x.DbPokemonId,
-                        principalTable: "Pokemons",
+                        name: "FK_PokemonStrategies_PokemonFormats_FormatId",
+                        column: x => x.FormatId,
+                        principalTable: "PokemonFormats",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_PokemonStrategies_Pokemons_PokemonId",
+                        column: x => x.PokemonId,
+                        principalTable: "Pokemons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "DbPokemonDbPokemonType",
+                columns: table => new
+                {
+                    PokemonsWithTypeListId = table.Column<long>(type: "bigint", nullable: false),
+                    TypesListId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DbPokemonDbPokemonType", x => new { x.PokemonsWithTypeListId, x.TypesListId });
+                    table.ForeignKey(
+                        name: "FK_DbPokemonDbPokemonType_PokemonTypes_TypesListId",
+                        column: x => x.TypesListId,
+                        principalTable: "PokemonTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DbPokemonDbPokemonType_Pokemons_PokemonsWithTypeListId",
+                        column: x => x.PokemonsWithTypeListId,
+                        principalTable: "Pokemons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "DbPokemonGenerationDbPokemonType",
+                columns: table => new
+                {
+                    GenerationsListId = table.Column<long>(type: "bigint", nullable: false),
+                    TypesWithGenerationListId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DbPokemonGenerationDbPokemonType", x => new { x.GenerationsListId, x.TypesWithGenerationListId });
+                    table.ForeignKey(
+                        name: "FK_DbPokemonGenerationDbPokemonType_PokemonGenerations_Generati~",
+                        column: x => x.GenerationsListId,
+                        principalTable: "PokemonGenerations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DbPokemonGenerationDbPokemonType_PokemonTypes_TypesWithGener~",
+                        column: x => x.TypesWithGenerationListId,
+                        principalTable: "PokemonTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "PokemonAttackEffectives",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    AttackerTypeId = table.Column<long>(type: "bigint", nullable: false),
+                    TargetTypeId = table.Column<long>(type: "bigint", nullable: false),
+                    Value = table.Column<float>(type: "float", nullable: false),
+                    GenerationAbbreviation = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PokemonAttackEffectives", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PokemonAttackEffectives_PokemonTypes_AttackerTypeId",
+                        column: x => x.AttackerTypeId,
+                        principalTable: "PokemonTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PokemonAttackEffectives_PokemonTypes_TargetTypeId",
+                        column: x => x.TargetTypeId,
+                        principalTable: "PokemonTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -343,105 +551,6 @@ namespace Diamond.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "PokemonStrategies",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    FormatId = table.Column<long>(type: "bigint", nullable: false),
-                    Outdated = table.Column<bool>(type: "tinyint(1)", nullable: true),
-                    PokemonId = table.Column<long>(type: "bigint", nullable: false),
-                    Overview = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Comments = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    MovesetName = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Gender = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    EVsHealth = table.Column<int>(type: "int", nullable: false),
-                    EVsAttack = table.Column<int>(type: "int", nullable: false),
-                    EVsDefense = table.Column<int>(type: "int", nullable: false),
-                    EVsSpecialAttack = table.Column<int>(type: "int", nullable: false),
-                    EVsSpecialDefense = table.Column<int>(type: "int", nullable: false),
-                    EVsSpeed = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PokemonStrategies", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PokemonStrategies_PokemonFormats_FormatId",
-                        column: x => x.FormatId,
-                        principalTable: "PokemonFormats",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PokemonStrategies_Pokemons_PokemonId",
-                        column: x => x.PokemonId,
-                        principalTable: "Pokemons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "PokemonAttackEffectives",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    AttackerTypeId = table.Column<long>(type: "bigint", nullable: false),
-                    TargetTypeId = table.Column<long>(type: "bigint", nullable: false),
-                    Value = table.Column<float>(type: "float", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PokemonAttackEffectives", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PokemonAttackEffectives_PokemonTypes_AttackerTypeId",
-                        column: x => x.AttackerTypeId,
-                        principalTable: "PokemonTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PokemonAttackEffectives_PokemonTypes_TargetTypeId",
-                        column: x => x.TargetTypeId,
-                        principalTable: "PokemonTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "PollVote",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
-                    PollId = table.Column<long>(type: "bigint", nullable: false),
-                    PollOptionId = table.Column<long>(type: "bigint", nullable: false),
-                    VotedAt = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PollVote", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PollVote_PollOption_PollOptionId",
-                        column: x => x.PollOptionId,
-                        principalTable: "PollOption",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PollVote_Poll_PollId",
-                        column: x => x.PollId,
-                        principalTable: "Poll",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "PokemonItems",
                 columns: table => new
                 {
@@ -452,7 +561,7 @@ namespace Diamond.Data.Migrations
                     Description = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IsNonstandard = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    GenerationsList = table.Column<string>(type: "longtext", nullable: false)
+                    GenerationAbbreviation = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DbPokemonStrategyId = table.Column<long>(type: "bigint", nullable: true)
                 },
@@ -483,7 +592,7 @@ namespace Diamond.Data.Migrations
                     SpecialAttack = table.Column<float>(type: "float", nullable: false),
                     SpecialDefense = table.Column<float>(type: "float", nullable: false),
                     Speed = table.Column<float>(type: "float", nullable: false),
-                    GenerationsList = table.Column<string>(type: "longtext", nullable: false)
+                    GenerationAbbreviation = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DbPokemonStrategyId = table.Column<long>(type: "bigint", nullable: true)
                 },
@@ -509,9 +618,8 @@ namespace Diamond.Data.Migrations
                     Description = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IsNonstandard = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    GenerationsList = table.Column<string>(type: "longtext", nullable: false)
+                    GenerationAbbreviation = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    DbPokemonId = table.Column<long>(type: "bigint", nullable: true),
                     DbPokemonStrategyId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
@@ -521,11 +629,6 @@ namespace Diamond.Data.Migrations
                         name: "FK_PokemonPassives_PokemonStrategies_DbPokemonStrategyId",
                         column: x => x.DbPokemonStrategyId,
                         principalTable: "PokemonStrategies",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_PokemonPassives_Pokemons_DbPokemonId",
-                        column: x => x.DbPokemonId,
-                        principalTable: "Pokemons",
                         principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -584,6 +687,135 @@ namespace Diamond.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "PollVote",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
+                    PollId = table.Column<long>(type: "bigint", nullable: false),
+                    PollOptionId = table.Column<long>(type: "bigint", nullable: false),
+                    VotedAt = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PollVote", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PollVote_PollOption_PollOptionId",
+                        column: x => x.PollOptionId,
+                        principalTable: "PollOption",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PollVote_Poll_PollId",
+                        column: x => x.PollId,
+                        principalTable: "Poll",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "DbPokemonGenerationDbPokemonItem",
+                columns: table => new
+                {
+                    GenerationsListId = table.Column<long>(type: "bigint", nullable: false),
+                    ItemsWithGenerationListId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DbPokemonGenerationDbPokemonItem", x => new { x.GenerationsListId, x.ItemsWithGenerationListId });
+                    table.ForeignKey(
+                        name: "FK_DbPokemonGenerationDbPokemonItem_PokemonGenerations_Generati~",
+                        column: x => x.GenerationsListId,
+                        principalTable: "PokemonGenerations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DbPokemonGenerationDbPokemonItem_PokemonItems_ItemsWithGener~",
+                        column: x => x.ItemsWithGenerationListId,
+                        principalTable: "PokemonItems",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "DbPokemonGenerationDbPokemonNature",
+                columns: table => new
+                {
+                    GenerationsListId = table.Column<long>(type: "bigint", nullable: false),
+                    NaturesWithGenerationListId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DbPokemonGenerationDbPokemonNature", x => new { x.GenerationsListId, x.NaturesWithGenerationListId });
+                    table.ForeignKey(
+                        name: "FK_DbPokemonGenerationDbPokemonNature_PokemonGenerations_Genera~",
+                        column: x => x.GenerationsListId,
+                        principalTable: "PokemonGenerations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DbPokemonGenerationDbPokemonNature_PokemonNatures_NaturesWit~",
+                        column: x => x.NaturesWithGenerationListId,
+                        principalTable: "PokemonNatures",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "DbPokemonDbPokemonPassive",
+                columns: table => new
+                {
+                    AbilitiesListId = table.Column<long>(type: "bigint", nullable: false),
+                    PokemonsWithPassiveListId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DbPokemonDbPokemonPassive", x => new { x.AbilitiesListId, x.PokemonsWithPassiveListId });
+                    table.ForeignKey(
+                        name: "FK_DbPokemonDbPokemonPassive_PokemonPassives_AbilitiesListId",
+                        column: x => x.AbilitiesListId,
+                        principalTable: "PokemonPassives",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DbPokemonDbPokemonPassive_Pokemons_PokemonsWithPassiveListId",
+                        column: x => x.PokemonsWithPassiveListId,
+                        principalTable: "Pokemons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "DbPokemonGenerationDbPokemonPassive",
+                columns: table => new
+                {
+                    GenerationsListId = table.Column<long>(type: "bigint", nullable: false),
+                    PassivesWithGenerationListId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DbPokemonGenerationDbPokemonPassive", x => new { x.GenerationsListId, x.PassivesWithGenerationListId });
+                    table.ForeignKey(
+                        name: "FK_DbPokemonGenerationDbPokemonPassive_PokemonGenerations_Gener~",
+                        column: x => x.GenerationsListId,
+                        principalTable: "PokemonGenerations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DbPokemonGenerationDbPokemonPassive_PokemonPassives_Passives~",
+                        column: x => x.PassivesWithGenerationListId,
+                        principalTable: "PokemonPassives",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "PokemonSmogonUsers",
                 columns: table => new
                 {
@@ -622,6 +854,56 @@ namespace Diamond.Data.Migrations
                 column: "EvolutionsListId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DbPokemonDbPokemonFormat_PokemonsWithFormatListId",
+                table: "DbPokemonDbPokemonFormat",
+                column: "PokemonsWithFormatListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DbPokemonDbPokemonGeneration_PokemonsWithGenerationListId",
+                table: "DbPokemonDbPokemonGeneration",
+                column: "PokemonsWithGenerationListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DbPokemonDbPokemonPassive_PokemonsWithPassiveListId",
+                table: "DbPokemonDbPokemonPassive",
+                column: "PokemonsWithPassiveListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DbPokemonDbPokemonType_TypesListId",
+                table: "DbPokemonDbPokemonType",
+                column: "TypesListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DbPokemonFormatDbPokemonGeneration_GenerationsListId",
+                table: "DbPokemonFormatDbPokemonGeneration",
+                column: "GenerationsListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DbPokemonGenerationDbPokemonItem_ItemsWithGenerationListId",
+                table: "DbPokemonGenerationDbPokemonItem",
+                column: "ItemsWithGenerationListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DbPokemonGenerationDbPokemonMove_MovesWithGenerationListId",
+                table: "DbPokemonGenerationDbPokemonMove",
+                column: "MovesWithGenerationListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DbPokemonGenerationDbPokemonNature_NaturesWithGenerationList~",
+                table: "DbPokemonGenerationDbPokemonNature",
+                column: "NaturesWithGenerationListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DbPokemonGenerationDbPokemonPassive_PassivesWithGenerationLi~",
+                table: "DbPokemonGenerationDbPokemonPassive",
+                column: "PassivesWithGenerationListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DbPokemonGenerationDbPokemonType_TypesWithGenerationListId",
+                table: "DbPokemonGenerationDbPokemonType",
+                column: "TypesWithGenerationListId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PokemonAttackEffectives_AttackerTypeId",
                 table: "PokemonAttackEffectives",
                 column: "AttackerTypeId");
@@ -630,16 +912,6 @@ namespace Diamond.Data.Migrations
                 name: "IX_PokemonAttackEffectives_TargetTypeId",
                 table: "PokemonAttackEffectives",
                 column: "TargetTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PokemonFormats_DbPokemonId",
-                table: "PokemonFormats",
-                column: "DbPokemonId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PokemonGenerations_DbPokemonId",
-                table: "PokemonGenerations",
-                column: "DbPokemonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PokemonItems_DbPokemonStrategyId",
@@ -660,11 +932,6 @@ namespace Diamond.Data.Migrations
                 name: "IX_PokemonNatures_DbPokemonStrategyId",
                 table: "PokemonNatures",
                 column: "DbPokemonStrategyId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PokemonPassives_DbPokemonId",
-                table: "PokemonPassives",
-                column: "DbPokemonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PokemonPassives_DbPokemonStrategyId",
@@ -712,11 +979,6 @@ namespace Diamond.Data.Migrations
                 column: "TypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PokemonTypes_DbPokemonId",
-                table: "PokemonTypes",
-                column: "DbPokemonId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PollOption_TargetPollId",
                 table: "PollOption",
                 column: "TargetPollId");
@@ -748,22 +1010,40 @@ namespace Diamond.Data.Migrations
                 name: "DbPokemonDbPokemon");
 
             migrationBuilder.DropTable(
+                name: "DbPokemonDbPokemonFormat");
+
+            migrationBuilder.DropTable(
+                name: "DbPokemonDbPokemonGeneration");
+
+            migrationBuilder.DropTable(
+                name: "DbPokemonDbPokemonPassive");
+
+            migrationBuilder.DropTable(
+                name: "DbPokemonDbPokemonType");
+
+            migrationBuilder.DropTable(
+                name: "DbPokemonFormatDbPokemonGeneration");
+
+            migrationBuilder.DropTable(
+                name: "DbPokemonGenerationDbPokemonItem");
+
+            migrationBuilder.DropTable(
+                name: "DbPokemonGenerationDbPokemonMove");
+
+            migrationBuilder.DropTable(
+                name: "DbPokemonGenerationDbPokemonNature");
+
+            migrationBuilder.DropTable(
+                name: "DbPokemonGenerationDbPokemonPassive");
+
+            migrationBuilder.DropTable(
+                name: "DbPokemonGenerationDbPokemonType");
+
+            migrationBuilder.DropTable(
                 name: "PokemonAttackEffectives");
 
             migrationBuilder.DropTable(
-                name: "PokemonGenerations");
-
-            migrationBuilder.DropTable(
-                name: "PokemonItems");
-
-            migrationBuilder.DropTable(
                 name: "PokemonLearnsets");
-
-            migrationBuilder.DropTable(
-                name: "PokemonNatures");
-
-            migrationBuilder.DropTable(
-                name: "PokemonPassives");
 
             migrationBuilder.DropTable(
                 name: "PokemonSmogonUsers");
@@ -779,6 +1059,18 @@ namespace Diamond.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "CsgoItems");
+
+            migrationBuilder.DropTable(
+                name: "PokemonItems");
+
+            migrationBuilder.DropTable(
+                name: "PokemonNatures");
+
+            migrationBuilder.DropTable(
+                name: "PokemonPassives");
+
+            migrationBuilder.DropTable(
+                name: "PokemonGenerations");
 
             migrationBuilder.DropTable(
                 name: "PokemonStrategyCreditsTeams");
