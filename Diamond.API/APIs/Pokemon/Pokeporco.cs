@@ -170,7 +170,7 @@ namespace Diamond.API.APIs.Pokemon
 			{
 				generationAbbreviation = "XY";
 			}
-			return string.Format(PokemonAPI.SMOGON_POKEMON_IMAGES_URL, generationAbbreviation.ToLowerInvariant(), this.PokemonName.ToLowerInvariant().Replace(" ", "-"), imageFormat);
+			return string.Format(PokemonAPI.SMOGON_POKEMON_IMAGES_URL, generationAbbreviation.ToLowerInvariant(), this.PokemonName.ToLowerInvariant().Replace(" ", "-").Replace(".", ""), imageFormat);
 		}
 
 		public string GetPokemonImage()
