@@ -38,6 +38,12 @@ namespace Diamond.API.Util
 			{
 				string formattedItemName = itemName.ToLower();
 
+				if (searchCriteria.ToLower() == formattedItemName)
+				{
+					bestMatches.Add(new SearchMatchInfo<T>(value, double.MaxValue));
+					continue;
+				}
+
 				double matches = 0;
 				foreach (string word in formattedItemName.Split(" "))
 				{
