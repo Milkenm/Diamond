@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Diamond.API.APIs.Pokemon;
@@ -27,7 +28,9 @@ namespace Diamond.API.SlashCommands.Pokemon
 		private const string BUTTON_POKEMON_VIEW_MOVES_NEXT = $"{BUTTON_POKEMON_BASE}_next";
 		private const string BUTTON_POKEMON_VIEW_MOVES_LAST = $"{BUTTON_POKEMON_BASE}_last";
 		private const string BUTTON_POKEMON_LOAD_STRATEGIES = $"{BUTTON_POKEMON_BASE}_strats_load";
-		private const string BUTTON_POKEMON_SHARE = $"{BUTTON_POKEMON_BASE}_share";
+		private const string BUTTON_POKEMON_SHARE_INFO = $"{BUTTON_POKEMON_BASE}_share_pokemon";
+		private const string BUTTON_POKEMON_SHARE_MOVES = $"{BUTTON_POKEMON_BASE}_share_moves";
+		private const string BUTTON_POKEMON_SHARE_STRATEGIES = $"{BUTTON_POKEMON_BASE}_share_strategies";
 
 		private const string SELECT_POKEMON_BASE = "select_pokemon";
 		private const string SELECT_POKEMON_INFO_GENERATION = $"{SELECT_POKEMON_BASE}_info_generation";
@@ -48,27 +51,28 @@ namespace Diamond.API.SlashCommands.Pokemon
 
 			ComponentBuilder components = new ComponentBuilder();
 
-			// First row
-			if (!showEveryone)
-			{
-				_ = components.WithButton("Info", $"{BUTTON_POKEMON_VIEW_INFO}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("❤️"), disabled: embed == PokemonEmbed.Info);
-				_ = components.WithButton("Moves", $"{BUTTON_POKEMON_VIEW_MOVES}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("👊"), disabled: embed == PokemonEmbed.Moves);
-				_ = components.WithButton("Strategies", $"{BUTTON_POKEMON_VIEW_STRATS}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("🧠"), disabled: embed == PokemonEmbed.Strategies);
-			}
+			// We have to use this because the rows thing has to be in order else it breaks
+			int rowIndex = 0;
 
-			if (!dbPokemon.IsNonstandard || dbPokemon.DexNumber > 0)
-			{
-				_ = components.WithButton("View on Pokédex", style: ButtonStyle.Link, url: poke.GetPokedexUrl());
-			}
-			_ = components.WithButton("View on Smogon", style: ButtonStyle.Link, url: poke.GetSmogonPokemonUrl(dbPokemon.GenerationAbbreviation));
 			if (!showEveryone)
 			{
-				_ = components.WithButton("Share", $"{BUTTON_POKEMON_SHARE}:{dbPokemon.Name},{dbPokemon.GenerationAbbreviation}", style: ButtonStyle.Secondary, emote: Emoji.Parse("📲"));
+				_ = components.WithButton("Info", $"{BUTTON_POKEMON_VIEW_INFO}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("❤️"), disabled: embed == PokemonEmbed.Info, row: rowIndex);
+				_ = components.WithButton("Moves", $"{BUTTON_POKEMON_VIEW_MOVES}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("👊"), disabled: embed == PokemonEmbed.Moves, row: rowIndex);
+				_ = components.WithButton("Strategies", $"{BUTTON_POKEMON_VIEW_STRATS}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("🧠"), disabled: embed == PokemonEmbed.Strategies || true, row: rowIndex);
+				rowIndex++;
 			}
 
 			if (!showEveryone)
 			{
-				// Second row
+				if (embed == PokemonEmbed.Moves)
+				{
+					_ = components.WithButton("First page", $"{BUTTON_POKEMON_VIEW_MOVES_FIRST}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("⏮️"), disabled: movesStartingIndex == 0, row: rowIndex);
+					_ = components.WithButton("Back", $"{BUTTON_POKEMON_VIEW_MOVES_BACK}:{dbPokemon.Name},{generationAbbreviation},{movesStartingIndex},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("◀️"), disabled: movesStartingIndex == 0, row: rowIndex);
+					_ = components.WithButton("Next", $"{BUTTON_POKEMON_VIEW_MOVES_NEXT}:{dbPokemon.Name},{generationAbbreviation},{movesStartingIndex},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("▶️"), disabled: movesStartingIndex + MOVES_PER_PAGE >= movesMaxIndex, row: rowIndex);
+					_ = components.WithButton("Last page", $"{BUTTON_POKEMON_VIEW_MOVES_LAST}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("⏭️"), disabled: movesStartingIndex + MOVES_PER_PAGE >= movesMaxIndex, row: rowIndex);
+					rowIndex++;
+				}
+
 				List<SelectMenuOptionBuilder> infoGenerationsList = new List<SelectMenuOptionBuilder>();
 				foreach (DbPokemonGeneration dbGeneration in dbPokemon.GenerationsList)
 				{
@@ -81,23 +85,40 @@ namespace Diamond.API.SlashCommands.Pokemon
 					PokemonEmbed.Strategies => SELECT_POKEMON_STRATEGIES_GENERATION,
 					_ => throw new ArgumentOutOfRangeException(),
 				};
-				_ = components.WithSelectMenu($"{selectMenuId}:{pokemonName},{replaceEmojis}", infoGenerationsList, row: 1);
-
-				if (embed == PokemonEmbed.Moves)
-				{
-					_ = components.WithButton("First page", $"{BUTTON_POKEMON_VIEW_MOVES_FIRST}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("⏮️"), disabled: movesStartingIndex == 0, row: 1);
-					_ = components.WithButton("Back", $"{BUTTON_POKEMON_VIEW_MOVES_BACK}:{dbPokemon.Name},{generationAbbreviation},{movesStartingIndex},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("◀️"), disabled: movesStartingIndex == 0, row: 1);
-					_ = components.WithButton("Next", $"{BUTTON_POKEMON_VIEW_MOVES_NEXT}:{dbPokemon.Name},{generationAbbreviation},{movesStartingIndex},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("▶️"), disabled: movesStartingIndex + MOVES_PER_PAGE >= movesMaxIndex, row: 1);
-					_ = components.WithButton("Last page", $"{BUTTON_POKEMON_VIEW_MOVES_LAST}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("⏭️"), disabled: movesStartingIndex + MOVES_PER_PAGE >= movesMaxIndex, row: 1);
-				}
+				_ = components.WithSelectMenu($"{selectMenuId}:{pokemonName},{replaceEmojis}", infoGenerationsList, row: rowIndex);
+				rowIndex++;
 			}
+
+			if (!showEveryone)
+			{
+				string buttonId = embed switch
+				{
+					PokemonEmbed.Info => $"{BUTTON_POKEMON_SHARE_INFO}:{dbPokemon.Name},{dbPokemon.GenerationAbbreviation},{replaceEmojis}",
+					PokemonEmbed.Moves => $"{BUTTON_POKEMON_SHARE_MOVES}:{dbPokemon.Name},{dbPokemon.GenerationAbbreviation},{replaceEmojis},{movesStartingIndex}",
+					PokemonEmbed.Strategies => $"{BUTTON_POKEMON_SHARE_STRATEGIES}:{dbPokemon.Name},{dbPokemon.GenerationAbbreviation},{replaceEmojis}",
+				};
+				_ = components.WithButton("Share", buttonId, style: ButtonStyle.Secondary, emote: Emoji.Parse("📲"), disabled: true, row: rowIndex);
+			}
+			if (!dbPokemon.IsNonstandard || dbPokemon.DexNumber > 0)
+			{
+				_ = components.WithButton("View on Pokédex", style: ButtonStyle.Link, url: poke.GetPokedexUrl(), row: rowIndex);
+			}
+			_ = components.WithButton("View on Smogon", style: ButtonStyle.Link, url: poke.GetSmogonPokemonUrl(dbPokemon.GenerationAbbreviation), row: rowIndex);
 
 			return components.Build();
 		}
 
+		private void CheckItemsLoading()
+		{
+			while (this._pokemonApi.IsLoadingItems)
+			{
+				Thread.Sleep(250);
+			}
+		}
+
 		private void AddGeneration(List<SelectMenuOptionBuilder> optionsList, DbPokemonGeneration dbGeneration, bool isSelected)
 		{
-			optionsList.Add(new SelectMenuOptionBuilder($"{dbGeneration.Name} ({dbGeneration.Abbreviation})", dbGeneration.Abbreviation, $"{(isSelected ? "Currently selected" : " ")}", isDefault: isSelected));
+			optionsList.Add(new SelectMenuOptionBuilder($"{dbGeneration.Name} ({dbGeneration.Abbreviation})", dbGeneration.Abbreviation, isDefault: isSelected));
 		}
 
 		public class PokemonNameAutocompleter : AutocompleteHandler

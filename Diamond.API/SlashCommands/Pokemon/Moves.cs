@@ -9,8 +9,6 @@ using Diamond.Data.Models.Pokemons;
 
 using Discord.Interactions;
 
-using ScriptsLibV2.Extensions;
-
 namespace Diamond.API.SlashCommands.Pokemon
 {
 	public partial class Pokemon
@@ -20,22 +18,31 @@ namespace Diamond.API.SlashCommands.Pokemon
 		[DSlashCommand("moves", "View a pokémon's moves.")]
 		public async Task PokemonMovesCommandAsync(
 			[Summary("name", "The name of the pokémon."), Autocomplete(typeof(PokemonNameAutocompleter))] string pokemonName,
-			[Summary("generation", "The generation of the pokémon."), Autocomplete(typeof(PokemonGenerationAutocompleter))] string generationAbbreviation,
+			[Summary("generation", "The generation of the pokémon."), Autocomplete(typeof(PokemonGenerationAutocompleter))] string? generationAbbreviation = null,
+			[Summary("page", "The page number to navigate to.")] int movesStartPage = 0,
 			[Summary("replace-emojis", "Replaces the type emojis with a text in case you a have trouble reading.")] bool replaceEmojis = false,
 			[ShowEveryone] bool showEveryone = false
 		)
 		{
 			await this.DeferAsync(!showEveryone);
 
-			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, 0, replaceEmojis, showEveryone);
+			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, movesStartPage * MOVES_PER_PAGE, replaceEmojis, showEveryone);
 		}
 
 		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_MOVES}:*,*,*", true)]
-		public async Task ButtonViewMovesHandler(string pokemonName, string generationAbbreviation, bool replaceEmojis)
+		public async Task ButtonViewMovesHandlerAsync(string pokemonName, string generationAbbreviation, bool replaceEmojis)
 		{
 			await this.DeferAsync();
 
 			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, 0, replaceEmojis, false);
+		}
+
+		[ComponentInteraction($"{BUTTON_POKEMON_SHARE_MOVES}:*,*,*,*", true)]
+		public async Task ButtonShareMovesHandlerAsync(string pokemonName, string generationAbbreviation, bool replaceEmojis, int movesStartIndex)
+		{
+			await this.DeferAsync();
+
+			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, movesStartIndex, replaceEmojis, true);
 		}
 
 		[ComponentInteraction($"{SELECT_POKEMON_MOVES_GENERATION}:*:*", true)]
@@ -50,16 +57,14 @@ namespace Diamond.API.SlashCommands.Pokemon
 		{
 			using DiamondContext db = new DiamondContext();
 
-			Pokeporco poke = new Pokeporco(pokemonName, db);
+			this.CheckItemsLoading();
 
-			if (generationAbbreviation.IsEmpty())
-			{
-				generationAbbreviation = PokemonAPI.POKEMON_DEFAULT_GENERATION;
-			}
+			Pokeporco poke = new Pokeporco(pokemonName, db);
+			generationAbbreviation = poke.GetValidGeneration(generationAbbreviation);
 
 			DefaultEmbed embed = new DefaultEmbed("Pokédex - Moves", "👊", this.Context)
 			{
-				Title = pokemonName,
+				Title = $"{poke.PokemonName} #{poke.DexNumber} ({generationAbbreviation})",
 			};
 
 			List<DbPokemonMove> movesList = await poke.GetMovesAsync(generationAbbreviation);

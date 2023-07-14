@@ -195,6 +195,11 @@ namespace Diamond.API.Util
 			return sb;
 		}
 
+		public static StringBuilder Preappend(this StringBuilder sb, string text, string separator)
+		{
+			return sb.Insert(0, text + (sb.Length > 0 ? separator : null));
+		}
+
 		public static string ToStringOrDefault(this StringBuilder sb, string defaultValue)
 		{
 			return sb.Length > 0 ? sb.ToString() : defaultValue;

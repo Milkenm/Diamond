@@ -19,21 +19,34 @@ namespace Diamond.API.SlashCommands.Pokemon
 		[DSlashCommand("info", "View info about a pokémon.")]
 		public async Task PokemonSearchCommandAsync(
 			[Summary("name", "The name of the pokémon."), Autocomplete(typeof(PokemonNameAutocompleter))] string pokemonName,
+			[Summary("generation", "The generation of the pokémon."), Autocomplete(typeof(PokemonGenerationAutocompleter))] Generation? generation = null,
 			[Summary("replace-emojis", "Replaces the type emojis with a text in case you a have trouble reading.")] bool replaceEmojis = false,
 			[ShowEveryone] bool showEveryone = false
 		)
 		{
 			await this.DeferAsync(!showEveryone);
 
-			await this.SendInfoEmbedAsync(pokemonName, null, replaceEmojis, showEveryone);
+			// Get generation abbreviation
+			using DiamondContext db = new DiamondContext();
+			string? generationAbbreviation = generation?.ToString();
+
+			await this.SendInfoEmbedAsync(pokemonName, generationAbbreviation, replaceEmojis, showEveryone, false);
 		}
 
 		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_INFO}:*,*,*", true)]
-		public async Task ButtonViewStatsHandler(string pokemonName, string generationAbbreviation, bool replaceEmojis)
+		public async Task ButtonViewInfoHandlerAsync(string pokemonName, string generationAbbreviation, bool replaceEmojis)
 		{
 			await this.DeferAsync();
 
-			await this.SendInfoEmbedAsync(pokemonName, generationAbbreviation, replaceEmojis, false);
+			await this.SendInfoEmbedAsync(pokemonName, generationAbbreviation, replaceEmojis, false, false);
+		}
+
+		[ComponentInteraction($"{BUTTON_POKEMON_SHARE_INFO}:*,*,*", true)]
+		public async Task ButtonSharePokemonHandlerAsync(string pokemonName, string generationAbbreviation, bool replaceEmojis)
+		{
+			await this.DeferAsync();
+
+			await this.SendInfoEmbedAsync(pokemonName, generationAbbreviation, replaceEmojis, true, true);
 		}
 
 		[ComponentInteraction($"{SELECT_POKEMON_INFO_GENERATION}:*,*", true)]
@@ -41,16 +54,17 @@ namespace Diamond.API.SlashCommands.Pokemon
 		{
 			await this.DeferAsync();
 
-			await this.SendInfoEmbedAsync(pokemonName, generationAbbreviation, replaceEmojis, false);
+			await this.SendInfoEmbedAsync(pokemonName, generationAbbreviation, replaceEmojis, false, false);
 		}
 
-		private async Task SendInfoEmbedAsync(string pokemonName, string? generationAbbreviation, bool replaceEmojis, bool showEveryone)
+		private async Task SendInfoEmbedAsync(string pokemonName, string? generationAbbreviation, bool replaceEmojis, bool showEveryone, bool sendAsNew)
 		{
-			generationAbbreviation ??= PokemonAPI.POKEMON_DEFAULT_GENERATION;
-
 			using DiamondContext db = new DiamondContext();
 
+			this.CheckItemsLoading();
+
 			Pokeporco poke = new Pokeporco(pokemonName, db);
+			generationAbbreviation = poke.GetValidGeneration(generationAbbreviation);
 			DbPokemon dbPokemon = poke.GetFullFromGeneration(generationAbbreviation);
 
 			// Effectiveness
@@ -81,10 +95,9 @@ namespace Diamond.API.SlashCommands.Pokemon
 
 			DefaultEmbed embed = new DefaultEmbed("Pokédex - Info", "🖥️", this.Context)
 			{
-				Title = $"{dbPokemon.Name} #{dbPokemon.DexNumber}",
+				Title = $"{dbPokemon.Name} #{dbPokemon.DexNumber} ({generationAbbreviation})",
 				Description = typesSb.ToString(),
-				/*ThumbnailUrl = PokemonAPIHelpers.GetPokemonGif(dbPokemon.Name),
-				ImageUrl = PokemonAPIHelpers.GetPokemonImage((int)dbPokemon.DexNumber),*/
+				ThumbnailUrl = poke.GetPokemonGif(generationAbbreviation),
 			};
 
 			// Generations
@@ -116,7 +129,9 @@ namespace Diamond.API.SlashCommands.Pokemon
 			// Fourth row
 			_ = embed.AddField($"✨ **__{Utils.Plural("Abilit", "y", "ies", dbPokemon.AbilitiesList)}__**", abilitiesSb.ToStringOrDefault("None"));
 
-			_ = await embed.SendAsync(this.GetEmbedButtons(dbPokemon.Name, dbPokemon.GenerationAbbreviation, PokemonEmbed.Info, replaceEmojis, showEveryone, db));
+			embed.Component = this.GetEmbedButtons(pokemonName, generationAbbreviation, PokemonEmbed.Info, replaceEmojis, showEveryone, db);
+
+			_ = await embed.SendAsync(sendAsNew: sendAsNew);
 		}
 
 		private static string GetPokemonStatString(int value, PokemonStat stat)
@@ -166,6 +181,19 @@ namespace Diamond.API.SlashCommands.Pokemon
 			Power,
 			Accuracy,
 			PowerPoints,
+		}
+
+		public enum Generation
+		{
+			[ChoiceDisplay("Red/Blue (RB)")] RB,
+			[ChoiceDisplay("Gold/Silver (GS)")] GS,
+			[ChoiceDisplay("Ruby/Sapphire (RS)")] RS,
+			[ChoiceDisplay("Diamond/Pearl (DP)")] DP,
+			[ChoiceDisplay("Black/White (BW)")] BW,
+			[ChoiceDisplay("X/Y (XY)")] XY,
+			[ChoiceDisplay("Sun/Moon (SM")] SM,
+			[ChoiceDisplay("Sword/Shield (SS)")] SS,
+			[ChoiceDisplay("Scarlet/Violet")] SV
 		}
 	}
 }

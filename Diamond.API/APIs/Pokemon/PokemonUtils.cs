@@ -95,23 +95,20 @@ namespace Diamond.API.APIs.Pokemon
 			DbPokemonFormat format = formatsList.Where(f => f.Name == strat.Format).FirstOrDefault();
 
 			// Get strat passives/abilities
-			List<DbPokemonPassive> passivesList = db.PokemonPassives.ToList();
 			List<DbPokemonPassive> passives = new List<DbPokemonPassive>();
 			foreach (string passive in strat.MovesetsList[0].AbilitiesList)
 			{
-				passives.Add(passivesList.Where(p => p.Name == passive).FirstOrDefault());
+				passives.Add(db.PokemonPassives.ToList().Where(p => p.Name == passive).FirstOrDefault());
 			}
 
 			// Get strat items
-			List<DbPokemonItem> itemsList = db.PokemonItems.ToList();
 			List<DbPokemonItem> items = new List<DbPokemonItem>();
 			foreach (string item in strat.MovesetsList[0].ItemsList)
 			{
-				items.Add(itemsList.Where(i => i.Name == item).FirstOrDefault());
+				items.Add(db.PokemonItems.ToList().Where(i => i.Name == item).FirstOrDefault());
 			}
 
 			// Get strat movesets
-			List<DbPokemonType> typesList = db.PokemonTypes.ToList();
 			List<DbPokemonStrategyMoveset> movesets = new List<DbPokemonStrategyMoveset>();
 			foreach (SmogonStrategyMoveSlot moveset in strat.MovesetsList[0].MoveSlotsList[0])
 			{
@@ -119,7 +116,7 @@ namespace Diamond.API.APIs.Pokemon
 				DbPokemonType type = null;
 				if (moveset.Type != null)
 				{
-					type = typesList.Where(t => t.Name == moveset.Type).FirstOrDefault();
+					type = db.PokemonTypes.Where(t => t.Name == moveset.Type).FirstOrDefault();
 				}
 
 				DbPokemonStrategyMoveset dbMoveset = new DbPokemonStrategyMoveset()
@@ -134,11 +131,10 @@ namespace Diamond.API.APIs.Pokemon
 			await db.SaveAsync();
 
 			// Get strat natures
-			List<DbPokemonNature> naturesList = db.PokemonNatures.ToList();
 			List<DbPokemonNature> natures = new List<DbPokemonNature>();
 			foreach (string nature in strat.MovesetsList[0].NaturesList)
 			{
-				natures.Add(naturesList.Where(n => n.Name == nature).FirstOrDefault());
+				natures.Add(db.PokemonNatures.Where(n => n.Name == nature).FirstOrDefault());
 			}
 
 			// Get strat written by
@@ -218,17 +214,42 @@ namespace Diamond.API.APIs.Pokemon
 				PassivesList = passives,
 				ItemsList = items,
 				Movesets = movesets,
-				EVsHealth = strat.MovesetsList[0].EvConfigsList[0].HP,
-				EVsAttack = strat.MovesetsList[0].EvConfigsList[0].Attack,
-				EVsDefense = strat.MovesetsList[0].EvConfigsList[0].Defense,
-				EVsSpecialAttack = strat.MovesetsList[0].EvConfigsList[0].SpecialAttack,
-				EVsSpecialDefense = strat.MovesetsList[0].EvConfigsList[0].SpecialDefense,
-				EVsSpeed = strat.MovesetsList[0].EvConfigsList[0].Speed,
+				EVsHealth = GetEvValue(strat.MovesetsList[0], Stat.HP),
+				EVsAttack = GetEvValue(strat.MovesetsList[0], Stat.Attack),
+				EVsDefense = GetEvValue(strat.MovesetsList[0], Stat.Defense),
+				EVsSpecialAttack = GetEvValue(strat.MovesetsList[0], Stat.SpecialAttack),
+				EVsSpecialDefense = GetEvValue(strat.MovesetsList[0], Stat.SpecialDefense),
+				EVsSpeed = GetEvValue(strat.MovesetsList[0], Stat.Speed),
 				NaturesList = natures,
 				WrittenByUsersList = writtenBy,
 				TeamsList = creditsTeams,
 			});
 			await db.SaveAsync();
+		}
+
+		private static int? GetEvValue(SmogonStrategyMoveSet moveSet, Stat stat)
+		{
+			if (moveSet.EvConfigsList.Count == 0) return null;
+
+			return stat switch
+			{
+				Stat.HP => moveSet.EvConfigsList[0].HP,
+				Stat.Attack => moveSet.EvConfigsList[0].Attack,
+				Stat.Defense => moveSet.EvConfigsList[0].Defense,
+				Stat.SpecialAttack => moveSet.EvConfigsList[0].SpecialAttack,
+				Stat.SpecialDefense => moveSet.EvConfigsList[0].SpecialDefense,
+				Stat.Speed => moveSet.EvConfigsList[0].Speed,
+			};
+		}
+
+		private enum Stat
+		{
+			HP,
+			Attack,
+			Defense,
+			SpecialAttack,
+			SpecialDefense,
+			Speed,
 		}
 
 		private static bool DoesPokemonExist(DiamondContext db, string pokemonName, out DbPokemon dbPokemon)

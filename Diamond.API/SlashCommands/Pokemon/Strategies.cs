@@ -1,21 +1,20 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.APIs.Pokemon;
-using Diamond.API.Attributes;
 using Diamond.API.Helpers;
+using Diamond.API.Util;
 using Diamond.Data;
 using Diamond.Data.Models.Pokemons;
 
 using Discord.Interactions;
 
-using ScriptsLibV2.Extensions;
-
 namespace Diamond.API.SlashCommands.Pokemon
 {
 	public partial class Pokemon
 	{
-		[DSlashCommand("strats", "View strategies for a pokémon.")]
+		/*[DSlashCommand("strats", "View strategies for a pokémon.")]
 		public async void StratsCommandHandlerAsync(
 			[Summary("name", "The name of the pokémon."), Autocomplete(typeof(PokemonNameAutocompleter))] string pokemonName,
 			[Summary("generation", "The generation of the pokémon."), Autocomplete(typeof(PokemonGenerationAutocompleter))] string generationAbbreviation,
@@ -26,14 +25,14 @@ namespace Diamond.API.SlashCommands.Pokemon
 			await this.DeferAsync(!showEveryone);
 
 			await this.SendStratsEmbed(pokemonName, generationAbbreviation, replaceEmojis, showEveryone);
-		}
+		}*/
 
 		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_STRATS}:*,*,*", true)]
 		public async Task ButtonViewStrategiesHandlerAsync(string pokemonName, string generationAbbreviation, bool replaceEmojis)
 		{
 			await this.DeferAsync();
 
-			await this.SendStratsEmbed(pokemonName, generationAbbreviation, replaceEmojis, false);
+			await this.SendStratsEmbedAsync(pokemonName, generationAbbreviation, replaceEmojis, false);
 		}
 
 		[ComponentInteraction($"{SELECT_POKEMON_STRATEGIES_GENERATION}:*:*", true)]
@@ -41,17 +40,17 @@ namespace Diamond.API.SlashCommands.Pokemon
 		{
 			await this.DeferAsync();
 
-			await this.SendStratsEmbed(pokemonName, generationNumber, replaceEmojis, false);
+			await this.SendStratsEmbedAsync(pokemonName, generationNumber, replaceEmojis, false);
 		}
 
-		private async Task SendStratsEmbed(string pokemonName, string? generationAbbreviation, bool replaceEmojis, bool showEveryone)
+		private async Task SendStratsEmbedAsync(string pokemonName, string? generationAbbreviation, bool replaceEmojis, bool showEveryone)
 		{
 			using DiamondContext db = new DiamondContext();
 
-			if (generationAbbreviation.IsEmpty())
-			{
-				generationAbbreviation = PokemonAPI.POKEMON_DEFAULT_GENERATION;
-			}
+			this.CheckItemsLoading();
+
+			Pokeporco poke = new Pokeporco(pokemonName, db);
+			generationAbbreviation ??= poke.Generations.Last().Abbreviation;
 
 			DefaultEmbed embed = new DefaultEmbed("Pokédex - Strategies", "🧠", this.Context)
 			{
@@ -67,7 +66,12 @@ namespace Diamond.API.SlashCommands.Pokemon
 				return;
 			}
 
-			embed.Description = strategiesList[0].Comments;
+			embed.Description = Utils.RemoveHtmlTags(strategiesList[0].Overview);
+			_ = embed.AddField(strategiesList[0].MovesetName, $"Move 1: {strategiesList[0].Movesets[0].Move}\nMove 2: {strategiesList[0].Movesets[1].Move}");
+			foreach (DbPokemonStrategyMoveset a in strategiesList[0].Movesets)
+			{
+
+			}
 			_ = await embed.SendAsync(this.GetEmbedButtons(pokemonName, generationAbbreviation, PokemonEmbed.Strategies, replaceEmojis, showEveryone, db));
 		}
 	}

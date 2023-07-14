@@ -3,6 +3,7 @@ using System;
 using Diamond.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Diamond.Data.Migrations
 {
     [DbContext(typeof(DiamondContext))]
-    partial class DiamondContextModelSnapshot : ModelSnapshot
+    [Migration("20230714100403_10")]
+    partial class _10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -632,7 +635,7 @@ namespace Diamond.Data.Migrations
                     b.Property<int?>("EVsSpeed")
                         .HasColumnType("int");
 
-                    b.Property<long?>("FormatId")
+                    b.Property<long>("FormatId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Gender")
@@ -1114,7 +1117,9 @@ namespace Diamond.Data.Migrations
                 {
                     b.HasOne("Diamond.Data.Models.Pokemons.DbPokemonFormat", "Format")
                         .WithMany()
-                        .HasForeignKey("FormatId");
+                        .HasForeignKey("FormatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Diamond.Data.Models.Pokemons.DbPokemon", "Pokemon")
                         .WithMany()

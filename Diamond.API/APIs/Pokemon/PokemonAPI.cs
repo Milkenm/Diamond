@@ -27,8 +27,9 @@ namespace Diamond.API.APIs.Pokemon
 		/// <summary>
 		/// {0}: Generation Abbreviation
 		/// {1}: Pokémon name
+		/// {2}: GIF or PNG
 		/// </summary>
-		public const string SMOGON_POKEMON_GIFS_URL = "https://www.smogon.com/dex/media/sprites/{0}/{1}.gif";
+		public const string SMOGON_POKEMON_IMAGES_URL = "https://www.smogon.com/dex/media/sprites/{0}/{1}.{2}";
 		/// <summary>
 		/// {0}: Dex number
 		/// </summary>
