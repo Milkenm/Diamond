@@ -119,4 +119,12 @@ public partial class MainPanelPage : Page
 			this.Button_Click(sender, null);
 		}
 	}
+
+	public void UpdatePing(long? ping)
+	{
+		this.Dispatcher.Invoke(() =>
+		{
+			this.label_ping.Content = $"Ping: {(ping != null ? ping : "Offline")}ms";
+		});
+	}
 }

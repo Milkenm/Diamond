@@ -13,5 +13,6 @@
 		<Button x:Name="button_start" Style="{StaticResource ButtonStyle}" Content="Start" HorizontalAlignment="Left" Margin="758,356,0,0" VerticalAlignment="Top" Width="141" Click="ButtonStart_Click"/>
 		<Button Style="{StaticResource MainButtonStyle}" Content="Run" HorizontalAlignment="Left" Margin="546,356,0,0" VerticalAlignment="Top" Width="44" Click="Button_Click"/>
 		<TextBox x:Name="textBox_command" KeyDown="textBox_command_KeyDown" Style="{StaticResource MainTextBoxStyle}" HorizontalAlignment="Left" Margin="10,356,0,0" VerticalAlignment="Top" Width="536"/>
+		<Label x:Name="label_ping" Style="{StaticResource LabelStyle}" Content="Ping: Offline" Margin="595,362,0,0" Padding="10,0,0,0"/>
 	</Grid>
 </Page>
