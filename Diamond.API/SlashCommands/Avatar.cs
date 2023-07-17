@@ -8,7 +8,7 @@ using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands
 {
-    public class Avatar : InteractionModuleBase<SocketInteractionContext>
+	public class Avatar : InteractionModuleBase<SocketInteractionContext>
 	{
 		[DSlashCommand("avatar", "Gets the avatar image of the selected user.")]
 		public async Task AvatarCommandAsync(
@@ -17,25 +17,29 @@ namespace Diamond.API.SlashCommands
 			[ShowEveryone] bool showEveryone = false
 		)
 		{
-			await DeferAsync(!showEveryone);
+			await this.DeferAsync(!showEveryone);
 
 			int size = (int)avatarSize;
 
-			string avatar = user.GetAvatarUrl();
-			avatar = avatar.Replace("?size=128", "?size=" + size);
+			string avatarUrl = user.GetAvatarUrl();
+			avatarUrl = avatarUrl.Replace("?size=128", "?size=" + size);
 
-			DefaultEmbed embed = new DefaultEmbed("Avatar", "📸", Context);
-			embed.AddField("👤 User", user.Mention, true);
-			embed.AddField("📏 Size", $"{size}px²", true);
-			embed.WithImageUrl(avatar);
+			DefaultEmbed embed = new DefaultEmbed("Avatar", "📸", this.Context);
+			_ = embed.AddField("👤 User", user.Mention, true);
+			_ = embed.AddField("📏 Size", $"{size}px²", true);
+			_ = embed.WithImageUrl(avatarUrl);
 
-			await embed.SendAsync();
+			MessageComponent components = new ComponentBuilder()
+				.WithButton("Open in browser", style: ButtonStyle.Link, url: avatarUrl)
+				.Build();
+
+			_ = await embed.SendAsync(components);
 		}
 
 		[UserCommand("Avatar")]
 		public async Task AvatarUserCommandAsync(IUser user)
 		{
-			await AvatarCommandAsync(user, AvatarSize.x4096);
+			await this.AvatarCommandAsync(user, AvatarSize.x4096);
 		}
 
 		public enum AvatarSize
