@@ -64,7 +64,7 @@ namespace Diamond.API.SlashCommands.CSGO
 			List<DbCsgoItemPrice> searchItemPrices = this._csgoBackpack.GetItemPrices(searchItem, currency);
 
 			embed.Title = searchItem.Name;
-			embed.Description = $"**Introduced**: {Utils.GetTimestampBlock(searchItem.FirstSaleDateUnix, TimestampSetting.TimeSince)}";
+			embed.Description = $"**Introduced**: {(searchItem.FirstSaleDateUnix == 0 ? "Unknown" : Utils.GetTimestampBlock(searchItem.FirstSaleDateUnix, TimestampSetting.TimeSince))}";
 			embed.ThumbnailUrl = $"https://community.cloudflare.steamstatic.com/economy/image/{searchItem.IconUrl}";
 			ComponentBuilder builder = new ComponentBuilder()
 				.WithButton(new ButtonBuilder("View on Steam market", style: ButtonStyle.Link, url: $"https://steamcommunity.com/market/listings/730/{searchItem.Name}".Replace(" ", "%20").Replace("|", "%7C"), emote: Emoji.Parse("🏪")))
