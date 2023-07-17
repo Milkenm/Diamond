@@ -3,6 +3,7 @@ using System;
 using Diamond.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Diamond.Data.Migrations
 {
     [DbContext(typeof(DiamondContext))]
-    partial class DiamondContextModelSnapshot : ModelSnapshot
+    [Migration("20230717104418_4")]
+    partial class _4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -288,16 +291,17 @@ namespace Diamond.Data.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<ulong>("DiscordUserId")
                         .HasColumnType("bigint unsigned");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<long?>("UpdatedAt")
+                    b.Property<long>("UpdatedAt")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -318,9 +322,6 @@ namespace Diamond.Data.Migrations
                     b.Property<long>("CreatedAt")
                         .HasColumnType("bigint");
 
-                    b.Property<ulong>("DiscordUserId")
-                        .HasColumnType("bigint unsigned");
-
                     b.Property<int?>("NotebookId")
                         .HasColumnType("int");
 
@@ -328,7 +329,7 @@ namespace Diamond.Data.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<long?>("UpdatedAt")
+                    b.Property<long>("UpdatedAt")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -336,46 +337,6 @@ namespace Diamond.Data.Migrations
                     b.HasIndex("NotebookId");
 
                     b.ToTable("NotebookPages");
-                });
-
-            modelBuilder.Entity("Diamond.Data.Models.Notebooks.SavedNotebookPage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<long>("CopiedAt")
-                        .HasColumnType("bigint");
-
-                    b.Property<ulong>("CreatedByDiscordUserId")
-                        .HasColumnType("bigint unsigned");
-
-                    b.Property<string>("NotebookName")
-                        .HasColumnType("longtext");
-
-                    b.Property<long>("OriginalPageCreatedAt")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("OriginalPageId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("OriginalPageUpdatedAt")
-                        .HasColumnType("bigint");
-
-                    b.Property<ulong>("SavedByDiscordUserId")
-                        .HasColumnType("bigint unsigned");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SavedNotebookPages");
                 });
 
             modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemon", b =>
@@ -1142,11 +1103,9 @@ namespace Diamond.Data.Migrations
 
             modelBuilder.Entity("Diamond.Data.Models.Notebooks.NotebookPage", b =>
                 {
-                    b.HasOne("Diamond.Data.Models.Notebooks.Notebook", "Notebook")
-                        .WithMany()
+                    b.HasOne("Diamond.Data.Models.Notebooks.Notebook", null)
+                        .WithMany("Pages")
                         .HasForeignKey("NotebookId");
-
-                    b.Navigation("Notebook");
                 });
 
             modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonAttackEffectiveness", b =>
@@ -1292,6 +1251,11 @@ namespace Diamond.Data.Migrations
                     b.Navigation("Poll");
 
                     b.Navigation("PollOption");
+                });
+
+            modelBuilder.Entity("Diamond.Data.Models.Notebooks.Notebook", b =>
+                {
+                    b.Navigation("Pages");
                 });
 
             modelBuilder.Entity("Diamond.Data.Models.Pokemons.DbPokemonStrategy", b =>
