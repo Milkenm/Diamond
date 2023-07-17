@@ -53,9 +53,9 @@ namespace Diamond.API.SlashCommands
 			_ = embed.AddField("🛏 Online since", $"{Utils.GetTimestampBlock(this._client.LastLogin)}", true);
 			_ = embed.AddField("🕒 Uptime", Utils.GetTimestampBlock((long)SMath.Round(uptime.TotalSeconds, 0), TimestampSetting.TimeOnly), true);
 			// Third row
-			_ = embed.AddField("🧠 Server CPU Usage", $"**{SMath.Round(cpuUsage, 0)}%**/100%", true);
-			_ = embed.AddField("💾 Server RAM Usage", $"**{SMath.Round(usedRam / 1024, 1)} GB**/{totalRam} GB", true);
-			_ = embed.AddField("💽 Server Disk Usage", $"**{SMath.Round(usedSpace / 1024D / 1024D / 1024D / 1024D, 1)} TB**/{SMath.Round(totalSpace / 1024D / 1024D / 1024D / 1024D, 1)} TB", true);
+			_ = embed.AddField("🧠 CPU Usage", $"**{SMath.Round(cpuUsage, 0)}%**/100%", true);
+			_ = embed.AddField("💾 RAM Usage", $"**{SMath.Round(usedRam / 1024, 1)} GB**/{totalRam} GB", true);
+			_ = embed.AddField("💽 Disk Usage", $"**{SMath.Round(usedSpace / 1024D / 1024D / 1024D / 1024D, 1)} TB**/{SMath.Round(totalSpace / 1024D / 1024D / 1024D / 1024D, 1)} TB", true);
 			// Buttons
 			ComponentBuilder components = new ComponentBuilder()
 				.WithButton("Invite", style: ButtonStyle.Link, emote: Emoji.Parse("🤖"), url: "https://discord.com/api/oauth2/authorize?client_id=456022260063404033&permissions=8&scope=applications.commands%20bot")
