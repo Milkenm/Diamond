@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management;
@@ -16,7 +15,7 @@ using Discord.Rest;
 using SMath = System.Math;
 namespace Diamond.API.SlashCommands
 {
-    public class Info : InteractionModuleBase<SocketInteractionContext>
+	public class Info : InteractionModuleBase<SocketInteractionContext>
 	{
 		private readonly DiamondClient _client;
 
@@ -32,8 +31,6 @@ namespace Diamond.API.SlashCommands
 		{
 			await this.DeferAsync(!showEveryone);
 
-			// Get some bot info
-			TimeSpan uptime = TimeSpan.FromSeconds(this._client.Uptime);
 			RestApplication appInfo = await this._client.GetApplicationInfoAsync();
 			// Get system info
 			float cpuUsage = this.GetCpuUsage();
@@ -50,12 +47,12 @@ namespace Diamond.API.SlashCommands
 			_ = embed.AddField("⏰ Latency", $"{this._client.Latency}ms", true);
 			// Second row
 			_ = embed.AddField("🪺 Bot created at", Utils.GetTimestampBlock(appInfo.CreatedAt.ToUnixTimeSeconds()), true);
-			_ = embed.AddField("🛏 Online since", $"{Utils.GetTimestampBlock(this._client.LastLogin)}", true);
-			_ = embed.AddField("🕒 Uptime", Utils.GetTimestampBlock((long)SMath.Round(uptime.TotalSeconds, 0), TimestampSetting.TimeOnly), true);
+			_ = embed.AddField("🛏 Online since", Utils.GetTimestampBlock(this._client.LastLogin), true);
+			_ = embed.AddField("‍", Utils.GetTimestampBlock((long)SMath.Round((double)this._client.LastLogin, 0), TimestampSetting.TimeSince), true);
 			// Third row
 			_ = embed.AddField("🧠 CPU Usage", $"**{SMath.Round(cpuUsage, 0)}%**/100%", true);
-			_ = embed.AddField("💾 RAM Usage", $"**{SMath.Round(usedRam / 1024, 1)} GB**/{totalRam} GB", true);
-			_ = embed.AddField("💽 Disk Usage", $"**{SMath.Round(usedSpace / 1024D / 1024D / 1024D / 1024D, 1)} TB**/{SMath.Round(totalSpace / 1024D / 1024D / 1024D / 1024D, 1)} TB", true);
+			_ = embed.AddField("💾 RAM Usage", $"**{this.GetFormattedSpace(usedRam)}**/{this.GetFormattedSpace(totalRam)}", true);
+			_ = embed.AddField("💽 Disk Usage", $"**{this.GetFormattedSpace(usedSpace)}**/{this.GetFormattedSpace(totalSpace)}", true);
 			// Buttons
 			ComponentBuilder components = new ComponentBuilder()
 				.WithButton("Invite", style: ButtonStyle.Link, emote: Emoji.Parse("🤖"), url: "https://discord.com/api/oauth2/authorize?client_id=456022260063404033&permissions=8&scope=applications.commands%20bot")
@@ -81,12 +78,12 @@ namespace Diamond.API.SlashCommands
 		private (float freeRam, float usedRam, float totalRam) GetRamUsage()
 		{
 			_ = PInvoke.GetPhysicallyInstalledSystemMemory(out long totalRamMb);
-			totalRamMb /= 1024;
+			totalRamMb *= 1024;
 			PerformanceCounter performance = new PerformanceCounter("Memory", "Available MBytes");
-			float freeRamMb = performance.NextValue();
+			float freeRamMb = performance.NextValue() * 1024 * 1024;
 			Debug.WriteLine("free ram: " + freeRamMb);
 
-			return (freeRamMb, totalRamMb - freeRamMb, totalRamMb / 1024);
+			return (freeRamMb, totalRamMb - freeRamMb, totalRamMb);
 		}
 
 		private (long freeSpace, long usedSpace, long totalSpace) GetDiskUsage()
@@ -105,6 +102,26 @@ namespace Diamond.API.SlashCommands
 				Debug.WriteLine("free space: " + drive.TotalFreeSpace);
 			}
 			return (freeSpace, totalSpace - freeSpace, totalSpace);
+		}
+
+		private string GetFormattedSpace(double space)
+		{
+			int divisions = 0;
+			while (space >= 1024)
+			{
+				space /= 1024;
+				divisions++;
+			}
+			return $"{SMath.Round(space, 1)} {(SizeSuffix)divisions}";
+		}
+
+		private enum SizeSuffix
+		{
+			B,
+			KB,
+			MB,
+			GB,
+			TB,
 		}
 	}
 }
