@@ -19,19 +19,19 @@ namespace Diamond.API.SlashCommands.SCNotebook
 		public async Task CreatePageCommandAsync(
 			[Summary("title", "Sets the page title.")] string? title = null,
 			[Summary("content", "Sets the content of the page.")] string? content = null,
-			[Summary("notebook", "Adds the page to the selected notebook.")] string? notebookName = null
+			[Summary("notebook", "Adds the page to the selected notebook."), Autocomplete(typeof(NotebookAutocompleter))] string? notebookName = null
 		)
 		{
 			await this.DeferAsync(true);
 
 			using DiamondContext db = new DiamondContext();
 
-			DefaultEmbed embed = new DefaultEmbed("Notebook", "📔", this.Context);
+			NotebookEmbed embed = new NotebookEmbed(this.Context);
 
 			if (title.IsEmpty() || content.IsEmpty())
 			{
 				// Show the editor if the title of content is empty
-				await this.Context.Interaction.RespondWithModalAsync($"modal_notebooks_page_editor", new NotebookPageEditorModal()
+				await this.Context.Interaction.RespondWithModalAsync(NotebookComponentIds.MODAL_NOTEBOOK_EDIT_PAGE, new NotebookPageEditorModal()
 				{
 					PageTitle = title,
 					PageContent = content,
@@ -86,7 +86,7 @@ namespace Diamond.API.SlashCommands.SCNotebook
 			public string? Notebook { get; set; }
 		}
 
-		[ModalInteraction("modal_notebooks_page_editor")]
+		[ModalInteraction(NotebookComponentIds.MODAL_NOTEBOOK_EDIT_PAGE, true)]
 		public async Task PollAddOptionModalHandler(ulong messageId, NotebookPageEditorModal modal)
 		{
 			await this.DeferAsync();

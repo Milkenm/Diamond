@@ -11,7 +11,7 @@ using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.LeagueOfLegends
 {
-    public partial class LeagueOfLegends
+	public partial class LeagueOfLegends
 	{
 		[DSlashCommand("champion", "View info about a champion.")]
 		public async Task ChampionCommandAsync(
@@ -77,6 +77,9 @@ namespace Diamond.API.SlashCommands.LeagueOfLegends
 			_ = await embed.SendAsync(component: component.Build());
 		}
 
-		private double CalculateMaxLevelStat(double baseStat, double perLevelStatIncrease, bool round = true) => System.Math.Round(baseStat + (perLevelStatIncrease * 17), round ? 0 : 1);
+		private double CalculateMaxLevelStat(double baseStat, double perLevelStatIncrease, bool round = true)
+		{
+			return System.Math.Round(baseStat + (perLevelStatIncrease * 17), round ? 0 : 1);
+		}
 	}
 }

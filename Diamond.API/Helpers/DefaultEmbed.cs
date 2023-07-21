@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Discord;
+using Discord.Interactions;
 using Discord.WebSocket;
 
 using ScriptsLibV2.Util;
@@ -40,7 +41,7 @@ namespace Diamond.API.Helpers
 		/// Sends the embed.
 		/// </summary>
 		/// <param name="ephemeral">If the message should only be visible to the user. This is ignored if DeferAsync() was used.</param>
-		public async Task<ulong> SendAsync(bool ephemeral = false, bool isFollowUp = false, bool sendAsNew = false)
+		public virtual async Task<ulong> SendAsync(bool ephemeral = false, bool isFollowUp = false, bool sendAsNew = false)
 		{
 			// Send a new message
 			if (sendAsNew)
@@ -71,7 +72,7 @@ namespace Diamond.API.Helpers
 			return (await this._interaction.GetOriginalResponseAsync()).Id;
 		}
 
-		public async Task<ulong> SendAsync(MessageComponent component, bool ephemeral = false)
+		public virtual async Task<ulong> SendAsync(MessageComponent component, bool ephemeral = false)
 		{
 			this.Component = component;
 			if (this._interaction.HasResponded)

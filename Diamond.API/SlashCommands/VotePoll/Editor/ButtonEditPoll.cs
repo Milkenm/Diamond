@@ -17,7 +17,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 		/// </summary>
 		/// <param name="messageId"></param>
 		/// <returns></returns>
-		[ComponentInteraction("button_edit:*", true)]
+		[ComponentInteraction($"{VotePollComponentIds.BUTTON_VOTEPOLL_EDIT_OPTION}:*", true)]
 		public async Task ButtonEditHandlerAsync(ulong messageId)
 		{
 			using DiamondContext db = new DiamondContext();
@@ -30,7 +30,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 				PollImageUrl = poll.ImageUrl,
 				PollThumbnailUrl = poll.ThumbnailUrl,
 			};
-			await this.Context.Interaction.RespondWithModalAsync($"modal_poll_edit:{messageId}", editorModal);
+			await this.Context.Interaction.RespondWithModalAsync($"{VotePollComponentIds.MODAL_VOTEPOLL_EDIT_OPTION}:{messageId}", editorModal);
 		}
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 		/// <param name="messageId">The ID of the message containing the button that called the modal.</param>
 		/// <param name="modal">The submitted modal.</param>
 		/// <returns></returns>
-		[ModalInteraction("modal_poll_edit:*", true)]
+		[ModalInteraction($"{VotePollComponentIds.MODAL_VOTEPOLL_EDIT_OPTION}:*", true)]
 		public async Task PollEditorModalHandlerAsync(ulong messageId, PollEditorModal modal)
 		{
 			await this.DeferAsync();

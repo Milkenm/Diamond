@@ -84,14 +84,14 @@ namespace Diamond.API.SlashCommands.Services
 				embed.Title = "Error removing permissions";
 				embed.Description = $"I couldn't remove the **{ChannelPermission.SendMessages}** permission from the {announcementsChannel.Mention} channel.\nThis permission was needed for me to publish the messages but is probably no longer needed.\n\nIf you want, you can remove the **{ChannelPermission.SendMessages}** permission from me on the {announcementsChannel.Mention} channel or give me the **{GuildPermission.ManageRoles}** permission on the guild so I can set it myself (if it still doesn't work, I'll need the **{GuildPermission.Administrator}** permission to remove it because you probably have a permission denying **{ChannelPermission.SendMessages}**).";
 				MessageComponent components = new ComponentBuilder()
-					.WithButton("Retry", $"button_autopublish_removepermissions_retry:{announcementsChannel.Id}", ButtonStyle.Primary, Emoji.Parse("🔁"))
-					.WithButton("It's ok", $"button_autopublish_removepermissions_close", ButtonStyle.Secondary, Emoji.Parse("😊"))
+					.WithButton("Retry", $"{AutoPublisherComponentIds.BUTTON_AUTOPUBLISHER_PERMISSIONS_REMOVE_RETRY}:{announcementsChannel.Id}", ButtonStyle.Primary, Emoji.Parse("🔁"))
+					.WithButton("It's ok", AutoPublisherComponentIds.BUTTON_AUTOPUBLISHER_PERMISSIONS_REMOVE_CLOSE, ButtonStyle.Secondary, Emoji.Parse("😊"))
 					.Build();
 				embed.Component = components;
 				_ = await embed.SendAsync(true, true);
 			}
 
-			[ComponentInteraction("button_autopublish_removepermissions_retry:*", true)]
+			[ComponentInteraction($"{AutoPublisherComponentIds.BUTTON_AUTOPUBLISHER_PERMISSIONS_REMOVE_RETRY}:*", true)]
 			public async Task ButtonRetryUnsetPermissionsHandlerAsync(ulong channelId)
 			{
 				await this.DeferAsync();
@@ -112,7 +112,7 @@ namespace Diamond.API.SlashCommands.Services
 				}
 			}
 
-			[ComponentInteraction("button_autopublish_removepermissions_cancel", true)]
+			[ComponentInteraction(AutoPublisherComponentIds.BUTTON_AUTOPUBLISHER_PERMISSIONS_REMOVE_CLOSE, true)]
 			public async Task ButtonCancelUnsetPermissionsHandlerAsync()
 			{
 				await this.DeferAsync();

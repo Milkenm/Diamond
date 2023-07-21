@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Diamond.Data.Exceptions.NotebookExceptions;
 using Diamond.Data.Exceptions.NotebookPageExceptions;
 
-using Microsoft.EntityFrameworkCore;
-
 using ScriptsLibV2.Extensions;
 
 namespace Diamond.Data.Models.Notebooks
@@ -20,6 +18,11 @@ namespace Diamond.Data.Models.Notebooks
 		/// <exception cref="NotebookPageContentIsNullException"></exception>
 		public static async Task CreateNotebookPageAsync(string title, string content, ulong userId, Notebook? notebook, DiamondContext db)
 		{
+			if (GetAllNotebookPages(userId, db).Count == 20 * 100)
+			{
+				throw new NotebookPageLimitReachedException(20 * 100);
+			}
+
 			ValidateNotebookPage(title, content);
 
 			try
@@ -64,11 +67,13 @@ namespace Diamond.Data.Models.Notebooks
 		/// <exception cref="NotebookPageContentIsNullException"></exception>
 		public static async Task CreateNotebookPageAsync(string title, string content, ulong userId, string notebookName, DiamondContext db)
 		{
-			var userNotebooks = Notebook.GetNotebooksMap(userId, db);
+			IQueryable<Notebook> userNotebooks = db.Notebooks.Where(n => n.Name == notebookName && n.DiscordUserId == userId);
 			if (!userNotebooks.Any())
 			{
 				throw new NotebookNotFoundException(notebookName);
 			}
+
+			await CreateNotebookPageAsync(title, content, userId, userNotebooks.First(), db);
 		}
 
 		/// <exception cref="NotebookPageCreateException"></exception>
@@ -80,8 +85,30 @@ namespace Diamond.Data.Models.Notebooks
 			await CreateNotebookPageAsync(title, content, userId, notebook: null, db);
 		}
 
-		public static Dictionary<string, NotebookPage> GetNotebookPages(Notebook notebook, ulong userId, DiamondContext db)
+		public static Dictionary<string, NotebookPage> GetAllNotebookPages(ulong userId, DiamondContext db)
 		{
+			IQueryable<NotebookPage> foundPages = db.NotebookPages.Where(p => p.DiscordUserId == userId);
+			if (!foundPages.Any())
+			{
+				return new Dictionary<string, NotebookPage>();
+			}
+
+			Dictionary<string, NotebookPage> notebookPagesMap = new Dictionary<string, NotebookPage>();
+			foreach (NotebookPage page in foundPages)
+			{
+				notebookPagesMap.Add(page.Title, page);
+			}
+			return notebookPagesMap;
+		}
+
+		/// <exception cref="ArgumentNullException"></exception>
+		public static Dictionary<string, NotebookPage> GetNotebookPages(Notebook? notebook, ulong? userId, DiamondContext db)
+		{
+			if (notebook == null && userId == null)
+			{
+				throw new ArgumentNullException($"Both '{nameof(notebook)}' and '{nameof(userId)}' cannot be null.");
+			}
+
 			IQueryable<NotebookPage> foundPages = db.NotebookPages.Where(p => (p.Notebook == notebook) || (p.Notebook == null && p.DiscordUserId == userId));
 			if (!foundPages.Any())
 			{
@@ -100,12 +127,7 @@ namespace Diamond.Data.Models.Notebooks
 		public static Dictionary<string, NotebookPage> GetNotebookPages(long? notebookId, ulong userId, DiamondContext db)
 		{
 			IQueryable<Notebook> foundNotebook = db.Notebooks.Where(n => n.Id == notebookId);
-			if (!foundNotebook.Any())
-			{
-				throw new NotebookNotFoundException(notebookId);
-			}
-
-			return GetNotebookPages(foundNotebook.First(), userId, db);
+			return !foundNotebook.Any() ? throw new NotebookNotFoundException(notebookId) : GetNotebookPages(foundNotebook.First(), userId, db);
 		}
 
 		/// <exception cref="NotebookPageNotChangedException"></exception>

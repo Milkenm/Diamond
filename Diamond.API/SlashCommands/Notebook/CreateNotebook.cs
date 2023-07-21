@@ -12,7 +12,7 @@ namespace Diamond.API.SlashCommands.SCNotebook
 {
 	public partial class SCNotebook
 	{
-		[DSlashCommand("create-page", "Creates a new page on your notebook.")]
+		[DSlashCommand("create", "Creates a new page on your notebook.")]
 		public async Task CreateNotebookCommandAsync(
 			[Summary("name", "Sets the name of the notebook.")] string name,
 			[Summary("description", "Set a description for the notebook.")] string? description = null
@@ -20,7 +20,7 @@ namespace Diamond.API.SlashCommands.SCNotebook
 		{
 			await this.DeferAsync(true);
 
-			DefaultEmbed embed = new DefaultEmbed("Notebook", "📔", this.Context);
+			NotebookEmbed embed = new NotebookEmbed(Context);
 
 			using DiamondContext db = new DiamondContext();
 

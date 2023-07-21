@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Diamond.API.APIs.Funny;
 using Diamond.API.Attributes;
 using Diamond.API.Helpers;
@@ -14,7 +15,7 @@ using static Diamond.API.APIs.Funny.MemeAPI;
 
 namespace Diamond.API.SlashCommands.Fun
 {
-    public partial class Fun
+	public partial class Fun
 	{
 		/// Key: MessageId, Value: List of Reddit Post ID
 		private static readonly Dictionary<ulong, List<string>> _shownMemes = new Dictionary<ulong, List<string>>();
@@ -35,7 +36,7 @@ namespace Diamond.API.SlashCommands.Fun
 			}
 		}
 
-		[ComponentInteraction("button_reroll_meme:*,*,*", true)]
+		[ComponentInteraction($"{MemeComponentIds.BUTTON_MEME_REROLL}:*,*,*", true)]
 		public async Task ButtonRerollMemeAsync(int rerollCount, bool preventDuplicates, int duplicates)
 		{
 			await this.DeferAsync(true);
@@ -49,7 +50,7 @@ namespace Diamond.API.SlashCommands.Fun
 			});
 		}
 
-		[ComponentInteraction("button_share_meme:*", true)]
+		[ComponentInteraction($"{MemeComponentIds.BUTTON_MEME_SHARE}:*", true)]
 		public async Task ButtonShareMemeAsync(string postLink)
 		{
 			await this.DeferAsync(true);
@@ -97,14 +98,14 @@ namespace Diamond.API.SlashCommands.Fun
 			// "Reroll" button
 			if (showAdditionalButtons)
 			{
-				_ = components.WithButton("Reroll", $"button_reroll_meme:{rerollCount},{preventDuplicates},{duplicates + duplicated}", style: ButtonStyle.Success, emote: Emoji.Parse("🔁"));
+				_ = components.WithButton("Reroll", $"{MemeComponentIds.BUTTON_MEME_REROLL}:{rerollCount},{preventDuplicates},{duplicates + duplicated}", style: ButtonStyle.Success, emote: Emoji.Parse("🔁"));
 			}
 			// "View post" button
 			_ = components.WithButton("View post", style: ButtonStyle.Link, emote: Emoji.Parse("📄"), url: meme.PostLink);
 			// "Share" button
 			if (showAdditionalButtons)
 			{
-				_ = components.WithButton("Share", $"button_share_meme:{meme.PostLink}", style: ButtonStyle.Secondary, emote: Emoji.Parse("📲"));
+				_ = components.WithButton("Share", $"{MemeComponentIds.BUTTON_MEME_SHARE}:{meme.PostLink}", style: ButtonStyle.Secondary, emote: Emoji.Parse("📲"));
 			}
 			embed.Component = components.Build();
 

@@ -18,7 +18,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 		/// </summary>
 		/// <param name="messageId">The ID of the message containing the clicked button.</param>
 		/// <returns></returns>
-		[ComponentInteraction("button_publish:*", true)]
+		[ComponentInteraction($"{VotePollComponentIds.BUTTON_VOTEPOLL_PUBLISH}:*", true)]
 		public async Task ButtonPublishHandlerAsync(ulong messageId)
 		{
 			await this.DeferAsync();

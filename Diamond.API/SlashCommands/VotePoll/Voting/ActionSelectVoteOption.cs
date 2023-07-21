@@ -16,7 +16,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 		/// </summary>
 		/// <param name="messageId">The ID of the message containing the select menu.</param>
 		/// <param name="selectedOptionId">The ID of the PollOption selected by the user.</param>
-		[ComponentInteraction("sm_poll_vote:*", true)]
+		[ComponentInteraction($"{VotePollComponentIds.SELECT_VOTEPOLL_VOTE}:*", true)]
 		public async Task SelectMenuPollVoteHandlerAsync(ulong messageId, long selectedOptionId)
 		{
 			await this.DeferAsync();

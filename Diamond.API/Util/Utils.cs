@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -12,6 +13,10 @@ using Diamond.API.Helpers;
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
+
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+using Org.BouncyCastle.Crypto.Tls;
 
 using ScriptsLibV2.Extensions;
 
@@ -256,6 +261,11 @@ namespace Diamond.API.Util
 			{
 				Merge(dictionary, kv, operation);
 			}
+		}
+
+		public static Dictionary<TKey, TValue> GetRange<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, int startingIndex, int count)
+		{
+			return dictionary.Skip(startingIndex).Take(count).ToDictionary(k => k.Key, v => v.Value);
 		}
 		#endregion
 

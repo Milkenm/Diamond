@@ -17,6 +17,11 @@ namespace Diamond.Data.Models.Notebooks
 		public static async Task CreateNotebookAsync(string name, string? description, ulong userId, DiamondContext db)
 		{
 			Dictionary<string, Notebook> userNotebooks = GetNotebooksMap(userId, db);
+			if (userNotebooks.Count == 100)
+			{
+				throw new NotebookLimitReachedException(100);
+			}
+
 			if (userNotebooks.ContainsKey(name))
 			{
 				throw new NotebookAlreadyExistsException(name);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 using Diamond.API.Helpers;
 using Diamond.API.Util;
 
@@ -10,7 +11,7 @@ using Discord.WebSocket;
 
 namespace Diamond.API.SlashCommands
 {
-    public class XMention : InteractionModuleBase<SocketInteractionContext>
+	public class XMention : InteractionModuleBase<SocketInteractionContext>
 	{
 
 		[EnabledInDm(false)]
@@ -40,17 +41,18 @@ namespace Diamond.API.SlashCommands
 				ChannelPermissions botPermissions = this.Context.Guild.CurrentUser.GetPermissions(textChannel);
 				if (userPermissions.ViewChannel && userPermissions.SendMessages && botPermissions.ViewChannel && botPermissions.SendMessages)
 				{
+					// Add the channel to the select menu
 					textChannels.Add(new SelectMenuOptionBuilder(textChannel.Name, textChannel.Id.ToString()));
 				}
 			}
 
 			ComponentBuilder component = new ComponentBuilder()
-				.WithSelectMenu($"xmention_channel_selector:{message.Id}", textChannels, "Select a channel");
+				.WithSelectMenu($"{XMentionComponentIds.SELECT_XMENTION_CHANNEL}:{message.Id}", textChannels, "Select a channel");
 
-			await embed.SendAsync(component.Build());
+			_ = await embed.SendAsync(component.Build());
 		}
 
-		[ComponentInteraction("xmention_channel_selector:*", true)]
+		[ComponentInteraction($"{XMentionComponentIds.SELECT_XMENTION_CHANNEL}:*", true)]
 		public async Task XChannelSelectionAsync(ulong messageId, string selectedChannelId)
 		{
 			await this.DeferAsync();
@@ -65,7 +67,7 @@ namespace Diamond.API.SlashCommands
 			};
 
 			SocketGuildChannel channel = this.Context.Guild.GetChannel(Convert.ToUInt64(selectedChannelId));
-			await (channel as SocketTextChannel).SendMessageAsync(embed: embed.Build());
+			_ = await (channel as SocketTextChannel).SendMessageAsync(embed: embed.Build());
 		}
 	}
 }

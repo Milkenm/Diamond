@@ -14,7 +14,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 		/// <para>(Called when a user clicks the "Cancel" button on the <see cref="VotingEmbed"/>)</para>
 		/// </summary>
 		/// <returns></returns>
-		[ComponentInteraction("button_poll_cancel_vote", true)]
+		[ComponentInteraction(VotePollComponentIds.BUTTON_VOTEPOLL_CANCEL_VOTE, true)]
 		public async Task ButtonCancelVoteHandlerAsync()
 		{
 			await this.DeferAsync();

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.Design;
 
 using Diamond.Data;
 using Diamond.Data.Models.Polls;
@@ -16,16 +17,16 @@ namespace Diamond.API.SlashCommands.VotePoll.Editor
 			List<DbPollOption> pollOptions = VoteUtils.GetPollOptions(db, poll);
 
 			ComponentBuilder builder = new ComponentBuilder()
-				.WithButton(new ButtonBuilder("Publish", $"button_publish:{messageId}", ButtonStyle.Success, isDisabled: pollOptions.Count < 2))
-				.WithButton(new ButtonBuilder("Add option", $"button_add:{messageId}"))
-				.WithButton(new ButtonBuilder("Change title or description", $"button_edit:{messageId}", ButtonStyle.Secondary));
+				.WithButton(new ButtonBuilder("Publish", $"{VotePollComponentIds.BUTTON_VOTEPOLL_PUBLISH}:{messageId}", ButtonStyle.Success, isDisabled: pollOptions.Count < 2))
+				.WithButton(new ButtonBuilder("Add option", $"{VotePollComponentIds.BUTTON_VOTEPOLL_ADD_OPTION}:{messageId}"))
+				.WithButton(new ButtonBuilder("Change title or description", $"{VotePollComponentIds.BUTTON_VOTEPOLL_EDIT_OPTION}:{messageId}", ButtonStyle.Secondary));
 
 			if (pollOptions.Count > 0)
 			{
 				// Create the selection menu
 				SelectMenuBuilder selectMenu = new SelectMenuBuilder()
 				{
-					CustomId = "sm_poll_remove_option:" + messageId,
+					CustomId = $"{VotePollComponentIds.SELECT_VOTEPOLL_REMOVE_OPTION}:{messageId}",
 					Placeholder = "Remove an option...",
 				};
 				foreach (DbPollOption pollOption in pollOptions)

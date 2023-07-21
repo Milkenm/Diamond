@@ -33,7 +33,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			await this.SendInfoEmbedAsync(pokemonName, generationAbbreviation, replaceEmojis, showEveryone, false);
 		}
 
-		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_INFO}:*,*,*", true)]
+		[ComponentInteraction($"{PokemonComponentIds.BUTTON_POKEMON_VIEW_INFO}:*,*,*", true)]
 		public async Task ButtonViewInfoHandlerAsync(string pokemonName, string generationAbbreviation, bool replaceEmojis)
 		{
 			await this.DeferAsync();
@@ -41,7 +41,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			await this.SendInfoEmbedAsync(pokemonName, generationAbbreviation, replaceEmojis, false, false);
 		}
 
-		[ComponentInteraction($"{BUTTON_POKEMON_SHARE_INFO}:*,*,*", true)]
+		[ComponentInteraction($"{PokemonComponentIds.BUTTON_POKEMON_SHARE_INFO}:*,*,*", true)]
 		public async Task ButtonSharePokemonHandlerAsync(string pokemonName, string generationAbbreviation, bool replaceEmojis)
 		{
 			await this.DeferAsync();
@@ -49,7 +49,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			await this.SendInfoEmbedAsync(pokemonName, generationAbbreviation, replaceEmojis, true, true);
 		}
 
-		[ComponentInteraction($"{SELECT_POKEMON_INFO_GENERATION}:*,*", true)]
+		[ComponentInteraction($"{PokemonComponentIds.SELECT_POKEMON_INFO_GENERATION}:*,*", true)]
 		public async Task SelectMenuInfoGenerationHandlerAsync(string pokemonName, bool replaceEmojis, string generationAbbreviation)
 		{
 			await this.DeferAsync();

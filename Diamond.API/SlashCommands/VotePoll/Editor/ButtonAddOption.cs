@@ -18,13 +18,13 @@ namespace Diamond.API.SlashCommands.VotePoll
 		/// <para>(Called when a user clicks the "Add Option" button on the <see cref="EditorEmbed"/>)</para>
 		/// </summary>
 		/// <param name="messageId">The ID of the message containing the button.</param>
-		[ComponentInteraction("button_add:*", true)]
+		[ComponentInteraction($"{VotePollComponentIds.BUTTON_VOTEPOLL_ADD_OPTION}:*", true)]
 		public async Task ButtonAddHandlerAsync(ulong messageId)
 		{
 			using DiamondContext db = new DiamondContext();
 
 			NewOptionModal newOptionModal = new NewOptionModal();
-			await this.Context.Interaction.RespondWithModalAsync($"modal_poll_add_option:{messageId}", newOptionModal);
+			await this.Context.Interaction.RespondWithModalAsync($"{VotePollComponentIds.MODAL_VOTEPOLL_ADD_OPTION}:{messageId}", newOptionModal);
 		}
 
 		/// <summary>
@@ -57,7 +57,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 		/// </summary>
 		/// <param name="messageId">The ID of the message containing the button that called the modal.</param>
 		/// <param name="modal">The submitted modal.</param>
-		[ModalInteraction("modal_poll_add_option:*")]
+		[ModalInteraction($"{VotePollComponentIds.MODAL_VOTEPOLL_ADD_OPTION}:*")]
 		public async Task PollAddOptionModalHandler(ulong messageId, NewOptionModal modal)
 		{
 			await this.DeferAsync();

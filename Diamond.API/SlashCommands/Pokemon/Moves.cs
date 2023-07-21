@@ -29,7 +29,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, movesStartPage * MOVES_PER_PAGE, replaceEmojis, showEveryone);
 		}
 
-		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_MOVES}:*,*,*", true)]
+		[ComponentInteraction($"{PokemonComponentIds.BUTTON_POKEMON_VIEW_MOVES}:*,*,*", true)]
 		public async Task ButtonViewMovesHandlerAsync(string pokemonName, string generationAbbreviation, bool replaceEmojis)
 		{
 			await this.DeferAsync();
@@ -37,7 +37,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, 0, replaceEmojis, false);
 		}
 
-		[ComponentInteraction($"{BUTTON_POKEMON_SHARE_MOVES}:*,*,*,*", true)]
+		[ComponentInteraction($"{PokemonComponentIds.BUTTON_POKEMON_SHARE_MOVES}:*,*,*,*", true)]
 		public async Task ButtonShareMovesHandlerAsync(string pokemonName, string generationAbbreviation, bool replaceEmojis, int movesStartIndex)
 		{
 			await this.DeferAsync();
@@ -45,7 +45,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, movesStartIndex, replaceEmojis, true);
 		}
 
-		[ComponentInteraction($"{SELECT_POKEMON_MOVES_GENERATION}:*,*", true)]
+		[ComponentInteraction($"{PokemonComponentIds.SELECT_POKEMON_MOVES_GENERATION}:*,*", true)]
 		public async Task SelectMenuMovesGenerationHandlerAsync(string pokemonName, bool replaceEmojis, string generationAbbreviation)
 		{
 			await this.DeferAsync();
@@ -89,7 +89,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			_ = await embed.SendAsync(this.GetEmbedButtons(pokemonName, generationAbbreviation, PokemonEmbed.Moves, replaceEmojis, showEveryone, db, startingIndex, movesList.Count));
 		}
 
-		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_MOVES_FIRST}:*,*,*", true)]
+		[ComponentInteraction($"{PokemonComponentIds.BUTTON_POKEMON_VIEW_MOVES_FIRST}:*,*,*", true)]
 		public async Task ButtonMovesFirstPageHandlerAsync(string pokemonName, string generationAbbreviation, bool replaceEmojis)
 		{
 			await this.DeferAsync();
@@ -97,7 +97,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, 0, replaceEmojis, false);
 		}
 
-		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_MOVES_BACK}:*,*,*,*", true)]
+		[ComponentInteraction($"{PokemonComponentIds.BUTTON_POKEMON_VIEW_MOVES_BACK}:*,*,*,*", true)]
 		public async Task ButtonMovesBackHandlerAsync(string pokemonName, string generationAbbreviation, int startingIndex, bool replaceEmojis)
 		{
 			await this.DeferAsync();
@@ -105,7 +105,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, startingIndex - MOVES_PER_PAGE, replaceEmojis, false);
 		}
 
-		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_MOVES_NEXT}:*,*,*,*", true)]
+		[ComponentInteraction($"{PokemonComponentIds.BUTTON_POKEMON_VIEW_MOVES_NEXT}:*,*,*,*", true)]
 		public async Task ButtonMovesNextHandlerAsync(string pokemonName, string generationAbbreviation, int startingIndex, bool replaceEmojis)
 		{
 			await this.DeferAsync();
@@ -113,7 +113,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			await this.SendMovesEmbedAsync(pokemonName, generationAbbreviation, startingIndex + MOVES_PER_PAGE, replaceEmojis, false);
 		}
 
-		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_MOVES_LAST}:*,*,*", true)]
+		[ComponentInteraction($"{PokemonComponentIds.BUTTON_POKEMON_VIEW_MOVES_LAST}:*,*,*", true)]
 		public async Task ButtonMovesLastPageHandlerAsync(string pokemonName, string generationAbbreviation, bool replaceEmojis)
 		{
 			await this.DeferAsync();

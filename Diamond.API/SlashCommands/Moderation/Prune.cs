@@ -11,7 +11,7 @@ using Discord.Interactions;
 
 namespace Diamond.API.SlashCommands.Moderation
 {
-    public partial class Moderation
+	public partial class Moderation
 	{
 		[RequireBotPermission(GuildPermission.ManageMessages)]
 		[RequireUserPermission(GuildPermission.ManageMessages)]
@@ -57,12 +57,12 @@ namespace Diamond.API.SlashCommands.Moderation
 			}
 
 			ComponentBuilder component = new ComponentBuilder()
-				.WithButton("Delete", "delete_prune", ButtonStyle.Danger, Emoji.Parse("🗑️"));
+				.WithButton("Delete", PruneComponentIds.BUTTON_PRUNE_DELETE, ButtonStyle.Danger, Emoji.Parse("🗑️"));
 
 			_ = await embed.SendAsync(component.Build());
 		}
 
-		[ComponentInteraction("delete_prune", true)]
+		[ComponentInteraction(PruneComponentIds.BUTTON_PRUNE_DELETE, true)]
 		public async Task PruneButtonAsync()
 		{
 			await this.DeferAsync();

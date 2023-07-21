@@ -27,7 +27,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			await this.SendStratsEmbed(pokemonName, generationAbbreviation, replaceEmojis, showEveryone);
 		}*/
 
-		[ComponentInteraction($"{BUTTON_POKEMON_VIEW_STRATS}:*,*,*", true)]
+		[ComponentInteraction($"{PokemonComponentIds.BUTTON_POKEMON_VIEW_STRATS}:*,*,*", true)]
 		public async Task ButtonViewStrategiesHandlerAsync(string pokemonName, string generationAbbreviation, bool replaceEmojis)
 		{
 			await this.DeferAsync();
@@ -35,7 +35,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			await this.SendStratsEmbedAsync(pokemonName, generationAbbreviation, replaceEmojis, false);
 		}
 
-		[ComponentInteraction($"{SELECT_POKEMON_STRATEGIES_GENERATION}:*:*", true)]
+		[ComponentInteraction($"{PokemonComponentIds.SELECT_POKEMON_STRATEGIES_GENERATION}:*:*", true)]
 		public async Task SelectMenuStrategiesGenerationHandlerAsync(string pokemonName, bool replaceEmojis, string generationNumber)
 		{
 			await this.DeferAsync();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Diamond.API.Helpers;
 using Diamond.API.Util;
 using Diamond.Data;
 using Diamond.Data.Models.Notebooks;
@@ -14,6 +15,7 @@ using ScriptsLibV2.Extensions;
 
 namespace Diamond.API.SlashCommands.SCNotebook
 {
+	[Group("notebooks", "Notebook related commands.")]
 	public partial class SCNotebook : InteractionModuleBase<SocketInteractionContext>
 	{
 		public class NotebookAutocompleter : AutocompleteHandler
@@ -45,6 +47,13 @@ namespace Diamond.API.SlashCommands.SCNotebook
 
 				return AutocompletionResult.FromSuccess(autocompletions.Take(25));
 			}
+		}
+
+		public class NotebookEmbed : DefaultEmbed
+		{
+			public NotebookEmbed(IInteractionContext context)
+				: base("Notebooks", "📔", context)
+			{ }
 		}
 	}
 }

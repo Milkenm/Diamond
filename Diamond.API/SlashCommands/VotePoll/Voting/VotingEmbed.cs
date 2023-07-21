@@ -25,7 +25,7 @@ namespace Diamond.API.SlashCommands.VotePoll.Voting
 			// Create the selection menu
 			SelectMenuBuilder selectMenu = new SelectMenuBuilder()
 			{
-				CustomId = "sm_poll_vote:" + pollMessageId,
+				CustomId = $"{VotePollComponentIds.SELECT_VOTEPOLL_VOTE}:{pollMessageId}",
 				Placeholder = "Vote for an option...",
 			};
 			// Add "No vote" option
@@ -47,8 +47,8 @@ namespace Diamond.API.SlashCommands.VotePoll.Voting
 			// Add select menu to the response
 			ComponentBuilder builder = new ComponentBuilder()
 				.WithSelectMenu(selectMenu)
-				.WithButton(new ButtonBuilder("Submit vote", $"button_poll_submit_vote:{pollMessageId},{optionId}", ButtonStyle.Success, isDisabled: optionId == null))
-				.WithButton(new ButtonBuilder("Cancel", $"button_poll_cancel_vote", ButtonStyle.Secondary));
+				.WithButton(new ButtonBuilder("Submit vote", $"{VotePollComponentIds.BUTTON_VOTEPOLL_SUBMIT_VOTE}:{pollMessageId},{optionId}", ButtonStyle.Success, isDisabled: optionId == null))
+				.WithButton(new ButtonBuilder("Cancel", VotePollComponentIds.BUTTON_VOTEPOLL_CANCEL_VOTE, ButtonStyle.Secondary));
 			this.Component = builder.Build();
 		}
 	}

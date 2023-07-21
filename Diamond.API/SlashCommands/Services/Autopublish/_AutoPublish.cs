@@ -23,8 +23,6 @@ namespace Diamond.API.SlashCommands.Services
 
 			private static bool _eventInitialized = false;
 
-			private const string BUTTON_COMPONENT_PUBLISH_PREFIX = "button_autopublish_";
-
 			public AutoPublish(DiamondClient client)
 			{
 				this._client = client;

@@ -12,7 +12,7 @@ using Discord.WebSocket;
 
 namespace Diamond.API.SlashCommands
 {
-    public class Someone : InteractionModuleBase<SocketInteractionContext>
+	public class Someone : InteractionModuleBase<SocketInteractionContext>
 	{
 		private static readonly List<string> _kaomojisList = new List<string>()
 		{
@@ -47,7 +47,7 @@ namespace Diamond.API.SlashCommands
 			_ = await embed.SendAsync();
 		}
 
-		[ComponentInteraction("button_someone_reroll:*,*,*,*,*,*,*", true)]
+		[ComponentInteraction($"{SomeoneComponentIds.BUTTON_SOMEONE_REROLL}:*,*,*,*,*,*,*", true)]
 		public async Task ButtonRerollHandlerAsync(ulong withRoleId, ulong withoutRoleId, bool onlyInThisChannel, bool includeOffline, bool includeBots, bool includeSelf, bool printSettings)
 		{
 			await this.DeferAsync();
@@ -69,7 +69,7 @@ namespace Diamond.API.SlashCommands
 			if (addComponents)
 			{
 				embed.Component = new ComponentBuilder()
-				.WithButton("Reroll", $"button_someone_reroll:{(args.WithRole != null ? args.WithRole.Id : 0L)},{(args.WithoutRole != null ? args.WithRole.Id : 0L)},{args.OnlyInThisChannel},{args.IncludeOffline},{args.IncludeBots},{args.IncludeSelf},{args.PrintSettings}", style: ButtonStyle.Secondary, emote: Emoji.Parse("🔁"))
+				.WithButton("Reroll", $"{SomeoneComponentIds.BUTTON_SOMEONE_REROLL}:{(args.WithRole != null ? args.WithRole.Id : 0L)},{(args.WithoutRole != null ? args.WithRole.Id : 0L)},{args.OnlyInThisChannel},{args.IncludeOffline},{args.IncludeBots},{args.IncludeSelf},{args.PrintSettings}", style: ButtonStyle.Secondary, emote: Emoji.Parse("🔁"))
 				.Build();
 			}
 
