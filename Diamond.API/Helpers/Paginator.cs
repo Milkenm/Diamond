@@ -7,25 +7,38 @@ namespace Diamond.API.Helpers
 	public class Paginator<T>
 	{
 		public IReadOnlyCollection<T> Items { get; private set; }
+		public int StartingIndex { get; private set; }
 		public int ItemsPerPage { get; private set; }
+
 		public int MaxPages { get; private set; }
 		public int CurrentPage { get; private set; }
+		public int PrettyMaxPages => this.MaxPages + 1;
+		public int PrettyCurrentPage => this.CurrentPage + 1;
 
 		public bool HasPreviousPage => this.CurrentPage > 0;
 		public bool HasNextPage => this.CurrentPage < this.MaxPages;
 
-		public Paginator(IReadOnlyCollection<T> items, int itemsPerPage)
+		public Paginator(IReadOnlyCollection<T> items, int startingIndex, int itemsPerPage)
 		{
 			this.Items = items;
+			this.StartingIndex = startingIndex;
 			this.ItemsPerPage = itemsPerPage;
 
 			this.MaxPages = this.CalculateMaxPages();
+
+			if (this.StartingIndex == -1)
+			{
+				this.StartingIndex = this.MaxPages;
+			}
+
+			this.CurrentPage = this.GetPageOfIndex(this.StartingIndex);
+
 		}
 
 		public int CalculateMaxPages()
 		{
 			int maxPages = (int)Math.Ceiling((double)(this.Items.Count / this.ItemsPerPage));
-			if (this.Items.Count % this.ItemsPerPage == 0)
+			if (this.Items.Count > 0 && this.Items.Count % this.ItemsPerPage == 0)
 			{
 				maxPages--;
 			}
@@ -34,9 +47,9 @@ namespace Diamond.API.Helpers
 
 		public IEnumerable<T> GetItemsFromPage(int page)
 		{
-			if (page < 0 || page > this.MaxPages)
+			if (page < 0 || page > this.PrettyMaxPages)
 			{
-				throw new ArgumentOutOfRangeException($"'{nameof(page)}' must range from 0 to {this.MaxPages}, but was {page}.");
+				throw new ArgumentOutOfRangeException($"'{nameof(page)}' must range from 0 to {this.PrettyMaxPages}, but was {page}.");
 			}
 
 			this.CurrentPage = page;

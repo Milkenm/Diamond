@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -13,10 +12,6 @@ using Diamond.API.Helpers;
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
-
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-
-using Org.BouncyCastle.Crypto.Tls;
 
 using ScriptsLibV2.Extensions;
 
@@ -206,9 +201,14 @@ namespace Diamond.API.Util
 			return sb;
 		}
 
+		public static StringBuilder Preappend(this StringBuilder sb, string text)
+		{
+			return sb.Insert(0, text);
+		}
+
 		public static StringBuilder Preappend(this StringBuilder sb, string text, string separator)
 		{
-			return sb.Insert(0, text + (sb.Length > 0 ? separator : null));
+			return Preappend(sb, text + (sb.Length > 0 ? separator : null));
 		}
 
 		public static string ToStringOrDefault(this StringBuilder sb, string defaultValue)

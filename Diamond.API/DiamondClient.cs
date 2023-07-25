@@ -71,54 +71,57 @@ namespace Diamond.API
 
 		private async Task InteractionService_InteractionExecuted(ICommandInfo command, IInteractionContext context, IResult result)
 		{
-			if (!result.IsSuccess)
+			if (result.IsSuccess)
 			{
-				string contextProperties = GetObjectProperties(context);
-				string interactionProperties = GetObjectProperties(context.Interaction);
-				string slashCommandDataProperties = GetObjectProperties(context.Interaction.Data);
-
-				DefaultEmbed errorEmbed;
-				switch (result.Error)
-				{
-					case InteractionCommandError.UnmetPrecondition:
-						{
-							errorEmbed = new DefaultEmbed("Error", "🛑", context)
-							{
-								Title = "No permission",
-								Description = result.ErrorReason,
-							};
-						}
-						break;
-					case InteractionCommandError.UnknownCommand:
-						{
-							errorEmbed = new DefaultEmbed("Error", "🤔", context)
-							{
-								Title = "Unknown command",
-								Description = $"That command was not found.",
-							};
-						}
-						break;
-					default:
-						{
-							errorEmbed = new DefaultEmbed("Error", "🔥", context)
-							{
-								Title = "Something bad happened... :(",
-								Description = "This unexpected error was reported to the dev.\nHope to get it fixed soon...",
-							};
-							OnLog?.Invoke($"Error running '{(command != null ? command.Name : "unknown")}' (user: {context.User.Username}#{context.User.Discriminator}):\n{result.ErrorReason} ({result.Error.GetType()})\nInteraction: {command}\n{contextProperties}\n{interactionProperties}\n{slashCommandDataProperties}", true);
-						}
-						break;
-				}
-
-				if (!context.Interaction.HasResponded)
-				{
-					await context.Interaction.DeferAsync(true);
-				}
-				_ = await context.Interaction.ModifyOriginalResponseAsync((og) =>
-				{
-					og.Embed = errorEmbed.Build();
-				});
+				return;
 			}
+
+			string contextProperties = GetObjectProperties(context);
+			string interactionProperties = GetObjectProperties(context.Interaction);
+			string slashCommandDataProperties = GetObjectProperties(context.Interaction.Data);
+
+			DefaultEmbed errorEmbed;
+			switch (result.Error)
+			{
+				case InteractionCommandError.UnmetPrecondition:
+					{
+						errorEmbed = new DefaultEmbed("Error", "🛑", context)
+						{
+							Title = "No permission",
+							Description = result.ErrorReason,
+						};
+					}
+					break;
+				case InteractionCommandError.UnknownCommand:
+					{
+						errorEmbed = new DefaultEmbed("Error", "🤔", context)
+						{
+							Title = "Unknown command",
+							Description = $"That command was not found.",
+						};
+						OnLog?.Invoke($"Error running '{(command != null ? command.Name : "unknown")}': command not found.", true);
+					}
+					break;
+				default:
+					{
+						errorEmbed = new DefaultEmbed("Error", "🔥", context)
+						{
+							Title = "Something bad happened... :(",
+							Description = "This unexpected error was reported to the dev.\nHope to get it fixed soon...",
+						};
+						OnLog?.Invoke($"Error running '{(command != null ? command.Name : "unknown")}' (user: {context.User.Username}#{context.User.Discriminator}):\n{result.ErrorReason} ({result.Error.GetType()})\nInteraction: {command}\n{contextProperties}\n{interactionProperties}\n{slashCommandDataProperties}", true);
+					}
+					break;
+			}
+
+			if (!context.Interaction.HasResponded)
+			{
+				await context.Interaction.DeferAsync(true);
+			}
+			_ = await context.Interaction.ModifyOriginalResponseAsync((og) =>
+			{
+				og.Embed = errorEmbed.Build();
+			});
 		}
 
 		private async Task DiamondClient_InteractionCreated(SocketInteraction socketInteraction)

@@ -39,6 +39,9 @@
 
 	public class NotebookComponentIds
 	{
+		// Notebook - BUTTON
+		private const string BUTTON_NOTEBOOK_BASE = $"{ComponentIds.BUTTON_BASE}_notebook";
+		public const string BUTTON_NOTEBOOK_OPEN = $"{BUTTON_NOTEBOOK_BASE}_open";
 		// Notebook - MODAL
 		private const string MODAL_NOTEBOOK_BASE = $"{ComponentIds.MODAL_BASE}_notebook";
 		public const string MODAL_NOTEBOOK_EDIT_PAGE = $"{MODAL_NOTEBOOK_BASE}_edit_page";
