@@ -28,7 +28,7 @@ namespace Diamond.API.Helpers
 
 			if (this.StartingIndex == -1)
 			{
-				this.StartingIndex = this.MaxPages;
+				this.StartingIndex = this.Items.Count - 1;
 			}
 
 			this.CurrentPage = this.GetPageOfIndex(this.StartingIndex);

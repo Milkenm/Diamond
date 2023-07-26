@@ -275,30 +275,6 @@ namespace Diamond.API.Util
 			return @string.IsEmpty() ? @default : @string;
 		}
 		#endregion
-
-		#region ComponentBuilder
-		public static ComponentBuilder WithButtonFixed(this ComponentBuilder components, ButtonBuilder button, int row = 0)
-		{
-			if (components.ActionRows == null)
-			{
-				components.ActionRows = new List<ActionRowBuilder>();
-			}
-
-			while (components.ActionRows.Count - 1 < row)
-			{
-				_ = components.AddRow(new ActionRowBuilder());
-			}
-
-			_ = components.ActionRows[row].AddComponent(button.Build());
-
-			return components;
-		}
-
-		public static ComponentBuilder WithButtonFixed(this ComponentBuilder components, string label = null, string customId = null, ButtonStyle style = ButtonStyle.Primary, IEmote emote = null, string url = null, bool disabled = false, int row = 0)
-		{
-			return WithButtonFixed(components, label, customId, style, emote, url, disabled, row);
-		}
-		#endregion
 	}
 
 	public class SearchMatchInfo<T>

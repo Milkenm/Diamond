@@ -42,6 +42,11 @@
 		// Notebook - BUTTON
 		private const string BUTTON_NOTEBOOK_BASE = $"{ComponentIds.BUTTON_BASE}_notebook";
 		public const string BUTTON_NOTEBOOK_OPEN = $"{BUTTON_NOTEBOOK_BASE}_open";
+		public const string BUTTON_NOTEBOOK_DELETE = $"{BUTTON_NOTEBOOK_BASE}_delete";
+		public const string BUTTON_NOTEBOOK_DELETE_CONFIRM = $"{BUTTON_NOTEBOOK_DELETE}_confirm";
+		public const string BUTTON_NOTEBOOK_DELETE_CANCEL = $"{BUTTON_NOTEBOOK_DELETE}_cancel";
+		private const string BUTTON_NOTEBOOKPAGES_BASE = $"{ComponentIds.BUTTON_BASE}_notebookpages";
+		public const string BUTTON_NOTEBOOKPAGES_GOBACK = $"{BUTTON_NOTEBOOKPAGES_BASE}_goback";
 		// Notebook - MODAL
 		private const string MODAL_NOTEBOOK_BASE = $"{ComponentIds.MODAL_BASE}_notebook";
 		public const string MODAL_NOTEBOOK_EDIT_PAGE = $"{MODAL_NOTEBOOK_BASE}_edit_page";

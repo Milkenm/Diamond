@@ -50,6 +50,18 @@ namespace Diamond.Data.Models.Notebooks
 			}
 		}
 
+		public static Notebook GetNotebook(long notebookId, DiamondContext db)
+		{
+			var foundNotebooks = db.Notebooks.Where(n => n.Id == notebookId);
+
+			if (!foundNotebooks.Any())
+			{
+				throw new NotebookNotFoundException(notebookId);
+			}
+
+			return foundNotebooks.First();
+		}
+
 		public static Dictionary<string, Notebook> GetNotebooksMap(ulong userId, DiamondContext db)
 		{
 			IQueryable<Notebook>? userNotebooks = db.Notebooks.Where(n => n.DiscordUserId == userId);
@@ -147,7 +159,7 @@ namespace Diamond.Data.Models.Notebooks
 		}
 		#endregion
 
-		[Key][DatabaseGenerated(DatabaseGeneratedOption.Identity)] public int Id { get; set; }
+		[Key][DatabaseGenerated(DatabaseGeneratedOption.Identity)] public long Id { get; set; }
 		public required string Name { get; set; }
 		public string? Description { get; set; }
 		public required ulong DiscordUserId { get; set; }

@@ -13,7 +13,6 @@ namespace Diamond.API.Helpers
 {
 	public abstract class MultipageEmbed<T> : DefaultEmbed
 	{
-		public int NavigationButtonsRow { get; private set; }
 		public bool ShowEveryone { get; private set; }
 
 		public IReadOnlyCollection<T> ItemsList => this._paginator.Items;
@@ -24,10 +23,9 @@ namespace Diamond.API.Helpers
 		private readonly Paginator<T> _paginator;
 		private readonly Dictionary<MultipageButton, List<object>> _buttonsDataMap = new Dictionary<MultipageButton, List<object>>();
 
-		public MultipageEmbed(string title, string emoji, IInteractionContext context, List<T> itemsList, int startingIndex, int itemsPerPage, int navigationButtonsRow, bool showEveryone)
+		public MultipageEmbed(string title, string emoji, IInteractionContext context, List<T> itemsList, int startingIndex, int itemsPerPage,  bool showEveryone)
 			: base(title, emoji, context)
 		{
-			this.NavigationButtonsRow = navigationButtonsRow;
 			this.ShowEveryone = showEveryone;
 
 			this._paginator = new Paginator<T>(itemsList, startingIndex, itemsPerPage);
@@ -35,7 +33,7 @@ namespace Diamond.API.Helpers
 			this.AddDataToButton(this.StartingIndex, MultipageButton.Previous, MultipageButton.Next);
 		}
 
-		private void AddNavigationButtons()
+		public void AddNavigationButtons(int row)
 		{
 			if (this.ShowEveryone)
 			{
@@ -45,11 +43,11 @@ namespace Diamond.API.Helpers
 			this.AddDataToAllButtons(this.ShowEveryone);
 
 			_ = this._components
-				.WithButtonFixed(customId: $"{MultipageEmbedIds.BUTTON_MULTIPAGE_FIRST}{this.GetButtonData(MultipageButton.First)}", style: ButtonStyle.Secondary, emote: Emoji.Parse("⏪"), disabled: !this._paginator.HasPreviousPage, row: this.NavigationButtonsRow)
-				.WithButtonFixed(customId: $"{MultipageEmbedIds.BUTTON_MULTIPAGE_PREVIOUS}{this.GetButtonData(MultipageButton.Previous)}", style: ButtonStyle.Secondary, emote: Emoji.Parse("◀️"), disabled: !this._paginator.HasPreviousPage, row: this.NavigationButtonsRow)
-				.WithButtonFixed($"{this._paginator.PrettyCurrentPage} / {this._paginator.PrettyMaxPages}", MultipageEmbedIds.BUTTON_MULTIPAGE_PAGE, ButtonStyle.Secondary, disabled: true, row: this.NavigationButtonsRow)
-				.WithButtonFixed(customId: $"{MultipageEmbedIds.BUTTON_MULTIPAGE_NEXT}{this.GetButtonData(MultipageButton.Next)}", style: ButtonStyle.Secondary, emote: Emoji.Parse("▶️"), disabled: !this._paginator.HasNextPage, row: this.NavigationButtonsRow)
-				.WithButtonFixed(customId: $"{MultipageEmbedIds.BUTTON_MULTIPAGE_LAST}{this.GetButtonData(MultipageButton.Last)}", style: ButtonStyle.Secondary, emote: Emoji.Parse("⏩"), disabled: !this._paginator.HasNextPage, row: this.NavigationButtonsRow);
+				.WithButton(customId: $"{MultipageEmbedIds.BUTTON_MULTIPAGE_FIRST}{this.GetButtonData(MultipageButton.First)}", style: ButtonStyle.Secondary, emote: Emoji.Parse("⏪"), disabled: !this._paginator.HasPreviousPage, row: row)
+				.WithButton(customId: $"{MultipageEmbedIds.BUTTON_MULTIPAGE_PREVIOUS}{this.GetButtonData(MultipageButton.Previous)}", style: ButtonStyle.Secondary, emote: Emoji.Parse("◀️"), disabled: !this._paginator.HasPreviousPage, row: row)
+				.WithButton($"{this._paginator.PrettyCurrentPage} / {this._paginator.PrettyMaxPages}", MultipageEmbedIds.BUTTON_MULTIPAGE_PAGE, ButtonStyle.Secondary, disabled: true, row: row)
+				.WithButton(customId: $"{MultipageEmbedIds.BUTTON_MULTIPAGE_NEXT}{this.GetButtonData(MultipageButton.Next)}", style: ButtonStyle.Secondary, emote: Emoji.Parse("▶️"), disabled: !this._paginator.HasNextPage, row: row)
+				.WithButton(customId: $"{MultipageEmbedIds.BUTTON_MULTIPAGE_LAST}{this.GetButtonData(MultipageButton.Last)}", style: ButtonStyle.Secondary, emote: Emoji.Parse("⏩"), disabled: !this._paginator.HasNextPage, row: row);
 		}
 
 		private string GetButtonData(MultipageButton button)
@@ -68,14 +66,14 @@ namespace Diamond.API.Helpers
 			return dataSb.Preappend(":").ToString();
 		}
 
-		public void AddButton(ButtonBuilder buttonBuilder, int row)
+		public ComponentBuilder AddButton(ButtonBuilder buttonBuilder, int row)
 		{
-			_ = this._components.WithButtonFixed(buttonBuilder, row);
+			return this._components.WithButton(buttonBuilder, row);
 		}
 
-		public void AddSelectMenu(SelectMenuBuilder selectMenuBuilder, int row)
+		public ComponentBuilder AddSelectMenu(SelectMenuBuilder selectMenuBuilder, int row)
 		{
-			_ = this._components.WithSelectMenu(selectMenuBuilder, row);
+			return this._components.WithSelectMenu(selectMenuBuilder, row);
 		}
 
 		public void AddDataToButton(object data, params MultipageButton[] buttons)
@@ -100,7 +98,6 @@ namespace Diamond.API.Helpers
 		{
 			this.FillItems(this.ItemsList.Skip(this.StartingIndex).Take(this.ItemsPerPage));
 
-			this.AddNavigationButtons();
 			/*// Fix the component's rows
 			ComponentBuilder fixedComponents = new ComponentBuilder();
 			foreach (ActionRowBuilder row in this._components.ActionRows)

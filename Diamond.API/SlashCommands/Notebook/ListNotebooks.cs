@@ -14,6 +14,8 @@ namespace Diamond.API.SlashCommands.SCNotebook
 {
 	public partial class SCNotebook
 	{
+		private const int ITEMS_PER_PAGE = 5;
+
 		[DSlashCommand("list", "List every notebook you have.")]
 		public async Task ListNotebooksCommandAsync(
 			[ShowEveryone] bool showEveryone = false
@@ -37,7 +39,7 @@ namespace Diamond.API.SlashCommands.SCNotebook
 		{
 			await this.DeferAsync();
 
-			await this.SendNotebooksListEmbedAsync(startingIndex - 1, showEveryone);
+			await this.SendNotebooksListEmbedAsync(startingIndex - ITEMS_PER_PAGE, showEveryone);
 		}
 
 		[ComponentInteraction($"{MultipageEmbedIds.BUTTON_MULTIPAGE_NEXT}:*,*", true)]
@@ -45,7 +47,7 @@ namespace Diamond.API.SlashCommands.SCNotebook
 		{
 			await this.DeferAsync();
 
-			await this.SendNotebooksListEmbedAsync(startingIndex + 1, showEveryone);
+			await this.SendNotebooksListEmbedAsync(startingIndex + ITEMS_PER_PAGE, showEveryone);
 		}
 
 		[ComponentInteraction($"{MultipageEmbedIds.BUTTON_MULTIPAGE_LAST}:*", true)]
@@ -56,21 +58,29 @@ namespace Diamond.API.SlashCommands.SCNotebook
 			await this.SendNotebooksListEmbedAsync(-1, showEveryone);
 		}
 
+		[ComponentInteraction($"{NotebookComponentIds.BUTTON_NOTEBOOKPAGES_GOBACK}:*", true)]
+		public async Task OnBackButtonClickHandlerAsync(int startingIndex)
+		{
+			await this.DeferAsync();
+
+			await this.SendNotebooksListEmbedAsync(startingIndex, false);
+		}
+
 		private async Task SendNotebooksListEmbedAsync(int startingIndex, bool showEveryone)
 		{
 			using DiamondContext db = new DiamondContext();
 
 			Dictionary<string, Notebook> userNotebooks = Notebook.GetNotebooksMap(this.Context.User.Id, db);
 
-			NotebooksListMultipageEmbed embed = new NotebooksListMultipageEmbed(this.Context, userNotebooks.Values.ToList(), startingIndex, showEveryone);
+			ListNotebooksMultipageEmbed embed = new ListNotebooksMultipageEmbed(this.Context, userNotebooks.Values.ToList(), startingIndex, showEveryone);
 
 			await embed.SendAsync();
 		}
 
-		private class NotebooksListMultipageEmbed : MultipageEmbed<Notebook>
+		private class ListNotebooksMultipageEmbed : MultipageEmbed<Notebook>
 		{
-			public NotebooksListMultipageEmbed(IInteractionContext context, List<Notebook> userNotebooks, int startingIndex, bool showEveryone)
-				: base("Notebooks List", "📔", context, userNotebooks, startingIndex, 5, userNotebooks.Any() ? 1 : 0, showEveryone)
+			public ListNotebooksMultipageEmbed(IInteractionContext context, List<Notebook> userNotebooks, int startingIndex, bool showEveryone)
+				: base("Notebooks List", "📔", context, userNotebooks, startingIndex, 5, showEveryone)
 			{ }
 
 			protected override void FillItems(IEnumerable<Notebook> notebooksList)
@@ -78,15 +88,16 @@ namespace Diamond.API.SlashCommands.SCNotebook
 				if (!this.ItemsList.Any())
 				{
 					this.Description = "You don't have any notebooks.";
+					this.AddNavigationButtons(0);
 					return;
 				}
 
 				foreach (Notebook notebook in notebooksList)
 				{
-					this.AddButton(new ButtonBuilder($"#{notebook.Id}", $"{NotebookComponentIds.BUTTON_NOTEBOOK_OPEN}:{notebook.Id}", ButtonStyle.Primary), 0);
-
+					_ = this.AddButton(new ButtonBuilder($"#{notebook.Id}", $"{NotebookComponentIds.BUTTON_NOTEBOOK_OPEN}:{notebook.Id},{this.StartingIndex}", ButtonStyle.Success), 0);
 					_ = this.AddField($"**#{notebook.Id}** :heavy_minus_sign: {notebook.Name}", notebook.Description ?? "*No description*");
 				}
+				this.AddNavigationButtons(1);
 			}
 		}
 	}
