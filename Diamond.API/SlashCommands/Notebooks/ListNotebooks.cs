@@ -3,18 +3,19 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
-using Diamond.API.Helpers;
+using Diamond.API.SlashCommands.Notebooks.Embeds;
 using Diamond.Data;
 using Diamond.Data.Models.Notebooks;
 
-using Discord;
 using Discord.Interactions;
 
-namespace Diamond.API.SlashCommands.SCNotebook
+using static Diamond.API.SlashCommands.NotebookComponentIds;
+
+namespace Diamond.API.SlashCommands.Notebooks
 {
-	public partial class SCNotebook
+	public partial class Notebooks
 	{
-		private const int ITEMS_PER_PAGE = 5;
+		/*private const int ITEMS_PER_PAGE = 5;
 
 		[DSlashCommand("list", "List every notebook you have.")]
 		public async Task ListNotebooksCommandAsync(
@@ -58,7 +59,7 @@ namespace Diamond.API.SlashCommands.SCNotebook
 			await this.SendNotebooksListEmbedAsync(-1, showEveryone);
 		}
 
-		[ComponentInteraction($"{NotebookComponentIds.BUTTON_NOTEBOOKPAGES_GOBACK}:*", true)]
+		[ButtonNotebookPagesGotoList]
 		public async Task OnBackButtonClickHandlerAsync(int startingIndex)
 		{
 			await this.DeferAsync();
@@ -72,33 +73,12 @@ namespace Diamond.API.SlashCommands.SCNotebook
 
 			Dictionary<string, Notebook> userNotebooks = Notebook.GetNotebooksMap(this.Context.User.Id, db);
 
-			ListNotebooksMultipageEmbed embed = new ListNotebooksMultipageEmbed(this.Context, userNotebooks.Values.ToList(), startingIndex, showEveryone);
-
-			await embed.SendAsync();
-		}
-
-		private class ListNotebooksMultipageEmbed : MultipageEmbed<Notebook>
-		{
-			public ListNotebooksMultipageEmbed(IInteractionContext context, List<Notebook> userNotebooks, int startingIndex, bool showEveryone)
-				: base("Notebooks List", "📔", context, userNotebooks, startingIndex, 5, showEveryone)
-			{ }
-
-			protected override void FillItems(IEnumerable<Notebook> notebooksList)
+			if (!await NotebookValidationUtils.HasNotebooks(this.Context, userNotebooks))
 			{
-				if (!this.ItemsList.Any())
-				{
-					this.Description = "You don't have any notebooks.";
-					this.AddNavigationButtons(0);
-					return;
-				}
-
-				foreach (Notebook notebook in notebooksList)
-				{
-					_ = this.AddButton(new ButtonBuilder($"#{notebook.Id}", $"{NotebookComponentIds.BUTTON_NOTEBOOK_OPEN}:{notebook.Id},{this.StartingIndex}", ButtonStyle.Success), 0);
-					_ = this.AddField($"**#{notebook.Id}** :heavy_minus_sign: {notebook.Name}", notebook.Description ?? "*No description*");
-				}
-				this.AddNavigationButtons(1);
+				return;
 			}
-		}
+
+			await new ListNotebooksEmbed(this.Context, userNotebooks.Values.ToList(), startingIndex, showEveryone).SendAsync();
+		}*/
 	}
 }

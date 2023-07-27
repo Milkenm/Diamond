@@ -114,6 +114,11 @@ namespace Diamond.API
 					break;
 			}
 
+			if (context.Interaction is SocketAutocompleteInteraction)
+			{
+				return;
+			}
+
 			if (!context.Interaction.HasResponded)
 			{
 				await context.Interaction.DeferAsync(true);

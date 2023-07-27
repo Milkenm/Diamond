@@ -13,23 +13,35 @@ namespace Diamond.API.Helpers
 {
 	public abstract class MultipageEmbed<T> : DefaultEmbed
 	{
-		public bool ShowEveryone { get; private set; }
+		public bool ShowEveryone { get; set; }
 
 		public IReadOnlyCollection<T> ItemsList => this._paginator.Items;
 		public int StartingIndex => this._paginator.StartingIndex;
 		public int ItemsPerPage => this._paginator.ItemsPerPage;
 
+		private Paginator<T> _paginator;
 		private readonly ComponentBuilder _components = new ComponentBuilder();
-		private readonly Paginator<T> _paginator;
 		private readonly Dictionary<MultipageButton, List<object>> _buttonsDataMap = new Dictionary<MultipageButton, List<object>>();
 
-		public MultipageEmbed(string title, string emoji, IInteractionContext context, List<T> itemsList, int startingIndex, int itemsPerPage,  bool showEveryone)
+		public MultipageEmbed() { }
+
+		public MultipageEmbed(IInteractionContext context, bool showEveryone)
+			: base(context)
+		{
+			this.ShowEveryone = showEveryone;
+		}
+
+		public MultipageEmbed(string title, string emoji, IInteractionContext context, List<T> itemsList, int startingIndex, int itemsPerPage, bool showEveryone)
 			: base(title, emoji, context)
 		{
 			this.ShowEveryone = showEveryone;
 
-			this._paginator = new Paginator<T>(itemsList, startingIndex, itemsPerPage);
+			this.SetItemsList(itemsList, startingIndex, itemsPerPage);
+		}
 
+		public void SetItemsList(List<T> itemsList, int startingIndex, int itemsPerPage)
+		{
+			this._paginator = new Paginator<T>(itemsList, startingIndex, itemsPerPage);
 			this.AddDataToButton(this.StartingIndex, MultipageButton.Previous, MultipageButton.Next);
 		}
 

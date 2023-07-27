@@ -32,7 +32,12 @@ namespace Diamond.API.Util
 		#region Search
 		public static List<SearchMatchInfo<T>> Search<T>(Dictionary<string, T> searchList, string searchCriteria)
 		{
-			List<SearchMatchInfo<T>> bestMatches = new List<SearchMatchInfo<T>>();
+			if (!searchList.Any())
+			{
+				return new List<SearchMatchInfo<T>>();
+			}
+
+			List<SearchMatchInfo<T>> matchesList = new List<SearchMatchInfo<T>>();
 			// There is a random glitch where the collection is modified, so this should fix it for now:
 			foreach ((string itemName, T value) in new Dictionary<string, T>(searchList))
 			{
@@ -40,29 +45,24 @@ namespace Diamond.API.Util
 
 				if (searchCriteria.ToLower() == formattedItemName)
 				{
-					bestMatches.Add(new SearchMatchInfo<T>(value, double.MaxValue));
+					matchesList.Add(new SearchMatchInfo<T>(value, double.MaxValue));
 					continue;
 				}
 
-				double matches = 0;
+				double matchRatio = 1;
 				foreach (string word in formattedItemName.Split(" "))
 				{
 					if (formattedItemName.Replace(" ", "").Replace("-", "").Contains(word))
 					{
-						matches++;
+						matchRatio++;
 					}
 				}
-				matches *= SUtils.CalculateLevenshteinSimilarity(searchCriteria, formattedItemName);
-				if (matches == 0) continue;
-				bestMatches.Add(new SearchMatchInfo<T>(value, matches));
-			}
-			if (bestMatches.Count > 0)
-			{
-				bestMatches = bestMatches.OrderBy(bm => bm.Match).Reverse().ToList();
-				return bestMatches;
+				matchRatio *= SUtils.CalculateLevenshteinSimilarity(searchCriteria, formattedItemName); ;
+				matchesList.Add(new SearchMatchInfo<T>(value, matchRatio));
 			}
 
-			return new List<SearchMatchInfo<T>>();
+			matchesList = matchesList.OrderBy(bm => bm.Match).Reverse().ToList();
+			return matchesList;
 		}
 
 		public static SearchMatchInfo<T>? GetBestMatch<T>(List<SearchMatchInfo<T>> matches)
@@ -273,6 +273,14 @@ namespace Diamond.API.Util
 		public static string OrDefault(this string @string, string @default)
 		{
 			return @string.IsEmpty() ? @default : @string;
+		}
+
+		/// https://stackoverflow.com/a/8809437
+		public static string ReplaceFirst(this string @string, string search, string replace)
+		{
+			int index = @string.IndexOf(search);
+
+			return index < 0 ? @string : @string.Substring(0, index) + replace + @string.Substring(index + search.Length);
 		}
 		#endregion
 	}

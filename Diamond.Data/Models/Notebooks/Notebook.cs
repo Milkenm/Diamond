@@ -14,7 +14,7 @@ namespace Diamond.Data.Models.Notebooks
 		/// <exception cref="NotebookAlreadyExistsException"></exception>
 		/// <exception cref="NotebookNameIsNullException"></exception>
 		/// <exception cref="NotebookCreateException"></exception>
-		public static async Task CreateNotebookAsync(string name, string? description, ulong userId, DiamondContext db)
+		public static async Task<Notebook> CreateNotebookAsync(string name, string? description, ulong userId, DiamondContext db)
 		{
 			Dictionary<string, Notebook> userNotebooks = GetNotebooksMap(userId, db);
 			if (userNotebooks.Count == 100)
@@ -34,15 +34,19 @@ namespace Diamond.Data.Models.Notebooks
 
 			try
 			{
-				_ = db.Notebooks.Add(new Notebook()
+				Notebook notebook = new Notebook()
 				{
 					Name = name,
 					Description = description,
 					DiscordUserId = userId,
 					CreatedAt = DateTimeOffset.Now.ToUnixTimeSeconds(),
 					UpdatedAt = null,
-				});
+				};
+
+				_ = db.Notebooks.Add(notebook);
 				_ = await db.SaveChangesAsync();
+
+				return notebook;
 			}
 			catch (Exception ex)
 			{
@@ -52,14 +56,9 @@ namespace Diamond.Data.Models.Notebooks
 
 		public static Notebook GetNotebook(long notebookId, DiamondContext db)
 		{
-			var foundNotebooks = db.Notebooks.Where(n => n.Id == notebookId);
+			IQueryable<Notebook> foundNotebooks = db.Notebooks.Where(n => n.Id == notebookId);
 
-			if (!foundNotebooks.Any())
-			{
-				throw new NotebookNotFoundException(notebookId);
-			}
-
-			return foundNotebooks.First();
+			return !foundNotebooks.Any() ? throw new NotebookNotFoundException(notebookId) : foundNotebooks.First();
 		}
 
 		public static Dictionary<string, Notebook> GetNotebooksMap(ulong userId, DiamondContext db)
