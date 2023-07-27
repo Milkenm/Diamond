@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
@@ -68,16 +69,17 @@ namespace Diamond.API.SlashCommands.SCNotebook
 			}.SendAsync();
 		}
 
-		[ComponentInteraction($"{NotebookComponentIds.BUTTON_NOTEBOOK_DELETE_CANCEL}:*",true)]
+		[ComponentInteraction($"{NotebookComponentIds.BUTTON_NOTEBOOK_DELETE_CANCEL}:*", true)]
 		public async Task OnDeleteNotebookCancelButtonClickHandlerAsync(long notebookId)
 		{
 			await this.DeferAsync();
 
 			using DiamondContext db = new DiamondContext();
 			Notebook notebook = Notebook.GetNotebook(notebookId, db);
-			List<NotebookPage>
+			Dictionary<string, NotebookPage> notebookPages = NotebookPage.GetNotebookPages(notebook, this.Context.User.Id, db);
 
-			new NotebookPagesListMultipageEmbed(this.Context,notebook, )
+			await new NotebookPagesListMultipageEmbed(this.Context, notebook, notebookPages.Values.ToList(), 0, 0, false)
+				.SendAsync();
 		}
 
 		private class NotebookDeletedEmbed : DefaultEmbed
