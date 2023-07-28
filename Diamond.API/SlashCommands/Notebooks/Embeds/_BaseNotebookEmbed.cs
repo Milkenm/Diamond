@@ -6,13 +6,13 @@ using Discord;
 
 namespace Diamond.API.SlashCommands.Notebooks.Embeds
 {
-	public abstract class NotebookEmbed : DefaultEmbed
+	public abstract class BaseNotebookEmbed : DefaultEmbed
 	{
-		public NotebookEmbed(string title, IInteractionContext context)
+		public BaseNotebookEmbed(string title, IInteractionContext context)
 			: base(title, "📔", context)
 		{ }
 
-		public NotebookEmbed(IInteractionContext context)
+		public BaseNotebookEmbed(IInteractionContext context)
 			: base(context)
 		{ }
 	}

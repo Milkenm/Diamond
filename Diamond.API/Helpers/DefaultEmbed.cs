@@ -13,8 +13,6 @@ namespace Diamond.API.Helpers
 
 		public MessageComponent Component { get; set; }
 
-		public DefaultEmbed() { }
-
 		public DefaultEmbed(IInteractionContext context)
 		{
 			this.SetContext(context);

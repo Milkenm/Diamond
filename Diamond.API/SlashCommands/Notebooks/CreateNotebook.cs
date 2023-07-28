@@ -12,7 +12,7 @@ namespace Diamond.API.SlashCommands.Notebooks
 {
 	public partial class Notebooks
 	{
-		/*[DSlashCommand("create", "Creates a new page on your notebook.")]
+		[DSlashCommand("create", "Creates a new notebook.")]
 		public async Task CreateNotebookCommandAsync(
 			[Summary("name", "Sets the name of the notebook.")] string notebookName,
 			[Summary("description", "Set a description for the notebook.")] string? description = null
@@ -32,6 +32,6 @@ namespace Diamond.API.SlashCommands.Notebooks
 				_ = await new CreatedNotebookEmbed(this.Context, ex).SendAsync();
 				return;
 			}
-		}*/
+		}
 	}
 }

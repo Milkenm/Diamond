@@ -23,8 +23,6 @@ namespace Diamond.API.Helpers
 		private readonly ComponentBuilder _components = new ComponentBuilder();
 		private readonly Dictionary<MultipageButton, List<object>> _buttonsDataMap = new Dictionary<MultipageButton, List<object>>();
 
-		public MultipageEmbed() { }
-
 		public MultipageEmbed(IInteractionContext context, bool showEveryone)
 			: base(context)
 		{
@@ -106,7 +104,7 @@ namespace Diamond.API.Helpers
 			this.AddDataToButton(data, (MultipageButton[])Enum.GetValues(typeof(MultipageButton)));
 		}
 
-		public async Task SendAsync()
+		public async Task<ulong> SendAsync()
 		{
 			this.FillItems(this.ItemsList.Skip(this.StartingIndex).Take(this.ItemsPerPage));
 
@@ -122,7 +120,7 @@ namespace Diamond.API.Helpers
 			}*/
 			this.Component = this._components.Build();
 
-			_ = await base.SendAsync(component: this.Component);
+			return await base.SendAsync(component: this.Component);
 		}
 
 		protected abstract void FillItems(IEnumerable<T> itemsList);

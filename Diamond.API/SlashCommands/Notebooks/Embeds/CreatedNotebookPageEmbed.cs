@@ -3,6 +3,7 @@
 using Discord;
 
 using ScriptsLibV2.Extensions;
+
 namespace Diamond.API.SlashCommands.Notebooks.Embeds
 {
 	/*public class CreatedNotebookPageEmbed : NotebookEmbed

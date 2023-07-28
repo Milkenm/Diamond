@@ -1,6 +1,4 @@
-﻿using Diamond.API.Helpers;
-
-namespace Diamond.API.SlashCommands
+﻿namespace Diamond.API.SlashCommands
 {
 	public class ComponentIds
 	{
@@ -37,70 +35,6 @@ namespace Diamond.API.SlashCommands
 		public const string BUTTON_MULTIPAGE_PREVIOUS = $"{BUTTON_MULTIPAGE_BASE}_previous";
 		public const string BUTTON_MULTIPAGE_NEXT = $"{BUTTON_MULTIPAGE_BASE}_next";
 		public const string BUTTON_MULTIPAGE_LAST = $"{BUTTON_MULTIPAGE_BASE}_last";
-	}
-
-	public class NotebookComponentIds
-	{
-		public class ButtonNotebookBaseAttribute : DefaultComponentInteractionAttribute
-		{
-			private static string GetId(string subId) => $"{ComponentIds.BUTTON_BASE}_notebook_{subId}";
-
-			public ButtonNotebookBaseAttribute(string subId)
-				: base(GetId(subId))
-			{ }
-
-			public ButtonNotebookBaseAttribute(string subId, params object[] data)
-				: base(GetId(subId), data)
-			{ }
-		}
-
-		public class ButtonNotebookGotoListAttribute : ButtonNotebookBaseAttribute
-		{
-			public ButtonNotebookGotoListAttribute()
-				: base("goto_list:*")
-			{ }
-
-			public ButtonNotebookGotoListAttribute(long? notebookId)
-				: base("goto_list:*", notebookId)
-			{ }
-		}
-
-		public class ButtonNotebookPagesBaseAttribute : DefaultComponentInteractionAttribute
-		{
-			private static string GetId(string subId) => $"{ComponentIds.BUTTON_BASE}_notebookpages_{subId}";
-
-			public ButtonNotebookPagesBaseAttribute(string subId)
-				: base(GetId(subId))
-			{ }
-
-			public ButtonNotebookPagesBaseAttribute(string subId, params object[] data)
-				: base(GetId(subId), data)
-			{ }
-		}
-
-		public class ButtonNotebookPagesGotoListAttribute : ButtonNotebookPagesBaseAttribute
-		{
-			public ButtonNotebookPagesGotoListAttribute()
-				: base("goto_list:*")
-			{ }
-
-			public ButtonNotebookPagesGotoListAttribute(long? notebookPageId)
-				: base("goto_list:*", notebookPageId)
-			{ }
-		}
-
-		// Notebook - BUTTON
-		private const string BUTTON_NOTEBOOK_BASE = $"{ComponentIds.BUTTON_BASE}_notebook";
-		public const string BUTTON_NOTEBOOK_OPEN = $"{BUTTON_NOTEBOOK_BASE}_open";
-		public const string BUTTON_NOTEBOOK_DELETE = $"{BUTTON_NOTEBOOK_BASE}_delete";
-		public const string BUTTON_NOTEBOOK_DELETE_CONFIRM = $"{BUTTON_NOTEBOOK_DELETE}_confirm";
-		public const string BUTTON_NOTEBOOK_RENAME = $"{BUTTON_NOTEBOOK_BASE}_rename";
-		public const string BUTTON_NOTEBOOK_RENAME_CONFIRM = $"{BUTTON_NOTEBOOK_RENAME}_confirm";
-		// NotebookPages - BUTTON
-		private const string BUTTON_NOTEBOOKPAGES_BASE = $"{ComponentIds.BUTTON_BASE}_notebookpages";
-		// Notebook - MODAL
-		private const string MODAL_NOTEBOOK_BASE = $"{ComponentIds.MODAL_BASE}_notebook";
-		public const string MODAL_NOTEBOOK_EDIT_PAGE = $"{MODAL_NOTEBOOK_BASE}_edit_page";
 	}
 
 	public class PokemonComponentIds

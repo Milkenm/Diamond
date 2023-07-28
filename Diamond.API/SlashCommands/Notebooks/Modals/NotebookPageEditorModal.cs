@@ -10,7 +10,7 @@ namespace Diamond.API.SlashCommands.Notebooks.Modals
 		public NotebookPageEditorModal() { }
 
 		public NotebookPageEditorModal(IInteractionContext context)
-			: base("Create notebook page", context)
+			: base("Create notebook page", "modal_notebook_createpage", context)
 		{ }
 
 		[RequiredInput]
