@@ -26,17 +26,6 @@
 		public const string BUTTON_MEME_SHARE = $"{BUTTON_MEME_BASE}_share";
 	}
 
-	public class MultipageEmbedIds
-	{
-		// MultipageEmbed - BUTTON
-		private const string BUTTON_MULTIPAGE_BASE = $"{ComponentIds.BUTTON_BASE}_multipageembed";
-		public const string BUTTON_MULTIPAGE_PAGE = $"{BUTTON_MULTIPAGE_BASE}_page";
-		public const string BUTTON_MULTIPAGE_FIRST = $"{BUTTON_MULTIPAGE_BASE}_first";
-		public const string BUTTON_MULTIPAGE_PREVIOUS = $"{BUTTON_MULTIPAGE_BASE}_previous";
-		public const string BUTTON_MULTIPAGE_NEXT = $"{BUTTON_MULTIPAGE_BASE}_next";
-		public const string BUTTON_MULTIPAGE_LAST = $"{BUTTON_MULTIPAGE_BASE}_last";
-	}
-
 	public class PokemonComponentIds
 	{
 		// Pokémon - BUTTON

@@ -20,7 +20,6 @@ namespace Diamond.API.Helpers
 		public int ItemsPerPage => this._paginator.ItemsPerPage;
 
 		private Paginator<T> _paginator;
-		private readonly ComponentBuilder _components = new ComponentBuilder();
 		private readonly Dictionary<MultipageButton, List<object>> _buttonsDataMap = new Dictionary<MultipageButton, List<object>>();
 
 		public MultipageEmbed(IInteractionContext context, bool showEveryone)
@@ -52,12 +51,11 @@ namespace Diamond.API.Helpers
 
 			this.AddDataToAllButtons(this.ShowEveryone);
 
-			_ = this._components
-				.WithButton(customId: $"{MultipageEmbedIds.BUTTON_MULTIPAGE_FIRST}{this.GetButtonData(MultipageButton.First)}", style: ButtonStyle.Secondary, emote: Emoji.Parse("⏪"), disabled: !this._paginator.HasPreviousPage, row: row)
-				.WithButton(customId: $"{MultipageEmbedIds.BUTTON_MULTIPAGE_PREVIOUS}{this.GetButtonData(MultipageButton.Previous)}", style: ButtonStyle.Secondary, emote: Emoji.Parse("◀️"), disabled: !this._paginator.HasPreviousPage, row: row)
-				.WithButton($"{this._paginator.PrettyCurrentPage} / {this._paginator.PrettyMaxPages}", MultipageEmbedIds.BUTTON_MULTIPAGE_PAGE, ButtonStyle.Secondary, disabled: true, row: row)
-				.WithButton(customId: $"{MultipageEmbedIds.BUTTON_MULTIPAGE_NEXT}{this.GetButtonData(MultipageButton.Next)}", style: ButtonStyle.Secondary, emote: Emoji.Parse("▶️"), disabled: !this._paginator.HasNextPage, row: row)
-				.WithButton(customId: $"{MultipageEmbedIds.BUTTON_MULTIPAGE_LAST}{this.GetButtonData(MultipageButton.Last)}", style: ButtonStyle.Secondary, emote: Emoji.Parse("⏩"), disabled: !this._paginator.HasNextPage, row: row);
+			_ = this.AddButton(customId: $"{MultipageEmbedIds.BUTTON_MULTIPAGE_FIRST}{this.GetButtonData(MultipageButton.First)}", style: ButtonStyle.Secondary, emote: Emoji.Parse("⏪"), isDisabled: !this._paginator.HasPreviousPage, row: row)
+				.AddButton(customId: $"{MultipageEmbedIds.BUTTON_MULTIPAGE_PREVIOUS}{this.GetButtonData(MultipageButton.Previous)}", style: ButtonStyle.Secondary, emote: Emoji.Parse("◀️"), isDisabled: !this._paginator.HasPreviousPage, row: row)
+				.AddButton($"{this._paginator.PrettyCurrentPage} / {this._paginator.PrettyMaxPages}", MultipageEmbedIds.BUTTON_MULTIPAGE_PAGE, ButtonStyle.Secondary, isDisabled: true, row: row)
+				.AddButton(customId: $"{MultipageEmbedIds.BUTTON_MULTIPAGE_NEXT}{this.GetButtonData(MultipageButton.Next)}", style: ButtonStyle.Secondary, emote: Emoji.Parse("▶️"), isDisabled: !this._paginator.HasNextPage, row: row)
+				.AddButton(customId: $"{MultipageEmbedIds.BUTTON_MULTIPAGE_LAST}{this.GetButtonData(MultipageButton.Last)}", style: ButtonStyle.Secondary, emote: Emoji.Parse("⏩"), isDisabled: !this._paginator.HasNextPage, row: row);
 		}
 
 		private string GetButtonData(MultipageButton button)
@@ -74,16 +72,6 @@ namespace Diamond.API.Helpers
 				_ = dataSb.Append(data.ToString(), ",");
 			}
 			return dataSb.Preappend(":").ToString();
-		}
-
-		public ComponentBuilder AddButton(ButtonBuilder buttonBuilder, int row)
-		{
-			return this._components.WithButton(buttonBuilder, row);
-		}
-
-		public ComponentBuilder AddSelectMenu(SelectMenuBuilder selectMenuBuilder, int row)
-		{
-			return this._components.WithSelectMenu(selectMenuBuilder, row);
 		}
 
 		public void AddDataToButton(object data, params MultipageButton[] buttons)
@@ -118,12 +106,22 @@ namespace Diamond.API.Helpers
 					_ = fixedComponents.ActionRows[fixedComponents.ActionRows.Count - 1].AddComponent(component);
 				}
 			}*/
-			this.Component = this._components.Build();
+			//this.Component = this._components.Build();
 
-			return await base.SendAsync(component: this.Component);
+			return await base.SendAsync(/*component: this.Component*/);
 		}
 
 		protected abstract void FillItems(IEnumerable<T> itemsList);
+	}
+
+	public class MultipageEmbedIds
+	{
+		private const string BUTTON_MULTIPAGE_BASE = $"{ComponentIds.BUTTON_BASE}_multipageembed";
+		public const string BUTTON_MULTIPAGE_PAGE = $"{BUTTON_MULTIPAGE_BASE}_page";
+		public const string BUTTON_MULTIPAGE_FIRST = $"{BUTTON_MULTIPAGE_BASE}_first";
+		public const string BUTTON_MULTIPAGE_PREVIOUS = $"{BUTTON_MULTIPAGE_BASE}_previous";
+		public const string BUTTON_MULTIPAGE_NEXT = $"{BUTTON_MULTIPAGE_BASE}_next";
+		public const string BUTTON_MULTIPAGE_LAST = $"{BUTTON_MULTIPAGE_BASE}_last";
 	}
 
 	public enum MultipageButton

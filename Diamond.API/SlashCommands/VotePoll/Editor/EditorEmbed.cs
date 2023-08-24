@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.Design;
 
 using Diamond.Data;
 using Diamond.Data.Models.Polls;
@@ -16,10 +15,9 @@ namespace Diamond.API.SlashCommands.VotePoll.Editor
 
 			List<DbPollOption> pollOptions = VoteUtils.GetPollOptions(db, poll);
 
-			ComponentBuilder builder = new ComponentBuilder()
-				.WithButton(new ButtonBuilder("Publish", $"{VotePollComponentIds.BUTTON_VOTEPOLL_PUBLISH}:{messageId}", ButtonStyle.Success, isDisabled: pollOptions.Count < 2))
-				.WithButton(new ButtonBuilder("Add option", $"{VotePollComponentIds.BUTTON_VOTEPOLL_ADD_OPTION}:{messageId}"))
-				.WithButton(new ButtonBuilder("Change title or description", $"{VotePollComponentIds.BUTTON_VOTEPOLL_EDIT_OPTION}:{messageId}", ButtonStyle.Secondary));
+			_ = this.AddButton(new ButtonBuilder("Publish", $"{VotePollComponentIds.BUTTON_VOTEPOLL_PUBLISH}:{messageId}", ButtonStyle.Success, isDisabled: pollOptions.Count < 2))
+				.AddButton(new ButtonBuilder("Add option", $"{VotePollComponentIds.BUTTON_VOTEPOLL_ADD_OPTION}:{messageId}"))
+				.AddButton(new ButtonBuilder("Change title or description", $"{VotePollComponentIds.BUTTON_VOTEPOLL_EDIT_OPTION}:{messageId}", ButtonStyle.Secondary));
 
 			if (pollOptions.Count > 0)
 			{
@@ -34,10 +32,8 @@ namespace Diamond.API.SlashCommands.VotePoll.Editor
 					_ = selectMenu.AddOption(pollOption.Name, pollOption.Id.ToString(), pollOption.Description);
 				}
 				// Add to the response
-				_ = builder.WithSelectMenu(selectMenu);
+				_ = this.AddSelectMenu(selectMenu);
 			}
-
-			this.Component = builder.Build();
 		}
 	}
 }

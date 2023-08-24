@@ -129,7 +129,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			// Fourth row
 			_ = embed.AddField($"✨ **__{Utils.Plural("Abilit", "y", "ies", dbPokemon.AbilitiesList)}__**", abilitiesSb.ToStringOrDefault("None"));
 
-			embed.Component = this.GetEmbedButtons(pokemonName, generationAbbreviation, PokemonEmbed.Info, replaceEmojis, showEveryone, db);
+			this.AddEmbedButtons(embed, pokemonName, generationAbbreviation, PokemonEmbedType.Info, replaceEmojis, showEveryone, db);
 
 			_ = await embed.SendAsync(sendAsNew: sendAsNew);
 		}

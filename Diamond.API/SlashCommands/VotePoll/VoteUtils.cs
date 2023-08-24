@@ -43,7 +43,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 			_ = await context.Interaction.ModifyOriginalResponseAsync((msg) =>
 			{
 				msg.Embed = editorEmbed.Build();
-				msg.Components = editorEmbed.Component;
+				msg.Components = editorEmbed.GetComponents();
 			});
 		}
 
@@ -71,7 +71,7 @@ namespace Diamond.API.SlashCommands.VotePoll
 			_ = await context.Interaction.ModifyOriginalResponseAsync((msg) =>
 			{
 				msg.Embed = voteEmbed.Build();
-				msg.Components = voteEmbed.Component;
+				msg.Components = voteEmbed.GetComponents();
 			});
 		}
 

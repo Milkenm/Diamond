@@ -99,7 +99,17 @@ namespace Diamond.API
 							Title = "Unknown command",
 							Description = $"That command was not found.",
 						};
-						OnLog?.Invoke($"Error running '{(command != null ? command.Name : "unknown")}': command not found.", true);
+
+						string commandName = "unknown";
+						if (command != null)
+						{
+							commandName = command.Name;
+						}
+						else if (context.Interaction.Data is SocketMessageComponentData componentData)
+						{
+							commandName = componentData.CustomId;
+						}
+						OnLog?.Invoke($"Error running '{commandName}': command not found.", true);
 					}
 					break;
 				default:

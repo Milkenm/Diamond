@@ -68,9 +68,7 @@ namespace Diamond.API.SlashCommands
 			DefaultEmbed embed = new DefaultEmbed("Someone", "👤", context);
 			if (addComponents)
 			{
-				embed.Component = new ComponentBuilder()
-				.WithButton("Reroll", $"{SomeoneComponentIds.BUTTON_SOMEONE_REROLL}:{(args.WithRole != null ? args.WithRole.Id : 0L)},{(args.WithoutRole != null ? args.WithRole.Id : 0L)},{args.OnlyInThisChannel},{args.IncludeOffline},{args.IncludeBots},{args.IncludeSelf},{args.PrintSettings}", style: ButtonStyle.Secondary, emote: Emoji.Parse("🔁"))
-				.Build();
+				_ = embed.AddButton("Reroll", $"{SomeoneComponentIds.BUTTON_SOMEONE_REROLL}:{(args.WithRole != null ? args.WithRole.Id : 0L)},{(args.WithoutRole != null ? args.WithRole.Id : 0L)},{args.OnlyInThisChannel},{args.IncludeOffline},{args.IncludeBots},{args.IncludeSelf},{args.PrintSettings}", style: ButtonStyle.Secondary, emote: Emoji.Parse("🔁"));
 			}
 
 			// Add embed settings

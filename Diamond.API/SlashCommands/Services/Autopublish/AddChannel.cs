@@ -53,14 +53,11 @@ namespace Diamond.API.SlashCommands.Services
 				await db.SaveAsync();
 
 				// Send existing messages button
-				MessageComponent components = new ComponentBuilder()
-					.WithButton("Publish the latest 5 messages", $"{AutoPublisherComponentIds.BUTTON_AUTOPUBLISHER_PUBLISH_MESSAGES}:{announcementsChannel.Id}", ButtonStyle.Primary, Emoji.Parse("📣"))
-					.Build();
+				_ = embed.AddButton("Publish the latest 5 messages", $"{AutoPublisherComponentIds.BUTTON_AUTOPUBLISHER_PUBLISH_MESSAGES}:{announcementsChannel.Id}", ButtonStyle.Primary, Emoji.Parse("📣"));
 
 				// Send success embed
 				embed.Title = "Channel added!";
 				embed.Description = $"Now tracking {announcementsChannel.Mention}!\nNew messages in this channel will be automatically published.";
-				embed.Component = components;
 				_ = await embed.SendAsync();
 
 				// Set permissions
@@ -120,11 +117,8 @@ namespace Diamond.API.SlashCommands.Services
 			{
 				defaultEmbed.Title = "Error setting permissions";
 				defaultEmbed.Description = $"I couldn't set the **{ChannelPermission.SendMessages}** permission for the {announcementsChannel.Mention} channel.\nThis permission is needed for me to publish the messages.\nIt cannot be given through a role. This only works by setting the permission specifically for me in the channel's permissions tab (Discord stuff...).\n\nPlease give me the **{ChannelPermission.SendMessages}** permission on the {announcementsChannel.Mention} channel or give me the **{GuildPermission.ManageRoles}** permission on the guild so I can set it myself.\nIf it still doesn't work, it's probably because you have a permission denying **{ChannelPermission.SendMessages}** and I can't override it. For that I need the **{GuildPermission.Administrator}** permission.";
-				MessageComponent components = new ComponentBuilder()
-					.WithButton("Retry", $"{AutoPublisherComponentIds.BUTTON_AUTOPUBLISHER_PERMISSIONS_SET_RETRY}:{announcementsChannel.Id}", ButtonStyle.Primary, Emoji.Parse("🔁"))
-					.WithButton("I'll do it myself", AutoPublisherComponentIds.BUTTON_AUTOPUBLISHER_PERMISSIONS_SET_CLOSE, ButtonStyle.Secondary, Emoji.Parse("💪"))
-					.Build();
-				defaultEmbed.Component = components;
+				_ = defaultEmbed.AddButton("Retry", $"{AutoPublisherComponentIds.BUTTON_AUTOPUBLISHER_PERMISSIONS_SET_RETRY}:{announcementsChannel.Id}", ButtonStyle.Primary, Emoji.Parse("🔁"))
+					.AddButton("I'll do it myself", AutoPublisherComponentIds.BUTTON_AUTOPUBLISHER_PERMISSIONS_SET_CLOSE, ButtonStyle.Secondary, Emoji.Parse("💪"));
 				_ = await defaultEmbed.SendAsync(true, true);
 			}
 

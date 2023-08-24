@@ -86,7 +86,8 @@ namespace Diamond.API.SlashCommands.Pokemon
 				_ = embed.AddField($"{PokemonUtils.GetTypeEmoji(dbMove.Type)} {PokemonUtils.GetAttackTypeEmoji(dbMove.Category)} {dbMove.Name} (💥 {GetAttackStatString(dbMove.Power, Stat.Power)}   🎯 {GetAttackStatString(dbMove.Accuracy, Stat.Accuracy)}   ⚡ {GetAttackStatString(dbMove.PowerPoints, Stat.PowerPoints)})", dbMove.Description);
 			}
 
-			_ = await embed.SendAsync(this.GetEmbedButtons(pokemonName, generationAbbreviation, PokemonEmbed.Moves, replaceEmojis, showEveryone, db, startingIndex, movesList.Count));
+			this.AddEmbedButtons(embed, pokemonName, generationAbbreviation, PokemonEmbedType.Moves, replaceEmojis, showEveryone, db, startingIndex, movesList.Count);
+			_ = await embed.SendAsync();
 		}
 
 		[ComponentInteraction($"{PokemonComponentIds.BUTTON_POKEMON_VIEW_MOVES_FIRST}:*,*,*", true)]

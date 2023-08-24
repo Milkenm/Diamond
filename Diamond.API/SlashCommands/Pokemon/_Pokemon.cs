@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Diamond.API.APIs.Pokemon;
+using Diamond.API.Helpers;
 using Diamond.API.Util;
 using Diamond.Data;
 using Diamond.Data.Models.Pokemons;
@@ -26,32 +27,30 @@ namespace Diamond.API.SlashCommands.Pokemon
 			this._pokemonApi = pokemonApi;
 		}
 
-		private MessageComponent GetEmbedButtons(string pokemonName, string generationAbbreviation, PokemonEmbed embed, bool replaceEmojis, bool showEveryone, DiamondContext db, int movesStartingIndex = 0, int movesMaxIndex = 0)
+		private void AddEmbedButtons(DefaultEmbed embed, string pokemonName, string generationAbbreviation, PokemonEmbedType embedType, bool replaceEmojis, bool showEveryone, DiamondContext db, int movesStartingIndex = 0, int movesMaxIndex = 0)
 		{
 			Pokeporco poke = new Pokeporco(pokemonName, db);
 			DbPokemon dbPokemon = poke.GetFullFromGeneration(generationAbbreviation);
-
-			ComponentBuilder components = new ComponentBuilder();
 
 			// We have to use this because the rows thing has to be in order else it breaks
 			int rowIndex = 0;
 
 			if (!showEveryone)
 			{
-				_ = components.WithButton("Info", $"{PokemonComponentIds.BUTTON_POKEMON_VIEW_INFO}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("❤️"), disabled: embed == PokemonEmbed.Info, row: rowIndex);
-				_ = components.WithButton("Moves", $"{PokemonComponentIds.BUTTON_POKEMON_VIEW_MOVES}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("👊"), disabled: embed == PokemonEmbed.Moves, row: rowIndex);
-				_ = components.WithButton("Strategies", $"{PokemonComponentIds.BUTTON_POKEMON_VIEW_STRATS}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("🧠"), disabled: embed == PokemonEmbed.Strategies || true, row: rowIndex);
+				_ = embed.AddButton("Info", $"{PokemonComponentIds.BUTTON_POKEMON_VIEW_INFO}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("❤️"), isDisabled: embedType == PokemonEmbedType.Info, row: rowIndex)
+					.AddButton("Moves", $"{PokemonComponentIds.BUTTON_POKEMON_VIEW_MOVES}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Primary, Emoji.Parse("👊"), isDisabled: embedType == PokemonEmbedType.Moves, row: rowIndex)
+					.AddButton("Strategies", $"{PokemonComponentIds.BUTTON_POKEMON_VIEW_STRATS}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("🧠"), isDisabled: embedType == PokemonEmbedType.Strategies || true, row: rowIndex);
 				rowIndex++;
 			}
 
 			if (!showEveryone)
 			{
-				if (embed == PokemonEmbed.Moves)
+				if (embedType == PokemonEmbedType.Moves)
 				{
-					_ = components.WithButton("First page", $"{PokemonComponentIds.BUTTON_POKEMON_VIEW_MOVES_FIRST}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("⏮️"), disabled: movesStartingIndex == 0, row: rowIndex);
-					_ = components.WithButton("Back", $"{PokemonComponentIds.BUTTON_POKEMON_VIEW_MOVES_BACK}:{dbPokemon.Name},{generationAbbreviation},{movesStartingIndex},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("◀️"), disabled: movesStartingIndex == 0, row: rowIndex);
-					_ = components.WithButton("Next", $"{PokemonComponentIds.BUTTON_POKEMON_VIEW_MOVES_NEXT}:{dbPokemon.Name},{generationAbbreviation},{movesStartingIndex},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("▶️"), disabled: movesStartingIndex + MOVES_PER_PAGE >= movesMaxIndex, row: rowIndex);
-					_ = components.WithButton("Last page", $"{PokemonComponentIds.BUTTON_POKEMON_VIEW_MOVES_LAST}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("⏭️"), disabled: movesStartingIndex + MOVES_PER_PAGE >= movesMaxIndex, row: rowIndex);
+					_ = embed.AddButton("First page", $"{PokemonComponentIds.BUTTON_POKEMON_VIEW_MOVES_FIRST}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("⏮️"), isDisabled: movesStartingIndex == 0, row: rowIndex)
+						.AddButton("Back", $"{PokemonComponentIds.BUTTON_POKEMON_VIEW_MOVES_BACK}:{dbPokemon.Name},{generationAbbreviation},{movesStartingIndex},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("◀️"), isDisabled: movesStartingIndex == 0, row: rowIndex)
+						.AddButton("Next", $"{PokemonComponentIds.BUTTON_POKEMON_VIEW_MOVES_NEXT}:{dbPokemon.Name},{generationAbbreviation},{movesStartingIndex},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("▶️"), isDisabled: movesStartingIndex + MOVES_PER_PAGE >= movesMaxIndex, row: rowIndex)
+						.AddButton("Last page", $"{PokemonComponentIds.BUTTON_POKEMON_VIEW_MOVES_LAST}:{dbPokemon.Name},{generationAbbreviation},{replaceEmojis}", ButtonStyle.Secondary, Emoji.Parse("⏭️"), isDisabled: movesStartingIndex + MOVES_PER_PAGE >= movesMaxIndex, row: rowIndex);
 					rowIndex++;
 				}
 
@@ -60,34 +59,32 @@ namespace Diamond.API.SlashCommands.Pokemon
 				{
 					this.AddGeneration(infoGenerationsList, dbGeneration, dbGeneration.Abbreviation == generationAbbreviation);
 				}
-				string selectMenuId = embed switch
+				string selectMenuId = embedType switch
 				{
-					PokemonEmbed.Info => PokemonComponentIds.SELECT_POKEMON_INFO_GENERATION,
-					PokemonEmbed.Moves => PokemonComponentIds.SELECT_POKEMON_MOVES_GENERATION,
-					PokemonEmbed.Strategies => PokemonComponentIds.SELECT_POKEMON_STRATEGIES_GENERATION,
+					PokemonEmbedType.Info => PokemonComponentIds.SELECT_POKEMON_INFO_GENERATION,
+					PokemonEmbedType.Moves => PokemonComponentIds.SELECT_POKEMON_MOVES_GENERATION,
+					PokemonEmbedType.Strategies => PokemonComponentIds.SELECT_POKEMON_STRATEGIES_GENERATION,
 					_ => throw new ArgumentOutOfRangeException(),
 				};
-				_ = components.WithSelectMenu($"{selectMenuId}:{pokemonName},{replaceEmojis}", infoGenerationsList, row: rowIndex);
+				_ = embed.AddSelectMenu($"{selectMenuId}:{pokemonName},{replaceEmojis}", infoGenerationsList, row: rowIndex);
 				rowIndex++;
 			}
 
 			if (!showEveryone)
 			{
-				string buttonId = embed switch
+				string buttonId = embedType switch
 				{
-					PokemonEmbed.Info => $"{PokemonComponentIds.BUTTON_POKEMON_SHARE_INFO}:{dbPokemon.Name},{dbPokemon.GenerationAbbreviation},{replaceEmojis}",
-					PokemonEmbed.Moves => $"{PokemonComponentIds.BUTTON_POKEMON_SHARE_MOVES}:{dbPokemon.Name},{dbPokemon.GenerationAbbreviation},{replaceEmojis},{movesStartingIndex}",
-					PokemonEmbed.Strategies => $"{PokemonComponentIds.BUTTON_POKEMON_SHARE_STRATEGIES}:{dbPokemon.Name},{dbPokemon.GenerationAbbreviation},{replaceEmojis}",
+					PokemonEmbedType.Info => $"{PokemonComponentIds.BUTTON_POKEMON_SHARE_INFO}:{dbPokemon.Name},{dbPokemon.GenerationAbbreviation},{replaceEmojis}",
+					PokemonEmbedType.Moves => $"{PokemonComponentIds.BUTTON_POKEMON_SHARE_MOVES}:{dbPokemon.Name},{dbPokemon.GenerationAbbreviation},{replaceEmojis},{movesStartingIndex}",
+					PokemonEmbedType.Strategies => $"{PokemonComponentIds.BUTTON_POKEMON_SHARE_STRATEGIES}:{dbPokemon.Name},{dbPokemon.GenerationAbbreviation},{replaceEmojis}",
 				};
-				_ = components.WithButton("Share", buttonId, style: ButtonStyle.Secondary, emote: Emoji.Parse("📲"), disabled: true, row: rowIndex);
+				_ = embed.AddButton("Share", buttonId, style: ButtonStyle.Secondary, emote: Emoji.Parse("📲"), isDisabled: true, row: rowIndex);
 			}
 			if (!dbPokemon.IsNonstandard || dbPokemon.DexNumber > 0)
 			{
-				_ = components.WithButton("View on Pokédex", style: ButtonStyle.Link, url: poke.GetPokedexUrl(), row: rowIndex);
+				_ = embed.AddButton("View on Pokédex", style: ButtonStyle.Link, url: poke.GetPokedexUrl(), row: rowIndex);
 			}
-			_ = components.WithButton("View on Smogon", style: ButtonStyle.Link, url: poke.GetSmogonPokemonUrl(dbPokemon.GenerationAbbreviation), row: rowIndex);
-
-			return components.Build();
+			_ = embed.AddButton("View on Smogon", style: ButtonStyle.Link, url: poke.GetSmogonPokemonUrl(dbPokemon.GenerationAbbreviation), row: rowIndex);
 		}
 
 		private void CheckItemsLoading()
@@ -170,7 +167,7 @@ namespace Diamond.API.SlashCommands.Pokemon
 			}
 		}
 
-		private enum PokemonEmbed
+		private enum PokemonEmbedType
 		{
 			Info,
 			Moves,

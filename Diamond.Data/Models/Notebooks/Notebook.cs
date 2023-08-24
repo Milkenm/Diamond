@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.CompilerServices;
 
 using Diamond.Data.Exceptions.NotebookExceptions;
 
@@ -16,20 +17,33 @@ namespace Diamond.Data.Models.Notebooks
 		/// <exception cref="NotebookCreateException"></exception>
 		public static async Task<Notebook> CreateNotebookAsync(string name, string? description, ulong userId, DiamondContext db)
 		{
-			Dictionary<string, Notebook> userNotebooks = GetNotebooksMap(userId, db);
+			if (description != null)
+			{
+				if (description.IsEmpty())
+				{
+					description = null;
+				}
+				else
+				{
+					description = DiamondContext.FormatDiscordInput(description);
+				}
+			}
+			name = DiamondContext.FormatDiscordInput(name);
+
+			List<Notebook> userNotebooks = GetUserNotebooks(userId, db);
 			if (userNotebooks.Count == 100)
 			{
 				throw new NotebookLimitReachedException(100);
 			}
 
-			if (userNotebooks.ContainsKey(name))
-			{
-				throw new NotebookAlreadyExistsException(name);
-			}
-
 			if (name.IsEmpty())
 			{
 				throw new NotebookNameIsNullException();
+			}
+
+			if (userNotebooks.Find(n => n.Name == name) != null)
+			{
+				throw new NotebookAlreadyExistsException(name);
 			}
 
 			try
@@ -61,19 +75,19 @@ namespace Diamond.Data.Models.Notebooks
 			return !foundNotebooks.Any() ? throw new NotebookNotFoundException(notebookId) : foundNotebooks.First();
 		}
 
-		public static Dictionary<string, Notebook> GetNotebooksMap(ulong userId, DiamondContext db)
+		public static List<Notebook> GetUserNotebooks(ulong userId, DiamondContext db)
 		{
 			IQueryable<Notebook>? userNotebooks = db.Notebooks.Where(n => n.DiscordUserId == userId);
 
 			if (!userNotebooks.Any())
 			{
-				return new Dictionary<string, Notebook>();
+				return new List<Notebook>();
 			}
 
-			Dictionary<string, Notebook> notebooksMap = new Dictionary<string, Notebook>();
+			List<Notebook> notebooksMap = new List<Notebook>();
 			foreach (Notebook notebook in userNotebooks)
 			{
-				notebooksMap.Add(notebook.Name, notebook);
+				notebooksMap.Add(notebook);
 			}
 			return notebooksMap;
 		}
@@ -81,7 +95,7 @@ namespace Diamond.Data.Models.Notebooks
 		/// <exception cref="NotebookNameIsNullException"></exception>
 		/// <exception cref="NotebookNotChangedException"></exception>
 		/// <exception cref="NotebookUpdateException"></exception>
-		public static async Task UpdateNotebookAsync(Notebook notebook, string name, string? description, DiamondContext db)
+		public static async Task<Notebook> UpdateNotebookAsync(Notebook notebook, string name, string? description, DiamondContext db)
 		{
 			if (name.IsEmpty())
 			{
@@ -114,20 +128,19 @@ namespace Diamond.Data.Models.Notebooks
 			{
 				throw new NotebookUpdateException(ex);
 			}
+
+			return notebook;
 		}
 
 		/// <exception cref="NotebookNotFoundException"></exception>
 		/// <exception cref="NotebookNotChangedException"></exception>
 		/// <exception cref="NotebookUpdateException"></exception>
-		public static async Task UpdateNotebookAsync(long notebookId, string name, string? description, DiamondContext db)
+		public static async Task<Notebook> UpdateNotebookAsync(long notebookId, string name, string? description, DiamondContext db)
 		{
 			IQueryable<Notebook> foundNotebooks = db.Notebooks.Where(n => n.Id == notebookId);
-			if (!foundNotebooks.Any())
-			{
-				throw new NotebookNotFoundException(notebookId);
-			}
-
-			await UpdateNotebookAsync(foundNotebooks.First(), name, description, db);
+			return !foundNotebooks.Any()
+				? throw new NotebookNotFoundException(notebookId)
+				: await UpdateNotebookAsync(foundNotebooks.First(), name, description, db);
 		}
 
 		/// <exception cref="NotebookDeleteException"></exception>
@@ -135,6 +148,12 @@ namespace Diamond.Data.Models.Notebooks
 		{
 			try
 			{
+				// Delete all pages first
+				foreach (NotebookPage page in NotebookPage.GetNotebookPages(notebook, db))
+				{
+					_ = db.NotebookPages.Remove(page);
+				}
+
 				_ = db.Notebooks.Remove(notebook);
 				await db.SaveAsync();
 			}

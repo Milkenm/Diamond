@@ -32,10 +32,7 @@ namespace Diamond.API.SlashCommands.VotePoll.Published
 				_ = this.AddField(pollOption.Name, "0 votes", true);
 			}
 
-			ComponentBuilder builder = new ComponentBuilder();
-			_ = builder.WithButton(new ButtonBuilder("Vote", VotePollComponentIds.BUTTON_VOTEPOLL_VOTE, ButtonStyle.Primary));
-
-			this.Component = builder.Build();
+			_ = this.AddButton(new ButtonBuilder("Vote", VotePollComponentIds.BUTTON_VOTEPOLL_VOTE, ButtonStyle.Primary));
 		}
 	}
 }

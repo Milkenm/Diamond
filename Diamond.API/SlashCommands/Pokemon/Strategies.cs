@@ -62,7 +62,8 @@ namespace Diamond.API.SlashCommands.Pokemon
 			if (strategiesList.Count == 0)
 			{
 				embed.Description = "No strategies found for " + pokemonName;
-				_ = await embed.SendAsync(this.GetEmbedButtons(pokemonName, generationAbbreviation, PokemonEmbed.Strategies, replaceEmojis, showEveryone, db));
+				this.AddEmbedButtons(embed, pokemonName, generationAbbreviation, PokemonEmbedType.Strategies, replaceEmojis, showEveryone, db);
+				_ = await embed.SendAsync();
 				return;
 			}
 
@@ -72,7 +73,8 @@ namespace Diamond.API.SlashCommands.Pokemon
 			{
 
 			}
-			_ = await embed.SendAsync(this.GetEmbedButtons(pokemonName, generationAbbreviation, PokemonEmbed.Strategies, replaceEmojis, showEveryone, db));
+			this.AddEmbedButtons(embed, pokemonName, generationAbbreviation, PokemonEmbedType.Strategies, replaceEmojis, showEveryone, db);
+			_ = await embed.SendAsync();
 		}
 	}
 }

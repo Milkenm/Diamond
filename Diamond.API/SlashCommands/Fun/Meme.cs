@@ -42,12 +42,7 @@ namespace Diamond.API.SlashCommands.Fun
 			await this.DeferAsync(true);
 
 			(DefaultEmbed embed, _) = GetMemeEmbed(this.Context, Utils.GetButtonMessageId(this.Context), rerollCount + 1, true, preventDuplicates, duplicates);
-
-			_ = await this.ModifyOriginalResponseAsync((msg) =>
-			{
-				msg.Components = embed.Component;
-				msg.Embed = embed.Build();
-			});
+			_ = await embed.SendAsync();
 		}
 
 		[ComponentInteraction($"{MemeComponentIds.BUTTON_MEME_SHARE}:*", true)]
@@ -56,11 +51,12 @@ namespace Diamond.API.SlashCommands.Fun
 			await this.DeferAsync(true);
 
 			RestInteractionMessage response = await this.Context.Interaction.GetOriginalResponseAsync();
-			Embed embed = response.Embeds.ElementAt(0);
-			ComponentBuilder components = new ComponentBuilder()
-				.WithButton("View post", style: ButtonStyle.Link, emote: Emoji.Parse("📄"), url: postLink);
+			Embed responseEmbed = response.Embeds.ElementAt(0);
 
-			_ = await this.ReplyAsync(embed: embed, components: components.Build());
+			DefaultEmbed embed = new DefaultEmbed(responseEmbed, this.Context)
+				.AddButton("View post", style: ButtonStyle.Link, emote: Emoji.Parse("📄"), url: postLink);
+
+			_ = await embed.SendAsync(sendAsNew: true);
 		}
 
 		private static (DefaultEmbed embed, MemeResponse meme) GetMemeEmbed(SocketInteractionContext context, ulong? messageId, int rerollCount, bool showAdditionalButtons, bool preventDuplicates, int duplicates)
@@ -93,21 +89,18 @@ namespace Diamond.API.SlashCommands.Fun
 				_ = embed.AddField("‍", "‍", true);
 			}
 
-			// Buttons
-			ComponentBuilder components = new ComponentBuilder();
 			// "Reroll" button
 			if (showAdditionalButtons)
 			{
-				_ = components.WithButton("Reroll", $"{MemeComponentIds.BUTTON_MEME_REROLL}:{rerollCount},{preventDuplicates},{duplicates + duplicated}", style: ButtonStyle.Success, emote: Emoji.Parse("🔁"));
+				_ = embed.AddButton("Reroll", $"{MemeComponentIds.BUTTON_MEME_REROLL}:{rerollCount},{preventDuplicates},{duplicates + duplicated}", style: ButtonStyle.Success, emote: Emoji.Parse("🔁"));
 			}
 			// "View post" button
-			_ = components.WithButton("View post", style: ButtonStyle.Link, emote: Emoji.Parse("📄"), url: meme.PostLink);
+			_ = embed.AddButton("View post", style: ButtonStyle.Link, emote: Emoji.Parse("📄"), url: meme.PostLink);
 			// "Share" button
 			if (showAdditionalButtons)
 			{
-				_ = components.WithButton("Share", $"{MemeComponentIds.BUTTON_MEME_SHARE}:{meme.PostLink}", style: ButtonStyle.Secondary, emote: Emoji.Parse("📲"));
+				_ = embed.AddButton("Share", $"{MemeComponentIds.BUTTON_MEME_SHARE}:{meme.PostLink}", style: ButtonStyle.Secondary, emote: Emoji.Parse("📲"));
 			}
-			embed.Component = components.Build();
 
 			return (embed, meme);
 		}

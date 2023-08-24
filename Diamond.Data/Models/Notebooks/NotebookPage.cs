@@ -16,8 +16,21 @@ namespace Diamond.Data.Models.Notebooks
 		/// <exception cref="NotebookPageTitleAndContentAreNullException"/>
 		/// <exception cref="NotebookPageTitleIsNullException"/>
 		/// <exception cref="NotebookPageContentIsNullException"/>
-		public static async Task CreateNotebookPageAsync(string title, string? content, ulong userId, Notebook? notebook, DiamondContext db)
+		public static async Task<NotebookPage> CreateNotebookPageAsync(string title, string? content, ulong userId, Notebook? notebook, DiamondContext db)
 		{
+			if (content != null)
+			{
+				if (content.IsEmpty())
+				{
+					content = null;
+				}
+				else
+				{
+					content = DiamondContext.FormatDiscordInput(content);
+				}
+			}
+			title = DiamondContext.FormatDiscordInput(title);
+
 			if (GetAllNotebookPages(userId, db).Count == 20 * 100)
 			{
 				throw new NotebookPageLimitReachedException(20 * 100);
@@ -27,7 +40,7 @@ namespace Diamond.Data.Models.Notebooks
 
 			try
 			{
-				_ = db.NotebookPages.Add(new NotebookPage()
+				NotebookPage page = new NotebookPage()
 				{
 					Title = title,
 					Content = content,
@@ -35,8 +48,12 @@ namespace Diamond.Data.Models.Notebooks
 					DiscordUserId = userId,
 					CreatedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
 					UpdatedAt = null,
-				});
+				};
+
+				_ = db.NotebookPages.Add(page);
 				await db.SaveAsync();
+
+				return page;
 			}
 			catch (Exception ex)
 			{
@@ -49,15 +66,13 @@ namespace Diamond.Data.Models.Notebooks
 		/// <exception cref="NotebookPageTitleAndContentAreNullException"/>
 		/// <exception cref="NotebookPageTitleIsNullException"/>
 		/// <exception cref="NotebookPageContentIsNullException"/>
-		public static async Task CreateNotebookPageAsync(string title, string? content, ulong userId, long notebookId, DiamondContext db)
+		public static async Task<NotebookPage> CreateNotebookPageAsync(string title, string? content, ulong userId, long notebookId, DiamondContext db)
 		{
 			IQueryable<Notebook> foundNotebooks = db.Notebooks.Where(n => n.Id == notebookId && n.DiscordUserId == userId);
-			if (!foundNotebooks.Any())
-			{
-				throw new NotebookNotFoundException(notebookId);
-			}
 
-			await CreateNotebookPageAsync(title, content, userId, foundNotebooks.First(), db);
+			return !foundNotebooks.Any()
+				? throw new NotebookNotFoundException(notebookId)
+				: await CreateNotebookPageAsync(title, content, userId, foundNotebooks.First(), db);
 		}
 
 		/// <exception cref="NotebookNotFoundException"/>
@@ -65,24 +80,27 @@ namespace Diamond.Data.Models.Notebooks
 		/// <exception cref="NotebookPageTitleAndContentAreNullException"/>
 		/// <exception cref="NotebookPageTitleIsNullException"/>
 		/// <exception cref="NotebookPageContentIsNullException"/>
-		public static async Task CreateNotebookPageAsync(string title, string? content, ulong userId, string notebookName, DiamondContext db)
+		public static async Task<NotebookPage> CreateNotebookPageAsync(string title, string? content, ulong userId, string notebookName, DiamondContext db)
 		{
 			IQueryable<Notebook> userNotebooks = db.Notebooks.Where(n => n.Name == notebookName && n.DiscordUserId == userId);
-			if (!userNotebooks.Any())
-			{
-				throw new NotebookNotFoundException(notebookName);
-			}
-
-			await CreateNotebookPageAsync(title, content, userId, userNotebooks.First(), db);
+			return !userNotebooks.Any()
+				? throw new NotebookNotFoundException(notebookName)
+				: await CreateNotebookPageAsync(title, content, userId, userNotebooks.First(), db);
 		}
 
 		/// <exception cref="NotebookPageCreateException"/>
 		/// <exception cref="NotebookPageTitleAndContentAreNullException"/>
 		/// <exception cref="NotebookPageTitleIsNullException"/>
 		/// <exception cref="NotebookPageContentIsNullException"/>
-		public static async Task CreateNotebookPageAsync(string title, string? content, ulong userId, DiamondContext db)
+		public static async Task<NotebookPage> CreateNotebookPageAsync(string title, string? content, ulong userId, DiamondContext db)
 		{
-			await CreateNotebookPageAsync(title, content, userId, notebook: null, db);
+			return await CreateNotebookPageAsync(title, content, userId, notebook: null, db);
+		}
+
+		public static NotebookPage GetNotebookPage(long pageId, DiamondContext db)
+		{
+			NotebookPage? foundPage = db.NotebookPages.Where(p => p.Id == pageId).FirstOrDefault();
+			return foundPage ?? throw new NotebookPageNotFoundException(pageId);
 		}
 
 		public static Dictionary<string, NotebookPage> GetAllNotebookPages(ulong userId, DiamondContext db)
@@ -102,7 +120,7 @@ namespace Diamond.Data.Models.Notebooks
 		}
 
 		/// <exception cref="ArgumentNullException"/>
-		public static Dictionary<string, NotebookPage> GetNotebookPages(Notebook? notebook, ulong? userId, DiamondContext db)
+		public static List<NotebookPage> GetNotebookPages(Notebook? notebook, ulong? userId, DiamondContext db)
 		{
 			if (notebook == null && userId == null)
 			{
@@ -112,19 +130,24 @@ namespace Diamond.Data.Models.Notebooks
 			IQueryable<NotebookPage> foundPages = db.NotebookPages.Where(p => (p.Notebook == notebook) || (p.Notebook == null && p.DiscordUserId == userId));
 			if (!foundPages.Any())
 			{
-				return new Dictionary<string, NotebookPage>();
+				return new List<NotebookPage>();
 			}
 
-			Dictionary<string, NotebookPage> pagesMap = new Dictionary<string, NotebookPage>();
+			List<NotebookPage> pagesMap = new List<NotebookPage>();
 			foreach (NotebookPage? page in foundPages)
 			{
-				pagesMap.Add(page.Title, page);
+				pagesMap.Add(page);
 			}
 			return pagesMap;
 		}
 
+		public static List<NotebookPage> GetNotebookPages(Notebook notebook, DiamondContext db)
+		{
+			return GetNotebookPages(notebook, null, db);
+		}
+
 		/// <exception cref="NotebookNotFoundException"/>
-		public static Dictionary<string, NotebookPage> GetNotebookPages(long? notebookId, ulong userId, DiamondContext db)
+		public static List<NotebookPage> GetNotebookPages(long? notebookId, ulong userId, DiamondContext db)
 		{
 			IQueryable<Notebook> foundNotebook = db.Notebooks.Where(n => n.Id == notebookId);
 			return !foundNotebook.Any() ? throw new NotebookNotFoundException(notebookId) : GetNotebookPages(foundNotebook.First(), userId, db);
@@ -135,36 +158,38 @@ namespace Diamond.Data.Models.Notebooks
 		/// <exception cref="NotebookPageTitleAndContentAreNullException"/>
 		/// <exception cref="NotebookPageTitleIsNullException"/>
 		/// <exception cref="NotebookPageContentIsNullException"/>
-		public static async Task UpdateNotebookPageAsync(NotebookPage page, string title, string content, Notebook? notebook, DiamondContext db)
+		public static async Task<NotebookPage> UpdateNotebookPageAsync(NotebookPage page, string title, string content, Notebook? notebook, DiamondContext db)
 		{
-			ValidateNotebookPage(title);
-
-			bool hasChanged = false;
-			if (title != page.Title)
-			{
-				page.Title = title;
-				hasChanged = true;
-			}
-			if (content != page.Content)
-			{
-				page.Content = content;
-				hasChanged = true;
-			}
-			if (notebook != page.Notebook)
-			{
-				page.Notebook = notebook;
-				hasChanged = true;
-			}
-
-			if (!hasChanged)
-			{
-				throw new NotebookPageNotChangedException();
-			}
-
-			page.UpdatedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 			try
 			{
+				ValidateNotebookPage(title);
+
+				bool hasChanged = false;
+				if (title != page.Title)
+				{
+					page.Title = title;
+					hasChanged = true;
+				}
+				if (content != page.Content)
+				{
+					page.Content = content;
+					hasChanged = true;
+				}
+				if (notebook != page.Notebook)
+				{
+					page.Notebook = notebook;
+					hasChanged = true;
+				}
+
+				if (!hasChanged)
+				{
+					throw new NotebookPageNotChangedException();
+				}
+
+				page.UpdatedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
 				await db.SaveAsync();
+				return page;
 			}
 			catch (Exception ex)
 			{
@@ -175,15 +200,20 @@ namespace Diamond.Data.Models.Notebooks
 		/// <exception cref="NotebookPageNotFoundException"/>
 		/// <exception cref="NotebookPageNotChangedException"/>
 		/// <exception cref="NotebookPageUpdateException"/>
-		public static async Task UpdateNotebookPageAsync(long notebookPageId, string title, string content, Notebook? notebook, DiamondContext db)
+		public static async Task<NotebookPage> UpdateNotebookPageAsync(long pageId, string title, string content, Notebook? notebook, DiamondContext db)
 		{
-			IQueryable<NotebookPage> foundPages = db.NotebookPages.Where(p => p.Id == notebookPageId);
-			if (!foundPages.Any())
-			{
-				throw new NotebookPageNotFoundException(notebookPageId);
-			}
+			IQueryable<NotebookPage> foundPages = db.NotebookPages.Where(p => p.Id == pageId);
+			return !foundPages.Any()
+				? throw new NotebookPageNotFoundException(pageId)
+				: await UpdateNotebookPageAsync(foundPages.First(), title, content, notebook, db);
+		}
 
-			await UpdateNotebookPageAsync(foundPages.First(), title, content, notebook, db);
+		public static async Task<NotebookPage> UpdateNotebookPageAsync(long pageId, string title, string content, long notebookId, DiamondContext db)
+		{
+			Notebook? notebook = Notebook.GetNotebook(notebookId, db);
+			NotebookPage? page = GetNotebookPage(pageId, db);
+
+			return await UpdateNotebookPageAsync(page, title, content, notebook, db);
 		}
 
 		/// <exception cref="NotebookPageDeleteException"/>
@@ -202,12 +232,12 @@ namespace Diamond.Data.Models.Notebooks
 
 		/// <exception cref="NotebookPageNotFoundException"/>
 		/// <exception cref="NotebookPageDeleteException"/>
-		public static async Task DeleteNotebookPageAsync(long notebookPageId, DiamondContext db)
+		public static async Task DeleteNotebookPageAsync(long pageId, DiamondContext db)
 		{
-			IQueryable<NotebookPage> foundPages = db.NotebookPages.Where(p => p.Id == notebookPageId);
+			IQueryable<NotebookPage> foundPages = db.NotebookPages.Where(p => p.Id == pageId);
 			if (!foundPages.Any())
 			{
-				throw new NotebookPageNotFoundException(notebookPageId);
+				throw new NotebookPageNotFoundException(pageId);
 			}
 
 			await DeleteNotebookPageAsync(foundPages.First(), db);
