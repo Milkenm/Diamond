@@ -6,7 +6,7 @@ using Diamond.Data;
 using Discord;
 using Discord.Interactions;
 
-namespace Diamond.API.SlashCommands.Notebooks.Interaction.Modals
+namespace Diamond.API.SlashCommands.Notebooks.Interaction
 {
     public class ModalPageEditorAttribute : DefaultComponentInteractionAttribute
     {

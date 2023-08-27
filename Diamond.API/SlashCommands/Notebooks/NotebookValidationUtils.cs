@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-using Diamond.API.SlashCommands.Notebooks.Interaction.Embeds;
+using Diamond.API.SlashCommands.Notebooks.Interaction;
 using Diamond.Data.Models.Notebooks;
 
 using Discord;

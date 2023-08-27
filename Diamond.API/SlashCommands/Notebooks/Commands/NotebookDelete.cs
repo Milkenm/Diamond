@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 using Diamond.API.Attributes;
 using Diamond.API.SlashCommands.Notebooks.Commands.Autocompleters;
-using Diamond.API.SlashCommands.Notebooks.Interaction.Embeds;
+using Diamond.API.SlashCommands.Notebooks.Interaction;
 using Diamond.API.Util;
 using Diamond.Data;
 using Diamond.Data.Models.Notebooks;

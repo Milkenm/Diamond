@@ -2,7 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-using Diamond.API.SlashCommands.Notebooks.Interaction.Embeds;
+using Diamond.API.SlashCommands.Notebooks.Exceptions;
+using Diamond.API.SlashCommands.Notebooks.Interaction;
 using Diamond.Data;
 using Diamond.Data.Exceptions.NotebookExceptions;
 using Diamond.Data.Exceptions.NotebookPageExceptions;
@@ -16,10 +17,35 @@ namespace Diamond.API.SlashCommands.Notebooks
 	[Group("notebooks", "Notebook related commands.")]
 	public partial class Notebooks : InteractionModuleBase<SocketInteractionContext>
 	{
+		#region Settings
+		public const int ITEMS_PER_PAGE = 5;
+		#endregion
+
 		#region Utils
 		public static Dictionary<string, Notebook> GetNotebooksMap(List<Notebook> notebooksList)
 		{
 			return notebooksList.ToDictionary(n => n.Name, n => n);
+		}
+
+		public static async Task SendNotebooksListEmbedAsync(IInteractionContext context, int startingIndex, bool showEveryone)
+		{
+			using DiamondContext db = new DiamondContext();
+
+			try
+			{
+				_ = await new NotebookListEmbed(context, startingIndex, showEveryone, db).SendAsync();
+			}
+			catch (NoNotebooksException)
+			{
+				_ = await new NoNotebooksEmbed(context).SendAsync();
+			}
+		}
+
+		public static async Task SendPagesListEmbedAsync(IInteractionContext context, long notebookId, int startingIndex, bool showEveryone)
+		{
+			using DiamondContext db = new DiamondContext();
+
+			_ = await new PageListEmbed(context, notebookId, startingIndex, showEveryone, db).SendAsync();
 		}
 		#endregion
 
