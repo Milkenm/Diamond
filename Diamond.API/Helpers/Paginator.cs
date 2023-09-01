@@ -28,7 +28,7 @@ namespace Diamond.API.Helpers
 
 			if (this.StartingIndex == -1)
 			{
-				this.StartingIndex = MaxPages * ItemsPerPage; /*(int)Math.Floor((double)this.Items.Count / this.ItemsPerPage);*/
+				this.StartingIndex = this.MaxPages * this.ItemsPerPage; /*(int)Math.Floor((double)this.Items.Count / this.ItemsPerPage);*/
 			}
 
 			this.CurrentPage = this.GetPageOfIndex(this.StartingIndex);
@@ -45,11 +45,20 @@ namespace Diamond.API.Helpers
 			return maxPages;
 		}
 
-		public IEnumerable<T> GetItemsFromPage(int page)
+		public IEnumerable<T> GetItemsFromPage(int page, bool errorIfOutOfRange = true)
 		{
-			if (page < 0 || page > this.PrettyMaxPages)
+			if (errorIfOutOfRange && (page < 0 || page > this.MaxPages))
 			{
 				throw new ArgumentOutOfRangeException($"'{nameof(page)}' must range from 0 to {this.PrettyMaxPages}, but was {page}.");
+			}
+
+			if (page < 0)
+			{
+				return this.GetItemsFromPage(0);
+			}
+			else if (page > this.MaxPages)
+			{
+				return this.GetItemsFromPage(this.MaxPages);
 			}
 
 			this.CurrentPage = page;

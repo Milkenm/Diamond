@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.CompilerServices;
 
 using Diamond.Data.Exceptions.NotebookExceptions;
 
@@ -12,9 +11,7 @@ namespace Diamond.Data.Models.Notebooks
 	public class Notebook
 	{
 		#region Actions
-		/// <exception cref="NotebookAlreadyExistsException"></exception>
-		/// <exception cref="NotebookNameIsNullException"></exception>
-		/// <exception cref="NotebookCreateException"></exception>
+		
 		public static async Task<Notebook> CreateNotebookAsync(string name, string? description, ulong userId, DiamondContext db)
 		{
 			if (description != null)
@@ -31,10 +28,10 @@ namespace Diamond.Data.Models.Notebooks
 			name = DiamondContext.FormatDiscordInput(name);
 
 			List<Notebook> userNotebooks = GetUserNotebooks(userId, db);
-			if (userNotebooks.Count == 100)
+			/*if (userNotebooks.Count == 100)
 			{
 				throw new NotebookLimitReachedException(100);
-			}
+			}*/
 
 			if (name.IsEmpty())
 			{

@@ -26,10 +26,10 @@ namespace Diamond.Data.Models.Notebooks
 			}
 			title = DiamondContext.FormatDiscordInput(title);
 
-			if (GetAllNotebookPages(userId, db).Count == 20 * 100)
+			/*if (GetAllNotebookPages(userId, db).Count == 20 * 100)
 			{
 				throw new NotebookPageLimitReachedException(20 * 100);
-			}
+			}*/
 
 			ValidateNotebookPage(title);
 

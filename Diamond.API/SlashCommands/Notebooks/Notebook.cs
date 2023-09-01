@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -74,15 +75,13 @@ namespace Diamond.API.SlashCommands.Notebooks
 					_ = await new NotebookUpdatedEmbed(context, updatedNotebook, oldName, oldDescription).SendAsync();
 				}
 			}
-			catch (NotebookCreateException ex)
+			catch (Exception ex) when (ex is NotebookCreateException or NotebookAlreadyExistsException)
 			{
 				_ = await new NotebookCreatedEmbed(context, ex).SendAsync();
-				return;
 			}
 			catch (NotebookUpdateException ex)
 			{
 				_ = await new NotebookUpdatedEmbed(context, ex).SendAsync();
-				return;
 			}
 		}
 

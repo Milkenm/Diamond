@@ -30,14 +30,14 @@ namespace Diamond.API.SlashCommands.Notebooks.Commands.Autocompleters
 
                 foreach (SearchMatchInfo<Notebook> notebook in searchResult)
                 {
-                    autocompletions.Add(new AutocompleteResult(notebook.Item.Name, notebook.Item.Id.ToString()));
+                    autocompletions.Add(new AutocompleteResult(notebook.Item.Name, notebook.Item.Id));
                 }
             }
             else
             {
                 foreach (Notebook notebook in db.Notebooks.Where(n => n.DiscordUserId == autocompleteInteraction.User.Id).AsEnumerable().OrderBy(p => p.Name))
                 {
-                    autocompletions.Add(new AutocompleteResult(notebook.Name, notebook.Id.ToString()));
+                    autocompletions.Add(new AutocompleteResult(notebook.Name, notebook.Id));
                 }
             }
 

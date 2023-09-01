@@ -96,7 +96,7 @@ namespace Diamond.API.Helpers
 
 		public async Task<ulong> SendAsync()
 		{
-			this.FillItems(this.ItemsList.Skip(this.StartingIndex).Take(this.ItemsPerPage));
+			this.FillItems(this._paginator.GetItemsFromPage(this.StartingIndex / this.ItemsPerPage));
 			return await base.SendAsync();
 		}
 
