@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using Diamond.API.GlobalComponents.Buttons;
 using Diamond.API.Helpers;
 using Diamond.API.SlashCommands.Notebooks.Exceptions;
 using Diamond.Data;
@@ -48,7 +47,7 @@ namespace Diamond.API.SlashCommands.Notebooks.Interaction
 				_ = this.AddField($"**#{notebook.Id}** :heavy_minus_sign: {notebook.Name}", notebook.Description ?? "*No description*");
 			}
 			_ = this.AddButton(new ButtonNotebookEditorAttribute().GetButtonBuilder(), 1);
-			_ = this.AddButton(new ButtonCloseAttribute().GetButtonBuilder(), 1);
+			_ = this.AddButton(new ButtonNotebookCloseEmbedAttribute().GetButtonBuilder(), 1);
 			this.AddNavigationButtons(2);
 		}
 	}
